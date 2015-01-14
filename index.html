@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Hello Createjs</title>
+    <script src="http://code.createjs.com/createjs-2013.12.12.min.js"></script>
+    <script>
+    var stage, canvas, loader;
+    function init(){
+        canvas = document.getElementById("gameCanvas");
+        stage = new createjs.Stage(canvas);
+
+        createjs.Ticker.addEventListener("tick", tick);
+        createjs.Ticker.setFPS(30);
+
+        var manifest = [
+            {src:"assets/Graphics/Characters/01 - Hero.png", id:"hero"},
+        ];
+
+        loader = new createjs.LoadQueue(false);
+        loader.addEventListener("complete", handleLoadComplete);
+        loader.loadManifest(manifest);
+    };
+
+    function handleLoadComplete(){
+
+        var spriteSheet = new createjs.SpriteSheet({
+            images:[loader.getResult("hero")],
+            frames:[[0,32,24,32,0,12,16]],//{width:24,height:32,regX:16,regY:16},
+            animations:{
+                walk:[0,2,"walk",0.2],
+                run:[0,2,"run",0.6],
+            }
+        });
+
+        var bmpAnimation = new createjs.BitmapAnimation(spriteSheet);
+        bmpAnimation.gotoAndPlay("walk");
+        bmpAnimation.shadow = new createjs.Shadow("#454", 0, 5, 4);
+        bmpAnimation.x = 250;
+        bmpAnimation.y = 250;
+        stage.addChild(bmpAnimation);
+    }
+
+    function tick(){
+        stage.update();
+    }
+    </script>
+</head>
+<body onload="init();">
+    <div>
+        <canvas id="gameCanvas" width="500" height="500"></canvas>
+    </div>
+</body>
+</html>
