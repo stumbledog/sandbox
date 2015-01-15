@@ -1,1 +1,4 @@
-/assets
+/bin
+/node_modules
+/public/assets
+package.json

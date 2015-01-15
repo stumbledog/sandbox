@@ -89,8 +89,11 @@
 		});
 
 		var bmpAnimation = new createjs.Sprite(spriteSheet);
-		//bmpAnimation.gotoAndPlay("front");
-		bmpAnimation.shadow = new createjs.Shadow("#454", 3, 3, 10);
+		/*bmpAnimation.gotoAndPlay("front");
+		var mask = new createjs.Shape();
+		mask.graphics.beginFill("#f00").drawRect(0,0,24,32);
+		bmpAnimation.mask = mask;
+		bmpAnimation.shadow = new createjs.Shadow("#454", 0, 0, 200);*/
 		bmpAnimation.x = 12;
 		bmpAnimation.y = 16;
 		bmpAnimation.scaleX = bmpAnimation.scaleY = 1;
