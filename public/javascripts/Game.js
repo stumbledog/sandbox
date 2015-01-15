@@ -3,13 +3,14 @@ var Game = (function(){
 	var instance;
 
 	function init(){
-		var stage, canvas, loader, hero, cursor, unit_container, cursor_container;
+		var stage, canvas, loader, hero, cursor;
+		var map_container, block_container, unit_container, cursor_container;
 		var command = "move";
 		canvas = document.getElementById("gameCanvas");
 		canvas.width = window.innerWidth;
 		canvas.height = window.innerHeight;
-		stage = new createjs.Stage(canvas);
 
+		stage = new createjs.Stage(canvas);
 		stage.enableMouseOver(10);
 
 		window.onresize = function(){
@@ -20,6 +21,8 @@ var Game = (function(){
 		var manifest = [
 			{src:"assets/Graphics/Characters/01 - Hero.png", id:"hero"},
 			{src:"assets/Graphics/System/Icons/IconSet.png", id:"icon"},
+			{src:"assets/Graphics/Tilesets/A5/Exterior_Forest_TileA5.png", id:"mapA"},
+			{src:"assets/Graphics/Tilesets/B/Exterior_Forest_TileB.png", id:"mapB"},
 		];
 
 		loader = new createjs.LoadQueue(false);
@@ -30,54 +33,108 @@ var Game = (function(){
 			initContainer();
 			initEventListener();
 			initMouseCursor();
+			initMap();
 			createHero();
 
 			createjs.Ticker.addEventListener("tick", tick);
-			createjs.Ticker.setFPS(30);
+			createjs.Ticker.setFPS(60);
 		}
 
 		function initContainer(){
+			map_container = new createjs.Container();
+			block_container = new createjs.Container();
 			unit_container = new createjs.Container();
 			cursor_container = new createjs.Container();
-			stage.addChild(unit_container, cursor_container);
+			stage.addChild(map_container, unit_container, cursor_container);
 		}
 
 		function initEventListener(){
 			stage.on("stagemousedown", function(event){
-				if(command === "move" && event.nativeEvent.button == 2){
+				if(event.nativeEvent.button == 2){
 					hero.move(event.stageX,event.stageY);
-				}else if(command === "move" && event.nativeEvent.button == 0){
-					console.log("select");
-				}else if(command === "attack" && event.nativeEvent.button == 0){
-					hero.move(event.stageX,event.stageY);
-					command = "move";
+					setCommand("move");
+				}else if(event.nativeEvent.button == 0){
+					if(command === "move"){
+						console.log("select");
+					}else if(command === "attack"){
+						hero.move(event.stageX,event.stageY);
+						setCommand("move");
+					}
 				}
 			});
 
 			stage.on("stagemousemove", function(event){
 				cursor.x = event.stageX;
 				cursor.y = event.stageY;
+
+				if(event.stageX > canvas.width-100){
+					map_container.x --;
+					unit_container.x--;
+				}
 			});
 
 			document.onkeydown = function(event){
+				console.log(event.keyCode);
 				switch(event.keyCode){
+					case 27://esc
+						setCommand("move");
+						break;
 					case 87://w
 						break;
 					case 68://d
 						break;
 					case 83://s
+						setCommand("stop");
 						break;
 					case 65://a
-						command = "attack";
+						setCommand("attack");
 						break;
 				}
 			}
 		}
 
 		function initMouseCursor(){
-			cursor = new createjs.Bitmap(loader.getResult("icon"));
-			cursor.sourceRect = new createjs.Rectangle(245,102,13,14);
+			cursor = new Cursor(loader.getResult("icon"));
 			cursor_container.addChild(cursor);
+		}
+
+		function initMap(){
+			var tiles_A = [
+				[1,1,1,1,1,1,1,1],
+				[1,1,1,2,1,1,1,1],
+				[1,1,2,1,1,2,1,1],
+				[1,1,1,1,1,1,2,1],
+				[1,1,1,1,1,1,1,1],
+				[1,2,1,2,1,1,1,1],
+				[1,1,1,1,1,2,1,1],
+				[1,1,1,1,1,1,1,1],
+			];
+
+			var tile_map_A = [
+				[32,0,32,32],
+				[160,0,32,32],
+			];
+
+			var tiles_B = [
+				[0,0,0,0,0,0,0,0],
+				[0,0,0,0,0,0,0,0],
+				[0,0,1,2,0,0,0,0],
+				[0,0,3,4,0,0,0,0],
+				[0,0,0,0,0,0,0,0],
+				[0,0,0,0,0,0,0,0],
+				[0,0,0,0,0,0,0,0],
+				[0,0,0,0,0,0,0,0],
+			];
+
+			var tile_map_B = [
+				[32,0,32,32],
+				[64,0,32,32],
+				[32,32,32,32],
+				[64,32,32,32],
+			];
+			map_container.addChild(new Map(loader.getResult("mapA"), tiles_A, tile_map_A));
+			block_container.addChild(new Map(loader.getResult("mapB"), tiles_B, tile_map_B));
+			console.log(map_container, block_container);
 		}
 
 		function createHero(){
@@ -118,7 +175,27 @@ var Game = (function(){
 			});
 
 			hero = new Hero(spriteSheet);
+			hero.x = 128;
+			hero.y = 128;
 			unit_container.addChild(hero);
+		}
+
+		function setCommand(type){
+			switch(type){
+				case "attack":
+					command = "attack";
+					cursor.attack();
+				break;
+				case "move":
+					command = "move";
+					cursor.move();
+				break;
+				case "stop":
+					command = "move";
+					cursor.move();
+					hero.stop();
+				break;
+			}
 		}
 
 		function tick(){
