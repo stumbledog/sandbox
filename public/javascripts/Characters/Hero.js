@@ -1,5 +1,5 @@
-function Hero(sprite){
-	this.initialize(sprite);
+function Hero(file, index){
+	this.initialize(file, index);
 }
 
 Hero.prototype = new createjs.Sprite();
@@ -7,28 +7,56 @@ Hero.prototype = new createjs.Sprite();
 Hero.prototype.Sprite_initialize = Hero.prototype.initialize;
 Hero.prototype.stopPlaying = Hero.prototype.stop;
 
-Hero.prototype.initialize = function(sprite){
-	this.Sprite_initialize(sprite);
+Hero.prototype.initialize = function(file, index){
+	this.game = Game.getInstance();
+
+	var frames = [];
+	var offsetX = index % 2 *32;
+	var offsetY = parseInt(index / 2) *32;
+
+	for(var i=0 ;i < 12; i++){
+		frames.push([offsetX+(i%3)*24,offsetY+parseInt(i/3)*32+1,24,32,0,12,16]);
+	}
+
+	var spriteSheet = new createjs.SpriteSheet({
+		images:[this.game.getLoader().getResult(file)],
+		frames:frames,
+		animations:{
+			front:{
+				frames:[0,1,2],
+				speed:0.3
+			},
+			left:{
+				frames:[3,4,5],
+				speed:0.3
+			},
+			right:{
+				frames:[6,7,8],
+				speed:0.3
+			},
+			back:{
+				frames:[9,10,11],
+				speed:0.3
+			},
+		}
+	});
+
+	this.Sprite_initialize(spriteSheet);
+
 	this.shadow = new createjs.Shadow("#333",3,3,10);
-	this.speed = 3;
+	this.speed = 20;
 	this.status = "move";
 	this.destination = null;
 	this.move_queue = [];
 }
 
 Hero.prototype.move = function(x, y){
-	this.move_queue = [{x:x,y:y}];
-	//this.destination = {x:x,y:y};
 	this.status = "move";
-//	this.findPath();
-
+	this.move_queue = this.game.findPath({x:this.x,y:this.y}, {x:x,y:y});
 	this.shiftMoveQueue();
 
 }
 
-Hero.prototype.findPath = function(){
-
-}
 
 Hero.prototype.shiftMoveQueue = function(){
 	if(this.move_queue.length){
@@ -63,7 +91,8 @@ Hero.prototype.attackTarget = function(target){
 
 }
 
-Hero.prototype.stop = function(){	
+Hero.prototype.stop = function(){
+	this.move_queue = [];
 	this.stopPlaying();
 }
 

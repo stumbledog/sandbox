@@ -1,7 +1,5 @@
-function PathFinder(){
-	
-}
+function PathFinder(){}
 
-PathFinder.find = function(){
+PathFinder.findPath = function(starting, destination){
 	
 }

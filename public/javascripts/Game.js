@@ -37,7 +37,7 @@ var Game = (function(){
 			createHero();
 
 			createjs.Ticker.addEventListener("tick", tick);
-			createjs.Ticker.setFPS(60);
+			createjs.Ticker.setFPS(30);
 		}
 
 		function initContainer(){
@@ -45,7 +45,7 @@ var Game = (function(){
 			block_container = new createjs.Container();
 			unit_container = new createjs.Container();
 			cursor_container = new createjs.Container();
-			stage.addChild(map_container, unit_container, cursor_container);
+			stage.addChild(map_container, block_container ,unit_container, cursor_container);
 		}
 
 		function initEventListener(){
@@ -100,14 +100,22 @@ var Game = (function(){
 
 		function initMap(){
 			var tiles_A = [
-				[1,1,1,1,1,1,1,1],
-				[1,1,1,2,1,1,1,1],
-				[1,1,2,1,1,2,1,1],
-				[1,1,1,1,1,1,2,1],
-				[1,1,1,1,1,1,1,1],
-				[1,2,1,2,1,1,1,1],
-				[1,1,1,1,1,2,1,1],
-				[1,1,1,1,1,1,1,1],
+				[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+				[1,1,1,2,1,1,1,1,1,1,1,1,1,1,1,1],
+				[1,1,2,1,1,2,1,1,1,1,1,1,1,1,1,1],
+				[1,1,1,1,1,1,2,1,1,1,1,1,1,1,1,1],
+				[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+				[1,2,1,2,1,1,1,1,1,1,1,1,1,1,1,1],
+				[1,1,1,1,1,2,1,1,1,1,1,1,1,1,1,1],
+				[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+				[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+				[1,1,1,2,1,1,1,1,1,1,1,1,1,1,1,1],
+				[1,1,2,1,1,2,1,1,1,1,1,1,1,1,1,1],
+				[1,1,1,1,1,1,2,1,1,1,1,1,1,1,1,1],
+				[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+				[1,2,1,2,1,1,1,1,1,1,1,1,1,1,1,1],
+				[1,1,1,1,1,2,1,1,1,1,1,1,1,1,1,1],
+				[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
 			];
 
 			var tile_map_A = [
@@ -116,14 +124,22 @@ var Game = (function(){
 			];
 
 			var tiles_B = [
-				[0,0,0,0,0,0,0,0],
-				[0,0,0,0,0,0,0,0],
-				[0,0,1,2,0,0,0,0],
-				[0,0,3,4,0,0,0,0],
-				[0,0,0,0,0,0,0,0],
-				[0,0,0,0,0,0,0,0],
-				[0,0,0,0,0,0,0,0],
-				[0,0,0,0,0,0,0,0],
+				[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+				[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+				[0,0,1,2,1,2,1,2,1,2,1,2,1,2,0,0],
+				[0,0,3,4,3,4,3,4,3,4,3,4,3,4,0,0],
+				[0,0,1,2,0,0,0,0,0,0,0,0,1,2,0,0],
+				[0,0,3,4,0,0,0,0,0,0,0,0,3,4,0,0],
+				[0,0,1,2,0,0,1,2,1,2,0,0,1,2,0,0],
+				[0,0,3,4,0,0,3,4,3,4,0,0,3,4,0,0],
+				[0,0,1,2,0,0,1,2,0,0,0,0,1,2,0,0],
+				[0,0,3,4,0,0,3,4,0,0,0,0,3,4,0,0],
+				[0,0,1,2,0,0,1,2,0,0,0,0,1,2,0,0],
+				[0,0,3,4,0,0,3,4,0,0,0,0,3,4,0,0],
+				[0,0,1,2,0,0,1,2,1,2,1,2,1,2,0,0],
+				[0,0,3,4,0,0,3,4,3,4,3,4,3,4,0,0],
+				[0,0,1,2,0,0,0,0,0,0,0,0,0,0,0,0],
+				[0,0,3,4,0,0,0,0,0,0,0,0,0,0,0,0],
 			];
 
 			var tile_map_B = [
@@ -134,47 +150,10 @@ var Game = (function(){
 			];
 			map_container.addChild(new Map(loader.getResult("mapA"), tiles_A, tile_map_A));
 			block_container.addChild(new Map(loader.getResult("mapB"), tiles_B, tile_map_B));
-			console.log(map_container, block_container);
 		}
 
 		function createHero(){
-			var spriteSheet = new createjs.SpriteSheet({
-				images:[loader.getResult("hero")],
-				frames:[
-					[ 0, 1,24,32,0,12,16],
-					[24, 1,24,32,0,12,16],
-					[48, 1,24,32,0,12,16],
-					[ 0,33,24,32,0,12,16],
-					[24,33,24,32,0,12,16],
-					[48,33,24,32,0,12,16],
-					[ 0,65,24,32,0,12,16],
-					[24,65,24,32,0,12,16],
-					[48,65,24,32,0,12,16],
-					[ 0,97,24,32,0,12,16],
-					[24,97,24,32,0,12,16],
-					[48,97,24,32,0,12,16],
-				],
-				animations:{
-					front:{
-						frames:[0,1,2],
-						speed:0.3
-					},
-					left:{
-						frames:[3,4,5],
-						speed:0.3
-					},
-					right:{
-						frames:[6,7,8],
-						speed:0.3
-					},
-					back:{
-						frames:[9,10,11],
-						speed:0.3
-					},
-				}
-			});
-
-			hero = new Hero(spriteSheet);
+			hero = new Hero("hero", 0);
 			hero.x = 128;
 			hero.y = 128;
 			unit_container.addChild(hero);
@@ -201,6 +180,131 @@ var Game = (function(){
 		function tick(){
 			hero.tick();
 			stage.update();
+		}
+
+		return {
+			getLoader:function(){
+				return loader;
+			},
+			findPath:function(starting, destination){
+				var paths = [];
+				var blocks = [
+					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+					[0,0,1,2,1,2,1,2,1,2,1,2,1,2,0,0],
+					[0,0,3,4,3,4,3,4,3,4,3,4,3,4,0,0],
+					[0,0,1,2,0,0,0,0,0,0,0,0,1,2,0,0],
+					[0,0,3,4,0,0,0,0,0,0,0,0,3,4,0,0],
+					[0,0,1,2,0,0,1,2,1,2,0,0,1,2,0,0],
+					[0,0,3,4,0,0,3,4,3,4,0,0,3,4,0,0],
+					[0,0,1,2,0,0,1,2,0,0,0,0,1,2,0,0],
+					[0,0,3,4,0,0,3,4,0,0,0,0,3,4,0,0],
+					[0,0,1,2,0,0,1,2,0,0,0,0,1,2,0,0],
+					[0,0,3,4,0,0,3,4,0,0,0,0,3,4,0,0],
+					[0,0,1,2,0,0,1,2,1,2,1,2,1,2,0,0],
+					[0,0,3,4,0,0,3,4,3,4,3,4,3,4,0,0],
+					[0,0,1,2,0,0,0,0,0,0,0,0,0,0,0,0],
+					[0,0,3,4,0,0,0,0,0,0,0,0,0,0,0,0],
+				];
+
+
+				var costs = [];
+				blocks.forEach(function(row){
+					var arr = [];
+					row.forEach(function(cell){
+						arr.push(0);
+					});
+					costs.push(arr);
+				});
+
+				calcCost(parseInt(starting.x/32),parseInt(starting.y/32),0,1);
+
+/*
+				var string = "";
+				costs.forEach(function(rows){
+					rows.forEach(function(cell){
+						string += cell+", ";
+					});
+					string += "\n";
+				});
+				console.log(string);
+*/
+
+				var path = getMinimum(parseInt(destination.x/32), parseInt(destination.y/32));
+
+				path = path.filter(function(point){
+					var x = point.x;
+					var y = point.y;
+					try{
+						return ((blocks[y+1][x+1] || blocks[y-1][x+1]|| blocks[y+1][x-1] || blocks[y-1][x-1]) 
+						&& (!blocks[y][x-1] && !blocks[y][x+1] && !blocks[y-1][x] && !blocks[y+1][x]));
+
+					}catch(e){}
+				});
+				
+				path.forEach(function(point){
+					point.x = point.x*32+16;
+					point.y = point.y*32+16;
+				});
+
+				path.push(destination);
+				return path;
+
+
+				function getMinimum(x,y, path){
+					var min = costs[y][x];
+					var point = {};
+
+					[[-1,0],[1,0],[0,-1],[0,1]].forEach(function(offset){
+						var i = offset[0];
+						var j = offset[1];
+						try{
+							if(blocks[y+i][x+j]===0 && costs[y+i][x+j] < min){
+								min = costs[y+i][x+j];
+								point.x = x+j;
+								point.y = y+i;
+							}
+						}catch(e){}
+					});
+					if(min === 1){
+						if (point){
+							return [point];
+						}else{
+							return [];
+						}
+					}else{
+						if(point){
+							return getMinimum(point.x,point.y, path).concat(point);
+						}else{
+							return getMinimum(point.x,point.y, path);
+						}
+					}
+				}
+
+				function calcCost(x,y,direction, new_cost){
+					//console.log(0);
+					if(y>=0 && y< blocks.length && x>=0 && x<blocks[y].length){
+						if(!blocks[y][x]){
+							var prev_cost = costs[y][x];
+							if(!prev_cost || new_cost<prev_cost){
+								costs[y][x] = new_cost;
+								if(direction !== 1){
+									calcCost(x-1,y,3,new_cost+1);
+								}
+								if(direction !== 2){
+									calcCost(x,y+1,4,new_cost+1);
+								}
+								if(direction !== 3){
+									calcCost(x+1,y,1,new_cost+1);
+								}
+								if(direction !== 4){
+									calcCost(x,y-1,2,new_cost+1);
+								}
+							}
+						}
+					}
+				}
+			}
 		}
 	}
 
