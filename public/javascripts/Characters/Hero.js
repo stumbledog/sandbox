@@ -1,10 +1,24 @@
 function Hero(file, index){
+	console.log("Hero instance");
+	this.initialize(file, index);
+	this.hero_initialize();
+}
+
+Hero.prototype = Unit.prototype;
+
+Hero.prototype.hero_initialize = function(){
+	console.log("Hero initialize");
+	this.status = "move";
+}
+
+/*
+function Hero(file, index){
 	this.initialize(file, index);
 }
 
 Hero.prototype = new createjs.Sprite();
 
-Hero.prototype.Sprite_initialize = Hero.prototype.initialize;
+Hero.prototype.sprite_initialize = Hero.prototype.initialize;
 Hero.prototype.stopPlaying = Hero.prototype.stop;
 
 Hero.prototype.initialize = function(file, index){
@@ -41,10 +55,10 @@ Hero.prototype.initialize = function(file, index){
 		}
 	});
 
-	this.Sprite_initialize(spriteSheet);
+	this.sprite_initialize(spriteSheet);
 
 	this.shadow = new createjs.Shadow("#333",3,3,10);
-	this.speed = 20;
+	this.speed = 10;
 	this.status = "move";
 	this.destination = null;
 	this.move_queue = [];
@@ -54,7 +68,6 @@ Hero.prototype.move = function(x, y){
 	this.status = "move";
 	this.move_queue = this.game.findPath({x:this.x,y:this.y}, {x:x,y:y});
 	this.shiftMoveQueue();
-
 }
 
 
@@ -110,4 +123,4 @@ Hero.prototype.tick = function(){
 			this.shiftMoveQueue();
 		}
 	}
-}
+}*/
