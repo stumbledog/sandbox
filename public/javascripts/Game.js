@@ -44,7 +44,7 @@ var Game = (function(){
 			initMap();
 			createHero();
 			createUnits();
-			createEnemy();
+			//createEnemy();
 			renderHealthBar();
 
 			createjs.Ticker.addEventListener("tick", tick);
@@ -231,7 +231,7 @@ var Game = (function(){
 			enemy_container.addChild(monster);
 			var monster = new Monster("monster29",1);
 			monster.x = 48;
-			monster.y = 330;
+			monster.y = 130;
 			enemy_container.addChild(monster);
 		}
 

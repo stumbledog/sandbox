@@ -7,8 +7,6 @@ Unit.prototype = new createjs.Container();
 
 Unit.prototype.container_initialize = Unit.prototype.initialize;
 
-Unit.prototype.stopPlaying = Unit.prototype.stop;
-
 Unit.prototype.initialize = function(file, index, stats){
 	this.container_initialize();
 	console.log("Unit initialize");
@@ -19,7 +17,7 @@ Unit.prototype.initialize = function(file, index, stats){
 	this.health = 10;
 	this.speed = 1;
 	this.range = 32;
-	this.attack_speed = 120;
+	this.attack_speed = 30;
 	this.direction = 180;
 
 	var frames = [];
@@ -54,15 +52,18 @@ Unit.prototype.initialize = function(file, index, stats){
 	});
 
 	this.sprite = new createjs.Sprite(spriteSheet);
+	this.sprite.z = 0;
+
 	this.weapon = new createjs.Bitmap(this.game.getLoader().getResult("icon"));
 	this.weapon.sourceRect = new createjs.Rectangle(292,100,16,16);
-	this.weapon.x = 6;
-	this.weapon.y = 8;
-	this.weapon.regX = this.weapon.regY=16;
+	this.weapon.z = 1;
+	this.weapon.regX = this.weapon.regY=12;
 	this.weapon.rotation = this.direction;
+	this.weapon.scaleX = this.weapon.scaleY = 0.8;
 
 	this.addChild(this.sprite, this.weapon);
 
+	this.rotate("front");
 	this.shadow = new createjs.Shadow("#333",3,3,10);
 	this.status = "idle";
 	this.destination = null;
@@ -72,8 +73,11 @@ Unit.prototype.initialize = function(file, index, stats){
 Unit.prototype.move = function(x, y){
 	this.status = "move";
 	this.target = null;
+	//console.log(this.game.findPath({x:this.x,y:this.y}, {x:x,y:y}));
+	
 	this.move_queue = this.game.findPath({x:this.x,y:this.y}, {x:x,y:y});
 	this.shiftMoveQueue();
+	
 }
 
 Unit.prototype.shiftMoveQueue = function(){
@@ -84,23 +88,51 @@ Unit.prototype.shiftMoveQueue = function(){
 		this.vy = Math.cos(this.radian) * this.speed;
 		if(Math.abs(this.vx) > Math.abs(this.vy)){
 			if(this.vx > 0){
-				this.sprite.gotoAndPlay("right");
-				this.direction = 90;
+				this.rotate("right");
 			}else{
-				this.sprite.gotoAndPlay("left");
-				this.direction = 270;
+				this.rotate("left");
 			}
 		}else{
 			if(this.vy > 0){
-				this.sprite.gotoAndPlay("front");
-				this.direction = 180;
+				this.rotate("front");
 			}else{
-				this.sprite.gotoAndPlay("back");
-				this.direction = 0;
+				this.rotate("back");
 			}
 		}
 	}else{
 		this.stop();
+	}
+}
+
+Unit.prototype.rotate = function(direction){
+	this.sprite.gotoAndPlay(direction);
+	if(direction === "back"){
+		this.direction = 0;
+		this.weapon.rotation = 90;
+		this.swing = 90;
+		this.weapon.x = 10;
+		this.weapon.y = 0;
+		this.sortChildren(function(obj1, obj2){return obj1>obj2?1:-1;});
+	}else if(direction === "right"){
+		this.weapon.rotation = this.direction = 90;
+		this.weapon.swing = 90;
+		this.weapon.x = 0;
+		this.weapon.y = 10;
+		this.sortChildren(function(obj1, obj2){return obj1<obj2?1:-1;});
+	}else if(direction === "front"){
+		this.direction = 180;
+		this.weapon.rotation = 270;
+		this.weapon.swing = -90;
+		this.weapon.x = -6;
+		this.weapon.y = 10;
+		this.sortChildren(function(obj1, obj2){return obj1<obj2?1:-1;});
+	}else if(direction === "left"){
+		this.direction = 270;
+		this.weapon.rotation = 0;
+		this.weapon.swing = -90;
+		this.weapon.x = 0;
+		this.weapon.y = 10;
+		this.sortChildren(function(obj1, obj2){return obj1>obj2?1:-1;});
 	}
 }
 
@@ -111,53 +143,45 @@ Unit.prototype.moveAttack = function(x, y){
 }
 
 Unit.prototype.attackTarget = function(target){
-/*	var weapon = new createjs.Bitmap(this.game.getLoader().getResult("icon"));
-	weapon.sourceRect = new createjs.Rectangle(292,100,16,16);
-	weapon.x = this.x + 6;
-	weapon.y = this.y + 8;*/
-	this.weapon.rotation = this.direction;
-	var swing = this.weapon.rotation === 270 ? -90 : 90;
 	var self = this;
-	if(this.weapon.rotation === 270){
-		this.weapon.rotation-=swing;
-		createjs.Tween.get(self.weapon).to({rotation:self.weapon.rotation+swing},300, createjs.Ease.backOut).wait(100);		
-	}else{
-		createjs.Tween.get(self.weapon).to({rotation:self.weapon.rotation+swing},300, createjs.Ease.backOut).wait(100);
-	}
+	createjs.Tween.get(self.weapon).to({rotation:self.weapon.rotation+this.weapon.swing},100, createjs.Ease.backOut).to({rotation:self.weapon.rotation},100, createjs.Ease.backOut);
 }
 
 Unit.prototype.stop = function(){
 	this.move_queue = [];
 	this.destination = null;
-	this.stopPlaying();
+	this.sprite.stop();
 	//this.status = "idle";
 }
 
 
 Unit.prototype.tick = function(){
 	if(status === "move"){
-		
+
 	}else if(status === "attack"){
-		
+
 	}else if(status === "move_attack"){
-		
+
 	}else if(status === "idle"){
-		
+
 	}else if(status === "hold"){
-		
+
 	}
 
 	if(this.status === "idle" && !this.target){
 		var self = this;
-		var enemy = this.game.getEnemies().reduce(function(prev, current){
-			if(Math.pow(prev.x-self.x,2)+Math.pow(prev.y-self.y,2) > Math.pow(current.x-self.x,2)+Math.pow(current.y-self.y,2)){
-				return current;
-			}else{
-				return prev;
-			}
-		});
-		this.target = enemy;
-		this.moveAttack(enemy.x,enemy.y);
+		var enemies = this.game.getEnemies();
+		if(enemies.length){
+			var enemy = enemies.reduce(function(prev, current){
+				if(Math.pow(prev.x-self.x,2)+Math.pow(prev.y-self.y,2) > Math.pow(current.x-self.x,2)+Math.pow(current.y-self.y,2)){
+					return current;
+				}else{
+					return prev;
+				}
+			});
+			this.target = enemy;
+			this.moveAttack(enemy.x,enemy.y);			
+		}
 	}
 
 	if(this.target){
