@@ -1,7 +1,6 @@
 function PathFinder(){}
 
 PathFinder.findPath = function(blocks, starting, destination){
-	console.log(destination);
 	if(blocks[parseInt(destination.y/16)][parseInt(destination.x/16)]){
 		destination = this.findClosestPoint(blocks, destination);
 	}

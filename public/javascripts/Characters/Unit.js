@@ -20,13 +20,13 @@ Unit.prototype.move = function(x, y){
 	this.status = "move";
 	this.target = null;
 	this.move_queue = this.game.findPath({x:this.x,y:this.y}, {x:x,y:y});
-	this.shiftMoveQueue();
-	
+	//this.shiftMoveQueue();
+	console.log("move");
 }
 
 Unit.prototype.shiftMoveQueue = function(){
 	if(this.move_queue.length){
-		this.destination = this.move_queue.shift();
+		//this.destination = this.move_queue.shift();
 		this.radian = Math.atan2(this.destination.x - this.x, this.destination.y - this.y);
 		this.vx = Math.sin(this.radian) * this.speed;
 		this.vy = Math.cos(this.radian) * this.speed;
@@ -44,49 +44,46 @@ Unit.prototype.shiftMoveQueue = function(){
 			}
 		}
 	}else{
-		//this.stop();
+		this.stop();
 	}
 }
 
 Unit.prototype.rotate = function(direction){
-	this.sprite.gotoAndPlay(direction);
-	if(direction === "back"){
-		this.direction = 0;
+	this.direction = direction;
+	if(this.direction === "back"){
 		if(this.weapon){
+			this.sortChildren(function(obj1, obj2){return obj1.z<obj2.z?1:-1;});
 			this.weapon.rotation = 90;
-			this.swing = 90;
+			this.swing = -90;
 			this.weapon.x = 6;
 			this.weapon.y = 6;
-			this.sortChildren(function(obj1, obj2){return obj1.z<obj2.z?1:-1;});
 		}
-	}else if(direction === "right"){
-		this.direction = 90;
+	}else if(this.direction === "right"){
 		if(this.weapon){
+			this.sortChildren(function(obj1, obj2){return obj1.z>obj2.z?1:-1;});
 			this.weapon.rotation = 90;
 			this.weapon.swing = 90;
 			this.weapon.x = 0;
 			this.weapon.y = 10;
-			this.sortChildren(function(obj1, obj2){return obj1.z>obj2.z?1:-1;});
 		}
-	}else if(direction === "front"){
-		this.direction = 180;
+	}else if(this.direction === "front"){
 		if(this.weapon){
-			this.weapon.rotation = 270;
+			this.sortChildren(function(obj1, obj2){return obj1.z>obj2.z?1:-1;});			
+			this.weapon.rotation = -90;
 			this.weapon.swing = -90;
 			this.weapon.x = -6;
 			this.weapon.y = 10;
-			this.sortChildren(function(obj1, obj2){return obj1.z>obj2.z?1:-1;});			
 		}
-	}else if(direction === "left"){
-		this.direction = 270;
+	}else if(this.direction === "left"){
 		if(this.weapon){
+			this.sortChildren(function(obj1, obj2){return obj1.z<obj2.z?1:-1;});			
 			this.weapon.rotation = 0;
 			this.weapon.swing = -90;
 			this.weapon.x = 0;
 			this.weapon.y = 10;
-			this.sortChildren(function(obj1, obj2){return obj1.z<obj2.z?1:-1;});			
 		}
 	}
+	this.sprite.gotoAndPlay(this.direction);
 }
 
 Unit.prototype.attackMove = function(x, y){
@@ -96,12 +93,11 @@ Unit.prototype.attackMove = function(x, y){
 }
 
 Unit.prototype.attackTarget = function(target){
-	var self = this;
-	createjs.Tween.get(self.weapon).to({rotation:self.weapon.rotation+this.weapon.swing},100, createjs.Ease.backOut).to({rotation:self.weapon.rotation},100, createjs.Ease.backOut);
+	createjs.Tween.get(this.weapon).to({rotation:this.weapon.rotation + this.weapon.swing},100, createjs.Ease.backOut).to({rotation:this.weapon.rotation},100, createjs.Ease.backOut);
 }
 
 Unit.prototype.stop = function(){
-	console.log("stop");
+	console.log("stop!!");
 	this.move_queue = [];
 	this.destination = null;
 	this.sprite.stop();

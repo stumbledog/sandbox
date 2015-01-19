@@ -48,7 +48,7 @@ var Game = (function(){
 			createEnemy();
 			
 			createjs.Ticker.addEventListener("tick", tick);
-			createjs.Ticker.setFPS(60);
+			createjs.Ticker.setFPS(120);
 		}
 
 		function initContainer(){
@@ -67,18 +67,14 @@ var Game = (function(){
 		function initEventListener(){
 			stage.on("stagemousedown", function(event){
 				if(event.nativeEvent.button == 2){
-					hero.move(event.stageX - offsetX,event.stageY);
-/*					unit_container.children.forEach(function(unit){
-						unit.move(event.stageX,event.stageY);
-					});*/
+					hero.move(event.stageX - offsetX,event.stageY - offsetY);
 					setCommand("move");
 				}else if(event.nativeEvent.button == 0){
 					if(command === "move"){
 						console.log("select");
 					}else if(command === "attack"){
-						console.log(event);
-						hero.move(event.stageX,event.stageY);
-						setCommand("move");
+						hero.attackMove(event.stageX,event.stageY);
+						setCommand("moveattack");
 					}
 				}
 			});
@@ -265,7 +261,31 @@ var Game = (function(){
 		function createEnemy(){
 			var monster = new Monster("monster29",0);
 			monster.x = 10*16+8;
+			monster.y = 0*16+8;
+			unit_container.addChild(monster);
+			var monster = new Monster("monster29",0);
+			monster.x = 11*16+8;
+			monster.y = 0*16+8;
+			unit_container.addChild(monster);
+			var monster = new Monster("monster29",0);
+			monster.x = 12*16+8;
+			monster.y = 0*16+8;
+			unit_container.addChild(monster);
+			var monster = new Monster("monster29",0);
+			monster.x = 10*16+8;
 			monster.y = 1*16+8;
+			unit_container.addChild(monster);
+			var monster = new Monster("monster29",0);
+			monster.x = 11*16+8;
+			monster.y = 1*16+8;
+			unit_container.addChild(monster);
+			var monster = new Monster("monster29",0);
+			monster.x = 12*16+8;
+			monster.y = 1*16+8;
+			unit_container.addChild(monster);
+			var monster = new Monster("monster29",0);
+			monster.x = 10*16+8;
+			monster.y = 2*16+8;
 			unit_container.addChild(monster);
 			var monster = new Monster("monster29",0);
 			monster.x = 11*16+8;
@@ -273,20 +293,20 @@ var Game = (function(){
 			unit_container.addChild(monster);
 			var monster = new Monster("monster29",0);
 			monster.x = 12*16+8;
+			monster.y = 2*16+8;
+			unit_container.addChild(monster);
+			var monster = new Monster("monster29",0);
+			monster.x = 10*16+8;
+			monster.y = 3*16+8;
+			unit_container.addChild(monster);
+			var monster = new Monster("monster29",0);
+			monster.x = 11*16+8;
 			monster.y = 3*16+8;
 			unit_container.addChild(monster);
 			var monster = new Monster("monster29",0);
 			monster.x = 12*16+8;
-			monster.y = 0*16+8;
-			unit_container.addChild(monster);
-			var monster = new Monster("monster29",0);
-			monster.x = 13*16+8;
-			monster.y = 1*16+8;
-			unit_container.addChild(monster);
-			var monster = new Monster("monster29",0);
-			monster.x = 14*16+8;
-			monster.y = 2*16+8;
-			unit_container.addChild(monster);
+			monster.y = 3*16+8;
+			unit_container.addChild(monster);			
 			var monster = new Monster("monster29",1);
 			monster.x = 40;
 			monster.y = 10*16+8;
@@ -350,7 +370,18 @@ var Game = (function(){
 				return effect_container;
 			},
 			findPath:function(starting, destination){
-				return PathFinder.findPath(blocks, starting, destination);
+				var new_blocks = [];
+				blocks.forEach(function(row){
+					new_blocks.push(row.slice(0));
+				});
+				unit_container.children.forEach(function(unit){
+					if(unit.id !== hero.id){
+						new_blocks[parseInt(unit.y/16)][parseInt(unit.x/16)] = 1;
+					}
+
+				});
+
+				return PathFinder.findPath(new_blocks, starting, destination);
 			},
 			getUnits:function(){
 				return unit_container.children;
@@ -359,18 +390,52 @@ var Game = (function(){
 				return unit_container.children.filter(function(unit){return unit.type === "monster";});
 			},
 			findAlterPath:function(target_id, starting, destination){
-				console.log(destination);
+				var new_blocks = [];
+				blocks.forEach(function(row){
+					new_blocks.push(row.slice(0));
+				});
+				var target = hero.getTarget();
+				unit_container.children.forEach(function(unit){
+					if(unit.id !== target_id || (target && unit.id !== target.id)){
+						new_blocks[parseInt(unit.y/16)][parseInt(unit.x/16)] = 1;
+					}
+				});
+				return PathFinder.findPath(new_blocks, starting, destination);
+			},
+			setTarget:function(target){
+				hero.setTarget(target);
+			},
+			findNeighbor:function(self, x, y){
 				var new_blocks = [];
 				blocks.forEach(function(row){
 					new_blocks.push(row.slice(0));
 				});
 				unit_container.children.forEach(function(unit){
-					if(unit.id !== target_id){
+					if(unit.id !== self.id){
 						new_blocks[parseInt(unit.y/16)][parseInt(unit.x/16)] = 1;
+						if(unit.vx>0){
+							new_blocks[parseInt(unit.y/16)][parseInt(unit.x/16)+1] = 1;
+						}else if(unit.vx < 0){
+							new_blocks[parseInt(unit.y/16)][parseInt(unit.x/16)-1] = 1;
+						}
+						if(unit.vy > 0 && new_blocks[parseInt(unit.y/16)+1]){
+							new_blocks[parseInt(unit.y/16)+1][parseInt(unit.x/16)] = 1;
+						}else if(unit.vy<0 && new_blocks[parseInt(unit.y/16)-1]){
+							new_blocks[parseInt(unit.y/16)-1][parseInt(unit.x/16)] = 1;
+						}
 					}
 				});
-//				new_blocks[pos.y][pos.x] = 1;
-				return PathFinder.findPath(new_blocks, starting, destination);
+				var random = parseInt(Math.random() * 4);
+				if(new_blocks[parseInt(y/16)+1] && new_blocks[parseInt(y/16)+1][parseInt(x/16)] === 0 && random === 0){
+					return PathFinder.findPath(new_blocks, {x:x,y:y}, {x:x, y:y+16});
+				}else if(new_blocks[parseInt(y/16)-1] && new_blocks[parseInt(y/16)-1][parseInt(x/16)] === 0 && random === 1){
+					return PathFinder.findPath(new_blocks, {x:x,y:y}, {x:x, y:y-16});
+				}else if(typeof new_blocks[parseInt(y/16)][parseInt(x/16)+1] !== "undefined" && new_blocks[parseInt(y/16)][parseInt(x/16)+1] === 0 && random === 2){
+					return PathFinder.findPath(new_blocks, {x:x,y:y}, {x:x+16, y:y});
+				}else if(typeof new_blocks[parseInt(y/16)][parseInt(x/16)-1] !== "undefined" && new_blocks[parseInt(y/16)][parseInt(x/16)-1] === 0 && random === 3){
+					return PathFinder.findPath(new_blocks, {x:x,y:y}, {x:x-16, y:y});
+				}
+				return [];
 			}
 		}
 	}

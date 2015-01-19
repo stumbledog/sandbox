@@ -1,5 +1,4 @@
 function Monster(file, index){
-	console.log("Monster instance");
 	this.monster_initialize(file, index);
 }
 
@@ -9,17 +8,15 @@ Monster.prototype.constructor = Monster;
 Monster.prototype.container_initialize = Monster.prototype.initialize;
 
 Monster.prototype.monster_initialize = function(file, index){
-	console.log("Monster initialize");
 	this.container_initialize();
 	this.game = Game.getInstance();
 	
 	this.type = "monster";
-	this.status = "stop";
 
 	this.ticks = 0;
 
 	this.max_health = this.health = 10;
-	this.speed = 3;
+	this.speed = 0.1;
 	this.range = 32;
 	this.attack_speed = 30;
 	
@@ -73,6 +70,10 @@ Monster.prototype.monster_initialize = function(file, index){
 
 Monster.prototype.initEventListener = function(){
 	var self = this;
+	this.addEventListener("mousedown", function(event){
+		console.log("set target");
+		self.game.setTarget(self);
+	});
 	this.addEventListener("rollover", function(event){
 		self.sprite.filters = [new createjs.ColorFilter(1,0,0,1)];
 		self.sprite.cache(-12,-16,24,32);
@@ -84,8 +85,42 @@ Monster.prototype.initEventListener = function(){
 }
 
 Monster.prototype.tick = function(){
-
+	if(this.status === "idle"){
+		this.move_queue = this.game.findNeighbor(this, this.x, this.y);
+		if(this.move_queue.length){
+			this.status = "roaming";
+		}
+	}else if(this.status === "roaming"){
+		if(this.move_queue.length){
+			if(Math.abs(this.move_queue[0].x - this.x) > this.speed || Math.abs(this.move_queue[0].y - this.y) > this.speed){
+				this.radian = Math.atan2(this.move_queue[0].x - this.x, this.move_queue[0].y - this.y);
+				this.vx = Math.sin(this.radian) * this.speed;
+				this.vy = Math.cos(this.radian) * this.speed;
+				if(Math.abs(this.vx) > Math.abs(this.vy)){
+					if(this.vx > 0 && this.direction !== "right"){
+						this.rotate("right");
+					}else if(this.vx < 0 && this.direction !== "left"){
+						this.rotate("left");
+					}
+				}else{
+					if(this.vy > 0 && this.direction !== "front"){
+						this.rotate("front");
+					}else if(this.vy < 0 && this.direction !== "back"){
+						this.rotate("back");
+					}
+				}
+				this.x += this.vx;
+				this.y += this.vy;
+			}else{
+				this.status = "idle";
+			}
+		}else{
+			this.status = "idle";
+		}
+	}
+	this.ticks++;
 }
+
 /*
 Enemy.prototype.initialize = function(){
 	console.log("init enemy");
