@@ -1,80 +1,24 @@
-function Unit(file, index, stats){
-	console.log("Unit instance");
-	this.initialize(file, index, stats);
+function Unit(){
+
 }
 
 Unit.prototype = new createjs.Container();
 
-Unit.prototype.container_initialize = Unit.prototype.initialize;
+Unit.prototype.initHealthBar = function(){
+	this.health_bar_border = new createjs.Shape();
+	this.health_bar_border.graphics.s("#fff").ss(2).rr(-12,-16,24,4,1);
+	this.health_bar = new createjs.Shape();
+	this.health_bar.graphics.f(this.color).dr(-11,-15,22,2);
+	this.addChild(this.health_bar_border, this.health_bar);
+}
 
-Unit.prototype.initialize = function(file, index, stats){
-	this.container_initialize();
-	console.log("Unit initialize");
-	this.game = Game.getInstance();
-	this.interval = 60;
-	this.ticks = 0;
-
-	this.health = 10;
-	this.speed = 1;
-	this.range = 32;
-	this.attack_speed = 30;
-	this.direction = 180;
-
-	var frames = [];
-	var offsetX = index % 4 *72;
-	var offsetY = parseInt(index / 4) * 128;
-
-	for(var i=0 ;i < 12; i++){
-		frames.push([offsetX+(i%3)*24,offsetY+parseInt(i/3)*32+1,24,32,0,12,16]);
-	}
-
-	var spriteSheet = new createjs.SpriteSheet({
-		images:[this.game.getLoader().getResult(file)],
-		frames:frames,
-		animations:{
-			front:{
-				frames:[0,1,2],
-				speed:0.1
-			},
-			left:{
-				frames:[3,4,5],
-				speed:0.1
-			},
-			right:{
-				frames:[6,7,8],
-				speed:0.1
-			},
-			back:{
-				frames:[9,10,11],
-				speed:0.1
-			},
-		}
-	});
-
-	this.sprite = new createjs.Sprite(spriteSheet);
-	this.sprite.z = 0;
-
-	this.weapon = new createjs.Bitmap(this.game.getLoader().getResult("icon"));
-	this.weapon.sourceRect = new createjs.Rectangle(292,100,16,16);
-	this.weapon.z = 1;
-	this.weapon.regX = this.weapon.regY=12;
-	this.weapon.rotation = this.direction;
-	this.weapon.scaleX = this.weapon.scaleY = 0.8;
-
-	this.addChild(this.sprite, this.weapon);
-
-	this.rotate("front");
-	this.shadow = new createjs.Shadow("#333",3,3,10);
-	this.status = "idle";
-	this.destination = null;
-	this.move_queue = [];
+Unit.prototype.renderHealthBar = function(){
+	this.health_bar.graphics.f(this.color).dr(-11,-15,22*(this.health/this.max_health),2);
 }
 
 Unit.prototype.move = function(x, y){
 	this.status = "move";
 	this.target = null;
-	//console.log(this.game.findPath({x:this.x,y:this.y}, {x:x,y:y}));
-	
 	this.move_queue = this.game.findPath({x:this.x,y:this.y}, {x:x,y:y});
 	this.shiftMoveQueue();
 	
@@ -100,7 +44,7 @@ Unit.prototype.shiftMoveQueue = function(){
 			}
 		}
 	}else{
-		this.stop();
+		//this.stop();
 	}
 }
 
@@ -108,36 +52,45 @@ Unit.prototype.rotate = function(direction){
 	this.sprite.gotoAndPlay(direction);
 	if(direction === "back"){
 		this.direction = 0;
-		this.weapon.rotation = 90;
-		this.swing = 90;
-		this.weapon.x = 10;
-		this.weapon.y = 0;
-		this.sortChildren(function(obj1, obj2){return obj1>obj2?1:-1;});
+		if(this.weapon){
+			this.weapon.rotation = 90;
+			this.swing = 90;
+			this.weapon.x = 6;
+			this.weapon.y = 6;
+			this.sortChildren(function(obj1, obj2){return obj1.z<obj2.z?1:-1;});
+		}
 	}else if(direction === "right"){
-		this.weapon.rotation = this.direction = 90;
-		this.weapon.swing = 90;
-		this.weapon.x = 0;
-		this.weapon.y = 10;
-		this.sortChildren(function(obj1, obj2){return obj1<obj2?1:-1;});
+		this.direction = 90;
+		if(this.weapon){
+			this.weapon.rotation = 90;
+			this.weapon.swing = 90;
+			this.weapon.x = 0;
+			this.weapon.y = 10;
+			this.sortChildren(function(obj1, obj2){return obj1.z>obj2.z?1:-1;});
+		}
 	}else if(direction === "front"){
 		this.direction = 180;
-		this.weapon.rotation = 270;
-		this.weapon.swing = -90;
-		this.weapon.x = -6;
-		this.weapon.y = 10;
-		this.sortChildren(function(obj1, obj2){return obj1<obj2?1:-1;});
+		if(this.weapon){
+			this.weapon.rotation = 270;
+			this.weapon.swing = -90;
+			this.weapon.x = -6;
+			this.weapon.y = 10;
+			this.sortChildren(function(obj1, obj2){return obj1.z>obj2.z?1:-1;});			
+		}
 	}else if(direction === "left"){
 		this.direction = 270;
-		this.weapon.rotation = 0;
-		this.weapon.swing = -90;
-		this.weapon.x = 0;
-		this.weapon.y = 10;
-		this.sortChildren(function(obj1, obj2){return obj1>obj2?1:-1;});
+		if(this.weapon){
+			this.weapon.rotation = 0;
+			this.weapon.swing = -90;
+			this.weapon.x = 0;
+			this.weapon.y = 10;
+			this.sortChildren(function(obj1, obj2){return obj1.z<obj2.z?1:-1;});			
+		}
 	}
 }
 
-Unit.prototype.moveAttack = function(x, y){
-	this.status = "move_attack";
+Unit.prototype.attackMove = function(x, y){
+	this.status = "attack_move";
 	this.move_queue = this.game.findPath({x:this.x,y:this.y}, {x:x,y:y});
 	this.shiftMoveQueue();
 }
@@ -148,14 +101,16 @@ Unit.prototype.attackTarget = function(target){
 }
 
 Unit.prototype.stop = function(){
+	console.log("stop");
 	this.move_queue = [];
 	this.destination = null;
 	this.sprite.stop();
-	//this.status = "idle";
+	this.status = "stop";
 }
 
-
+/*
 Unit.prototype.tick = function(){
+	
 	if(status === "move"){
 
 	}else if(status === "attack"){
@@ -171,6 +126,8 @@ Unit.prototype.tick = function(){
 	if(this.status === "idle" && !this.target){
 		var self = this;
 		var enemies = this.game.getEnemies();
+		//console.log(enemies);
+		//console.log(this.game.getUnits().constructor);
 		if(enemies.length){
 			var enemy = enemies.reduce(function(prev, current){
 				if(Math.pow(prev.x-self.x,2)+Math.pow(prev.y-self.y,2) > Math.pow(current.x-self.x,2)+Math.pow(current.y-self.y,2)){
@@ -196,12 +153,24 @@ Unit.prototype.tick = function(){
 
 	if(this.destination){
 		if(Math.abs(this.destination.x - this.x) > this.speed || Math.abs(this.destination.y - this.y) > this.speed){
+			
+			var units = this.game.getUnits();
+			units.forEach(function(unit){
+				if(unit.id !== this.id && parseInt(unit.x/16) === parseInt((this.x + this.vx)/16) && parseInt(unit.y/16)===parseInt((this.y + this.vy)/16)){
+					console.log("collision");
+					this.vx = this.vy = 0;
+					this.move_queue = this.game.findAlterPath({x:parseInt(unit.x/16),y:parseInt(unit.y/16)},{x:this.x,y:this.y},this.move_queue.pop());
+					this.shiftMoveQueue();
+				}
+			},this);
+
 			this.x += this.vx;
 			this.y += this.vy;
 		}else{
 			this.shiftMoveQueue();
 		}
 	}else{
+		console.log(this.move_queue);
 		if(this.move_queue.length){
 			this.shiftMoveQueue();
 		}
@@ -211,4 +180,4 @@ Unit.prototype.tick = function(){
 		this.status = "idle"
 	}
 	this.ticks++;
-}
+}*/

@@ -1,14 +1,25 @@
 function PathFinder(){}
 
 PathFinder.findPath = function(blocks, starting, destination){
+	console.log(destination);
+	if(blocks[parseInt(destination.y/16)][parseInt(destination.x/16)]){
+		destination = this.findClosestPoint(blocks, destination);
+	}
+
 	var ret = this.aStar(blocks, starting, destination);
 
 	ret.forEach(function(point){
-		point.x = point.x*32+16;
-		point.y = point.y*32+16;
+		point.x = point.x*16+8;
+		point.y = point.y*16+8;
 	});
+/*
+	if(ret.length){
+		ret.push(destination);
+	}
+*/
 
-	ret.push(destination);
+//	console.log(ret);	
+
 	return ret;
 }
 
@@ -21,9 +32,9 @@ PathFinder.aStar = function(blocks, starting, destination){
 		}
 		grid.push(arr);
 	}
-
-	var start = {g:0, f:0, h:0, pos:{x:parseInt(starting.x/32),y:parseInt(starting.y/32)}};
-	var end = {pos:{x:parseInt(destination.x/32),y:parseInt(destination.y/32)}};
+	
+	var start = {g:0, f:0, h:0, pos:{x:parseInt(starting.x/16),y:parseInt(starting.y/16)}};
+	var end = {pos:{x:parseInt(destination.x/16),y:parseInt(destination.y/16)}};
 
 	var openList = [start];
 	var closedList = [];
@@ -39,10 +50,11 @@ PathFinder.aStar = function(blocks, starting, destination){
 			var curr = currentNode;
 			var ret = [];
 			while(curr.parent) {
-				ret.push(curr);
+				ret.push(curr.pos);
 				curr = curr.parent;
 			}
-			return this.filter(blocks, ret.reverse());
+			return ret.reverse();
+			//return this.filter(blocks, ret.reverse());
 		}
 
 		openList.splice(index,1);
@@ -82,40 +94,42 @@ PathFinder.neighbors = function(grid, node){
 	var x = node.pos.x;
 	var y = node.pos.y;
 
-	if(grid[y-1][x]) {
+	if(grid[y-1] && grid[y-1][x]) {
 		ret.push(grid[y-1][x]);
 	}
-	if(grid[y+1][x]) {
+	if(grid[y+1] && grid[y+1][x]) {
 		ret.push(grid[y+1][x]);
 	}
-	if(grid[y][x-1]) {
+	if(grid[y] && grid[y][x-1]) {
 		ret.push(grid[y][x-1]);
 	}
-	if(grid[y][x+1]) {
+	if(grid[y] && grid[y][x+1]) {
 		ret.push(grid[y][x+1]);
 	}
 	return ret;
 }
 
 PathFinder.heuristic = function(pos0, pos1) {
-		var d1 = Math.abs(pos1.x - pos0.x);
-		var d2 = Math.abs(pos1.y - pos0.y);
+		var d1 = Math.pow(pos1.x - pos0.x,2);
+		var d2 = Math.pow(pos1.y - pos0.y,2);
 		return d1 + d2;
 }
 
 PathFinder.filter = function(blocks, path){
 	var arr = [];
-	path.forEach(function(node){
-		var x = node.pos.x;
-		var y = node.pos.y;
-		try{
-			if(blocks[y+1][x+1] && !blocks[y][x+1] && !blocks[y+1][x]
-			|| blocks[y-1][x+1] && !blocks[y][x+1] && !blocks[y-1][x]
-			|| blocks[y+1][x-1] && !blocks[y][x-1] && !blocks[y+1][x]
-			|| blocks[y-1][x-1] && !blocks[y][x-1] && !blocks[y-1][x]){
-				arr.push({x:x,y:y});
+	path.forEach(function(node, index){
+		var x = parseInt(node.pos.x/2);
+		var y = parseInt(node.pos.y/2);
+		if(index === path.length-1){
+			arr.push({x:node.pos.x,y:node.pos.y});
+		}else{
+			if(blocks[y+1] && blocks[y] && blocks[y+1][x+1] && !blocks[y][x+1] && !blocks[y+1][x]
+			|| blocks[y-1] && blocks[y] && blocks[y-1][x+1] && !blocks[y][x+1] && !blocks[y-1][x]
+			|| blocks[y+1] && blocks[y] && blocks[y+1][x-1] && !blocks[y][x-1] && !blocks[y+1][x]
+			|| blocks[y-1] && blocks[y] && blocks[y-1][x-1] && !blocks[y][x-1] && !blocks[y-1][x]){
+				arr.push({x:node.pos.x,y:node.pos.y});
 			}
-		}catch(e){}
+		}
 	});
 	return arr;
 }
@@ -171,11 +185,11 @@ PathFinder.findPath2 = function(blocks, starting, destination){
 }
 
 PathFinder.findClosestPoint = function(blocks, destination){
-	for(var i = 0.1;i<4;i+=0.1){
+	for(var i = 0.1;i<1;i+=0.1){
 		for(j=0;j<8;j++){
 			try{
-				if(!blocks[parseInt(destination.y/32 + Math.sin(Math.PI/4 * j) * i)][parseInt(destination.x/32 + Math.cos(Math.PI/4 * j) * i)]){
-					return {x:destination.x + Math.cos(Math.PI/4 * j) * i * 32,y:destination.y + Math.sin(Math.PI/4 * j) * i * 32};
+				if(!blocks[parseInt(destination.y/16 + Math.sin(Math.PI/4 * j) * i)][parseInt(destination.x/16 + Math.cos(Math.PI/4 * j) * i)]){
+					return {x:destination.x + Math.cos(Math.PI/4 * j) * i * 16,y:destination.y + Math.sin(Math.PI/4 * j) * i * 16};
 				}
 			}catch(e){}
 		}
