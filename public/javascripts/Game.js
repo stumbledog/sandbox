@@ -9,6 +9,7 @@ var Game = (function(){
 		var move_top = move_right = move_down = move_left = false;
 		var command = "move";
 		var map_width = 16 * 32, map_height  = 14 * 32;
+		var heroes = [];
 
 		canvas = document.getElementById("gameCanvas");
 		canvas.width = map_width;
@@ -67,7 +68,9 @@ var Game = (function(){
 		function initEventListener(){
 			stage.on("stagemousedown", function(event){
 				if(event.nativeEvent.button == 2){
-					hero.move(event.stageX - offsetX,event.stageY - offsetY);
+					heroes.forEach(function(hero){
+						hero.move(event.stageX - offsetX,event.stageY - offsetY);
+					});
 					setCommand("move");
 				}else if(event.nativeEvent.button == 0){
 					if(command === "move"){
@@ -201,9 +204,26 @@ var Game = (function(){
 		}
 
 		function createHero(){
+
+			hero = new Hero("hero", 0);
+			hero.x = 3 * 16 + 8;
+			hero.y = 0 * 16 + 8;
+			heroes.push(hero);
+			unit_container.addChild(hero);
+			hero = new Hero("hero", 0);
+			hero.x = 3 * 16 + 8;
+			hero.y = 1 * 16 + 8;
+			heroes.push(hero);
+			unit_container.addChild(hero);
 			hero = new Hero("hero", 0);
 			hero.x = 3 * 16 + 8;
 			hero.y = 2 * 16 + 8;
+			heroes.push(hero);
+			unit_container.addChild(hero);
+			hero = new Hero("hero", 0);
+			hero.x = 3 * 16 + 8;
+			hero.y = 3 * 16 + 8;
+			heroes.push(hero);
 			unit_container.addChild(hero);
 		}
 
@@ -369,19 +389,18 @@ var Game = (function(){
 			getEffectContainer:function(){
 				return effect_container;
 			},
-			findPath:function(starting, destination){
+			findPath:function(self, starting, destination){
+				/*
 				var new_blocks = [];
 				blocks.forEach(function(row){
 					new_blocks.push(row.slice(0));
 				});
 				unit_container.children.forEach(function(unit){
-					if(unit.id !== hero.id){
+					if(unit.id !== self.id){
 						new_blocks[parseInt(unit.y/16)][parseInt(unit.x/16)] = 1;
 					}
-
-				});
-
-				return PathFinder.findPath(new_blocks, starting, destination);
+				});*/
+				return PathFinder.findPath(blocks, starting, destination);
 			},
 			getUnits:function(){
 				return unit_container.children;
@@ -389,7 +408,7 @@ var Game = (function(){
 			getEnemies:function(){
 				return unit_container.children.filter(function(unit){return unit.type === "monster";});
 			},
-			findAlterPath:function(target_id, starting, destination){
+			findPathToTarget:function(target_id, starting, destination){
 				var new_blocks = [];
 				blocks.forEach(function(row){
 					new_blocks.push(row.slice(0));

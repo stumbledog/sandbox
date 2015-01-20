@@ -63,6 +63,7 @@ Monster.prototype.monster_initialize = function(file, index){
 	this.destination = null;
 	this.move_queue = [];
 	this.color = "#C00";
+	this.vx = this.vy = 0
 
 	this.initEventListener();
 	this.initHealthBar();
@@ -85,7 +86,7 @@ Monster.prototype.initEventListener = function(){
 }
 
 Monster.prototype.tick = function(){
-	if(this.status === "idle"){
+	if(this.status === "idle1"){
 		this.move_queue = this.game.findNeighbor(this, this.x, this.y);
 		if(this.move_queue.length){
 			this.status = "roaming";

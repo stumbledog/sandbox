@@ -86,17 +86,43 @@ Hero.prototype.getTarget = function(){
 Hero.prototype.tick = function(){
 	if(this.status === "move"){
 		if(this.move_queue.length){
-			if(Math.abs(this.move_queue[0].x - this.x) > this.speed || Math.abs(this.move_queue[0].y - this.y) > this.speed){/*
+			if(Math.abs(this.move_queue[0].x - this.x) > this.speed || Math.abs(this.move_queue[0].y - this.y) > this.speed){
 				var units = this.game.getUnits();
 				units.forEach(function(unit){
-					if(unit.id !== this.id && parseInt(unit.x/16) === parseInt((this.x + this.vx)/16) && parseInt(unit.y/16)===parseInt((this.y + this.vy)/16)){
+					if(unit.id !== this.id && Math.pow(this.x-unit.x,2)+Math.pow(this.y-unit.y,2) < 64){
+						var moving_radian = Math.atan2(this.vx,this.vy)+Math.PI;
+						var collision_radian = Math.atan2(unit.x-this.x,unit.y-this.y)+Math.PI;
+						if(unit.vx===0 && unit.vy===0){
+							if(moving_radian - collision_radian >= 0 && moving_radian - collision_radian <= Math.PI){
+								unit.x += Math.sin(moving_radian + Math.PI/2);
+								unit.y += Math.cos(moving_radian + Math.PI/2);
+							}else{
+								unit.x += Math.sin(moving_radian - Math.PI/2);
+								unit.y += Math.cos(moving_radian - Math.PI/2);
+							}							
+						}else{
+							if(moving_radian - collision_radian >= 0 && moving_radian - collision_radian <= Math.PI){
+								unit.x += Math.sin(moving_radian + Math.PI/2)*10;
+								unit.y += Math.cos(moving_radian + Math.PI/2)*10;
+							}else{
+								unit.x += Math.sin(moving_radian - Math.PI/2)*10;
+								unit.y += Math.cos(moving_radian - Math.PI/2)*10;
+							}
+						}
+
+						//unit.y += Math.cos(radian) * this.speed*2;
+						//unit.x += Math.sin(radian) * this.speed*2;
+						//console.log(Math.atan2(this.x-unit.x,this.y-unit.y));
+						//unit.y ++;
+						//console.log(unit);
+						/*
 						this.vx = this.vy = 0;
 						if(this.move_queue.length){
-							this.move_queue = this.game.findAlterPath({x:parseInt(unit.x/16),y:parseInt(unit.y/16)},{x:this.x,y:this.y},this.move_queue.pop());
+							this.move_queue = this.game.findPathToTarget({x:parseInt(unit.x/16),y:parseInt(unit.y/16)},{x:this.x,y:this.y},this.move_queue.pop());
 							this.shiftMoveQueue();
-						}
+						}*/
 					}
-				},this);*/
+				},this);
 				this.radian = Math.atan2(this.move_queue[0].x - this.x, this.move_queue[0].y - this.y);
 				this.vx = Math.sin(this.radian) * this.speed;
 				this.vy = Math.cos(this.radian) * this.speed;
@@ -116,7 +142,7 @@ Hero.prototype.tick = function(){
 				this.x += this.vx;
 				this.y += this.vy;
 			}else{
-				this.move_queue = this.game.findPath({x:this.x,y:this.y}, {x:this.move_queue[this.move_queue.length-1].x,y:this.move_queue[this.move_queue.length-1].y});
+				this.move_queue = this.game.findPath(this, {x:this.x,y:this.y}, {x:this.move_queue[this.move_queue.length-1].x,y:this.move_queue[this.move_queue.length-1].y});
 				//this.shiftMoveQueue();
 			}
 		}else{
@@ -160,7 +186,7 @@ Hero.prototype.tick = function(){
 						if(unit.id !== this.id && parseInt(unit.x/16) === parseInt((this.x + this.vx)/16) && parseInt(unit.y/16)===parseInt((this.y + this.vy)/16)){
 							this.vx = this.vy = 0;
 							if(this.move_queue.length){
-								this.move_queue = this.game.findAlterPath({x:parseInt(unit.x/16),y:parseInt(unit.y/16)},{x:this.x,y:this.y},this.move_queue.pop());
+								this.move_queue = this.game.findPathToTarget({x:parseInt(unit.x/16),y:parseInt(unit.y/16)},{x:this.x,y:this.y},this.move_queue.pop());
 								this.shiftMoveQueue();
 							}
 						}
@@ -199,7 +225,7 @@ Hero.prototype.tick = function(){
 						if(unit.id !== this.id && parseInt(unit.x/16) === parseInt((this.x + this.vx)/16) && parseInt(unit.y/16)===parseInt((this.y + this.vy)/16)){
 							this.vx = this.vy = 0;
 							if(this.move_queue.length){
-								this.move_queue = this.game.findAlterPath({x:parseInt(unit.x/16),y:parseInt(unit.y/16)},{x:this.x,y:this.y},this.move_queue.pop());
+								this.move_queue = this.game.findPathToTarget({x:parseInt(unit.x/16),y:parseInt(unit.y/16)},{x:this.x,y:this.y},this.move_queue.pop());
 								this.shiftMoveQueue();
 							}
 						}
@@ -258,7 +284,7 @@ Hero.prototype.tick = function(){
 				if(unit.id !== this.id && parseInt(unit.x/16) === parseInt((this.x + this.vx)/16) && parseInt(unit.y/16)===parseInt((this.y + this.vy)/16)){
 					console.log("collision");
 					this.vx = this.vy = 0;
-					this.move_queue = this.game.findAlterPath({x:parseInt(unit.x/16),y:parseInt(unit.y/16)},{x:this.x,y:this.y},this.move_queue.pop());
+					this.move_queue = this.game.findPathToTarget({x:parseInt(unit.x/16),y:parseInt(unit.y/16)},{x:this.x,y:this.y},this.move_queue.pop());
 					this.shiftMoveQueue();
 				}
 			},this);

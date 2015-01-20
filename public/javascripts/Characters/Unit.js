@@ -19,7 +19,7 @@ Unit.prototype.renderHealthBar = function(){
 Unit.prototype.move = function(x, y){
 	this.status = "move";
 	this.target = null;
-	this.move_queue = this.game.findPath({x:this.x,y:this.y}, {x:x,y:y});
+	this.move_queue = this.game.findPath(this, {x:this.x,y:this.y}, {x:x,y:y});
 	//this.shiftMoveQueue();
 	console.log("move");
 }
@@ -88,7 +88,7 @@ Unit.prototype.rotate = function(direction){
 
 Unit.prototype.attackMove = function(x, y){
 	this.status = "attack_move";
-	this.move_queue = this.game.findPath({x:this.x,y:this.y}, {x:x,y:y});
+	this.move_queue = this.game.findPath(this, {x:this.x,y:this.y}, {x:x,y:y});
 	this.shiftMoveQueue();
 }
 
@@ -155,7 +155,7 @@ Unit.prototype.tick = function(){
 				if(unit.id !== this.id && parseInt(unit.x/16) === parseInt((this.x + this.vx)/16) && parseInt(unit.y/16)===parseInt((this.y + this.vy)/16)){
 					console.log("collision");
 					this.vx = this.vy = 0;
-					this.move_queue = this.game.findAlterPath({x:parseInt(unit.x/16),y:parseInt(unit.y/16)},{x:this.x,y:this.y},this.move_queue.pop());
+					this.move_queue = this.game.findPathToTarget({x:parseInt(unit.x/16),y:parseInt(unit.y/16)},{x:this.x,y:this.y},this.move_queue.pop());
 					this.shiftMoveQueue();
 				}
 			},this);
