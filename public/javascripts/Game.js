@@ -10,6 +10,7 @@ var Game = (function(){
 		var command = "move";
 		var map_width = 16 * 32, map_height  = 14 * 32;
 		var heroes = [];
+		var unit_coordinates;
 
 		canvas = document.getElementById("gameCanvas");
 		canvas.width = map_width;
@@ -49,7 +50,7 @@ var Game = (function(){
 			createEnemy();
 			
 			createjs.Ticker.addEventListener("tick", tick);
-			createjs.Ticker.setFPS(120);
+			createjs.Ticker.setFPS(60);
 		}
 
 		function initContainer(){
@@ -76,8 +77,8 @@ var Game = (function(){
 					if(command === "move"){
 						console.log("select");
 					}else if(command === "attack"){
-						hero.attackMove(event.stageX,event.stageY);
-						setCommand("moveattack");
+						hero.moveAttack(event.stageX,event.stageY);
+						setCommand("move_attack");
 					}
 				}
 			});
@@ -184,7 +185,7 @@ var Game = (function(){
 		function setBlocks(tiles){
 			var rows = tiles.length;
 			var cols = tiles[0].length;
-
+			
 			blocks = [];
 
 			tiles.forEach(function(row, y){
@@ -204,7 +205,6 @@ var Game = (function(){
 		}
 
 		function createHero(){
-
 			hero = new Hero("hero", 0);
 			hero.x = 3 * 16 + 8;
 			hero.y = 0 * 16 + 8;
@@ -234,61 +234,41 @@ var Game = (function(){
 			unit_container.addChild(unit);
 			var unit = new Follower("soldier", 1);
 			unit.x = 1 * 16 + 8;
-			unit.y = 0 * 16 + 8;
+			unit.y = 1 * 16 + 8;
 			unit_container.addChild(unit);
 			var unit = new Follower("soldier", 2);
 			unit.x = 2 * 16 + 8;
-			unit.y = 0 * 16 + 8;
+			unit.y = 2 * 16 + 8;
 			unit_container.addChild(unit);
 			var unit = new Follower("soldier", 3);
-			unit.x = 3 * 16 + 8;
-			unit.y = 0 * 16 + 8;
+			unit.x = 4 * 16 + 8;
+			unit.y = 1 * 16 + 8;
 			unit_container.addChild(unit);
 			var unit = new Follower("soldier", 0);
-			unit.x = 3 * 16 + 8;
-			unit.y = 1 * 16 + 8;
+			unit.x = 5 * 16 + 8;
+			unit.y = 2 * 16 + 8;
 			unit_container.addChild(unit);
 			var unit = new Follower("soldier", 1);
-			unit.x = 3 * 16 + 8;
-			unit.y = 2 * 16 + 8;
+			unit.x = 6 * 16 + 8;
+			unit.y = 3 * 16 + 8;
 			unit_container.addChild(unit);
 			var unit = new Follower("soldier", 2);
-			unit.x = 3 * 16 + 8;
-			unit.y = 3 * 16 + 8;
-			unit_container.addChild(unit);
-			var unit = new Follower("soldier", 3);
-			unit.x = 2 * 16 + 8;
-			unit.y = 3 * 16 + 8;
-			unit_container.addChild(unit);
-			var unit = new Follower("soldier", 3);
-			unit.x = 1 * 16 + 8;
-			unit.y = 3 * 16 + 8;
-			unit_container.addChild(unit);
-			var unit = new Follower("soldier", 3);
-			unit.x = 0 * 16 + 8;
-			unit.y = 3 * 16 + 8;
-			unit_container.addChild(unit);
-			var unit = new Follower("soldier", 3);
-			unit.x = 0 * 16 + 8;
+			unit.x = 8 * 16 + 8;
 			unit.y = 2 * 16 + 8;
 			unit_container.addChild(unit);
 			var unit = new Follower("soldier", 3);
-			unit.x = 0 * 16 + 8;
+			unit.x = 7 * 16 + 8;
 			unit.y = 1 * 16 + 8;
+			unit_container.addChild(unit);
+			var unit = new Follower("soldier", 3);
+			unit.x = 6 * 16 + 8;
+			unit.y = 0 * 16 + 8;
 			unit_container.addChild(unit);
 		}
 
 		function createEnemy(){
 			var monster = new Monster("monster29",0);
-			monster.x = 10*16+8;
-			monster.y = 0*16+8;
-			unit_container.addChild(monster);
-			var monster = new Monster("monster29",0);
-			monster.x = 11*16+8;
-			monster.y = 0*16+8;
-			unit_container.addChild(monster);
-			var monster = new Monster("monster29",0);
-			monster.x = 12*16+8;
+			monster.x = 9*16+8;
 			monster.y = 0*16+8;
 			unit_container.addChild(monster);
 			var monster = new Monster("monster29",0);
@@ -297,39 +277,31 @@ var Game = (function(){
 			unit_container.addChild(monster);
 			var monster = new Monster("monster29",0);
 			monster.x = 11*16+8;
+			monster.y = 2*16+8;
+			unit_container.addChild(monster);
+			var monster = new Monster("monster29",0);
+			monster.x = 15*16+8;
+			monster.y = 3*16+8;
+			unit_container.addChild(monster);
+			var monster = new Monster("monster29",0);
+			monster.x = 14*16+8;
+			monster.y = 2*16+8;
+			unit_container.addChild(monster);
+			var monster = new Monster("monster29",0);
+			monster.x = 13*16+8;
 			monster.y = 1*16+8;
 			unit_container.addChild(monster);
 			var monster = new Monster("monster29",0);
-			monster.x = 12*16+8;
+			monster.x = 16*16+8;
+			monster.y = 0*16+8;
+			unit_container.addChild(monster);
+			var monster = new Monster("monster29",0);
+			monster.x = 17*16+8;
 			monster.y = 1*16+8;
 			unit_container.addChild(monster);
 			var monster = new Monster("monster29",0);
-			monster.x = 10*16+8;
+			monster.x = 18*16+8;
 			monster.y = 2*16+8;
-			unit_container.addChild(monster);
-			var monster = new Monster("monster29",0);
-			monster.x = 11*16+8;
-			monster.y = 2*16+8;
-			unit_container.addChild(monster);
-			var monster = new Monster("monster29",0);
-			monster.x = 12*16+8;
-			monster.y = 2*16+8;
-			unit_container.addChild(monster);
-			var monster = new Monster("monster29",0);
-			monster.x = 10*16+8;
-			monster.y = 3*16+8;
-			unit_container.addChild(monster);
-			var monster = new Monster("monster29",0);
-			monster.x = 11*16+8;
-			monster.y = 3*16+8;
-			unit_container.addChild(monster);
-			var monster = new Monster("monster29",0);
-			monster.x = 12*16+8;
-			monster.y = 3*16+8;
-			unit_container.addChild(monster);			
-			var monster = new Monster("monster29",1);
-			monster.x = 40;
-			monster.y = 10*16+8;
 			unit_container.addChild(monster);
 		}
 
@@ -348,6 +320,9 @@ var Game = (function(){
 					cursor.move();
 					hero.stop();
 				break;
+				case "move_attack":
+					command = "move_attack"
+					cursor.move();
 			}
 		}
 
@@ -356,7 +331,19 @@ var Game = (function(){
 		}
 
 		function tick(){
+			if(!unit_coordinates){
+				console.log("init coordinates");
+				unit_coordinates = [];
+				for(var i=0;i<blocks.length;i++){
+					unit_coordinates.push([]);
+				}
+				unit_container.children.forEach(function(unit){
+					unit_coordinates[parseInt(unit.y/16)][parseInt(unit.x/16)] = unit;
+				});
+			}
+
 			unit_container.sortChildren(function(obj1, obj2){return obj1.y>obj2.y?1:-1;});
+
 			if(move_right && window.innerWidth - offsetX < canvas.width){
 				offsetX-=10;
 				stage.children.forEach(function(container, index){
@@ -389,18 +376,19 @@ var Game = (function(){
 			getEffectContainer:function(){
 				return effect_container;
 			},
-			findPath:function(self, starting, destination){
-				/*
+			findPath:function(self, starting, destination, avoid_enemy){
 				var new_blocks = [];
 				blocks.forEach(function(row){
 					new_blocks.push(row.slice(0));
 				});
-				unit_container.children.forEach(function(unit){
-					if(unit.id !== self.id){
-						new_blocks[parseInt(unit.y/16)][parseInt(unit.x/16)] = 1;
-					}
-				});*/
-				return PathFinder.findPath(blocks, starting, destination);
+				if(avoid_enemy){
+					unit_container.children.forEach(function(unit){
+						if(unit.team !== self.team){
+							new_blocks[parseInt(unit.y/16)][parseInt(unit.x/16)] = 1;
+						}
+					});					
+				}
+				return PathFinder.findPath(new_blocks, starting, destination);
 			},
 			getUnits:function(){
 				return unit_container.children;
@@ -408,17 +396,17 @@ var Game = (function(){
 			getEnemies:function(){
 				return unit_container.children.filter(function(unit){return unit.type === "monster";});
 			},
-			findPathToTarget:function(target_id, starting, destination){
+			findPathToTarget:function(self, target, starting, destination){
 				var new_blocks = [];
 				blocks.forEach(function(row){
 					new_blocks.push(row.slice(0));
 				});
-				var target = hero.getTarget();
 				unit_container.children.forEach(function(unit){
-					if(unit.id !== target_id || (target && unit.id !== target.id)){
+					if(unit.team !== self.team){
 						new_blocks[parseInt(unit.y/16)][parseInt(unit.x/16)] = 1;
 					}
 				});
+				new_blocks[parseInt(target.y/16)][parseInt(target.x/16)] = 1;
 				return PathFinder.findPath(new_blocks, starting, destination);
 			},
 			setTarget:function(target){
@@ -455,6 +443,9 @@ var Game = (function(){
 					return PathFinder.findPath(new_blocks, {x:x,y:y}, {x:x-16, y:y});
 				}
 				return [];
+			},
+			getUnitCoordinates:function(){
+				return unit_coordinates;
 			}
 		}
 	}

@@ -11,6 +11,7 @@ Follower.prototype.follower_initialize = function(file, index){
 	this.initialize(file, index);
 	console.log("Follower initialize");
 	this.type="follower";
+	this.team = "player";
 	this.status = "move";
 }
 

@@ -12,6 +12,7 @@ Monster.prototype.monster_initialize = function(file, index){
 	this.game = Game.getInstance();
 	
 	this.type = "monster";
+	this.team = "enemy";
 
 	this.ticks = 0;
 
@@ -86,7 +87,7 @@ Monster.prototype.initEventListener = function(){
 }
 
 Monster.prototype.tick = function(){
-	if(this.status === "idle1"){
+	if(this.status === "idle"){
 		this.move_queue = this.game.findNeighbor(this, this.x, this.y);
 		if(this.move_queue.length){
 			this.status = "roaming";
@@ -98,20 +99,29 @@ Monster.prototype.tick = function(){
 				this.vx = Math.sin(this.radian) * this.speed;
 				this.vy = Math.cos(this.radian) * this.speed;
 				if(Math.abs(this.vx) > Math.abs(this.vy)){
-					if(this.vx > 0 && this.direction !== "right"){
+					if(this.vx > 0){
 						this.rotate("right");
-					}else if(this.vx < 0 && this.direction !== "left"){
+					}else if(this.vx < 0){
 						this.rotate("left");
 					}
 				}else{
-					if(this.vy > 0 && this.direction !== "front"){
+					if(this.vy > 0){
 						this.rotate("front");
-					}else if(this.vy < 0 && this.direction !== "back"){
+					}else if(this.vy < 0){
 						this.rotate("back");
 					}
 				}
+				var unit_coordinates = this.game.getUnitCoordinates();
+				if(unit_coordinates[parseInt((this.y+this.vy)/16)] 
+					&& unit_coordinates[parseInt((this.y+this.vy)/16)][parseInt((this.x+this.vx)/16)]
+					&& this.id !== unit_coordinates[parseInt((this.y+this.vy)/16)][parseInt((this.x+this.vx)/16)].id){
+					this.vx =this.vy = 0;
+					this.status = "idle";
+				}
+				unit_coordinates[parseInt(this.y/16)][parseInt(this.x/16)] = null;
 				this.x += this.vx;
 				this.y += this.vy;
+				unit_coordinates[parseInt(this.y/16)][parseInt(this.x/16)] = this;
 			}else{
 				this.status = "idle";
 			}

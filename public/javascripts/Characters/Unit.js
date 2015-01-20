@@ -19,7 +19,7 @@ Unit.prototype.renderHealthBar = function(){
 Unit.prototype.move = function(x, y){
 	this.status = "move";
 	this.target = null;
-	this.move_queue = this.game.findPath(this, {x:this.x,y:this.y}, {x:x,y:y});
+	this.move_queue = this.game.findPath(this, {x:this.x,y:this.y}, {x:x,y:y}, true);
 	//this.shiftMoveQueue();
 	console.log("move");
 }
@@ -48,48 +48,51 @@ Unit.prototype.shiftMoveQueue = function(){
 	}
 }
 
-Unit.prototype.rotate = function(direction){
-	this.direction = direction;
-	if(this.direction === "back"){
-		if(this.weapon){
-			this.sortChildren(function(obj1, obj2){return obj1.z<obj2.z?1:-1;});
-			this.weapon.rotation = 90;
-			this.swing = -90;
-			this.weapon.x = 6;
-			this.weapon.y = 6;
+Unit.prototype.rotate = function(direction){	
+	if(direction !== this.direction){
+		this.direction = direction;
+		if(this.direction === "back"){
+			if(this.weapon){
+				this.sortChildren(function(obj1, obj2){return obj1.z<obj2.z?1:-1;});
+				this.weapon.rotation = 90;
+				this.swing = -90;
+				this.weapon.x = 6;
+				this.weapon.y = 6;
+			}
+		}else if(this.direction === "right"){
+			if(this.weapon){
+				this.sortChildren(function(obj1, obj2){return obj1.z>obj2.z?1:-1;});
+				this.weapon.rotation = 90;
+				this.weapon.swing = 90;
+				this.weapon.x = 0;
+				this.weapon.y = 10;
+			}
+		}else if(this.direction === "front"){
+			if(this.weapon){
+				this.sortChildren(function(obj1, obj2){return obj1.z>obj2.z?1:-1;});			
+				this.weapon.rotation = -90;
+				this.weapon.swing = -90;
+				this.weapon.x = -6;
+				this.weapon.y = 10;
+			}
+		}else if(this.direction === "left"){
+			if(this.weapon){
+				this.sortChildren(function(obj1, obj2){return obj1.z<obj2.z?1:-1;});			
+				this.weapon.rotation = 0;
+				this.weapon.swing = -90;
+				this.weapon.x = 0;
+				this.weapon.y = 10;
+			}
 		}
-	}else if(this.direction === "right"){
-		if(this.weapon){
-			this.sortChildren(function(obj1, obj2){return obj1.z>obj2.z?1:-1;});
-			this.weapon.rotation = 90;
-			this.weapon.swing = 90;
-			this.weapon.x = 0;
-			this.weapon.y = 10;
-		}
-	}else if(this.direction === "front"){
-		if(this.weapon){
-			this.sortChildren(function(obj1, obj2){return obj1.z>obj2.z?1:-1;});			
-			this.weapon.rotation = -90;
-			this.weapon.swing = -90;
-			this.weapon.x = -6;
-			this.weapon.y = 10;
-		}
-	}else if(this.direction === "left"){
-		if(this.weapon){
-			this.sortChildren(function(obj1, obj2){return obj1.z<obj2.z?1:-1;});			
-			this.weapon.rotation = 0;
-			this.weapon.swing = -90;
-			this.weapon.x = 0;
-			this.weapon.y = 10;
-		}
+		this.sprite.gotoAndPlay(this.direction);		
 	}
-	this.sprite.gotoAndPlay(this.direction);
 }
 
-Unit.prototype.attackMove = function(x, y){
-	this.status = "attack_move";
-	this.move_queue = this.game.findPath(this, {x:this.x,y:this.y}, {x:x,y:y});
-	this.shiftMoveQueue();
+Unit.prototype.moveAttack = function(x, y){
+	this.status = "move_attack";
+	this.move_queue = this.game.findPath(this, {x:this.x,y:this.y}, {x:x,y:y}, false);
+	//this.game.getEffectContainer();
+	//this.shiftMoveQueue();
 }
 
 Unit.prototype.attackTarget = function(target){
@@ -102,6 +105,21 @@ Unit.prototype.stop = function(){
 	this.destination = null;
 	this.sprite.stop();
 	this.status = "stop";
+}
+
+Unit.prototype.findClosestEnemy = function(){
+	var self = this;
+	return this.game.getUnits().reduce(function(prev, current){
+		if(self.getSquareDistance(self, prev) < self.getSquareDistance(self, current)){
+			return current;
+		}else{
+			return prev;
+		}
+	});
+}
+
+Unit.prototype.getSquareDistance = function(a, b){
+	return Math.pow(a.x-b.x,2)+Math.pow(a.y-b.y,2);
 }
 
 /*

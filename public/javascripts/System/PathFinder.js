@@ -184,11 +184,11 @@ PathFinder.findPath2 = function(blocks, starting, destination){
 }
 
 PathFinder.findClosestPoint = function(blocks, destination){
-	for(var i = 0.1;i<1;i+=0.1){
+	for(var i = 0.1;i<4;i+=0.1){
 		for(j=0;j<8;j++){
 			try{
 				if(!blocks[parseInt(destination.y/16 + Math.sin(Math.PI/4 * j) * i)][parseInt(destination.x/16 + Math.cos(Math.PI/4 * j) * i)]){
-					return {x:destination.x + Math.cos(Math.PI/4 * j) * i * 16,y:destination.y + Math.sin(Math.PI/4 * j) * i * 16};
+					return {x:destination.x + Math.cos(Math.PI/4 * j) * i * 8,y:destination.y + Math.sin(Math.PI/4 * j) * i * 16};
 				}
 			}catch(e){}
 		}
