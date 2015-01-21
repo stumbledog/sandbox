@@ -453,25 +453,11 @@ var Game = (function(){
 			getUnits:function(){
 				return unit_container.children;
 			},
-			getEnemies:function(self){
-				return unit_container.children.filter(function(unit){return self.team !== unit.team;});
+			removeUnit:function(target){
+				unit_container.removeChild(target);
 			},
-			findPathToTarget:function(self, target, starting, destination){
-				var new_blocks = [];
-				blocks.forEach(function(row){
-					new_blocks.push(row.slice(0));
-				});
-				unit_container.children.forEach(function(unit){
-					if(unit.team !== self.team){
-						new_blocks[parseInt(unit.y/16)][parseInt(unit.x/16)] = 1;
-					}else if(unit.vx == 0 && unit.vy == 0){
-						new_blocks[parseInt(unit.y/16)][parseInt(unit.x/16)] = 1;
-					}else{
-						new_blocks[parseInt(unit.y/16)][parseInt(unit.x/16)] = 1;
-					}
-				});
-				new_blocks[parseInt(target.y/16)][parseInt(target.x/16)] = 1;
-				return PathFinder.findPath(new_blocks, starting, destination);
+			getEnemies:function(self){
+				return unit_container.children.filter(function(unit){return self.team !== unit.team && unit.status !== "death";});
 			},
 			setTarget:function(target){
 				hero.setTarget(target);

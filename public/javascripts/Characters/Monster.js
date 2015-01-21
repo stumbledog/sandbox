@@ -58,7 +58,7 @@ Monster.prototype.monster_initialize = function(file, index){
 	this.sprite.z = 0;
 	this.addChild(this.sprite);
 
-	this.rotate("front");
+	this.rotate(0,0);
 	this.shadow = new createjs.Shadow("#333",3,3,10);
 	this.status = "idle";
 	this.destination = null;
@@ -98,19 +98,7 @@ Monster.prototype.tick = function(){
 				this.radian = Math.atan2(this.move_queue[0].x - this.x, this.move_queue[0].y - this.y);
 				this.vx = Math.sin(this.radian) * this.speed;
 				this.vy = Math.cos(this.radian) * this.speed;
-				if(Math.abs(this.vx) > Math.abs(this.vy)){
-					if(this.vx > 0){
-						this.rotate("right");
-					}else if(this.vx < 0){
-						this.rotate("left");
-					}
-				}else{
-					if(this.vy > 0){
-						this.rotate("front");
-					}else if(this.vy < 0){
-						this.rotate("back");
-					}
-				}
+				this.rotate(this.vx, this.vy);
 				var unit_coordinates = this.game.getUnitCoordinates();
 				if(unit_coordinates[parseInt((this.y+this.vy)/16)] 
 					&& unit_coordinates[parseInt((this.y+this.vy)/16)][parseInt((this.x+this.vx)/16)]
@@ -131,8 +119,3 @@ Monster.prototype.tick = function(){
 	}
 	this.ticks++;
 }
-
-/*
-Enemy.prototype.initialize = function(){
-	console.log("init enemy");
-}*/

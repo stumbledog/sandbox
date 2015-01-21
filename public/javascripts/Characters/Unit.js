@@ -21,11 +21,25 @@ Unit.prototype.move = function(x, y){
 	this.status = "move";
 	this.target = null;
 	this.move_queue = this.game.findPath(this, {x:this.x,y:this.y}, {x:x,y:y}, true);
-	//this.shiftMoveQueue();
 	console.log("move");
 }
 
-Unit.prototype.rotate = function(direction){	
+Unit.prototype.rotate = function(dx, dy){
+	var direction;
+	if(Math.abs(dx) > Math.abs(dy)){
+		if(dx > 0){
+			direction = "right";
+		}else{
+			direction = "left";
+		}
+	}else{
+		if(dy < 0){
+			direction = "back";
+		}else{
+			direction = "front";
+		}
+	}
+
 	if(direction !== this.direction){
 		this.direction = direction;
 		if(this.direction === "back"){
@@ -46,7 +60,7 @@ Unit.prototype.rotate = function(direction){
 			}
 		}else if(this.direction === "front"){
 			if(this.weapon){
-				this.sortChildren(function(obj1, obj2){return obj1.z>obj2.z?1:-1;});			
+				this.sortChildren(function(obj1, obj2){return obj1.z>obj2.z?1:-1;});
 				this.weapon.rotation = -90;
 				this.weapon.swing = -90;
 				this.weapon.x = -6;
@@ -54,14 +68,14 @@ Unit.prototype.rotate = function(direction){
 			}
 		}else if(this.direction === "left"){
 			if(this.weapon){
-				this.sortChildren(function(obj1, obj2){return obj1.z<obj2.z?1:-1;});			
+				this.sortChildren(function(obj1, obj2){return obj1.z<obj2.z?1:-1;});
 				this.weapon.rotation = 0;
 				this.weapon.swing = -90;
 				this.weapon.x = 0;
 				this.weapon.y = 10;
 			}
 		}
-		this.sprite.gotoAndPlay(this.direction);		
+		this.sprite.gotoAndPlay(this.direction);
 	}
 }
 
@@ -72,8 +86,49 @@ Unit.prototype.moveAttack = function(x, y){
 	this.move_queue = this.game.findPath(this, {x:this.x,y:this.y}, {x:x,y:y}, false);
 }
 
-Unit.prototype.attackTarget = function(target){
+Unit.prototype.attackTarget = function(target, damage){
+	target.hit(this, 10);
+	console.log(target.x - this.x, target.y - this.y);
+	this.rotate(target.x - this.x, target.y - this.y);
 	createjs.Tween.get(this.weapon).to({rotation:this.weapon.rotation + this.weapon.swing},100, createjs.Ease.backOut).to({rotation:this.weapon.rotation},100, createjs.Ease.backOut);
+}
+
+Unit.prototype.hit = function(attacker, damage){
+	this.health -= damage;
+	if(this.health <= 0){
+		this.health = 0;
+		this.die(attacker);
+	}else{
+		createjs.Tween.get(this).call(function(event){
+			event.target.sprite.filters = [new createjs.ColorFilter(1,0,0,1)];
+			event.target.sprite.cache(-12,-16,24,32);
+		}).wait(300).call(function(event){
+			event.target.sprite.filters = null;
+			event.target.sprite.uncache();
+		});
+	}
+}
+
+Unit.prototype.die = function(attacker){
+	console.log("die");
+	createjs.Tween.get(this).call(function(event){
+		event.target.sprite.filters = [new createjs.ColorFilter(1,1,1,0)];
+		event.target.sprite.cache(-12,-16,24,32);
+		event.target.status = "death";
+		attacker.target = null;
+		attacker.move_queue = this.game.findPath(attacker, attacker, attacker.destination, false);
+		console.log(attacker, attacker.destination);
+		console.log(attacker.move_queue);
+		var unit_coordinates = this.game.getUnitCoordinates();
+		unit_coordinates[parseInt(this.y/16)][parseInt(this.x/16)] = null;
+	}).wait(300).call(function(event){
+		event.target.sprite.filters = [new createjs.ColorFilter(1,1,1,1)];
+		event.target.sprite.updateCache();
+	}).wait(300).call(function(event){
+		event.target.sprite.filters = [new createjs.ColorFilter(1,1,1,0)];
+		event.target.sprite.updateCache();
+		event.target.game.removeUnit(event.target);
+	});
 }
 
 Unit.prototype.stop = function(){
@@ -86,99 +141,17 @@ Unit.prototype.stop = function(){
 
 Unit.prototype.findClosestEnemy = function(range){
 	var self = this;
-	var closest_unit = this.game.getEnemies(this).reduce(function(prev, curr){
-		var prev_distance = self.getSquareDistance(prev);
-		var curr_distance = self.getSquareDistance(curr);
-		if(prev_distance < curr_distance){
-			prev.distance = prev_distance;
-			return prev;
-		}else{
-			curr.distance = curr_distance;
-			return curr;
+	var enemies = this.game.getEnemies(this);
+	var min;
+	enemies.forEach(function(enemy){
+		enemy.distance = this.getSquareDistance(enemy);
+		if((!min || enemy.distance < min.distance) && enemy.distance < Math.pow(range,2)){
+			min = enemy;
 		}
-	});
-
-	if(closest_unit.distance < Math.pow(range,2)){
-		return closest_unit;
-	}else{
-		return null;
-	}
+	},this);
+	return min;
 }
 
 Unit.prototype.getSquareDistance = function(target){
 	return Math.pow(this.x - target.x, 2)+Math.pow(this.y - target.y, 2);
 }
-
-/*
-Unit.prototype.tick = function(){
-	
-	if(status === "move"){
-
-	}else if(status === "attack"){
-
-	}else if(status === "move_attack"){
-
-	}else if(status === "idle"){
-
-	}else if(status === "hold"){
-
-	}
-
-	if(this.status === "idle" && !this.target){
-		var self = this;
-		var enemies = this.game.getEnemies();
-		//console.log(enemies);
-		//console.log(this.game.getUnits().constructor);
-		if(enemies.length){
-			var enemy = enemies.reduce(function(prev, current){
-				if(Math.pow(prev.x-self.x,2)+Math.pow(prev.y-self.y,2) > Math.pow(current.x-self.x,2)+Math.pow(current.y-self.y,2)){
-					return current;
-				}else{
-					return prev;
-				}
-			});
-			this.target = enemy;
-			this.moveAttack(enemy.x,enemy.y);			
-		}
-	}
-
-	if(this.target){
-		if((Math.pow(this.x - this.target.x,2)+Math.pow(this.y - this.target.y,2)) <= Math.pow(this.range,2)){
-			this.vx = this.vy = 0;
-			if(this.attack_speed < this.ticks){
-				this.attackTarget(this.target);
-				this.ticks = 0;
-			}
-		}
-	}
-
-	if(this.destination){
-		if(Math.abs(this.destination.x - this.x) > this.speed || Math.abs(this.destination.y - this.y) > this.speed){
-			
-			var units = this.game.getUnits();
-			units.forEach(function(unit){
-				if(unit.id !== this.id && parseInt(unit.x/16) === parseInt((this.x + this.vx)/16) && parseInt(unit.y/16)===parseInt((this.y + this.vy)/16)){
-					console.log("collision");
-					this.vx = this.vy = 0;
-					this.move_queue = this.game.findPathToTarget({x:parseInt(unit.x/16),y:parseInt(unit.y/16)},{x:this.x,y:this.y},this.move_queue.pop());
-					this.shiftMoveQueue();
-				}
-			},this);
-
-			this.x += this.vx;
-			this.y += this.vy;
-		}else{
-			this.shiftMoveQueue();
-		}
-	}else{
-		console.log(this.move_queue);
-		if(this.move_queue.length){
-			this.shiftMoveQueue();
-		}
-	}
-
-	if(!this.destination && !this.target){
-		this.status = "idle"
-	}
-	this.ticks++;
-}*/
