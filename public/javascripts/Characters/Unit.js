@@ -17,35 +17,12 @@ Unit.prototype.renderHealthBar = function(){
 }
 
 Unit.prototype.move = function(x, y){
+	this.destination = {x:x,y:y};
 	this.status = "move";
 	this.target = null;
 	this.move_queue = this.game.findPath(this, {x:this.x,y:this.y}, {x:x,y:y}, true);
 	//this.shiftMoveQueue();
 	console.log("move");
-}
-
-Unit.prototype.shiftMoveQueue = function(){
-	if(this.move_queue.length){
-		//this.destination = this.move_queue.shift();
-		this.radian = Math.atan2(this.destination.x - this.x, this.destination.y - this.y);
-		this.vx = Math.sin(this.radian) * this.speed;
-		this.vy = Math.cos(this.radian) * this.speed;
-		if(Math.abs(this.vx) > Math.abs(this.vy)){
-			if(this.vx > 0){
-				this.rotate("right");
-			}else{
-				this.rotate("left");
-			}
-		}else{
-			if(this.vy > 0){
-				this.rotate("front");
-			}else{
-				this.rotate("back");
-			}
-		}
-	}else{
-		this.stop();
-	}
 }
 
 Unit.prototype.rotate = function(direction){	
@@ -89,10 +66,10 @@ Unit.prototype.rotate = function(direction){
 }
 
 Unit.prototype.moveAttack = function(x, y){
+	this.destination = {x:x,y:y};
 	this.status = "move_attack";
+	this.target = this.findClosestEnemy(this.range);
 	this.move_queue = this.game.findPath(this, {x:this.x,y:this.y}, {x:x,y:y}, false);
-	//this.game.getEffectContainer();
-	//this.shiftMoveQueue();
 }
 
 Unit.prototype.attackTarget = function(target){
@@ -107,19 +84,29 @@ Unit.prototype.stop = function(){
 	this.status = "stop";
 }
 
-Unit.prototype.findClosestEnemy = function(){
+Unit.prototype.findClosestEnemy = function(range){
 	var self = this;
-	return this.game.getUnits().reduce(function(prev, current){
-		if(self.getSquareDistance(self, prev) < self.getSquareDistance(self, current)){
-			return current;
-		}else{
+	var closest_unit = this.game.getEnemies(this).reduce(function(prev, curr){
+		var prev_distance = self.getSquareDistance(prev);
+		var curr_distance = self.getSquareDistance(curr);
+		if(prev_distance < curr_distance){
+			prev.distance = prev_distance;
 			return prev;
+		}else{
+			curr.distance = curr_distance;
+			return curr;
 		}
 	});
+
+	if(closest_unit.distance < Math.pow(range,2)){
+		return closest_unit;
+	}else{
+		return null;
+	}
 }
 
-Unit.prototype.getSquareDistance = function(a, b){
-	return Math.pow(a.x-b.x,2)+Math.pow(a.y-b.y,2);
+Unit.prototype.getSquareDistance = function(target){
+	return Math.pow(this.x - target.x, 2)+Math.pow(this.y - target.y, 2);
 }
 
 /*

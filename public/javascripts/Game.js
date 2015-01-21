@@ -206,6 +206,66 @@ var Game = (function(){
 
 		function createHero(){
 			hero = new Hero("hero", 0);
+			hero.x = 0 * 16 + 8;
+			hero.y = 0 * 16 + 8;
+			heroes.push(hero);
+			unit_container.addChild(hero);/*
+			hero = new Hero("hero", 0);
+			hero.x = 0 * 16 + 8;
+			hero.y = 1 * 16 + 8;
+			heroes.push(hero);
+			unit_container.addChild(hero);
+			hero = new Hero("hero", 0);
+			hero.x = 0 * 16 + 8;
+			hero.y = 2 * 16 + 8;
+			heroes.push(hero);
+			unit_container.addChild(hero);
+			hero = new Hero("hero", 0);
+			hero.x = 0 * 16 + 8;
+			hero.y = 3 * 16 + 8;
+			heroes.push(hero);
+			unit_container.addChild(hero);
+			hero = new Hero("hero", 0);
+			hero.x = 1 * 16 + 8;
+			hero.y = 0 * 16 + 8;
+			heroes.push(hero);
+			unit_container.addChild(hero);
+			hero = new Hero("hero", 0);
+			hero.x = 1 * 16 + 8;
+			hero.y = 1 * 16 + 8;
+			heroes.push(hero);
+			unit_container.addChild(hero);
+			hero = new Hero("hero", 0);
+			hero.x = 1 * 16 + 8;
+			hero.y = 2 * 16 + 8;
+			heroes.push(hero);
+			unit_container.addChild(hero);
+			hero = new Hero("hero", 0);
+			hero.x = 1 * 16 + 8;
+			hero.y = 3 * 16 + 8;
+			heroes.push(hero);
+			unit_container.addChild(hero);
+			hero = new Hero("hero", 0);
+			hero.x = 2 * 16 + 8;
+			hero.y = 0 * 16 + 8;
+			heroes.push(hero);
+			unit_container.addChild(hero);
+			hero = new Hero("hero", 0);
+			hero.x = 2 * 16 + 8;
+			hero.y = 1 * 16 + 8;
+			heroes.push(hero);
+			unit_container.addChild(hero);
+			hero = new Hero("hero", 0);
+			hero.x = 2 * 16 + 8;
+			hero.y = 2 * 16 + 8;
+			heroes.push(hero);
+			unit_container.addChild(hero);
+			hero = new Hero("hero", 0);
+			hero.x = 2 * 16 + 8;
+			hero.y = 3 * 16 + 8;
+			heroes.push(hero);
+			unit_container.addChild(hero);
+			hero = new Hero("hero", 0);
 			hero.x = 3 * 16 + 8;
 			hero.y = 0 * 16 + 8;
 			heroes.push(hero);
@@ -224,7 +284,7 @@ var Game = (function(){
 			hero.x = 3 * 16 + 8;
 			hero.y = 3 * 16 + 8;
 			heroes.push(hero);
-			unit_container.addChild(hero);
+			unit_container.addChild(hero);*/
 		}
 
 		function createUnits(){
@@ -393,8 +453,8 @@ var Game = (function(){
 			getUnits:function(){
 				return unit_container.children;
 			},
-			getEnemies:function(){
-				return unit_container.children.filter(function(unit){return unit.type === "monster";});
+			getEnemies:function(self){
+				return unit_container.children.filter(function(unit){return self.team !== unit.team;});
 			},
 			findPathToTarget:function(self, target, starting, destination){
 				var new_blocks = [];
@@ -403,6 +463,10 @@ var Game = (function(){
 				});
 				unit_container.children.forEach(function(unit){
 					if(unit.team !== self.team){
+						new_blocks[parseInt(unit.y/16)][parseInt(unit.x/16)] = 1;
+					}else if(unit.vx == 0 && unit.vy == 0){
+						new_blocks[parseInt(unit.y/16)][parseInt(unit.x/16)] = 1;
+					}else{
 						new_blocks[parseInt(unit.y/16)][parseInt(unit.x/16)] = 1;
 					}
 				});
