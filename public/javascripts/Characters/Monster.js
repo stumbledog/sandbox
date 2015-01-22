@@ -13,14 +13,14 @@ Monster.prototype.monster_initialize = function(file, index){
 	
 	this.type = "monster";
 	this.team = "enemy";
-
 	this.ticks = 0;
+	this.aggro_radius = 80;
 
 	this.max_health = this.health = 10;
 	this.speed = 0.1;
 	this.range = 32;
 	this.attack_speed = 30;
-	
+	this.damage = 1;
 	this.direction = 180;
 
 	this.frames = [];
@@ -73,24 +73,48 @@ Monster.prototype.monster_initialize = function(file, index){
 Monster.prototype.initEventListener = function(){
 	var self = this;
 	this.addEventListener("mousedown", function(event){
-		console.log("set target");
-		self.game.setTarget(self);
+		if(event.nativeEvent.button == 2){
+			self.game.setTarget(self);
+		}else{
+
+		}
 	});
 	this.addEventListener("rollover", function(event){
-		self.sprite.filters = [new createjs.ColorFilter(1,0,0,1)];
-		self.sprite.cache(-12,-16,24,32);
+		if(self.status !== "death"){
+			self.sprite.filters = [new createjs.ColorFilter(1,0,0,1)];
+			self.sprite.cache(-12,-16,24,32);			
+		}
 	});
 	this.addEventListener("rollout", function(event){
-		self.sprite.filters = null;
-		self.sprite.uncache();
+		if(self.status !== "death"){
+			self.sprite.filters = null;
+			self.sprite.uncache();
+		}
 	});
 }
 
+Monster.prototype.hit = function(attacker, damage){
+	Unit.prototype.hit.call(this, attacker, damage);
+	if(this.status !== "attack"){
+		this.status = "attack";
+	}
+}
+
 Monster.prototype.tick = function(){
-	if(this.status === "idle"){
-		this.move_queue = this.game.findNeighbor(this, this.x, this.y);
-		if(this.move_queue.length){
-			this.status = "roaming";
+	if(this.target && this.getSquareDistance(this.target) <= Math.pow(this.range,2)){
+		if(this.ticks > this.attack_speed){
+			this.ticks = 0;
+			this.attackTarget(this.target);
+		}
+	}else if(this.status === "idle"){
+		this.target = this.findClosestEnemy(this.aggro_radius);
+		if(this.target){
+			this.status = "attack";
+		}else{
+			this.move_queue = this.game.findNeighbor(this, this.x, this.y);
+			if(this.move_queue.length){
+				this.status = "roaming";
+			}
 		}
 	}else if(this.status === "roaming"){
 		if(this.move_queue.length){
@@ -112,6 +136,37 @@ Monster.prototype.tick = function(){
 				unit_coordinates[parseInt(this.y/16)][parseInt(this.x/16)] = this;
 			}else{
 				this.status = "idle";
+			}
+		}else{
+			this.status = "idle";
+		}
+	}else if(this.status === "attack"){
+		if(this.target){
+			if(this.getSquareDistance(this.target) > Math.pow(this.aggro_radius,2)){
+				this.target = null;
+				this.status = "idle";
+			}else{
+				this.move_queue = this.game.findPath(this, {x:this.x,y:this.y}, this.target, true);
+				this.radian = Math.atan2(this.move_queue[0].x - this.x, this.move_queue[0].y - this.y);
+				this.vx = Math.sin(this.radian) * this.speed;
+				this.vy = Math.cos(this.radian) * this.speed;
+
+				var unit_coordinates = this.game.getUnitCoordinates();
+				var indexX = parseInt((this.x + this.vx)/16);
+				var indexY = parseInt((this.y + this.vy)/16);
+
+				if(unit_coordinates[indexY] && unit_coordinates[indexY][indexX] && this.id !== unit_coordinates[indexY][indexX].id){
+					target = unit_coordinates[indexY][indexX];
+					this.move_queue = this.game.findPath(this, {x:this.x,y:this.y}, this.target, true);
+					this.vx = this.vy = 0;
+				}
+
+				this.rotate(this.vx, this.vy);
+
+				unit_coordinates[parseInt(this.y/16)][parseInt(this.x/16)] = null;
+				this.x += this.vx;
+				this.y += this.vy;
+				unit_coordinates[parseInt(this.y/16)][parseInt(this.x/16)] = this;
 			}
 		}else{
 			this.status = "idle";

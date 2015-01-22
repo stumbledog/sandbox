@@ -15,12 +15,13 @@ Hero.prototype.hero_initialize = function(file, index){
 	this.ticks = 0;
 	this.team = "player";
 
-	this.health = 10;
+	this.max_health = this.health = 50;
 	this.speed = 3;
 	this.aggro_radius = 80;
 	this.range = 16;
 	this.attack_speed = 30;
-	
+	this.damage = 5;
+
 	this.frames = [];
 	var offsetX = index % 4 *72;
 	var offsetY = parseInt(index / 4) * 128;
@@ -73,16 +74,6 @@ Hero.prototype.hero_initialize = function(file, index){
 	this.initHealthBar();
 }
 
-Hero.prototype.setTarget = function(target){
-	this.target = target;
-	this.status = "attack";
-	console.log("set target");
-}
-
-Hero.prototype.getTarget = function(){
-	return this.tager;
-}
-
 Hero.prototype.tick = function(){
 	if(this.target && this.getSquareDistance(this.target) <= Math.pow(this.range,2)){
 		if(this.ticks > this.attack_speed){
@@ -125,7 +116,6 @@ Hero.prototype.tick = function(){
 			if(this.destination){
 				if(this.getSquareDistance(this.destination)<16){
 					this.stop();
-					console.log("stopped");
 				}else{
 					this.move_queue = this.game.findPath(this, {x:this.x,y:this.y}, {x:this.destination.x,y:this.destination.y}, true);
 					if(this.move_queue.length){
@@ -167,12 +157,46 @@ Hero.prototype.tick = function(){
 			}else{
 				this.target = this.findClosestEnemy(this.aggro_radius);
 				if(this.target){
-					this.move_queue = this.game.findPath(this, {x:this.x,y:this.y}, this.target, false);	
+					this.move_queue = this.game.findPath(this, {x:this.x,y:this.y}, this.target, false);
 				}else{
 					this.move_queue = this.game.findPath(this, {x:this.x,y:this.y}, this.move_queue[this.move_queue.length-1], false);	
 				}
 			}
 		}
+	}else if(this.status === "attack"){
+		if(this.target){
+			if(this.move_queue.length){
+				if(Math.abs(this.move_queue[0].x - this.x) > this.speed || Math.abs(this.move_queue[0].y - this.y) > this.speed){
+					this.radian = Math.atan2(this.move_queue[0].x - this.x, this.move_queue[0].y - this.y);
+					this.vx = Math.sin(this.radian) * this.speed;
+					this.vy = Math.cos(this.radian) * this.speed;
+
+					var unit_coordinates = this.game.getUnitCoordinates();
+					var indexX = parseInt((this.x + this.vx)/16);
+					var indexY = parseInt((this.y + this.vy)/16);
+
+					if(unit_coordinates[indexY] && unit_coordinates[indexY][indexX] && this.id !== unit_coordinates[indexY][indexX].id){
+						target = unit_coordinates[indexY][indexX];
+						this.move_queue = this.game.findPath(this, {x:this.x,y:this.y}, this.target, true);
+						this.vx = this.vy = 0;
+					}
+
+					this.rotate(this.vx, this.vy);
+
+					unit_coordinates[parseInt(this.y/16)][parseInt(this.x/16)] = null;
+					this.x += this.vx;
+					this.y += this.vy;
+					unit_coordinates[parseInt(this.y/16)][parseInt(this.x/16)] = this;
+				}else{
+					this.move_queue = this.game.findPath(this, {x:this.x,y:this.y}, this.target, true);
+				}
+			}else{
+				this.move_queue = this.game.findPath(this, {x:this.x,y:this.y}, this.target, true);
+			}
+		}else{
+			this.stop();
+		}
+
 	}
 	this.ticks++;
 }

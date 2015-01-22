@@ -6,14 +6,14 @@ Unit.prototype = new createjs.Container();
 
 Unit.prototype.initHealthBar = function(){
 	this.health_bar_border = new createjs.Shape();
-	this.health_bar_border.graphics.s("#fff").ss(2).rr(-12,-16,24,4,1);
+	this.health_bar_border.graphics.s("#fff").ss(2).f("#fff").rr(-12,-16,24,4,1);
 	this.health_bar = new createjs.Shape();
 	this.health_bar.graphics.f(this.color).dr(-11,-15,22,2);
 	this.addChild(this.health_bar_border, this.health_bar);
 }
 
 Unit.prototype.renderHealthBar = function(){
-	this.health_bar.graphics.f(this.color).dr(-11,-15,22*(this.health/this.max_health),2);
+	this.health_bar.graphics.c().f(this.color).dr(-11,-15,22*(this.health/this.max_health),2);
 }
 
 Unit.prototype.move = function(x, y){
@@ -21,7 +21,6 @@ Unit.prototype.move = function(x, y){
 	this.status = "move";
 	this.target = null;
 	this.move_queue = this.game.findPath(this, {x:this.x,y:this.y}, {x:x,y:y}, true);
-	console.log("move");
 }
 
 Unit.prototype.rotate = function(dx, dy){
@@ -82,15 +81,16 @@ Unit.prototype.rotate = function(dx, dy){
 Unit.prototype.moveAttack = function(x, y){
 	this.destination = {x:x,y:y};
 	this.status = "move_attack";
-	this.target = this.findClosestEnemy(this.range);
+	this.target = this.findClosestEnemy(this.aggro_radius);
 	this.move_queue = this.game.findPath(this, {x:this.x,y:this.y}, {x:x,y:y}, false);
 }
 
 Unit.prototype.attackTarget = function(target, damage){
-	target.hit(this, 10);
-	console.log(target.x - this.x, target.y - this.y);
+	target.hit(this, this.damage);
 	this.rotate(target.x - this.x, target.y - this.y);
-	createjs.Tween.get(this.weapon).to({rotation:this.weapon.rotation + this.weapon.swing},100, createjs.Ease.backOut).to({rotation:this.weapon.rotation},100, createjs.Ease.backOut);
+	if(this.weapon){
+		createjs.Tween.get(this.weapon).to({rotation:this.weapon.rotation + this.weapon.swing},100, createjs.Ease.backOut).to({rotation:this.weapon.rotation},100, createjs.Ease.backOut);
+	}
 }
 
 Unit.prototype.hit = function(attacker, damage){
@@ -102,11 +102,12 @@ Unit.prototype.hit = function(attacker, damage){
 		createjs.Tween.get(this).call(function(event){
 			event.target.sprite.filters = [new createjs.ColorFilter(1,0,0,1)];
 			event.target.sprite.cache(-12,-16,24,32);
-		}).wait(300).call(function(event){
+		}).wait(200).call(function(event){
 			event.target.sprite.filters = null;
 			event.target.sprite.uncache();
 		});
 	}
+	this.renderHealthBar();
 }
 
 Unit.prototype.die = function(attacker){
@@ -115,12 +116,15 @@ Unit.prototype.die = function(attacker){
 		event.target.sprite.filters = [new createjs.ColorFilter(1,1,1,0)];
 		event.target.sprite.cache(-12,-16,24,32);
 		event.target.status = "death";
-		attacker.target = null;
-		attacker.move_queue = this.game.findPath(attacker, attacker, attacker.destination, false);
-		console.log(attacker, attacker.destination);
-		console.log(attacker.move_queue);
+		attacker.targetDied();
 		var unit_coordinates = this.game.getUnitCoordinates();
 		unit_coordinates[parseInt(this.y/16)][parseInt(this.x/16)] = null;
+	}).wait(300).call(function(event){
+		event.target.sprite.filters = [new createjs.ColorFilter(1,1,1,1)];
+		event.target.sprite.updateCache();
+	}).wait(300).call(function(event){
+		event.target.sprite.filters = [new createjs.ColorFilter(1,1,1,0)];
+		event.target.sprite.updateCache();
 	}).wait(300).call(function(event){
 		event.target.sprite.filters = [new createjs.ColorFilter(1,1,1,1)];
 		event.target.sprite.updateCache();
@@ -131,8 +135,20 @@ Unit.prototype.die = function(attacker){
 	});
 }
 
+Unit.prototype.targetDied = function(){
+	this.target = null;
+	if(this.status ==="move_attack"){
+		this.move_queue = this.game.findPath(this, this, this.destination, false);
+	}
+}
+
+Unit.prototype.setTarget = function(target){
+	this.target = target;
+	this.status = "attack";
+	this.move_queue = this.game.findPath(this, {x:this.x,y:this.y}, target, true);
+}
+
 Unit.prototype.stop = function(){
-	console.log("stop!!");
 	this.move_queue = [];
 	this.destination = null;
 	this.sprite.stop();

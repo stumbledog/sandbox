@@ -18,7 +18,7 @@ var Game = (function(){
 
 		stage = new createjs.Stage(canvas);
 		stage.enableMouseOver(10);
-//		stage.scaleX = stage.scaleY=2;
+		stage.scaleX = stage.scaleY = 1;
 
 		window.onresize = function(){
 			canvas.width = map_width;
@@ -68,6 +68,7 @@ var Game = (function(){
 
 		function initEventListener(){
 			stage.on("stagemousedown", function(event){
+				console.log(event);
 				if(event.nativeEvent.button == 2){
 					heroes.forEach(function(hero){
 						hero.move(event.stageX - offsetX,event.stageY - offsetY);
