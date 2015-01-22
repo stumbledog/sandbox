@@ -17,10 +17,10 @@ Monster.prototype.monster_initialize = function(file, index){
 	this.aggro_radius = 80;
 
 	this.max_health = this.health = 10;
-	this.speed = 0.1;
-	this.range = 32;
-	this.attack_speed = 30;
-	this.damage = 1;
+	this.speed = 2;
+	this.range = 24;
+	this.attack_speed = 10;
+	this.damage = 0.1;
 	this.direction = 180;
 
 	this.frames = [];
@@ -82,13 +82,15 @@ Monster.prototype.initEventListener = function(){
 	this.addEventListener("rollover", function(event){
 		if(self.status !== "death"){
 			self.sprite.filters = [new createjs.ColorFilter(1,0,0,1)];
-			self.sprite.cache(-12,-16,24,32);			
+			self.sprite.cache(-12,-16,24,32);
+			self.game.setTarget(self);
 		}
 	});
 	this.addEventListener("rollout", function(event){
 		if(self.status !== "death"){
 			self.sprite.filters = null;
 			self.sprite.uncache();
+			self.game.unsetTarget(self);
 		}
 	});
 }
@@ -141,12 +143,10 @@ Monster.prototype.tick = function(){
 			this.status = "idle";
 		}
 	}else if(this.status === "attack"){
-		if(this.target){
-			if(this.getSquareDistance(this.target) > Math.pow(this.aggro_radius,2)){
-				this.target = null;
-				this.status = "idle";
-			}else{
-				this.move_queue = this.game.findPath(this, {x:this.x,y:this.y}, this.target, true);
+		if(this.target && this.getSquareDistance(this.target) < Math.pow(this.aggro_radius,2)){
+			this.followPath(this.target, true);
+			/*
+			if(this.move_queue && this.move_queue.length && (Math.abs(this.move_queue[0].x - this.x) > this.speed || Math.abs(this.move_queue[0].y - this.y) > this.speed)){
 				this.radian = Math.atan2(this.move_queue[0].x - this.x, this.move_queue[0].y - this.y);
 				this.vx = Math.sin(this.radian) * this.speed;
 				this.vy = Math.cos(this.radian) * this.speed;
@@ -167,8 +167,11 @@ Monster.prototype.tick = function(){
 				this.x += this.vx;
 				this.y += this.vy;
 				unit_coordinates[parseInt(this.y/16)][parseInt(this.x/16)] = this;
-			}
+			}else{
+				this.move_queue = this.game.findPath(this, {x:this.x,y:this.y}, this.target, true);
+			}*/
 		}else{
+			this.target = null;
 			this.status = "idle";
 		}
 	}

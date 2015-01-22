@@ -16,6 +16,11 @@ Unit.prototype.renderHealthBar = function(){
 	this.health_bar.graphics.c().f(this.color).dr(-11,-15,22*(this.health/this.max_health),2);
 }
 
+Unit.prototype.setTarget = function(unit){
+	this.target = unit;
+	this.status = "attack";
+}
+
 Unit.prototype.move = function(x, y){
 	this.destination = {x:x,y:y};
 	this.status = "move";
@@ -86,32 +91,37 @@ Unit.prototype.moveAttack = function(x, y){
 }
 
 Unit.prototype.attackTarget = function(target, damage){
-	target.hit(this, this.damage);
-	this.rotate(target.x - this.x, target.y - this.y);
-	if(this.weapon){
-		createjs.Tween.get(this.weapon).to({rotation:this.weapon.rotation + this.weapon.swing},100, createjs.Ease.backOut).to({rotation:this.weapon.rotation},100, createjs.Ease.backOut);
+	if(target.status !== "death"){
+		target.hit(this, this.damage);
+		this.rotate(target.x - this.x, target.y - this.y);
+		if(this.weapon){
+			createjs.Tween.get(this.weapon).to({rotation:this.weapon.rotation + this.weapon.swing},100, createjs.Ease.backOut).to({rotation:this.weapon.rotation},100, createjs.Ease.backOut);
+		}else{
+			createjs.Tween.get(this.sprite).to({y:-8},300, createjs.Ease.backOut).to({y:0},300, createjs.Ease.backOut);
+		}
 	}
 }
 
 Unit.prototype.hit = function(attacker, damage){
-	this.health -= damage;
-	if(this.health <= 0){
-		this.health = 0;
-		this.die(attacker);
-	}else{
-		createjs.Tween.get(this).call(function(event){
-			event.target.sprite.filters = [new createjs.ColorFilter(1,0,0,1)];
-			event.target.sprite.cache(-12,-16,24,32);
-		}).wait(200).call(function(event){
-			event.target.sprite.filters = null;
-			event.target.sprite.uncache();
-		});
+	if(this.status !== "death"){
+		this.health -= damage;
+		if(this.health <= 0){
+			this.health = 0;
+			this.die(attacker);
+		}else{
+			createjs.Tween.get(this).call(function(event){
+				event.target.sprite.filters = [new createjs.ColorFilter(1,0,0,1)];
+				event.target.sprite.cache(-12,-16,24,32);
+			}).wait(200).call(function(event){
+				event.target.sprite.filters = null;
+				event.target.sprite.uncache();
+			});
+		}
+		this.renderHealthBar();
 	}
-	this.renderHealthBar();
 }
 
 Unit.prototype.die = function(attacker){
-	console.log("die");
 	createjs.Tween.get(this).call(function(event){
 		event.target.sprite.filters = [new createjs.ColorFilter(1,1,1,0)];
 		event.target.sprite.cache(-12,-16,24,32);
@@ -120,17 +130,18 @@ Unit.prototype.die = function(attacker){
 		var unit_coordinates = this.game.getUnitCoordinates();
 		unit_coordinates[parseInt(this.y/16)][parseInt(this.x/16)] = null;
 	}).wait(300).call(function(event){
+		event.target.sprite.uncache();
 		event.target.sprite.filters = [new createjs.ColorFilter(1,1,1,1)];
-		event.target.sprite.updateCache();
+		event.target.sprite.cache(-12,-16,24,32);
 	}).wait(300).call(function(event){
+		event.target.sprite.uncache();
 		event.target.sprite.filters = [new createjs.ColorFilter(1,1,1,0)];
-		event.target.sprite.updateCache();
+		event.target.sprite.cache(-12,-16,24,32);
 	}).wait(300).call(function(event){
+		event.target.sprite.uncache();
 		event.target.sprite.filters = [new createjs.ColorFilter(1,1,1,1)];
-		event.target.sprite.updateCache();
+		event.target.sprite.cache(-12,-16,24,32);
 	}).wait(300).call(function(event){
-		event.target.sprite.filters = [new createjs.ColorFilter(1,1,1,0)];
-		event.target.sprite.updateCache();
 		event.target.game.removeUnit(event.target);
 	});
 }
@@ -161,8 +172,14 @@ Unit.prototype.findClosestEnemy = function(range){
 	var min;
 	enemies.forEach(function(enemy){
 		enemy.distance = this.getSquareDistance(enemy);
-		if((!min || enemy.distance < min.distance) && enemy.distance < Math.pow(range,2)){
-			min = enemy;
+		if(range){
+			if((!min || enemy.distance < min.distance) && enemy.distance < Math.pow(range,2)){
+				min = enemy;
+			}
+		}else{
+			if((!min || enemy.distance < min.distance)){
+				min = enemy;
+			}
 		}
 	},this);
 	return min;
@@ -170,4 +187,39 @@ Unit.prototype.findClosestEnemy = function(range){
 
 Unit.prototype.getSquareDistance = function(target){
 	return Math.pow(this.x - target.x, 2)+Math.pow(this.y - target.y, 2);
+}
+
+Unit.prototype.followPath = function(destination, avoid_enemy, move_attack){
+	if(this.move_queue.length && (Math.abs(this.move_queue[0].x - this.x) > this.speed || Math.abs(this.move_queue[0].y - this.y) > this.speed)){
+		this.radian = Math.atan2(this.move_queue[0].x - this.x, this.move_queue[0].y - this.y);
+		this.vx = Math.sin(this.radian) * this.speed;
+		this.vy = Math.cos(this.radian) * this.speed;
+
+		if(!this.unit_coordinates){
+			this.unit_coordinates = this.game.getUnitCoordinates();
+		}
+
+		var indexX = parseInt((this.x + this.vx)/16);
+		var indexY = parseInt((this.y + this.vy)/16);
+
+		if(!(this.unit_coordinates[indexY] && this.unit_coordinates[indexY][indexX] && this.id !== this.unit_coordinates[indexY][indexX].id)){
+			this.rotate(this.vx, this.vy);
+			this.unit_coordinates[parseInt(this.y/16)][parseInt(this.x/16)] = null;
+			this.x += this.vx;
+			this.y += this.vy;
+			this.unit_coordinates[parseInt(this.y/16)][parseInt(this.x/16)] = this;
+		}
+	}else{
+		if(move_attack){
+			if(this.target){
+				this.move_queue = this.game.findPath(this, {x:this.x,y:this.y}, this.target, false);
+			}else if(this.move_queue.length){
+				this.move_queue = this.game.findPath(this, {x:this.x,y:this.y}, this.move_queue[this.move_queue.length-1], false);					
+			}else{
+				this.stop();
+			}
+		}else if(destination){
+			this.move_queue = this.game.findPath(this, {x:this.x,y:this.y}, destination, avoid_enemy);
+		}
+	}
 }

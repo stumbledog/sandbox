@@ -3,7 +3,7 @@ var Game = (function(){
 	var instance;
 
 	function init(){
-		var stage, canvas, loader, hero, cursor, blocks;
+		var stage, canvas, loader, hero, cursor, blocks, target;
 		var map_container, block_container, enemy_container, unit_container, hero_container, effect_container, health_bar_container, cursor_container;
 		var offsetX = offsetY = 0;
 		var move_top = move_right = move_down = move_left = false;
@@ -68,18 +68,27 @@ var Game = (function(){
 
 		function initEventListener(){
 			stage.on("stagemousedown", function(event){
-				console.log(event);
+				if(target && target.status === "death"){
+					target = null;
+				}
 				if(event.nativeEvent.button == 2){
-					heroes.forEach(function(hero){
+					if(target){
+						hero.setTarget(target);
+					}else{
 						hero.move(event.stageX - offsetX,event.stageY - offsetY);
-					});
-					setCommand("move");
+						setCommand("move");
+					}
 				}else if(event.nativeEvent.button == 0){
 					if(command === "move"){
 						console.log("select");
 					}else if(command === "attack"){
-						hero.moveAttack(event.stageX,event.stageY);
-						setCommand("move_attack");
+						if(target){
+							hero.setTarget(target);
+							setCommand("move");
+						}else{
+							hero.moveAttack(event.stageX,event.stageY);
+							setCommand("move_attack");
+						}
 					}
 				}
 			});
@@ -290,7 +299,7 @@ var Game = (function(){
 
 		function createUnits(){
 			var unit = new Follower("soldier", 0);
-			unit.x = 0 * 16 + 8;
+			unit.x = 1 * 16 + 8;
 			unit.y = 0 * 16 + 8;
 			unit_container.addChild(unit);
 			var unit = new Follower("soldier", 1);
@@ -298,9 +307,9 @@ var Game = (function(){
 			unit.y = 1 * 16 + 8;
 			unit_container.addChild(unit);
 			var unit = new Follower("soldier", 2);
-			unit.x = 2 * 16 + 8;
+			unit.x = 1 * 16 + 8;
 			unit.y = 2 * 16 + 8;
-			unit_container.addChild(unit);
+			unit_container.addChild(unit);/*
 			var unit = new Follower("soldier", 3);
 			unit.x = 4 * 16 + 8;
 			unit.y = 1 * 16 + 8;
@@ -324,7 +333,7 @@ var Game = (function(){
 			var unit = new Follower("soldier", 3);
 			unit.x = 6 * 16 + 8;
 			unit.y = 0 * 16 + 8;
-			unit_container.addChild(unit);
+			unit_container.addChild(unit);*/
 		}
 
 		function createEnemy(){
@@ -442,13 +451,15 @@ var Game = (function(){
 				blocks.forEach(function(row){
 					new_blocks.push(row.slice(0));
 				});
-				if(avoid_enemy){
-					unit_container.children.forEach(function(unit){
-						if(unit.team !== self.team){
-							new_blocks[parseInt(unit.y/16)][parseInt(unit.x/16)] = 1;
-						}
-					});					
-				}
+
+				unit_container.children.forEach(function(unit){
+					if(avoid_enemy && unit.id !== self.id){
+						new_blocks[parseInt(unit.y/16)][parseInt(unit.x/16)] = 1;
+					}else if(!avoid_enemy && unit.team === self.team && unit.id !== self.id){
+						new_blocks[parseInt(unit.y/16)][parseInt(unit.x/16)] = 1;
+					}
+				});
+
 				return PathFinder.findPath(new_blocks, starting, destination);
 			},
 			getUnits:function(){
@@ -460,8 +471,13 @@ var Game = (function(){
 			getEnemies:function(self){
 				return unit_container.children.filter(function(unit){return self.team !== unit.team && unit.status !== "death";});
 			},
-			setTarget:function(target){
-				hero.setTarget(target);
+			setTarget:function(unit){
+				target = unit;
+			},
+			unsetTarget:function(unit){
+				if(target.id === unit.id){
+					target = null;
+				}
 			},
 			findNeighbor:function(self, x, y){
 				var new_blocks = [];
