@@ -7,6 +7,12 @@ Map.prototype = new createjs.Container();
 Map.prototype.container_initialize = Map.prototype.initialize;
 
 Map.prototype.initialize = function(image, tiles, tile_map){
+	var maps = arguments;
+
+	for(index in maps){
+		console.log(maps[index]);
+	}
+
 	for(i=0;i<tiles.length;i++){
 		for(j=0;j<tiles[i].length;j++){
 			if(tiles[i][j]>0){
@@ -16,8 +22,12 @@ Map.prototype.initialize = function(image, tiles, tile_map){
 				bitmap.cache(0,0,32,32);
 				bitmap.x = j * 32;
 				bitmap.y = i * 32;
-				this.addChild(bitmap);				
+				this.addChild(bitmap);
 			}
 		}
 	}
+}
+
+Map.prototype.getBlock = function(){
+	
 }

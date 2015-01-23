@@ -3,13 +3,11 @@ var Game = (function(){
 	var instance;
 
 	function init(){
-		var stage, canvas, loader, hero, cursor, blocks, target;
-		var map_container, block_container, enemy_container, unit_container, hero_container, effect_container, health_bar_container, cursor_container;
+		var stage, ui, canvas, loader, hero, cursor, blocks, target;
+		var map_container, unit_container, effect_container;
 		var offsetX = offsetY = 0;
 		var move_top = move_right = move_down = move_left = false;
-		var command = "move";
 		var map_width = 16 * 32, map_height  = 14 * 32;
-		var heroes = [];
 		var unit_coordinates;
 
 		canvas = document.getElementById("gameCanvas");
@@ -23,6 +21,7 @@ var Game = (function(){
 		window.onresize = function(){
 			canvas.width = map_width;
 			canvas.height = map_height;
+			ui.setCanvasSize(map_width, map_height);
 		};
 
 		var manifest = [
@@ -42,10 +41,9 @@ var Game = (function(){
 
 		function handleLoadComplete(){
 			initContainer();
-			initEventListener();
-			initMouseCursor();
 			initMap();
 			createHero();
+			ui = new UI(stage);
 			//createUnits();
 			createEnemy();
 			
@@ -55,85 +53,9 @@ var Game = (function(){
 
 		function initContainer(){
 			map_container = new createjs.Container();
-			block_container = new createjs.Container();
-			//enemy_container = new createjs.Container();
 			unit_container = new createjs.Container();
-			//hero_container = new createjs.Container();
 			effect_container = new createjs.Container();
-			//health_bar_container = new createjs.Container();
-			cursor_container = new createjs.Container();
-			//stage.addChild(map_container, block_container, enemy_container, unit_container, hero_container, effect_container, health_bar_container, cursor_container);
-			stage.addChild(map_container, block_container, unit_container, effect_container, cursor_container);
-		}
-
-		function initEventListener(){
-			stage.on("stagemousedown", function(event){
-				if(target && target.status === "death"){
-					target = null;
-				}
-				if(event.nativeEvent.button == 2){
-					if(target){
-						hero.setTarget(target);
-					}else{
-						hero.move(event.stageX - offsetX,event.stageY - offsetY);
-						setCommand("move");
-					}
-				}else if(event.nativeEvent.button == 0){
-					if(command === "move"){
-						console.log("select");
-					}else if(command === "attack"){
-						if(target){
-							hero.setTarget(target);
-							setCommand("move");
-						}else{
-							hero.moveAttack(event.stageX,event.stageY);
-							setCommand("move_attack");
-						}
-					}
-				}
-			});
-
-			stage.on("stagemousemove", function(event){
-				cursor.x = event.stageX;
-				cursor.y = event.stageY;
-				//console.log(event);
-				if(event.stageX > window.innerWidth-100){
-					move_right = true;
-				}else{
-					move_right = false;
-				}
-
-				if(event.stageX < 100 - offsetX){
-					move_left = true;
-				}else{
-					move_left = false;
-				}
-			});
-
-			document.onkeydown = function(event){
-				console.log(event.keyCode);
-				switch(event.keyCode){
-					case 27://esc
-						setCommand("move");
-						break;
-					case 87://w
-						break;
-					case 68://d
-						setCommand("assemble");
-						break;
-					case 83://s
-						setCommand("stop");
-						break;
-					case 65://a
-						setCommand("attack");
-						break;
-				}
-			}
-		}
-
-		function initMouseCursor(){
-			cursor = new Cursor(loader.getResult("icon"));
-			cursor_container.addChild(cursor);
+			stage.addChild(map_container, unit_container, effect_container);
 		}
 
 		function initMap(){
@@ -186,8 +108,10 @@ var Game = (function(){
 				[64,160,32,32],
 			];
 
+			var map = {tiles:tiles_A, tile_map:tile_map_A, file:"filename", file_id:"id"};
+
 			map_container.addChild(new Map(loader.getResult("mapA"), tiles_A, tile_map_A));
-			block_container.addChild(new Map(loader.getResult("E2"), tiles_B, tile_map_B));
+			map_container.addChild(new Map(loader.getResult("E2"), tiles_B, tile_map_B));
 
 			setBlocks(tiles_B);
 		}
@@ -202,12 +126,8 @@ var Game = (function(){
 				var arr1 = [];
 				var arr2 = [];
 				row.forEach(function(cell, x){
-//					if(y === 0 || y === rows - 1 || x === 0 || x === cols - 1){
-//						arr.push(1);
-//					}else{
-						arr1.push(cell,cell);
-						arr2.push(cell,cell);
-//					}
+					arr1.push(cell,cell);
+					arr2.push(cell,cell);
 				});
 				blocks.push(arr1);
 				blocks.push(arr2);
@@ -218,83 +138,7 @@ var Game = (function(){
 			hero = new Hero("hero", 0);
 			hero.x = 0 * 16 + 8;
 			hero.y = 0 * 16 + 8;
-			heroes.push(hero);
-			unit_container.addChild(hero);/*
-			hero = new Hero("hero", 0);
-			hero.x = 0 * 16 + 8;
-			hero.y = 1 * 16 + 8;
-			heroes.push(hero);
 			unit_container.addChild(hero);
-			hero = new Hero("hero", 0);
-			hero.x = 0 * 16 + 8;
-			hero.y = 2 * 16 + 8;
-			heroes.push(hero);
-			unit_container.addChild(hero);
-			hero = new Hero("hero", 0);
-			hero.x = 0 * 16 + 8;
-			hero.y = 3 * 16 + 8;
-			heroes.push(hero);
-			unit_container.addChild(hero);
-			hero = new Hero("hero", 0);
-			hero.x = 1 * 16 + 8;
-			hero.y = 0 * 16 + 8;
-			heroes.push(hero);
-			unit_container.addChild(hero);
-			hero = new Hero("hero", 0);
-			hero.x = 1 * 16 + 8;
-			hero.y = 1 * 16 + 8;
-			heroes.push(hero);
-			unit_container.addChild(hero);
-			hero = new Hero("hero", 0);
-			hero.x = 1 * 16 + 8;
-			hero.y = 2 * 16 + 8;
-			heroes.push(hero);
-			unit_container.addChild(hero);
-			hero = new Hero("hero", 0);
-			hero.x = 1 * 16 + 8;
-			hero.y = 3 * 16 + 8;
-			heroes.push(hero);
-			unit_container.addChild(hero);
-			hero = new Hero("hero", 0);
-			hero.x = 2 * 16 + 8;
-			hero.y = 0 * 16 + 8;
-			heroes.push(hero);
-			unit_container.addChild(hero);
-			hero = new Hero("hero", 0);
-			hero.x = 2 * 16 + 8;
-			hero.y = 1 * 16 + 8;
-			heroes.push(hero);
-			unit_container.addChild(hero);
-			hero = new Hero("hero", 0);
-			hero.x = 2 * 16 + 8;
-			hero.y = 2 * 16 + 8;
-			heroes.push(hero);
-			unit_container.addChild(hero);
-			hero = new Hero("hero", 0);
-			hero.x = 2 * 16 + 8;
-			hero.y = 3 * 16 + 8;
-			heroes.push(hero);
-			unit_container.addChild(hero);
-			hero = new Hero("hero", 0);
-			hero.x = 3 * 16 + 8;
-			hero.y = 0 * 16 + 8;
-			heroes.push(hero);
-			unit_container.addChild(hero);
-			hero = new Hero("hero", 0);
-			hero.x = 3 * 16 + 8;
-			hero.y = 1 * 16 + 8;
-			heroes.push(hero);
-			unit_container.addChild(hero);
-			hero = new Hero("hero", 0);
-			hero.x = 3 * 16 + 8;
-			hero.y = 2 * 16 + 8;
-			heroes.push(hero);
-			unit_container.addChild(hero);
-			hero = new Hero("hero", 0);
-			hero.x = 3 * 16 + 8;
-			hero.y = 3 * 16 + 8;
-			heroes.push(hero);
-			unit_container.addChild(hero);*/
 		}
 
 		function createUnits(){
@@ -375,27 +219,6 @@ var Game = (function(){
 			unit_container.addChild(monster);
 		}
 
-		function setCommand(type){
-			switch(type){
-				case "attack":
-					command = "attack";
-					cursor.attack();
-				break;
-				case "move":
-					command = "move";
-					cursor.move();
-				break;
-				case "stop":
-					command = "move";
-					cursor.move();
-					hero.stop();
-				break;
-				case "move_attack":
-					command = "move_attack"
-					cursor.move();
-			}
-		}
-
 		function assembleCompany(){
 
 		}
@@ -432,7 +255,6 @@ var Game = (function(){
 			unit_container.children.forEach(function(unit){
 				unit.tick();
 			});
-
 			stage.update();
 		}
 
@@ -445,6 +267,9 @@ var Game = (function(){
 			},
 			getEffectContainer:function(){
 				return effect_container;
+			},
+			scrollScreen:function(direction){
+
 			},
 			findPath:function(self, starting, destination, avoid_enemy){
 				var new_blocks = [];
@@ -461,6 +286,9 @@ var Game = (function(){
 				});
 
 				return PathFinder.findPath(new_blocks, starting, destination);
+			},
+			getHero:function(){
+				return hero;
 			},
 			getUnits:function(){
 				return unit_container.children;

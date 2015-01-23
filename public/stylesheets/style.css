@@ -3,6 +3,20 @@ html, body {
 	padding: 0px;
 }
 
-#gameCanvas{
+canvas#bg,
+canvas#gameCanvas,
+canvas#ui
+{
+	position:absolute;
 	cursor:none;
+}
+
+canvas#bg{
+	z-index: 0;
+}
+canvas#gameCanvas{
+	z-index: 1;
+}
+canvas#ui{
+	z-index: 2;
 }

@@ -19,8 +19,8 @@ Hero.prototype.hero_initialize = function(file, index){
 	this.speed = 3;
 	this.aggro_radius = 80;
 	this.range = 24;
-	this.attack_speed = 1;
-	this.damage = 1;
+	this.attack_speed = 20;
+	this.damage = 5;
 
 	this.frames = [];
 	var offsetX = index % 4 *72;
