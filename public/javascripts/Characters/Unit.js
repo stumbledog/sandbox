@@ -112,7 +112,7 @@ Unit.prototype.hit = function(attacker, damage){
 			createjs.Tween.get(this).call(function(event){
 				event.target.sprite.filters = [new createjs.ColorFilter(1,0,0,1)];
 				event.target.sprite.cache(-12,-16,24,32);
-			}).wait(200).call(function(event){
+			}).wait(50).call(function(event){
 				event.target.sprite.filters = null;
 				event.target.sprite.uncache();
 			});
@@ -137,11 +137,19 @@ Unit.prototype.die = function(attacker){
 		event.target.sprite.uncache();
 		event.target.sprite.filters = [new createjs.ColorFilter(1,1,1,0)];
 		event.target.sprite.cache(-12,-16,24,32);
-	}).wait(300).call(function(event){
+	}).wait(200).call(function(event){
 		event.target.sprite.uncache();
 		event.target.sprite.filters = [new createjs.ColorFilter(1,1,1,1)];
 		event.target.sprite.cache(-12,-16,24,32);
-	}).wait(300).call(function(event){
+	}).wait(200).call(function(event){
+		event.target.sprite.uncache();
+		event.target.sprite.filters = [new createjs.ColorFilter(1,1,1,0)];
+		event.target.sprite.cache(-12,-16,24,32);
+	}).wait(100).call(function(event){
+		event.target.sprite.uncache();
+		event.target.sprite.filters = [new createjs.ColorFilter(1,1,1,1)];
+		event.target.sprite.cache(-12,-16,24,32);
+	}).wait(100).call(function(event){
 		event.target.game.removeUnit(event.target);
 	});
 }

@@ -19,7 +19,7 @@ Monster.prototype.monster_initialize = function(file, index){
 	this.max_health = this.health = 10;
 	this.speed = 2;
 	this.range = 24;
-	this.attack_speed = 10;
+	this.attack_speed = 30;
 	this.damage = 0.1;
 	this.direction = 180;
 
