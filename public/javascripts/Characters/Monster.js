@@ -17,7 +17,7 @@ Monster.prototype.monster_initialize = function(file, index){
 	this.aggro_radius = 80;
 
 	this.max_health = this.health = 10;
-	this.speed = 2;
+	this.speed = .2;
 	this.range = 24;
 	this.attack_speed = 30;
 	this.damage = 0.1;
@@ -80,6 +80,7 @@ Monster.prototype.initEventListener = function(){
 		}
 	});
 	this.addEventListener("rollover", function(event){
+		console.log("as");
 		if(self.status !== "death"){
 			self.sprite.filters = [new createjs.ColorFilter(1,0,0,1)];
 			self.sprite.cache(-12,-16,24,32);

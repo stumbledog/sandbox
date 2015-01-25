@@ -2,9 +2,6 @@ function UI(stage){
 	this.initialize(stage);
 }
 
-UI.prototype = new createjs.Container();
-UI.prototype.container_initialize = UI.prototype.initialize;
-
 UI.prototype.initialize = function(stage){
 	this.game_stage = stage;
 
@@ -13,7 +10,7 @@ UI.prototype.initialize = function(stage){
 	this.canvas.height = stage.canvas.height;
 	
 	this.stage = new createjs.Stage(this.canvas);
-	this.stage.enableMouseOver(10);
+	this.stage.enableMouseOver();
 	this.stage.scaleX = this.stage.scaleY = 1;
 
 	this.cursor = new Cursor();
@@ -23,17 +20,19 @@ UI.prototype.initialize = function(stage){
 
 	this.offsetX = this.offsetY = 0;
 
-	stage.addChild(this.cursor);
+	this.stage.addChild(this.cursor);
+	this.stage.nextStage = stage;
+	stage.enableMouseOver();
 	this.initEvent();
 }
 
-
-
 UI.prototype.initEvent = function(){
 	var self = this;
-	this.stage.on("stagemousemove", function(event){
-		this.cursor.x = event.stageX;
-		this.cursor.y = event.stageY;
+	this.stage.addEventListener("stagemousemove", function(event){
+		self.cursor.x = event.stageX;
+		self.cursor.y = event.stageY;
+		self.stage.update();
+		//this.game.mouseMove(event);
 		//self.stage.update();
 		/*
 		if(event.stageX > window.innerWidth-100){
@@ -48,7 +47,7 @@ UI.prototype.initEvent = function(){
 			move_left = false;
 		}
 		*/
-	}, this);
+	});
 	
 	this.stage.on("stagemousedown", function(event){
 		if(this.target && this.target.status === "death"){
@@ -74,6 +73,7 @@ UI.prototype.initEvent = function(){
 				}
 			}
 		}
+		this.stage.update();
 	}, this);
 
 	document.onkeydown = function(event){
@@ -94,7 +94,12 @@ UI.prototype.initEvent = function(){
 				self.setCommand("attack");
 				break;
 		}
+		self.stage.update();
 	}
+
+	document.addEventListener("mousewheel", function(event){
+		this.game.setScale(event.wheelDelta);
+	}.bind(this), false);
 }
 
 UI.prototype.setCommand = function(type){
@@ -121,68 +126,4 @@ UI.prototype.setCommand = function(type){
 UI.prototype.setCanvasSize = function(width, height){
 	this.canvas.width = width;
 	this.canvas.height = height;
-}
-
-UI.prototype.initEventListener = function(){
-	stage.on("stagemousedown", function(event){
-		if(target && target.status === "death"){
-			target = null;
-		}
-		if(event.nativeEvent.button == 2){
-			if(target){
-				hero.setTarget(target);
-			}else{
-				hero.move(event.stageX - offsetX,event.stageY - offsetY);
-				setCommand("move");
-			}
-		}else if(event.nativeEvent.button == 0){
-			if(command === "move"){
-				console.log("select");
-			}else if(command === "attack"){
-				if(target){
-					hero.setTarget(target);
-					setCommand("move");
-				}else{
-					hero.moveAttack(event.stageX,event.stageY);
-					setCommand("move_attack");
-				}
-			}
-		}
-	});
-
-	stage.on("stagemousemove", function(event){
-		cursor.x = event.stageX;
-		cursor.y = event.stageY;
-		if(event.stageX > window.innerWidth-100){
-			move_right = true;
-		}else{
-			move_right = false;
-		}
-
-		if(event.stageX < 100 - offsetX){
-			move_left = true;
-		}else{
-			move_left = false;
-		}
-	});
-
-	document.onkeydown = function(event){
-		console.log(event.keyCode);
-		switch(event.keyCode){
-			case 27://esc
-				setCommand("move");
-				break;
-			case 87://w
-				break;
-			case 68://d
-				setCommand("assemble");
-				break;
-			case 83://s
-				setCommand("stop");
-				break;
-			case 65://a
-				setCommand("attack");
-				break;
-		}
-	}
 }

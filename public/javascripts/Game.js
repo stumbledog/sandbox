@@ -3,20 +3,23 @@ var Game = (function(){
 	var instance;
 
 	function init(){
-		var stage, ui, canvas, loader, hero, cursor, blocks, target;
-		var map_container, unit_container, effect_container;
+		var stage, ui, map, canvas, loader, hero, blocks, target;
+		var unit_container, effect_container;
 		var offsetX = offsetY = 0;
 		var move_top = move_right = move_down = move_left = false;
 		var map_width = 16 * 32, map_height  = 14 * 32;
 		var unit_coordinates;
+		var scale = 1;
+
+		var unit_stage;
 
 		canvas = document.getElementById("gameCanvas");
-		canvas.width = map_width;
-		canvas.height = map_height;
+		canvas.width = map_width * scale;
+		canvas.height = map_height * scale;
 
 		stage = new createjs.Stage(canvas);
-		stage.enableMouseOver(10);
-		stage.scaleX = stage.scaleY = 1;
+		//stage.enableMouseOver(10);
+		stage.scaleX = stage.scaleY = scale;
 
 		window.onresize = function(){
 			canvas.width = map_width;
@@ -29,10 +32,6 @@ var Game = (function(){
 			{src:"assets/Graphics/Characters/01 - Hero.png", id:"hero"},
 			{src:"assets/Graphics/Characters/23 - Soldier.png", id:"soldier"},
 			{src:"assets/Graphics/Characters/29 - Monster.png", id:"monster29"},
-			{src:"assets/Graphics/Tilesets/A5/Exterior_Forest_TileA5.png", id:"mapA"},
-			{src:"assets/Graphics/Tilesets/B/Exterior_Forest_TileB.png", id:"mapB"},
-			{src:"assets/Graphics/Tilesets/A2/Exterior_Forest_TileA2.png", id:"EFTA2"},
-			{src:"assets/Graphics/Tilesets/E/Exterior_Walls_TileE.png", id:"E2"},
 		];
 
 		loader = new createjs.LoadQueue(false);
@@ -52,10 +51,9 @@ var Game = (function(){
 		}
 
 		function initContainer(){
-			map_container = new createjs.Container();
 			unit_container = new createjs.Container();
 			effect_container = new createjs.Container();
-			stage.addChild(map_container, unit_container, effect_container);
+			stage.addChild(unit_container, effect_container);
 		}
 
 		function initMap(){
@@ -108,30 +106,25 @@ var Game = (function(){
 				[64,160,32,32],
 			];
 
-			var map = {tiles:tiles_A, tile_map:tile_map_A, file:"filename", file_id:"id"};
-
-			map_container.addChild(new Map(loader.getResult("mapA"), tiles_A, tile_map_A));
-			map_container.addChild(new Map(loader.getResult("E2"), tiles_B, tile_map_B));
-
-			setBlocks(tiles_B);
-		}
-
-		function setBlocks(tiles){
-			var rows = tiles.length;
-			var cols = tiles[0].length;
-			
-			blocks = [];
-
-			tiles.forEach(function(row, y){
-				var arr1 = [];
-				var arr2 = [];
-				row.forEach(function(cell, x){
-					arr1.push(cell,cell);
-					arr2.push(cell,cell);
-				});
-				blocks.push(arr1);
-				blocks.push(arr2);
+			map = new Map({
+				maps:[{
+					tiles:tiles_A, 
+					tile_map:tile_map_A, 
+					file:"assets/Graphics/Tilesets/A5/Exterior_Forest_TileA5.png", 
+					file_id:"A5/Exterior_Forest_TileA5",
+					block:false
+					},{
+					tiles:tiles_B, 
+					tile_map:tile_map_B, 
+					file:"assets/Graphics/Tilesets/E/Exterior_Walls_TileE.png", 
+					file_id:"E/Exterior_Walls_TileE",
+					block:true
+				}],
+				width:32*16,
+				height:32*14,
+				rows:14
 			});
+			blocks = map.getBlock();
 		}
 
 		function createHero(){
@@ -184,7 +177,7 @@ var Game = (function(){
 			var monster = new Monster("monster29",0);
 			monster.x = 9*16+8;
 			monster.y = 0*16+8;
-			unit_container.addChild(monster);
+			stage.addChild(monster);
 			var monster = new Monster("monster29",0);
 			monster.x = 10*16+8;
 			monster.y = 1*16+8;
@@ -225,7 +218,6 @@ var Game = (function(){
 
 		function tick(){
 			if(!unit_coordinates){
-				console.log("init coordinates");
 				unit_coordinates = [];
 				for(var i=0;i<blocks.length;i++){
 					unit_coordinates.push([]);
@@ -341,6 +333,26 @@ var Game = (function(){
 			},
 			getUnitCoordinates:function(){
 				return unit_coordinates;
+			},
+			getMap:function(){
+				return map;
+			},
+			setScale:function(delta){
+				scale += delta/100;
+				scale = scale < 1 ? 1 :scale > 3 ? 3 : scale;
+				console.log(scale);
+				stage.scaleX = stage.scaleY = scale;
+				canvas.width = map_width * scale;
+				canvas.height = map_height * scale;
+				stage.update();
+				map.setScale(scale);
+			},
+			mouseMove:function(event){
+//				console.log(event);
+//				stage.mouseX = event.stageX;
+//				stage.mouseY = event.stageY;
+				console.log(stage);
+//				console.log(stage.getObjectUnderPoint(event.stageX,event.stageY,0));
 			}
 		}
 	}
