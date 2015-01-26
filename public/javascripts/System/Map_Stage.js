@@ -1,8 +1,8 @@
-function Map(){
+function Map_Stage(){
 	this.initialize(arguments);
 }
 
-Map.prototype.initialize = function(){
+Map_Stage.prototype.initialize = function(){
 	var args = Array.prototype.slice.call(arguments[0])[0];
 
 	this.maps = args.maps;
@@ -56,11 +56,11 @@ Map.prototype.initialize = function(){
 	}.bind(this));
 }
 
-Map.prototype.getBlock = function(){
+Map_Stage.prototype.getBlock = function(){
 	return this.block;
 }
 
-Map.prototype.setScale = function(scale){
+Map_Stage.prototype.setScale = function(scale){
 	this.stage.scaleX = this.stage.scaleY = scale;
 	this.canvas.width = this.width * scale;
 	this.canvas.height = this.height * scale;

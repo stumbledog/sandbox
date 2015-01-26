@@ -4,19 +4,43 @@ html, body {
 }
 
 canvas#bg,
-canvas#gameCanvas,
+canvas#game,
 canvas#ui
 {
 	position:absolute;
-	cursor:none;
 }
 
 canvas#bg{
 	z-index: 0;
 }
-canvas#gameCanvas{
+canvas#game{
 	z-index: 1;
 }
 canvas#ui{
+	cursor:url('../assets/Graphics/System/Icons/swordIcon.png'), auto;
 	z-index: 2;
+}
+canvas#ui.attack{
+	cursor:url('../assets/Graphics/System/Icons/attackIcon.png'), auto;
+}
+
+.div {
+	position: relative;
+	width: 960px;
+	height: 400px;
+}
+canvas {
+	background: none;
+}
+#one {
+	position: absolute;
+	right: 0;
+	top: 0;
+	border: 1px solid grey;
+}
+#two {
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	border: 1px solid grey;
 }

@@ -1,14 +1,16 @@
 function Monster(file, index){
-	this.monster_initialize(file, index);
+	this.initialize(file, index);
 }
 
 Monster.prototype = new Unit();
 
 Monster.prototype.constructor = Monster;
+//Monster.constructor = Unit.prototype.constructor;
 Monster.prototype.container_initialize = Monster.prototype.initialize;
 
-Monster.prototype.monster_initialize = function(file, index){
+Monster.prototype.initialize = function(file, index){
 	this.container_initialize();
+
 	this.game = Game.getInstance();
 	
 	this.type = "monster";
@@ -22,6 +24,7 @@ Monster.prototype.monster_initialize = function(file, index){
 	this.attack_speed = 30;
 	this.damage = 0.1;
 	this.direction = 180;
+
 
 	this.frames = [];
 	var offsetX = index % 4 *72;
@@ -71,29 +74,30 @@ Monster.prototype.monster_initialize = function(file, index){
 }
 
 Monster.prototype.initEventListener = function(){
-	var self = this;
+	
 	this.addEventListener("mousedown", function(event){
 		if(event.nativeEvent.button == 2){
-			self.game.setTarget(self);
+			this.game.setTarget(this);
 		}else{
 
 		}
-	});
+	}.bind(this));
+
 	this.addEventListener("rollover", function(event){
-		console.log("as");
-		if(self.status !== "death"){
-			self.sprite.filters = [new createjs.ColorFilter(1,0,0,1)];
-			self.sprite.cache(-12,-16,24,32);
-			self.game.setTarget(self);
+		if(this.status !== "death"){
+			this.sprite.filters = [new createjs.ColorFilter(1,0,0,1)];
+			this.sprite.cache(-12,-16,24,32);
+			this.game.setTarget(this);
 		}
-	});
+	}.bind(this));
+
 	this.addEventListener("rollout", function(event){
-		if(self.status !== "death"){
-			self.sprite.filters = null;
-			self.sprite.uncache();
-			self.game.unsetTarget(self);
+		if(this.status !== "death"){
+			this.sprite.filters = null;
+			this.sprite.uncache();
+			this.game.unsetTarget(this);
 		}
-	});
+	}.bind(this));
 }
 
 Monster.prototype.hit = function(attacker, damage){
@@ -126,7 +130,7 @@ Monster.prototype.tick = function(){
 				this.vx = Math.sin(this.radian) * this.speed;
 				this.vy = Math.cos(this.radian) * this.speed;
 				this.rotate(this.vx, this.vy);
-				var unit_coordinates = this.game.getUnitCoordinates();
+				var unit_coordinates = this.parent.parent.unit_coordinates;
 				if(unit_coordinates[parseInt((this.y+this.vy)/16)] 
 					&& unit_coordinates[parseInt((this.y+this.vy)/16)][parseInt((this.x+this.vx)/16)]
 					&& this.id !== unit_coordinates[parseInt((this.y+this.vy)/16)][parseInt((this.x+this.vx)/16)].id){

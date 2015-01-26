@@ -1,6 +1,4 @@
-function Unit(){
-
-}
+function Unit(){}
 
 Unit.prototype = new createjs.Container();
 
@@ -127,7 +125,7 @@ Unit.prototype.die = function(attacker){
 		event.target.sprite.cache(-12,-16,24,32);
 		event.target.status = "death";
 		attacker.targetDied();
-		var unit_coordinates = this.game.getUnitCoordinates();
+		var unit_coordinates = this.getStage().unit_coordinates;
 		unit_coordinates[parseInt(this.y/16)][parseInt(this.x/16)] = null;
 	}).wait(300).call(function(event){
 		event.target.sprite.uncache();
@@ -150,7 +148,7 @@ Unit.prototype.die = function(attacker){
 		event.target.sprite.filters = [new createjs.ColorFilter(1,1,1,1)];
 		event.target.sprite.cache(-12,-16,24,32);
 	}).wait(100).call(function(event){
-		event.target.game.removeUnit(event.target);
+		event.target.getStage().removeUnit(event.target);
 	});
 }
 
@@ -176,7 +174,7 @@ Unit.prototype.stop = function(){
 
 Unit.prototype.findClosestEnemy = function(range){
 	var self = this;
-	var enemies = this.game.getEnemies(this);
+	var enemies = this.parent.parent.getEnemies(this);
 	var min;
 	enemies.forEach(function(enemy){
 		enemy.distance = this.getSquareDistance(enemy);
@@ -204,7 +202,7 @@ Unit.prototype.followPath = function(destination, avoid_enemy, move_attack){
 		this.vy = Math.cos(this.radian) * this.speed;
 
 		if(!this.unit_coordinates){
-			this.unit_coordinates = this.game.getUnitCoordinates();
+			this.unit_coordinates = this.parent.parent.unit_coordinates;
 		}
 
 		var indexX = parseInt((this.x + this.vx)/16);
