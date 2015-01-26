@@ -12,8 +12,6 @@ var Game = (function(){
 
 		var unit_stage;
 
-		//stage.scaleX = stage.scaleY = scale;
-
 		window.onresize = function(){
 			canvas.width = map_width;
 			canvas.height = map_height;
@@ -21,6 +19,7 @@ var Game = (function(){
 		};
 
 		var manifest = [
+			{src:"assets/Graphics/System/Icons/IconSet.png", id:"icon"},
 			{src:"assets/Graphics/Characters/01 - Hero.png", id:"hero"},
 			{src:"assets/Graphics/Characters/23 - Soldier.png", id:"soldier"},
 			{src:"assets/Graphics/Characters/29 - Monster.png", id:"monster29"},
@@ -214,17 +213,8 @@ var Game = (function(){
 		}
 
 		return {
-			getStage:function(){
-				return stage;
-			},
 			getLoader:function(){
 				return loader;
-			},
-			getEffectContainer:function(){
-				return effect_container;
-			},
-			scrollScreen:function(direction){
-
 			},
 			findPath:function(self, starting, destination, avoid_enemy){
 				var new_blocks = [];
@@ -242,18 +232,6 @@ var Game = (function(){
 
 				return PathFinder.findPath(new_blocks, starting, destination);
 			},
-			getHero:function(){
-				return hero;
-			},
-			getUnits:function(){
-				return unit_container.children;
-			},
-			removeUnit:function(target){
-				unit_container.removeChild(target);
-			},
-			getEnemies:function(self){
-				return unit_container.children.filter(function(unit){return self.team !== unit.team && unit.status !== "death";});
-			},
 			setTarget:function(unit){
 				target = unit;
 			},
@@ -261,38 +239,6 @@ var Game = (function(){
 				if(target.id === unit.id){
 					target = null;
 				}
-			},
-			findNeighbor:function(self, x, y){
-				var new_blocks = [];
-				blocks.forEach(function(row){
-					new_blocks.push(row.slice(0));
-				});
-				ui_stage.getUnits().forEach(function(unit){
-					if(unit.id !== self.id){
-						new_blocks[parseInt(unit.y/16)][parseInt(unit.x/16)] = 1;
-						if(unit.vx>0){
-							new_blocks[parseInt(unit.y/16)][parseInt(unit.x/16)+1] = 1;
-						}else if(unit.vx < 0){
-							new_blocks[parseInt(unit.y/16)][parseInt(unit.x/16)-1] = 1;
-						}
-						if(unit.vy > 0 && new_blocks[parseInt(unit.y/16)+1]){
-							new_blocks[parseInt(unit.y/16)+1][parseInt(unit.x/16)] = 1;
-						}else if(unit.vy<0 && new_blocks[parseInt(unit.y/16)-1]){
-							new_blocks[parseInt(unit.y/16)-1][parseInt(unit.x/16)] = 1;
-						}
-					}
-				});
-				var random = parseInt(Math.random() * 4);
-				if(new_blocks[parseInt(y/16)+1] && new_blocks[parseInt(y/16)+1][parseInt(x/16)] === 0 && random === 0){
-					return PathFinder.findPath(new_blocks, {x:x,y:y}, {x:x, y:y+16});
-				}else if(new_blocks[parseInt(y/16)-1] && new_blocks[parseInt(y/16)-1][parseInt(x/16)] === 0 && random === 1){
-					return PathFinder.findPath(new_blocks, {x:x,y:y}, {x:x, y:y-16});
-				}else if(typeof new_blocks[parseInt(y/16)][parseInt(x/16)+1] !== "undefined" && new_blocks[parseInt(y/16)][parseInt(x/16)+1] === 0 && random === 2){
-					return PathFinder.findPath(new_blocks, {x:x,y:y}, {x:x+16, y:y});
-				}else if(typeof new_blocks[parseInt(y/16)][parseInt(x/16)-1] !== "undefined" && new_blocks[parseInt(y/16)][parseInt(x/16)-1] === 0 && random === 3){
-					return PathFinder.findPath(new_blocks, {x:x,y:y}, {x:x-16, y:y});
-				}
-				return [];
 			},
 			getUnitCoordinates:function(){
 				return unit_coordinates;
@@ -306,12 +252,15 @@ var Game = (function(){
 			setScale:function(delta){
 				scale += delta/100;
 				scale = scale < 1 ? 1 :scale > 3 ? 3 : scale;
-				console.log(scale);
+				/*
 				stage.scaleX = stage.scaleY = scale;
 				canvas.width = map_width * scale;
 				canvas.height = map_height * scale;
 				stage.update();
-				map_stage.setScale(scale);
+				*/
+				map_stage.scaleX = map_stage.scaleY = scale;
+				ui_stage.scaleX = ui_stage.scaleY = scale;
+				map_stage.update();
 			}
 		}
 	}

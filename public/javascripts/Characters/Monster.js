@@ -74,10 +74,9 @@ Monster.prototype.initialize = function(file, index){
 }
 
 Monster.prototype.initEventListener = function(){
-	
 	this.addEventListener("mousedown", function(event){
 		if(event.nativeEvent.button == 2){
-			this.game.setTarget(this);
+			this.getStage().setTarget(this);
 		}else{
 
 		}
@@ -87,7 +86,7 @@ Monster.prototype.initEventListener = function(){
 		if(this.status !== "death"){
 			this.sprite.filters = [new createjs.ColorFilter(1,0,0,1)];
 			this.sprite.cache(-12,-16,24,32);
-			this.game.setTarget(this);
+			this.getStage().setTarget(this);
 		}
 	}.bind(this));
 
@@ -95,7 +94,7 @@ Monster.prototype.initEventListener = function(){
 		if(this.status !== "death"){
 			this.sprite.filters = null;
 			this.sprite.uncache();
-			this.game.unsetTarget(this);
+			this.getStage().unsetTarget(this);
 		}
 	}.bind(this));
 }
@@ -118,7 +117,7 @@ Monster.prototype.tick = function(){
 		if(this.target){
 			this.status = "attack";
 		}else{
-			this.move_queue = this.game.findNeighbor(this, this.x, this.y);
+			this.move_queue = this.getStage().findNeighbor(this, this.x, this.y);
 			if(this.move_queue.length){
 				this.status = "roaming";
 			}

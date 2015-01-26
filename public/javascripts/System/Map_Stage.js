@@ -2,6 +2,10 @@ function Map_Stage(){
 	this.initialize(arguments);
 }
 
+Map_Stage.prototype = new createjs.Stage();
+
+Map_Stage.prototype.stage_initialize = Map_Stage.prototype.initialize;
+
 Map_Stage.prototype.initialize = function(){
 	var args = Array.prototype.slice.call(arguments[0])[0];
 
@@ -14,8 +18,8 @@ Map_Stage.prototype.initialize = function(){
 	this.canvas.width = this.width;
 	this.canvas.height = this.height;
 	
-	this.stage = new createjs.Stage(this.canvas);
-	//this.stage.enableMouseOver(10);
+	this.stage_initialize(this.canvas);
+	
 	this.offsetX = this.offsetY = 0;
 
 	var manifest = [];
@@ -24,6 +28,7 @@ Map_Stage.prototype.initialize = function(){
 	});
 
 	this.block = [];
+
 	for(var i = 0 ;i < this.rows * 2;i++){
 		this.block.push([]);
 	}
@@ -47,22 +52,15 @@ Map_Stage.prototype.initialize = function(){
 						bitmap.cache(0,0,32,32);
 						bitmap.x = j * 32;
 						bitmap.y = i * 32;
-						this.stage.addChild(bitmap);
+						this.addChild(bitmap);
 					}
 				}
 			}
 		}, this);
-		this.stage.update();
+		this.update();
 	}.bind(this));
 }
 
 Map_Stage.prototype.getBlock = function(){
 	return this.block;
-}
-
-Map_Stage.prototype.setScale = function(scale){
-	this.stage.scaleX = this.stage.scaleY = scale;
-	this.canvas.width = this.width * scale;
-	this.canvas.height = this.height * scale;
-	this.stage.update();
 }

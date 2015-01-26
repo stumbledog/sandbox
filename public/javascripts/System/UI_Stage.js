@@ -15,7 +15,6 @@ UI_Stage.prototype.initialize = function(width, height, rows){
 	this.enableMouseOver(10);
 	
 	this.game = Game.getInstance();
-	this.hero = this.game.getHero();
 	this.target = null;
 
 	this.offsetX = this.offsetY = 0;
@@ -38,6 +37,15 @@ UI_Stage.prototype.initialize = function(width, height, rows){
 	this.initEvent();
 	this.initContainer();
 }
+
+UI_Stage.prototype.setTarget = function(enemy){
+	this.target = enemy;
+}
+
+UI_Stage.prototype.unsetTarget = function(enemy){
+	this.target = enemy.id === this.target.id ? null : this.target;
+}
+
 
 UI_Stage.prototype.initEvent = function(){
 	var self = this;
@@ -90,25 +98,24 @@ UI_Stage.prototype.initEvent = function(){
 	}, this);
 
 	document.onkeydown = function(event){
-		console.log(event.keyCode);
 		switch(event.keyCode){
 			case 27://esc
-				self.setCommand("move");
+				this.setCommand("move");
 				break;
 			case 87://w
 				break;
 			case 68://d
-				self.setCommand("assemble");
+				this.setCommand("assemble");
 				break;
 			case 83://s
-				self.setCommand("stop");
+				this.setCommand("stop");
 				break;
 			case 65://a
-				self.setCommand("attack");
+				this.setCommand("attack");
 				break;
 		}
-		self.update();
-	}
+		this.update();
+	}.bind(this);
 
 	document.addEventListener("mousewheel", function(event){
 		this.game.setScale(event.wheelDelta);
@@ -119,11 +126,6 @@ UI_Stage.prototype.initContainer = function(){
 	this.unit_container = new createjs.Container();
 	this.ui_container = new createjs.Container();
 	this.addChild(this.unit_container, this.ui_container);
-}
-
-UI_Stage.prototype.initCursor = function(){
-	this.cursor = new Cursor();
-	this.cursor_container.addChild(this.cursor);
 }
 
 UI_Stage.prototype.addHero = function(hero, x, y){
@@ -167,7 +169,7 @@ UI_Stage.prototype.setCommand = function(type){
 }
 
 UI_Stage.prototype.getUnits = function(self){
-	return this.unit_container.children;//.filter(function(unit){return self.team !== unit.team && unit.status !== "death";});
+	return this.unit_container.children;
 }
 
 UI_Stage.prototype.getEnemies = function(self){
@@ -179,7 +181,7 @@ UI_Stage.prototype.findNeighbor = function(self, x, y){
 	blocks.forEach(function(row){
 		new_blocks.push(row.slice(0));
 	});
-	unit_container.children.forEach(function(unit){
+	this.unit_container.children.forEach(function(unit){
 		if(unit.id !== self.id){
 			new_blocks[parseInt(unit.y/16)][parseInt(unit.x/16)] = 1;
 			if(unit.vx>0){
