@@ -26,17 +26,17 @@ Monster.prototype.initialize = function(file, index){
 	this.direction = 180;
 
 
-	this.frames = [];
+	var frames = [];
 	var offsetX = index % 4 *72;
 	var offsetY = parseInt(index / 4) * 128;
 
 	for(var i=0 ;i < 12; i++){
-		this.frames.push([offsetX+(i%3)*24,offsetY+parseInt(i/3)*32+1,24,32,0,12,16]);
+		frames.push([offsetX+(i%3)*24,offsetY+parseInt(i/3)*32+1,24,32,0,12,16]);
 	}
 	
 	var spriteSheet = new createjs.SpriteSheet({
 		images:[this.game.getLoader().getResult(file)],
-		frames:this.frames,
+		frames:frames,
 		animations:{
 			front:{
 				frames:[0,1,2],
@@ -124,56 +124,13 @@ Monster.prototype.tick = function(){
 		}
 	}else if(this.status === "roaming"){
 		if(this.move_queue.length){
-			if(Math.abs(this.move_queue[0].x - this.x) > this.speed || Math.abs(this.move_queue[0].y - this.y) > this.speed){
-				this.radian = Math.atan2(this.move_queue[0].x - this.x, this.move_queue[0].y - this.y);
-				this.vx = Math.sin(this.radian) * this.speed;
-				this.vy = Math.cos(this.radian) * this.speed;
-				this.rotate(this.vx, this.vy);
-				var unit_coordinates = this.parent.parent.unit_coordinates;
-				if(unit_coordinates[parseInt((this.y+this.vy)/16)] 
-					&& unit_coordinates[parseInt((this.y+this.vy)/16)][parseInt((this.x+this.vx)/16)]
-					&& this.id !== unit_coordinates[parseInt((this.y+this.vy)/16)][parseInt((this.x+this.vx)/16)].id){
-					this.vx =this.vy = 0;
-					this.status = "idle";
-				}
-				unit_coordinates[parseInt(this.y/16)][parseInt(this.x/16)] = null;
-				this.x += this.vx;
-				this.y += this.vy;
-				unit_coordinates[parseInt(this.y/16)][parseInt(this.x/16)] = this;
-			}else{
-				this.status = "idle";
-			}
+			this.followPath(this.move_queue[0], true);
 		}else{
 			this.status = "idle";
 		}
 	}else if(this.status === "attack"){
 		if(this.target && this.getSquareDistance(this.target) < Math.pow(this.aggro_radius,2)){
 			this.followPath(this.target, true);
-			/*
-			if(this.move_queue && this.move_queue.length && (Math.abs(this.move_queue[0].x - this.x) > this.speed || Math.abs(this.move_queue[0].y - this.y) > this.speed)){
-				this.radian = Math.atan2(this.move_queue[0].x - this.x, this.move_queue[0].y - this.y);
-				this.vx = Math.sin(this.radian) * this.speed;
-				this.vy = Math.cos(this.radian) * this.speed;
-
-				var unit_coordinates = this.game.getUnitCoordinates();
-				var indexX = parseInt((this.x + this.vx)/16);
-				var indexY = parseInt((this.y + this.vy)/16);
-
-				if(unit_coordinates[indexY] && unit_coordinates[indexY][indexX] && this.id !== unit_coordinates[indexY][indexX].id){
-					target = unit_coordinates[indexY][indexX];
-					this.move_queue = this.game.findPath(this, {x:this.x,y:this.y}, this.target, true);
-					this.vx = this.vy = 0;
-				}
-
-				this.rotate(this.vx, this.vy);
-
-				unit_coordinates[parseInt(this.y/16)][parseInt(this.x/16)] = null;
-				this.x += this.vx;
-				this.y += this.vy;
-				unit_coordinates[parseInt(this.y/16)][parseInt(this.x/16)] = this;
-			}else{
-				this.move_queue = this.game.findPath(this, {x:this.x,y:this.y}, this.target, true);
-			}*/
 		}else{
 			this.target = null;
 			this.status = "idle";

@@ -89,7 +89,7 @@ Unit.prototype.moveAttack = function(x, y){
 }
 
 Unit.prototype.attackTarget = function(target, damage){
-	if(target.status !== "death"){
+	if(target.status !== "death" && this.status !== "death"){
 		target.hit(this, this.damage);
 		this.rotate(target.x - this.x, target.y - this.y);
 		if(this.weapon){

@@ -42,28 +42,22 @@ var Game = (function(){
 			ui_stage = new UI_Stage(map_width * scale, map_height * scale, 14);
 		}
 
-		function initContainer(){
-			unit_container = new createjs.Container();
-			effect_container = new createjs.Container();
-			stage.addChild(unit_container, effect_container);
-		}
-
 		function initMap(){
 			var tiles_A = [
-				[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-				[1,1,1,2,1,1,1,1,1,1,1,1,1,1,1,1],
-				[1,1,2,1,1,2,1,1,1,1,1,1,1,1,1,1],
-				[1,1,1,1,1,1,2,1,1,1,1,1,1,1,1,1],
-				[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-				[1,2,1,2,1,1,1,1,1,1,1,1,1,1,1,1],
-				[1,1,1,1,1,2,1,1,1,1,1,1,1,1,1,1],
-				[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-				[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-				[1,1,1,2,1,1,1,1,1,1,1,1,1,1,1,1],
-				[1,1,2,1,1,2,1,1,1,1,1,1,1,1,1,1],
-				[1,1,1,1,1,1,2,1,1,1,1,1,1,1,1,1],
-				[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-				[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+				[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+				[1,1,1,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+				[1,1,2,1,1,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+				[1,1,1,1,1,1,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+				[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+				[1,2,1,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+				[1,1,1,1,1,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+				[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+				[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+				[1,1,1,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+				[1,1,2,1,1,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+				[1,1,1,1,1,1,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+				[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+				[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
 			];
 
 			var tile_map_A = [
@@ -124,42 +118,10 @@ var Game = (function(){
 		}
 
 		function createUnits(){
-			var unit = new Follower("soldier", 0);
-			unit.x = 1 * 16 + 8;
-			unit.y = 0 * 16 + 8;
-			unit_container.addChild(unit);
-			var unit = new Follower("soldier", 1);
-			unit.x = 1 * 16 + 8;
-			unit.y = 1 * 16 + 8;
-			unit_container.addChild(unit);
-			var unit = new Follower("soldier", 2);
-			unit.x = 1 * 16 + 8;
-			unit.y = 2 * 16 + 8;
-			unit_container.addChild(unit);/*
-			var unit = new Follower("soldier", 3);
-			unit.x = 4 * 16 + 8;
-			unit.y = 1 * 16 + 8;
-			unit_container.addChild(unit);
-			var unit = new Follower("soldier", 0);
-			unit.x = 5 * 16 + 8;
-			unit.y = 2 * 16 + 8;
-			unit_container.addChild(unit);
-			var unit = new Follower("soldier", 1);
-			unit.x = 6 * 16 + 8;
-			unit.y = 3 * 16 + 8;
-			unit_container.addChild(unit);
-			var unit = new Follower("soldier", 2);
-			unit.x = 8 * 16 + 8;
-			unit.y = 2 * 16 + 8;
-			unit_container.addChild(unit);
-			var unit = new Follower("soldier", 3);
-			unit.x = 7 * 16 + 8;
-			unit.y = 1 * 16 + 8;
-			unit_container.addChild(unit);
-			var unit = new Follower("soldier", 3);
-			unit.x = 6 * 16 + 8;
-			unit.y = 0 * 16 + 8;
-			unit_container.addChild(unit);*/
+			ui_stage.addFollower(new Follower("soldier",0),  1*16+8, 0*16+8);
+			ui_stage.addFollower(new Follower("soldier",1),  1*16+8, 1*16+8);
+			ui_stage.addFollower(new Follower("soldier",2),  1*16+8, 2*16+8);
+			ui_stage.addFollower(new Follower("soldier",3),  1*16+8, 3*16+8);
 		}
 
 		function createEnemy(){
@@ -174,23 +136,7 @@ var Game = (function(){
 			ui_stage.addUnit(new Monster("monster29",0), 18*16+8, 2*16+8);
 		}
 
-		function assembleCompany(){
-
-		}
-
 		function tick(){
-			if(!unit_coordinates){
-				unit_coordinates = [];
-				for(var i=0;i<blocks.length;i++){
-					unit_coordinates.push([]);
-				}
-				unit_container.children.forEach(function(unit){
-					unit_coordinates[parseInt(unit.y/16)][parseInt(unit.x/16)] = unit;
-				});
-			}
-
-			unit_container.sortChildren(function(obj1, obj2){return obj1.y>obj2.y?1:-1;});
-
 			if(move_right && window.innerWidth - offsetX < canvas.width){
 				offsetX-=10;
 				stage.children.forEach(function(container, index){
@@ -206,10 +152,6 @@ var Game = (function(){
 					}
 				});
 			}
-			unit_container.children.forEach(function(unit){
-				unit.tick();
-			});
-			stage.update();
 		}
 
 		return {
@@ -232,17 +174,6 @@ var Game = (function(){
 
 				return PathFinder.findPath(new_blocks, starting, destination);
 			},
-			setTarget:function(unit){
-				target = unit;
-			},
-			unsetTarget:function(unit){
-				if(target.id === unit.id){
-					target = null;
-				}
-			},
-			getUnitCoordinates:function(){
-				return unit_coordinates;
-			},
 			getMapStage:function(){
 				return map_stage;
 			},
@@ -252,12 +183,6 @@ var Game = (function(){
 			setScale:function(delta){
 				scale += delta/100;
 				scale = scale < 1 ? 1 :scale > 3 ? 3 : scale;
-				/*
-				stage.scaleX = stage.scaleY = scale;
-				canvas.width = map_width * scale;
-				canvas.height = map_height * scale;
-				stage.update();
-				*/
 				map_stage.scaleX = map_stage.scaleY = scale;
 				ui_stage.scaleX = ui_stage.scaleY = scale;
 				map_stage.update();

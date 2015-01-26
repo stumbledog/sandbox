@@ -21,18 +21,18 @@ Follower.prototype.follower_initialize = function(file, index){
 	this.range = 24;
 	this.attack_speed = 30;
 	this.damage = 2;
-
-	this.frames = [];
+	this.index = index;
+	var frames = [];
 	var offsetX = index % 4 *72;
 	var offsetY = parseInt(index / 4) * 128;
 
 	for(var i=0 ;i < 12; i++){
-		this.frames.push([offsetX+(i%3)*24,offsetY+parseInt(i/3)*32+1,24,32,0,12,16]);
+		frames.push([offsetX+(i%3)*24,offsetY+parseInt(i/3)*32+1,24,32,0,12,16]);
 	}
 
 	var spriteSheet = new createjs.SpriteSheet({
 		images:[this.game.getLoader().getResult(file)],
-		frames:this.frames,
+		frames:frames,
 		animations:{
 			front:{
 				frames:[0,1,2],
@@ -75,18 +75,21 @@ Follower.prototype.follower_initialize = function(file, index){
 }
 
 Follower.prototype.tick = function(){
-	if(this.status === "attack"){
-		this.target = this.findClosestEnemy();
-		if(this.target && this.getSquareDistance(this.target) <= Math.pow(this.range,2)){
-			if(this.ticks > this.attack_speed){
-				this.ticks = 0;
-				this.attackTarget(this.target);
-			}
-		}else if(this.target){
-			this.followPath(this.target, false);
-		}else{
-			this.stop();
+	this.target = this.findClosestEnemy();
+	//this.target = this.findClosestEnemy(this.aggro_radius);
+	if(this.target && this.getSquareDistance(this.target) <= Math.pow(this.range,2)){
+		if(this.ticks > this.attack_speed){
+			this.ticks = 0;
+			this.attackTarget(this.target);
 		}
-		this.ticks++;		
+	}else if(this.target){
+		this.followPath(this.target, false);
+	}else{
+		this.stop();
+		//this.followTarget(this.getStage().hero);
+		/*
+		var position = {x:this.getStage().hero.x + (this.index + 1) * 32,y:this.getStage().hero.y};
+		this.followPath(position, false);*/
 	}
+	this.ticks++;
 }

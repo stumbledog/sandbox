@@ -9,7 +9,7 @@ UI_Stage.prototype.stage_initialize = UI_Stage.prototype.initialize;
 UI_Stage.prototype.initialize = function(width, height, rows){
 	this.canvas = document.getElementById("ui");
 	this.canvas.width = width;
-	this.canvas.height = height;
+	this.canvas.height = height + 120;
 
 	this.stage_initialize(this.canvas);
 	this.enableMouseOver(10);
@@ -36,6 +36,7 @@ UI_Stage.prototype.initialize = function(width, height, rows){
 
 	this.initEvent();
 	this.initContainer();
+	this.renderUI();
 }
 
 UI_Stage.prototype.setTarget = function(enemy){
@@ -128,12 +129,26 @@ UI_Stage.prototype.initContainer = function(){
 	this.addChild(this.unit_container, this.ui_container);
 }
 
+UI_Stage.prototype.renderUI = function(){
+	var shape = new createjs.Shape();
+	shape.graphics.f("#000").dr(0, this.canvas.height-120,this.canvas.width,120);
+	this.ui_container.addChild(shape);
+}
+
 UI_Stage.prototype.addHero = function(hero, x, y){
 	this.hero = hero;
 	this.unit_container.addChild(this.hero);
 	this.hero.x = x;
 	this.hero.y = y;
 	this.unit_coordinates[parseInt(y/16)][parseInt(x/16)] = this.hero;
+}
+
+UI_Stage.prototype.addFollower = function(follower, x, y){
+	this.unit_container.addChild(follower);
+	follower.x = x;
+	follower.y = y;
+	this.unit_coordinates[parseInt(y/16)][parseInt(x/16)] = follower;
+	this.hero.followers.push(follower);
 }
 
 UI_Stage.prototype.addUnit = function(unit, x, y){

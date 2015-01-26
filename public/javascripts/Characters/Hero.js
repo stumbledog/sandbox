@@ -14,6 +14,7 @@ Hero.prototype.hero_initialize = function(file, index){
 	this.type = "hero";
 	this.team = "player";
 	this.ticks = 0;
+	this.followers = [];
 
 	this.max_health = this.health = 50;
 	this.speed = 3;
@@ -22,17 +23,17 @@ Hero.prototype.hero_initialize = function(file, index){
 	this.attack_speed = 20;
 	this.damage = 5;
 
-	this.frames = [];
+	var frames = [];
 	var offsetX = index % 4 *72;
 	var offsetY = parseInt(index / 4) * 128;
 
 	for(var i=0 ;i < 12; i++){
-		this.frames.push([offsetX+(i%3)*24,offsetY+parseInt(i/3)*32+1,24,32,0,12,16]);
+		frames.push([offsetX+(i%3)*24,offsetY+parseInt(i/3)*32+1,24,32,0,12,16]);
 	}
 
 	var spriteSheet = new createjs.SpriteSheet({
 		images:[this.game.getLoader().getResult(file)],
-		frames:this.frames,
+		frames:frames,
 		animations:{
 			front:{
 				frames:[0,1,2],
@@ -82,7 +83,7 @@ Hero.prototype.tick = function(){
 			if(this.ticks > this.attack_speed){
 				this.ticks = 0;
 				this.attackTarget(this.target);
-			}			
+			}
 		}
 	}else if(this.status === "move"){
 		this.followPath(this.move_queue[this.move_queue.length-1], true);

@@ -15,8 +15,11 @@ Map_Stage.prototype.initialize = function(){
 	this.rows = args.rows;
 
 	this.canvas = document.getElementById("bg");
-	this.canvas.width = this.width;
-	this.canvas.height = this.height;
+	this.canvas.width = window.innerWidth;//this.width;
+	this.canvas.height = window.innerHeight;//this.height;
+
+	this.canvas.width = window.innerWidth;//this.width;
+	this.canvas.height = window.innerHeight;//this.height;
 	
 	this.stage_initialize(this.canvas);
 	
