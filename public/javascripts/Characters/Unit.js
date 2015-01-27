@@ -222,12 +222,12 @@ Unit.prototype.followPath = function(destination, avoid_enemy, move_attack){
 			}else if(this.move_queue.length){
 				this.move_queue = this.game.findPath(this, {x:this.x,y:this.y}, this.move_queue[this.move_queue.length-1], false);					
 			}else{
-				this.stop();
+				//this.stop();
 			}
 		}else if(destination){
 			this.move_queue = this.game.findPath(this, {x:this.x,y:this.y}, destination, avoid_enemy);
 		}else{
-			this.stop();
+			//this.stop();
 		}
 	}
 }

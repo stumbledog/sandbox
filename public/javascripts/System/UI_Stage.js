@@ -2,29 +2,54 @@ function UI_Stage(width, height, rows){
 	this.initialize(width, height, rows);
 }
 
-UI_Stage.prototype = new createjs.Stage();
-
-UI_Stage.prototype.stage_initialize = UI_Stage.prototype.initialize;
+createjs.extend(UI_Stage, createjs.Stage);
+UI_Stage = createjs.promote(UI_Stage, "Stage");
 
 UI_Stage.prototype.initialize = function(width, height, rows){
 	this.canvas = document.getElementById("ui");
-	this.canvas.width = width;
-	this.canvas.height = height + 120;
+	this.canvas.width = window.innerWidth;
+	this.canvas.height = window.innerHeight;
 
-	this.stage_initialize(this.canvas);
-	this.enableMouseOver(10);
+	this.Stage_constructor(this.canvas);
+	this.enableMouseOver();
 	
 	this.game = Game.getInstance();
+	this.map = this.game.getMapStage();
+	this.mapSize = this.map.getSize();
+
 	this.target = null;
+
+	this.scroll_speed = 8;
 
 	this.offsetX = this.offsetY = 0;
 	createjs.Ticker.addEventListener("tick", function(){
-		this.unit_container.sortChildren(function(obj1, obj2){			
+		this.unit_container.sortChildren(function(obj1, obj2){
 			return obj1.y>obj2.y?1:-1;
 		});
 		this.unit_container.children.forEach(function(unit){
 			unit.tick();
 		});
+
+		if(this.move_left && this.regX - this.scroll_speed >= 0){
+			this.regX-=this.scroll_speed;
+			this.map.regX-=this.scroll_speed;
+			this.map.update();
+		}else if(this.move_right &&  this.canvas.width/this.scaleX + this.regX + this.scroll_speed <= this.mapSize.width){
+			this.regX+=this.scroll_speed;
+			this.map.regX+=this.scroll_speed;
+			this.map.update();
+		}
+
+		if(this.move_up && this.regY - this.scroll_speed >= 0){
+			this.regY-=this.scroll_speed;
+			this.map.regY-=this.scroll_speed;
+			this.map.update();
+		}else if(this.move_down &&  this.canvas.height/this.scaleY + this.regY + this.scroll_speed <= this.mapSize.height){
+			this.regY+=this.scroll_speed;
+			this.map.regY+=this.scroll_speed;
+			this.map.update();
+		}
+
 		this.update();
 	}.bind(this));
 	createjs.Ticker.setFPS(60);
@@ -36,7 +61,7 @@ UI_Stage.prototype.initialize = function(width, height, rows){
 
 	this.initEvent();
 	this.initContainer();
-	this.renderUI();
+	//this.renderUI();
 }
 
 UI_Stage.prototype.setTarget = function(enemy){
@@ -47,28 +72,31 @@ UI_Stage.prototype.unsetTarget = function(enemy){
 	this.target = enemy.id === this.target.id ? null : this.target;
 }
 
-
 UI_Stage.prototype.initEvent = function(){
-	var self = this;
 	this.on("stagemousemove", function(event){
-		//this.cursor.x = event.stageX;
-		//this.cursor.y = event.stageY;
-		//this.update();
-		//this.game.mouseMove(event);
-		//self.stage.update();
-		/*
 		if(event.stageX > window.innerWidth-100){
-			move_right = true;
+			this.move_right = true;
 		}else{
-			move_right = false;
+			this.move_right = false;
 		}
 
-		if(event.stageX < 100 - offsetX){
-			move_left = true;
+		if(event.stageX < 100){
+			this.move_left = true;
 		}else{
-			move_left = false;
+			this.move_left = false;
 		}
-		*/
+
+		if(event.stageY > window.innerHeight-100){
+			this.move_down = true;
+		}else{
+			this.move_down = false;
+		}
+
+		if(event.stageY < 100){
+			this.move_up = true;
+		}else{
+			this.move_up = false;
+		}		
 	}, this);
 	
 	this.on("stagemousedown", function(event){
@@ -79,7 +107,7 @@ UI_Stage.prototype.initEvent = function(){
 			if(this.target){
 				this.hero.setTarget(this.target);
 			}else{
-				this.hero.move(event.stageX - this.offsetX, event.stageY - this.offsetY);
+				this.hero.move(event.stageX/this.scaleX + this.regX, event.stageY/this.scaleY + this.regY);
 				this.setCommand("move");
 			}
 		}else if(event.nativeEvent.button == 0){
@@ -90,7 +118,7 @@ UI_Stage.prototype.initEvent = function(){
 					this.hero.setTarget(this.target);
 					this.setCommand("move");
 				}else{
-					this.hero.moveAttack(event.stageX,event.stageY);
+					this.hero.moveAttack(event.stageX/this.scaleX + this.regX, event.stageY/this.scaleY + this.regY);
 					this.setCommand("move_attack");
 				}
 			}
@@ -132,6 +160,7 @@ UI_Stage.prototype.initContainer = function(){
 UI_Stage.prototype.renderUI = function(){
 	var shape = new createjs.Shape();
 	shape.graphics.f("#000").dr(0, this.canvas.height-120,this.canvas.width,120);
+	shape.alpha = 0.5;
 	this.ui_container.addChild(shape);
 }
 

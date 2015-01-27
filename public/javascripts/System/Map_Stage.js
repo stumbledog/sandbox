@@ -15,11 +15,8 @@ Map_Stage.prototype.initialize = function(){
 	this.rows = args.rows;
 
 	this.canvas = document.getElementById("bg");
-	this.canvas.width = window.innerWidth;//this.width;
-	this.canvas.height = window.innerHeight;//this.height;
-
-	this.canvas.width = window.innerWidth;//this.width;
-	this.canvas.height = window.innerHeight;//this.height;
+	this.canvas.width = window.innerWidth;
+	this.canvas.height = window.innerHeight;
 	
 	this.stage_initialize(this.canvas);
 	
@@ -62,8 +59,16 @@ Map_Stage.prototype.initialize = function(){
 		}, this);
 		this.update();
 	}.bind(this));
+
+	this.on("stagemousemove", function(event){
+		console.log(event);
+	}, this);
 }
 
 Map_Stage.prototype.getBlock = function(){
 	return this.block;
+}
+
+Map_Stage.prototype.getSize = function(){
+	return {width:this.width, height:this.height};
 }

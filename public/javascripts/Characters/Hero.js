@@ -94,7 +94,7 @@ Hero.prototype.tick = function(){
 		if(this.target){
 			this.followPath(this.target, true);
 		}else{
-			this.stop();
+			//this.stop();
 		}
 	}
 	this.ticks++;
