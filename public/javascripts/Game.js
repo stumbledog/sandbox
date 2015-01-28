@@ -3,7 +3,7 @@ var Game = (function(){
 	var instance;
 
 	function init(){
-		var ui_stage, map_stage, loader, hero;
+		var ui_stage, map_stage, loader;
 		var offsetX = offsetY = 0;
 		var move_top = move_right = move_down = move_left = false;
 		var map_width = 16 * 32, map_height  = 14 * 32;
@@ -19,12 +19,24 @@ var Game = (function(){
 			ui_stage.update();
 		};
 
+		var hero_data = {
+			src:"assets/Graphics/Characters/01 - Hero.png",
+			id:"01 - Hero",
+			portrait_src:"assets/Graphics/Faces/ds_face01-02.png",
+			portrait_id:"ds_face01-02",
+			index:0
+		}
+
+
+
 		var manifest = [
 			{src:"assets/Graphics/System/Icons/IconSet.png", id:"icon"},
-			{src:"assets/Graphics/Characters/01 - Hero.png", id:"hero"},
 			{src:"assets/Graphics/Characters/23 - Soldier.png", id:"soldier"},
 			{src:"assets/Graphics/Characters/29 - Monster.png", id:"monster29"},
 		];
+
+		manifest.push({src:hero_data.src,id:hero_data.id});
+		manifest.push({src:hero_data.portrait_src,id:hero_data.portrait_id});
 
 		loader = new createjs.LoadQueue(false);
 		loader.addEventListener("complete", handleLoadComplete);
@@ -143,7 +155,7 @@ var Game = (function(){
 		}
 
 		function createHero(){
-			ui_stage.addHero(new Hero("hero", 0),  0*16+8, 0*16+8);
+			ui_stage.addHero(new Hero(hero_data),  0*16+8, 0*16+8);
 		}
 
 		function createUnits(){
@@ -210,7 +222,7 @@ var Game = (function(){
 				return ui_stage;
 			},
 			setScale:function(delta){
-				scale += delta/100;
+				scale += delta/1000;
 				scale = scale < 1 ? 1 :scale > 2 ? 2 : scale;
 				map_stage.scaleX = map_stage.scaleY = scale;
 				ui_stage.scaleX = ui_stage.scaleY = scale;

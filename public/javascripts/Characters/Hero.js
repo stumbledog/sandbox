@@ -1,5 +1,5 @@
-function Hero(file, index){
-	this.hero_initialize(file, index);
+function Hero(data){
+	this.hero_initialize(data);
 }
 
 Hero.prototype = new Unit();
@@ -7,7 +7,7 @@ Hero.prototype = new Unit();
 Hero.prototype.constructor = Hero;
 Hero.prototype.container_initialize = Hero.prototype.initialize;
 
-Hero.prototype.hero_initialize = function(file, index){
+Hero.prototype.hero_initialize = function(data){
 	this.container_initialize();
 	this.game = Game.getInstance();
 
@@ -22,7 +22,7 @@ Hero.prototype.hero_initialize = function(file, index){
 	this.range = 24;
 	this.attack_speed = 20;
 	this.damage = 5;
-
+	var index = data.index;
 	var frames = [];
 	var offsetX = index % 4 *72;
 	var offsetY = parseInt(index / 4) * 128;
@@ -32,7 +32,7 @@ Hero.prototype.hero_initialize = function(file, index){
 	}
 
 	var spriteSheet = new createjs.SpriteSheet({
-		images:[this.game.getLoader().getResult(file)],
+		images:[this.game.getLoader().getResult(data.id)],
 		frames:frames,
 		animations:{
 			front:{
@@ -63,6 +63,12 @@ Hero.prototype.hero_initialize = function(file, index){
 	this.weapon.scaleX = this.weapon.scaleY = 0.8;
 
 	this.addChild(this.sprite, this.weapon);
+
+	var offsetX = index % 4 *96;
+	var offsetY = parseInt(index / 4) * 96;
+
+	this.portrait = new createjs.Bitmap(this.game.getLoader().getResult(data.portrait_id));
+	this.portrait.sourceRect = new createjs.Rectangle(offsetX,offsetY,96,96);
 
 	this.rotate(0,0);
 	this.shadow = new createjs.Shadow("#333",3,3,10);
@@ -98,4 +104,8 @@ Hero.prototype.tick = function(){
 		}
 	}
 	this.ticks++;
+}
+
+Hero.prototype.getPortrait = function(){
+	return this.portrait;
 }

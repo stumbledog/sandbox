@@ -61,7 +61,6 @@ UI_Stage.prototype.initialize = function(width, height, rows){
 
 	this.initEvent();
 	this.initContainer();
-	//this.renderUI();
 }
 
 UI_Stage.prototype.setTarget = function(enemy){
@@ -159,9 +158,12 @@ UI_Stage.prototype.initContainer = function(){
 
 UI_Stage.prototype.renderUI = function(){
 	var shape = new createjs.Shape();
-	shape.graphics.f("#000").dr(0, this.canvas.height-120,this.canvas.width,120);
-	shape.alpha = 0.5;
-	this.ui_container.addChild(shape);
+	shape.graphics.f("#fff").dr(0, this.canvas.height - 52,52,52)
+	var portrait = this.hero.getPortrait();
+	portrait.scaleX = portrait.scaleY = 0.5;
+	portrait.x = 2;
+	portrait.y = this.canvas.height-50;
+	this.ui_container.addChild(shape, portrait);
 }
 
 UI_Stage.prototype.addHero = function(hero, x, y){
@@ -170,6 +172,7 @@ UI_Stage.prototype.addHero = function(hero, x, y){
 	this.hero.x = x;
 	this.hero.y = y;
 	this.unit_coordinates[parseInt(y/16)][parseInt(x/16)] = this.hero;
+	this.renderUI();
 }
 
 UI_Stage.prototype.addFollower = function(follower, x, y){
