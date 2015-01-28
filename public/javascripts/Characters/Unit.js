@@ -119,7 +119,29 @@ Unit.prototype.hit = function(attacker, damage){
 	}
 }
 
+Unit.prototype.gainExp = function(exp){
+	this.exp += exp;
+	while(this.exp >= this.level * 100){
+		this.exp -= this.level * 100;
+		this.level++;
+	}
+
+	if(this.type === "player"){
+		this.game.getUIStage().refreshExpBar();
+	}
+}
+
+Unit.prototype.levelUp = function(){
+
+}
+
 Unit.prototype.die = function(attacker){
+	if(this.team === "enemy"){
+		var allied_units = this.game.getUnitStage().getAlliedUnits(attacker);
+		allied_units.forEach(function(unit){
+			unit.gainExp(this.exp/allied_units.length);
+		},this);
+	}
 	createjs.Tween.get(this).call(function(event){
 		event.target.sprite.filters = [new createjs.ColorFilter(1,1,1,0)];
 		event.target.sprite.cache(-12,-16,24,32);

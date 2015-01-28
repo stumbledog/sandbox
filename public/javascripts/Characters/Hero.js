@@ -11,13 +11,19 @@ Hero.prototype.hero_initialize = function(data){
 	this.container_initialize();
 	this.game = Game.getInstance();
 
-	this.type = "hero";
+	this.type = "player";
 	this.team = "player";
 	this.ticks = 0;
 	this.followers = [];
 
-	this.max_health = this.health = 50;
-	this.speed = 3;
+	this.max_health = this.health = data.health;
+	this.speed = data.move_speed;
+	this.level = data.level;
+	this.exp = data.exp;
+	this.resource_type = data.resource_type;
+	this.max_resource = this.resource = data.resource;
+
+
 	this.aggro_radius = 80;
 	this.range = 24;
 	this.attack_speed = 20;
@@ -108,4 +114,9 @@ Hero.prototype.tick = function(){
 
 Hero.prototype.getPortrait = function(){
 	return this.portrait;
+}
+
+Hero.prototype.hit = function(attacker, damage){
+	Unit.prototype.hit.call(this, attacker, damage);
+	this.game.getUIStage().refreshHealthBar();
 }

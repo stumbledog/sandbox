@@ -17,12 +17,13 @@ Monster.prototype.initialize = function(file, index){
 	this.team = "enemy";
 	this.ticks = 0;
 	this.aggro_radius = 80;
+	this.exp = 20;
 
 	this.max_health = this.health = 10;
 	this.speed = .2;
 	this.range = 24;
 	this.attack_speed = 30;
-	this.damage = 0.1;
+	this.damage = 1;
 	this.direction = 180;
 
 

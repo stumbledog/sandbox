@@ -4,8 +4,7 @@ html, body {
 }
 
 canvas#bg,
-canvas#game,
-canvas#ui
+canvas#unit
 {
 	position:absolute;
 }
@@ -13,34 +12,20 @@ canvas#ui
 canvas#bg{
 	z-index: 0;
 }
-canvas#game{
+canvas#unit{
 	z-index: 1;
-}
-canvas#ui{
 	cursor:url('../assets/Graphics/System/Icons/swordIcon.png'), auto;
-	z-index: 2;
 }
-canvas#ui.attack{
+canvas#unit.attack{
 	cursor:url('../assets/Graphics/System/Icons/attackIcon.png'), auto;
 }
 
-.div {
-	position: relative;
-	width: 960px;
-	height: 400px;
-}
-canvas {
-	background: none;
-}
-#one {
-	position: absolute;
-	right: 0;
-	top: 0;
-	border: 1px solid grey;
-}
-#two {
-	position: absolute;
-	left: 0;
-	bottom: 0;
-	border: 1px solid grey;
+canvas#ui{
+	z-index: 2;
+	position: fixed;
+	bottom:0px;
+	height:82px;
+	width:300px;
+	left:50%;
+	margin-left:-150px;
 }

@@ -3,20 +3,15 @@ var Game = (function(){
 	var instance;
 
 	function init(){
-		var ui_stage, map_stage, loader;
-		var offsetX = offsetY = 0;
-		var move_top = move_right = move_down = move_left = false;
+		var unit_stage, map_stage, ui_stage, loader, hero;
 		var map_width = 16 * 32, map_height  = 14 * 32;
-		var unit_coordinates;
 		var scale = 1;
 
-		var unit_stage;
-
 		window.onresize = function(){
-			map_stage.canvas.width = ui_stage.canvas.width = window.innerWidth;
-			map_stage.canvas.height = ui_stage.canvas.height = window.innerHeight;
+			map_stage.canvas.width = unit_stage.canvas.width = window.innerWidth;
+			map_stage.canvas.height = unit_stage.canvas.height = window.innerHeight;
 			map_stage.update();
-			ui_stage.update();
+			unit_stage.update();
 		};
 
 		var hero_data = {
@@ -24,10 +19,19 @@ var Game = (function(){
 			id:"01 - Hero",
 			portrait_src:"assets/Graphics/Faces/ds_face01-02.png",
 			portrait_id:"ds_face01-02",
-			index:0
+			index:0,
+			level:1,
+			exp:0,
+			resource_type:"fury",
+			resource:100,
+			health:200,
+			damage:5,
+			attack_speed:20,
+			armor:2,
+			move_speed:3,
+			critical_rate:0.1,
+			critical_damage:2
 		}
-
-
 
 		var manifest = [
 			{src:"assets/Graphics/System/Icons/IconSet.png", id:"icon"},
@@ -44,15 +48,20 @@ var Game = (function(){
 
 		function handleLoadComplete(){
 			initMap();
-			initUI();
+			initUnit();
 
 			createHero();
 			//createUnits();
 			createEnemy();
+			initUI();
+		}
+
+		function initUnit(){
+			unit_stage = new Unit_Stage(map_width * scale, map_height * scale, 28);
 		}
 
 		function initUI(){
-			ui_stage = new UI_Stage(map_width * scale, map_height * scale, 28);
+			ui_stage = new UI_Stage(hero);
 		}
 
 		function initMap(){
@@ -155,44 +164,27 @@ var Game = (function(){
 		}
 
 		function createHero(){
-			ui_stage.addHero(new Hero(hero_data),  0*16+8, 0*16+8);
+			hero = new Hero(hero_data);
+			unit_stage.addHero(hero,  0*16+8, 0*16+8);
 		}
 
 		function createUnits(){
-			ui_stage.addFollower(new Follower("soldier",0),  1*16+8, 0*16+8);
-			ui_stage.addFollower(new Follower("soldier",1),  1*16+8, 1*16+8);
-			ui_stage.addFollower(new Follower("soldier",2),  1*16+8, 2*16+8);
-			ui_stage.addFollower(new Follower("soldier",3),  1*16+8, 3*16+8);
+			unit_stage.addFollower(new Follower("soldier",0),  1*16+8, 0*16+8);
+			unit_stage.addFollower(new Follower("soldier",1),  1*16+8, 1*16+8);
+			unit_stage.addFollower(new Follower("soldier",2),  1*16+8, 2*16+8);
+			unit_stage.addFollower(new Follower("soldier",3),  1*16+8, 3*16+8);
 		}
 
 		function createEnemy(){
-			ui_stage.addUnit(new Monster("monster29",0),  9*16+8, 0*16+8);
-			ui_stage.addUnit(new Monster("monster29",0), 10*16+8, 1*16+8);
-			ui_stage.addUnit(new Monster("monster29",0), 11*16+8, 2*16+8);
-			ui_stage.addUnit(new Monster("monster29",0), 15*16+8, 3*16+8);
-			ui_stage.addUnit(new Monster("monster29",0), 14*16+8, 2*16+8);
-			ui_stage.addUnit(new Monster("monster29",0), 13*16+8, 1*16+8);
-			ui_stage.addUnit(new Monster("monster29",0), 16*16+8, 0*16+8);
-			ui_stage.addUnit(new Monster("monster29",0), 17*16+8, 1*16+8);
-			ui_stage.addUnit(new Monster("monster29",0), 18*16+8, 2*16+8);
-		}
-
-		function tick(){
-			if(move_right && window.innerWidth - offsetX < canvas.width){
-				offsetX-=10;
-				stage.children.forEach(function(container, index){
-					if(index !== 4){
-						container.x = offsetX;
-					}
-				});
-			}else if(move_left && offsetX<0){
-				offsetX+=10;
-				stage.children.forEach(function(container, index){
-					if(index !== 4){
-						container.x = offsetX;
-					}
-				});
-			}
+			unit_stage.addUnit(new Monster("monster29",0),  9*16+8, 0*16+8);
+			unit_stage.addUnit(new Monster("monster29",0), 10*16+8, 1*16+8);
+			unit_stage.addUnit(new Monster("monster29",0), 11*16+8, 2*16+8);
+			unit_stage.addUnit(new Monster("monster29",0), 15*16+8, 3*16+8);
+			unit_stage.addUnit(new Monster("monster29",0), 14*16+8, 2*16+8);
+			unit_stage.addUnit(new Monster("monster29",0), 13*16+8, 1*16+8);
+			unit_stage.addUnit(new Monster("monster29",0), 16*16+8, 0*16+8);
+			unit_stage.addUnit(new Monster("monster29",0), 17*16+8, 1*16+8);
+			unit_stage.addUnit(new Monster("monster29",0), 18*16+8, 2*16+8);
 		}
 
 		return {
@@ -205,7 +197,7 @@ var Game = (function(){
 					new_blocks.push(row.slice(0));
 				});
 
-				ui_stage.getUnits().forEach(function(unit){
+				unit_stage.getUnits().forEach(function(unit){
 					if(avoid_enemy && unit.id !== self.id){
 						new_blocks[parseInt(unit.y/16)][parseInt(unit.x/16)] = 1;
 					}else if(!avoid_enemy && unit.team === self.team && unit.id !== self.id){
@@ -218,14 +210,17 @@ var Game = (function(){
 			getMapStage:function(){
 				return map_stage;
 			},
+			getUnitStage:function(){
+				return unit_stage;
+			},
 			getUIStage:function(){
 				return ui_stage;
 			},
 			setScale:function(delta){
-				scale += delta/1000;
+				scale += delta;
 				scale = scale < 1 ? 1 :scale > 2 ? 2 : scale;
 				map_stage.scaleX = map_stage.scaleY = scale;
-				ui_stage.scaleX = ui_stage.scaleY = scale;
+				unit_stage.scaleX = unit_stage.scaleY = scale;
 				map_stage.update();
 			}
 		}
