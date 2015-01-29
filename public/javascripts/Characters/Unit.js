@@ -20,9 +20,9 @@ Unit.prototype.setTarget = function(unit){
 }
 
 Unit.prototype.move = function(x, y){
-	this.destination = {x:x,y:y};
-	this.status = "move";
-	this.target = null;
+	//this.destination = {x:x,y:y};
+	//this.status = "move";
+	//this.target = null;
 	this.move_queue = this.game.findPath(this, {x:this.x,y:this.y}, {x:x,y:y}, true);
 }
 

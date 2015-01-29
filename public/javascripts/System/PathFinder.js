@@ -1,5 +1,13 @@
 function PathFinder(){}
 
+PathFinder.flowField = function(map, destination){
+	var costed_map = this.getCostedMap(map, destination);
+}
+
+PathFinder.getCostedMap = function(map, destination){
+
+}
+
 PathFinder.findPath = function(blocks, starting, destination){
 	if(blocks[parseInt(destination.y/16)][parseInt(destination.x/16)]){
 		destination = this.findClosestPoint(blocks, destination);

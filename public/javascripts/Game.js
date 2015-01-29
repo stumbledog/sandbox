@@ -52,7 +52,7 @@ var Game = (function(){
 
 			createHero();
 			//createUnits();
-			createEnemy();
+			//createEnemy();
 			initUI();
 		}
 
@@ -192,6 +192,7 @@ var Game = (function(){
 				return loader;
 			},
 			findPath:function(self, starting, destination, avoid_enemy){
+				/*
 				var new_blocks = [];
 				blocks.forEach(function(row){
 					new_blocks.push(row.slice(0));
@@ -206,6 +207,8 @@ var Game = (function(){
 				});
 
 				return PathFinder.findPath(new_blocks, starting, destination);
+				*/
+				console.log(PathFinder.flowField(blocks, destination));
 			},
 			getMapStage:function(){
 				return map_stage;

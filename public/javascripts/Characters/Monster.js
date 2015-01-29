@@ -108,7 +108,12 @@ Monster.prototype.hit = function(attacker, damage){
 }
 
 Monster.prototype.tick = function(){
-	if(this.target && this.getSquareDistance(this.target) <= Math.pow(this.range,2)){
+	if(this.status === "wait"){
+		if(this.ticks > this.wait){
+			this.status = "idle";
+			this.ticks = 0;
+		}
+	}else if(this.target && this.getSquareDistance(this.target) <= Math.pow(this.range,2)){
 		if(this.ticks > this.attack_speed){
 			this.ticks = 0;
 			this.attackTarget(this.target);
@@ -132,6 +137,11 @@ Monster.prototype.tick = function(){
 	}else if(this.status === "attack"){
 		if(this.target && this.getSquareDistance(this.target) < Math.pow(this.aggro_radius,2)){
 			this.followPath(this.target, true);
+			if(!this.move_queue.length){
+				this.status = "wait";
+				this.wait = 120;
+				console.log("wait");
+			}
 		}else{
 			this.target = null;
 			this.status = "idle";
