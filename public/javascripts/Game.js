@@ -51,7 +51,7 @@ var Game = (function(){
 			initUnit();
 
 			createHero();
-			//createUnits();
+			createUnits();
 			//createEnemy();
 			initUI();
 		}
@@ -102,34 +102,34 @@ var Game = (function(){
 			];
 
 			var tiles_B = [
-				[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-				[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-				[0,0,2,3,3,3,3,3,3,3,3,3,3,4,0,0],
-				[0,0,1,0,0,0,0,0,0,0,0,0,0,7,0,0],
-				[0,0,1,0,2,3,3,3,3,3,3,4,0,7,0,0],
-				[0,0,1,0,1,0,0,0,0,0,0,7,0,7,0,0],
-				[0,0,1,0,1,0,2,3,3,4,0,7,0,7,0,0],
-				[0,0,1,0,1,0,1,0,0,7,0,7,0,7,0,0],
-				[0,0,1,0,1,0,1,0,0,0,0,7,0,7,0,0],
-				[0,0,1,0,1,0,5,3,3,3,3,6,0,7,0,0],
-				[0,0,1,0,1,0,0,0,0,0,0,0,0,7,0,0],
-				[0,0,1,0,5,3,3,3,3,3,3,3,3,6,0,0],
-				[0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0],
-				[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-				[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-				[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-				[0,0,2,3,3,3,3,3,3,3,3,3,3,4,0,0],
-				[0,0,1,0,0,0,0,0,0,0,0,0,0,7,0,0],
-				[0,0,1,0,2,3,3,3,3,3,3,4,0,7,0,0],
-				[0,0,1,0,1,0,0,0,0,0,0,7,0,7,0,0],
-				[0,0,1,0,1,0,2,3,3,4,0,7,0,7,0,0],
-				[0,0,1,0,1,0,1,0,0,7,0,7,0,7,0,0],
-				[0,0,1,0,1,0,1,0,0,0,0,7,0,7,0,0],
-				[0,0,1,0,1,0,5,3,3,3,3,6,0,7,0,0],
-				[0,0,1,0,1,0,0,0,0,0,0,0,0,7,0,0],
-				[0,0,1,0,5,3,3,3,3,3,3,3,3,6,0,0],
-				[0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0],
-				[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+				[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+				[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+				[0,0,2,3,3,3,3,3,3,3,3,3,3,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+				[0,0,1,0,0,0,0,0,0,0,0,0,0,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+				[0,0,1,0,2,3,3,3,3,3,3,4,0,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+				[0,0,1,0,1,0,0,0,0,0,0,7,0,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+				[0,0,1,0,1,0,2,3,3,4,0,7,0,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+				[0,0,1,0,1,0,1,0,0,7,0,7,0,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+				[0,0,1,0,1,0,1,0,0,0,0,7,0,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+				[0,0,1,0,1,0,5,3,3,3,3,6,0,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+				[0,0,1,0,1,0,0,0,0,0,0,0,0,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+				[0,0,1,0,5,3,3,3,3,3,3,3,3,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+				[0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+				[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+				[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+				[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+				[0,0,2,3,3,3,3,3,3,3,3,3,3,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+				[0,0,1,0,0,0,0,0,0,0,0,0,0,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+				[0,0,1,0,2,3,3,3,3,3,3,4,0,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+				[0,0,1,0,1,0,0,0,0,0,0,7,0,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+				[0,0,1,0,1,0,2,3,3,4,0,7,0,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+				[0,0,1,0,1,0,1,0,0,7,0,7,0,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+				[0,0,1,0,1,0,1,0,0,0,0,7,0,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+				[0,0,1,0,1,0,5,3,3,3,3,6,0,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+				[0,0,1,0,1,0,0,0,0,0,0,0,0,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+				[0,0,1,0,5,3,3,3,3,3,3,3,3,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+				[0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+				[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 			];
 
 			var tile_map_B = [
@@ -173,6 +173,50 @@ var Game = (function(){
 			unit_stage.addFollower(new Follower("soldier",1),  1*16+8, 1*16+8);
 			unit_stage.addFollower(new Follower("soldier",2),  1*16+8, 2*16+8);
 			unit_stage.addFollower(new Follower("soldier",3),  1*16+8, 3*16+8);
+			unit_stage.addFollower(new Follower("soldier",0),  2*16+8, 0*16+8);
+			unit_stage.addFollower(new Follower("soldier",1),  2*16+8, 1*16+8);
+			unit_stage.addFollower(new Follower("soldier",2),  2*16+8, 2*16+8);
+			unit_stage.addFollower(new Follower("soldier",3),  2*16+8, 3*16+8);
+			unit_stage.addFollower(new Follower("soldier",0),  3*16+8, 0*16+8);
+			unit_stage.addFollower(new Follower("soldier",1),  3*16+8, 1*16+8);
+			unit_stage.addFollower(new Follower("soldier",2),  3*16+8, 2*16+8);
+			unit_stage.addFollower(new Follower("soldier",3),  3*16+8, 3*16+8);
+			unit_stage.addFollower(new Follower("soldier",0),  1*16+8, 0*16+8);
+			unit_stage.addFollower(new Follower("soldier",1),  1*16+8, 1*16+8);
+			unit_stage.addFollower(new Follower("soldier",2),  1*16+8, 2*16+8);
+			unit_stage.addFollower(new Follower("soldier",3),  1*16+8, 3*16+8);
+			unit_stage.addFollower(new Follower("soldier",0),  2*16+8, 0*16+8);
+			unit_stage.addFollower(new Follower("soldier",1),  2*16+8, 1*16+8);
+			unit_stage.addFollower(new Follower("soldier",2),  2*16+8, 2*16+8);
+			unit_stage.addFollower(new Follower("soldier",3),  2*16+8, 3*16+8);
+			unit_stage.addFollower(new Follower("soldier",0),  3*16+8, 0*16+8);
+			unit_stage.addFollower(new Follower("soldier",1),  3*16+8, 1*16+8);
+			unit_stage.addFollower(new Follower("soldier",2),  3*16+8, 2*16+8);
+			unit_stage.addFollower(new Follower("soldier",3),  3*16+8, 3*16+8);
+			unit_stage.addFollower(new Follower("soldier",0),  1*16+8, 0*16+8);
+			unit_stage.addFollower(new Follower("soldier",1),  1*16+8, 1*16+8);
+			unit_stage.addFollower(new Follower("soldier",2),  1*16+8, 2*16+8);
+			unit_stage.addFollower(new Follower("soldier",3),  1*16+8, 3*16+8);
+			unit_stage.addFollower(new Follower("soldier",0),  2*16+8, 0*16+8);
+			unit_stage.addFollower(new Follower("soldier",1),  2*16+8, 1*16+8);
+			unit_stage.addFollower(new Follower("soldier",2),  2*16+8, 2*16+8);
+			unit_stage.addFollower(new Follower("soldier",3),  2*16+8, 3*16+8);
+			unit_stage.addFollower(new Follower("soldier",0),  3*16+8, 0*16+8);
+			unit_stage.addFollower(new Follower("soldier",1),  3*16+8, 1*16+8);
+			unit_stage.addFollower(new Follower("soldier",2),  3*16+8, 2*16+8);
+			unit_stage.addFollower(new Follower("soldier",3),  3*16+8, 3*16+8);
+			unit_stage.addFollower(new Follower("soldier",0),  1*16+8, 0*16+8);
+			unit_stage.addFollower(new Follower("soldier",1),  1*16+8, 1*16+8);
+			unit_stage.addFollower(new Follower("soldier",2),  1*16+8, 2*16+8);
+			unit_stage.addFollower(new Follower("soldier",3),  1*16+8, 3*16+8);
+			unit_stage.addFollower(new Follower("soldier",0),  2*16+8, 0*16+8);
+			unit_stage.addFollower(new Follower("soldier",1),  2*16+8, 1*16+8);
+			unit_stage.addFollower(new Follower("soldier",2),  2*16+8, 2*16+8);
+			unit_stage.addFollower(new Follower("soldier",3),  2*16+8, 3*16+8);
+			unit_stage.addFollower(new Follower("soldier",0),  3*16+8, 0*16+8);
+			unit_stage.addFollower(new Follower("soldier",1),  3*16+8, 1*16+8);
+			unit_stage.addFollower(new Follower("soldier",2),  3*16+8, 2*16+8);
+			unit_stage.addFollower(new Follower("soldier",3),  3*16+8, 3*16+8);
 		}
 
 		function createEnemy(){
@@ -208,7 +252,7 @@ var Game = (function(){
 
 				return PathFinder.findPath(new_blocks, starting, destination);
 				*/
-				console.log(PathFinder.flowField(blocks, destination));
+				return PathFinder.flowField(blocks, destination);
 			},
 			getMapStage:function(){
 				return map_stage;

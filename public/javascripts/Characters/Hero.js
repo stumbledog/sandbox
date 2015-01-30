@@ -22,7 +22,8 @@ Hero.prototype.hero_initialize = function(data){
 	this.exp = data.exp;
 	this.resource_type = data.resource_type;
 	this.max_resource = this.resource = data.resource;
-
+	this.radius = 12;
+	this.mass = 10;
 
 	this.aggro_radius = 80;
 	this.range = 24;
@@ -60,6 +61,7 @@ Hero.prototype.hero_initialize = function(data){
 		}
 	});
 	this.sprite = new createjs.Sprite(spriteSheet);
+	//this.sprite.cache(-12,-16,24,32);
 	this.sprite.z = 0;
 
 	this.weapon = new createjs.Bitmap(this.game.getLoader().getResult("icon"));
@@ -88,6 +90,13 @@ Hero.prototype.hero_initialize = function(data){
 }
 
 Hero.prototype.tick = function(){
+	if(this.status === "move"){
+		var velocity = this.getVelocity(this.x, this.y, this.game.getUnitStage().getUnitsExceptMe(this));
+		this.x += velocity.vx;
+		this.y += velocity.vy;
+		this.rotate(velocity.vx,velocity.vy);
+	}
+	/*
 	if(this.target && this.getSquareDistance(this.target) <= Math.pow(this.range,2)){
 		if(this.target.status === "death"){
 			this.target = null;
@@ -108,7 +117,7 @@ Hero.prototype.tick = function(){
 		}else{
 			//this.stop();
 		}
-	}
+	}*/
 	this.ticks++;
 }
 

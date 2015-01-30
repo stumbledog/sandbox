@@ -21,6 +21,9 @@ Follower.prototype.follower_initialize = function(file, index){
 	this.range = 24;
 	this.attack_speed = 30;
 	this.damage = 2;
+	this.radius = 12;
+	this.mass = 1;
+
 	this.index = index;
 	var frames = [];
 	var offsetX = index % 4 *72;
@@ -54,6 +57,7 @@ Follower.prototype.follower_initialize = function(file, index){
 	});
 	this.sprite = new createjs.Sprite(spriteSheet);
 	this.sprite.z = 0;
+	//this.sprite.cache(-12,-16,24,32);
 
 	this.weapon = new createjs.Bitmap(this.game.getLoader().getResult("icon"));
 	this.weapon.sourceRect = new createjs.Rectangle(292,100,16,16);
@@ -75,8 +79,14 @@ Follower.prototype.follower_initialize = function(file, index){
 }
 
 Follower.prototype.tick = function(){
+	if(this.status === "move"){
+		var velocity = this.getVelocity(this.x, this.y, this.game.getUnitStage().getUnitsExceptMe(this));
+		this.x += velocity.vx;
+		this.y += velocity.vy;
+		this.rotate(velocity.vx,velocity.vy);
+	}
+	/*
 	this.target = this.findClosestEnemy();
-	//this.target = this.findClosestEnemy(this.aggro_radius);
 	if(this.target && this.getSquareDistance(this.target) <= Math.pow(this.range,2)){
 		if(this.ticks > this.attack_speed){
 			this.ticks = 0;
@@ -86,10 +96,6 @@ Follower.prototype.tick = function(){
 		this.followPath(this.target, false);
 	}else{
 		this.stop();
-		//this.followTarget(this.getStage().hero);
-		/*
-		var position = {x:this.getStage().hero.x + (this.index + 1) * 32,y:this.getStage().hero.y};
-		this.followPath(position, false);*/
 	}
-	this.ticks++;
+	this.ticks++;*/
 }

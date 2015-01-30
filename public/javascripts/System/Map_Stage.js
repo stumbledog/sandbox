@@ -41,9 +41,7 @@ Map_Stage.prototype.initialize = function(){
 			for(i=0;i<map.tiles.length;i++){
 				for(j=0;j<map.tiles[i].length;j++){
 					if(map.block){
-						this.block[i][j] = map.tiles[i][j] > 0 ? -1:0;
-					}else{
-						this.block[i][j] = 0;
+						this.block[i][j] = map.tiles[i][j] > 0 ? 65535 : 'E';
 					}
 					if(map.tiles[i][j]>0){
 						var index = map.tiles[i][j] - 1;
@@ -59,10 +57,6 @@ Map_Stage.prototype.initialize = function(){
 		}, this);
 		this.update();
 	}.bind(this));
-
-	this.on("stagemousemove", function(event){
-		console.log(event);
-	}, this);
 }
 
 Map_Stage.prototype.getBlock = function(){

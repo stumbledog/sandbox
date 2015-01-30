@@ -20,10 +20,58 @@ Unit.prototype.setTarget = function(unit){
 }
 
 Unit.prototype.move = function(x, y){
-	//this.destination = {x:x,y:y};
-	//this.status = "move";
-	//this.target = null;
-	this.move_queue = this.game.findPath(this, {x:this.x,y:this.y}, {x:x,y:y}, true);
+	this.map = this.game.findPath(this, {x:this.x,y:this.y}, {x:x,y:y}, true);
+	if(this.map){
+		this.status = "move";
+	}else{
+		this.status = "stop";
+	}
+}
+
+Unit.prototype.follow = function(target_unit){
+	this.status = target_unit.status;
+	this.map = target_unit.map;
+}
+
+Unit.prototype.getVelocity = function(x, y, units){
+	if(this.map){
+		var vx = vy = 0;
+		units.forEach(function(unit){
+			var distance = Math.sqrt(Math.pow(unit.x-this.x,2)+Math.pow(unit.y-this.y,2));
+			if(distance !== 0){
+				var magnitude = unit.mass*100 / (Math.pow(this.x-unit.x,2) + Math.pow(this.y-unit.y,2));
+				var direction = {
+					x:(unit.x - this.x) / distance * magnitude,
+					y:(unit.y - this.y) / distance * magnitude
+				};
+				vx -= direction.x;
+				vy -= direction.y;
+			}
+		},this);
+		
+		var indexX = Math.floor(this.x / 32);
+		var indexY = Math.floor(this.y / 32);
+
+		vx += this.map[indexY][indexX].vx;
+		vy += this.map[indexY][indexX].vy;
+		vx /= Math.sqrt(Math.pow(vx,2)+Math.pow(vy,2)) / this.speed;
+		vy /= Math.sqrt(Math.pow(vx,2)+Math.pow(vy,2)) / this.speed;
+
+		var indexVX = Math.floor((this.x +vx)/ 32);
+		var indexVY = Math.floor((this.y +vy)/ 32);
+
+		if(!this.map[indexVY] || !this.map[indexVY][indexVX] || this.map[indexVY][indexVX].block){			
+			if(this.map[indexY][indexVX] && !this.map[indexY][indexVX].block){
+				vy = 0;
+			}else if(this.map[indexVY] && !this.map[indexVY][indexX].block){
+				vx = 0;
+			}else{
+				vx = vy = 0;
+			}
+		}
+
+		return {vx:vx,vy:vy};
+	}
 }
 
 Unit.prototype.rotate = function(dx, dy){
@@ -148,7 +196,7 @@ Unit.prototype.die = function(attacker){
 		event.target.status = "death";
 		attacker.targetDied();
 		var unit_coordinates = this.getStage().unit_coordinates;
-		unit_coordinates[parseInt(this.y/16)][parseInt(this.x/16)] = null;
+		unit_coordinates[Math.floor(this.y/16)][Math.floor(this.x/16)] = null;
 	}).wait(300).call(function(event){
 		event.target.sprite.uncache();
 		event.target.sprite.filters = [new createjs.ColorFilter(1,1,1,1)];
@@ -227,15 +275,15 @@ Unit.prototype.followPath = function(destination, avoid_enemy, move_attack){
 			this.unit_coordinates = this.parent.parent.unit_coordinates;
 		}
 
-		var indexX = parseInt((this.x + this.vx)/16);
-		var indexY = parseInt((this.y + this.vy)/16);
+		var indexX = Math.floor((this.x + this.vx)/16);
+		var indexY = Math.floor((this.y + this.vy)/16);
 
 		if(!(this.unit_coordinates[indexY] && this.unit_coordinates[indexY][indexX] && this.id !== this.unit_coordinates[indexY][indexX].id)){
 			this.rotate(this.vx, this.vy);
-			this.unit_coordinates[parseInt(this.y/16)][parseInt(this.x/16)] = null;
+			this.unit_coordinates[Math.floor(this.y/16)][Math.floor(this.x/16)] = null;
 			this.x += this.vx;
 			this.y += this.vy;
-			this.unit_coordinates[parseInt(this.y/16)][parseInt(this.x/16)] = this;
+			this.unit_coordinates[Math.floor(this.y/16)][Math.floor(this.x/16)] = this;
 		}
 	}else{
 		if(move_attack){

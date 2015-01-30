@@ -1,24 +1,101 @@
 function PathFinder(){}
 
-PathFinder.flowField = function(map, destination){
-	console.log(parseInt(destination.x/32));
-
+PathFinder.flowField = function(block_map, destination){
+	if(block_map[parseInt(destination.y/32)][parseInt(destination.x/32)] === 65535){
+		destination = this.findClosestPoint2(block_map, destination);
+	}
+	var costed_map = [];
+	var vector_map = [];
+	block_map.forEach(function(row){
+		costed_map.push(row.slice());
+		vector_map.push(row.slice());
+	});
 	var queue = [];
-	queue.push({x:parseInt(destination.x/32)+1,y:parseInt(destination.y/32)});
-	queue.push({x:parseInt(destination.x/32)-1,y:parseInt(destination.y/32)});
-	queue.push({x:parseInt(destination.x/32),y:parseInt(destination.y/32)+1});
-	queue.push({x:parseInt(destination.x/32),y:parseInt(destination.y/32)-1});
-
-	var costed_map = this.getCostedMap(queue, 0, map, destination);
-	console.log(costed_map);
+	queue.push({x:parseInt(destination.x/32),y:parseInt(destination.y/32),cost:1});
+	this.getVectorMap(vector_map, this.getCostedMap(queue, costed_map));
+	//console.log(vector_map);
+	return vector_map;
 }
 
-PathFinder.getCostedMap = function(queue, map, destination){
+PathFinder.getCostedMap = function(queue, map){
 	if(queue.length){
 		var tile = queue.shift();
-		if(map)
+		if(map[tile.y] && map[tile.y][tile.x] && map[tile.y][tile.x] !== 65535 && (map[tile.y][tile.x] > tile.cost || map[tile.y][tile.x] === 'E')){
+			map[tile.y][tile.x] = tile.cost;
+			queue.push({x:tile.x+1,y:tile.y,cost:tile.cost+1});
+			queue.push({x:tile.x-1,y:tile.y,cost:tile.cost+1});
+			queue.push({x:tile.x,y:tile.y+1,cost:tile.cost+1});
+			queue.push({x:tile.x,y:tile.y-1,cost:tile.cost+1});
+		}
+		return this.getCostedMap(queue, map);
 	}else{
 		return map;
+	}
+}
+
+PathFinder.getVectorMap = function(vector_map, costed_map){
+	for(var i = 0; i < costed_map.length ; i++){
+		for(var j = 0; j < costed_map[i].length ; j++){
+			if(costed_map[i][j] === 65535){
+				vector_map[i][j] = {vx:0, vy:0, block:true};
+			}else{
+				var left = costed_map[i] && costed_map[i][j-1] && costed_map[i][j-1] !== 65535 ? costed_map[i][j-1] : null;
+				var right = costed_map[i] && costed_map[i][j+1] && costed_map[i][j+1] !== 65535 ? costed_map[i][j+1] : null;
+				var up = costed_map[i-1] && costed_map[i-1][j] && costed_map[i-1][j] !== 65535 ? costed_map[i-1][j] : null;
+				var down = costed_map[i+1] && costed_map[i+1][j] && costed_map[i+1][j] !== 65535 ? costed_map[i+1][j] : null;
+
+				var dx = left && right ? left - right : left ? -1 : right ? 1 : 0;
+				var dy = up && down ? up - down : up ? -1 : down ? 1 : 0;
+
+				if(!left && !right){
+					dx = 0;
+				}else{
+					if(!left){
+						if(right > costed_map[i][j]){
+							left = right;
+						}else{
+							left = right +1;
+						}
+					}
+
+					if(!right){
+						if(left > costed_map[i][j]){
+							right = left;
+						}else{
+							right = left +1;
+						}
+					}
+					dx = left - right;
+				}
+
+				if(!up && !down){
+					dy = 0;
+				}else{
+					if(!up){
+						if(down > costed_map[i][j]){
+							up = down;
+						}else{
+							up = down +1;
+						}
+					}
+
+					if(!down){
+						if(up > costed_map[i][j]){
+							down = up;
+						}else{
+							down = up +1;
+						}
+					}
+					dy = up - down;				
+				}
+
+				if(dx===0 && dy===0){
+				}
+
+				var distance = Math.sqrt(Math.pow(dx,2) + Math.pow(dy,2));
+				vector_map[i][j] = distance === 0 ? {vx:0, vy:0, block:false} : {vx:dx/distance, vy:dy/distance, block:false};
+			}
+		}
 	}
 }
 
@@ -214,6 +291,19 @@ PathFinder.findClosestPoint = function(blocks, destination){
 			try{
 				if(!blocks[parseInt(destination.y/16 + Math.sin(Math.PI/4 * j) * i)][parseInt(destination.x/16 + Math.cos(Math.PI/4 * j) * i)]){
 					return {x:parseInt(destination.x/16 + Math.cos(Math.PI/4 * j) * i) * 16 + 8,y:parseInt(destination.y/16 + Math.sin(Math.PI/4 * j) * i) * 16 + 8};
+				}
+			}catch(e){}
+		}
+	}
+	return [];
+}
+
+PathFinder.findClosestPoint2 = function(blocks, destination){	
+	for(var i = 0.1;i<4;i+=0.1){
+		for(j=0;j<8;j++){
+			try{
+				if(blocks[parseInt(destination.y/32 + Math.sin(Math.PI/4 * j) * i)][parseInt(destination.x/32 + Math.cos(Math.PI/4 * j) * i)] != 65535){
+					return {x:parseInt(destination.x/32 + Math.cos(Math.PI/4 * j) * i) * 32 + 16,y:parseInt(destination.y/32 + Math.sin(Math.PI/4 * j) * i) * 32 + 16};
 				}
 			}catch(e){}
 		}

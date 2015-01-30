@@ -25,7 +25,7 @@ Monster.prototype.initialize = function(file, index){
 	this.attack_speed = 30;
 	this.damage = 1;
 	this.direction = 180;
-
+	this.radius = 8;
 
 	var frames = [];
 	var offsetX = index % 4 *72;

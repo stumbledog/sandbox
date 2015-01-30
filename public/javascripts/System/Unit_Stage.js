@@ -107,6 +107,9 @@ Unit_Stage.prototype.initEvent = function(){
 				this.hero.setTarget(this.target);
 			}else{
 				this.hero.move(event.stageX/this.scaleX + this.regX, event.stageY/this.scaleY + this.regY);
+				this.getAlliedUnits(this.hero).forEach(function(unit){
+					unit.follow(this.hero);
+				}, this);
 				this.setCommand("move");
 			}
 		}else if(event.nativeEvent.button == 0){
@@ -210,9 +213,12 @@ Unit_Stage.prototype.setCommand = function(type){
 Unit_Stage.prototype.getUnits = function(self){
 	return this.unit_container.children;
 }
+Unit_Stage.prototype.getUnitsExceptMe = function(self){
+	return this.unit_container.children.filter(function(unit){return self.id !== unit.id && unit.status !== "death";});
+}
 
 Unit_Stage.prototype.getAlliedUnits = function(self){
-	return this.unit_container.children.filter(function(unit){return self.team === unit.team && unit.status !== "death";});
+	return this.unit_container.children.filter(function(unit){return self.id !== unit.id && self.team === unit.team && unit.status !== "death";});
 }
 
 Unit_Stage.prototype.getEnemies = function(self){
