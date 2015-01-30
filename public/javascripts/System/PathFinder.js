@@ -1,11 +1,25 @@
 function PathFinder(){}
 
 PathFinder.flowField = function(map, destination){
-	var costed_map = this.getCostedMap(map, destination);
+	console.log(parseInt(destination.x/32));
+
+	var queue = [];
+	queue.push({x:parseInt(destination.x/32)+1,y:parseInt(destination.y/32)});
+	queue.push({x:parseInt(destination.x/32)-1,y:parseInt(destination.y/32)});
+	queue.push({x:parseInt(destination.x/32),y:parseInt(destination.y/32)+1});
+	queue.push({x:parseInt(destination.x/32),y:parseInt(destination.y/32)-1});
+
+	var costed_map = this.getCostedMap(queue, 0, map, destination);
+	console.log(costed_map);
 }
 
-PathFinder.getCostedMap = function(map, destination){
-
+PathFinder.getCostedMap = function(queue, map, destination){
+	if(queue.length){
+		var tile = queue.shift();
+		if(map)
+	}else{
+		return map;
+	}
 }
 
 PathFinder.findPath = function(blocks, starting, destination){

@@ -29,7 +29,7 @@ Map_Stage.prototype.initialize = function(){
 
 	this.block = [];
 
-	for(var i = 0 ;i < this.rows * 2;i++){
+	for(var i = 0 ;i < this.rows;i++){
 		this.block.push([]);
 	}
 
@@ -41,9 +41,9 @@ Map_Stage.prototype.initialize = function(){
 			for(i=0;i<map.tiles.length;i++){
 				for(j=0;j<map.tiles[i].length;j++){
 					if(map.block){
-						this.block[i*2][j*2] = this.block[i*2+1][j*2] = this.block[i*2][j*2+1] = this.block[i*2+1][j*2+1] = map.tiles[i][j] > 0 ? 1:0;
+						this.block[i][j] = map.tiles[i][j] > 0 ? -1:0;
 					}else{
-						this.block[i*2][j*2] = this.block[i*2+1][j*2] = this.block[i*2][j*2+1] = this.block[i*2+1][j*2+1] = 0;
+						this.block[i][j] = 0;
 					}
 					if(map.tiles[i][j]>0){
 						var index = map.tiles[i][j] - 1;
