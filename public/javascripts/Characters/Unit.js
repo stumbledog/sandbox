@@ -54,8 +54,8 @@ Unit.prototype.getVelocity = function(x, y, units){
 
 		vx += this.map[indexY][indexX].vx;
 		vy += this.map[indexY][indexX].vy;
-		vx /= Math.sqrt(Math.pow(vx,2)+Math.pow(vy,2)) / this.speed;
-		vy /= Math.sqrt(Math.pow(vx,2)+Math.pow(vy,2)) / this.speed;
+		vx /= Math.sqrt(Math.pow(vx,2)+Math.pow(vy,2)) / this.speed / 2;
+		vy /= Math.sqrt(Math.pow(vx,2)+Math.pow(vy,2)) / this.speed / 2;
 
 		var indexVX = Math.floor((this.x +vx)/ 32);
 		var indexVY = Math.floor((this.y +vy)/ 32);

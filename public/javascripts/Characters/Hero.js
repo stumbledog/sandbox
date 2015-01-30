@@ -89,9 +89,22 @@ Hero.prototype.hero_initialize = function(data){
 	this.initHealthBar();
 }
 
+Hero.prototype.getPortrait = function(){
+	return this.portrait;
+}
+
+Hero.prototype.hit = function(attacker, damage){
+	Unit.prototype.hit.call(this, attacker, damage);
+	this.game.getUIStage().refreshHealthBar();
+}
+
+Hero.prototype.addFollower = function(follower){
+	this.followers.push(follower);
+}
+
 Hero.prototype.tick = function(){
 	if(this.status === "move"){
-		var velocity = this.getVelocity(this.x, this.y, this.game.getUnitStage().getUnitsExceptMe(this));
+		var velocity = this.getVelocity(this.x, this.y, this.followers);
 		this.x += velocity.vx;
 		this.y += velocity.vy;
 		this.rotate(velocity.vx,velocity.vy);
@@ -119,13 +132,4 @@ Hero.prototype.tick = function(){
 		}
 	}*/
 	this.ticks++;
-}
-
-Hero.prototype.getPortrait = function(){
-	return this.portrait;
-}
-
-Hero.prototype.hit = function(attacker, damage){
-	Unit.prototype.hit.call(this, attacker, damage);
-	this.game.getUIStage().refreshHealthBar();
 }

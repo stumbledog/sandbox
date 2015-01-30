@@ -125,7 +125,7 @@ Unit_Stage.prototype.initEvent = function(){
 				}
 			}
 		}
-		this.update();
+		//this.update();
 	}, this);
 
 	document.onkeydown = function(event){
