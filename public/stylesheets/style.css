@@ -28,4 +28,5 @@ canvas#ui{
 	width:300px;
 	left:50%;
 	margin-left:-150px;
+	cursor:url('../assets/Graphics/System/Icons/swordIcon.png'), auto;
 }

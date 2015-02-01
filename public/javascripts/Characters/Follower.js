@@ -1,5 +1,5 @@
-function Follower(file, index){
-	this.follower_initialize(file, index);
+function Follower(file, index, x, y){
+	this.follower_initialize(file, index, x, y);
 }
 
 Follower.prototype = new Unit();
@@ -7,24 +7,24 @@ Follower.prototype = new Unit();
 Follower.prototype.constructor = Follower;
 Follower.prototype.container_initialize = Follower.prototype.initialize;
 
-Follower.prototype.follower_initialize = function(file, index){
+Follower.prototype.follower_initialize = function(file, index, x, y){
 	this.container_initialize();
 	this.game = Game.getInstance();
-
 	this.type = "follower";
 	this.team = "player";
 	this.ticks = 0;
-
+	this.aggro_radius = 80;
 	this.max_health = this.health = 10;
 	this.speed = 3;
-	this.aggro_radius = 80;
 	this.range = 24;
 	this.attack_speed = 30;
 	this.damage = 2;
 	this.radius = 12;
 	this.mass = 1;
-
-	this.index = index;
+	this.x = x;
+	this.y = y;
+	
+	
 	var frames = [];
 	var offsetX = index % 4 *72;
 	var offsetY = parseInt(index / 4) * 128;
@@ -57,7 +57,6 @@ Follower.prototype.follower_initialize = function(file, index){
 	});
 	this.sprite = new createjs.Sprite(spriteSheet);
 	this.sprite.z = 0;
-	//this.sprite.cache(-12,-16,24,32);
 
 	this.weapon = new createjs.Bitmap(this.game.getLoader().getResult("icon"));
 	this.weapon.sourceRect = new createjs.Rectangle(292,100,16,16);
@@ -69,7 +68,7 @@ Follower.prototype.follower_initialize = function(file, index){
 
 	this.rotate(0,0);
 	this.shadow = new createjs.Shadow("#333",3,3,10);
-	this.status = "attack";
+	this.status = "stop";
 	this.target = null;
 	this.destination = null;
 	this.move_queue = [];
@@ -79,12 +78,10 @@ Follower.prototype.follower_initialize = function(file, index){
 }
 
 Follower.prototype.tick = function(){
-	if(this.status === "move"){
-		var velocity = this.getVelocity(this.x, this.y, this.game.getUnitStage().getUnitsExceptMe(this));
-		this.x += velocity.vx;
-		this.y += velocity.vy;
-		this.rotate(velocity.vx,velocity.vy);
-	}
+	var velocity = this.getVelocity(this.x, this.y, this.game.getUnitStage().getUnitsExceptMe(this));
+	this.x += velocity.vx;
+	this.y += velocity.vy;
+	this.rotate(velocity.vx,velocity.vy);		
 	/*
 	this.target = this.findClosestEnemy();
 	if(this.target && this.getSquareDistance(this.target) <= Math.pow(this.range,2)){

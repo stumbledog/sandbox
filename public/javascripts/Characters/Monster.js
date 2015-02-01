@@ -1,32 +1,32 @@
-function Monster(file, index){
-	this.initialize(file, index);
+function Monster(file, index, x, y){
+	this.initialize(file, index, x, y);
 }
 
 Monster.prototype = new Unit();
 
 Monster.prototype.constructor = Monster;
-//Monster.constructor = Unit.prototype.constructor;
 Monster.prototype.container_initialize = Monster.prototype.initialize;
 
-Monster.prototype.initialize = function(file, index){
+Monster.prototype.initialize = function(file, index, x, y){
 	this.container_initialize();
-
 	this.game = Game.getInstance();
-	
 	this.type = "monster";
 	this.team = "enemy";
 	this.ticks = 0;
 	this.aggro_radius = 80;
 	this.exp = 20;
-
 	this.max_health = this.health = 10;
 	this.speed = .2;
 	this.range = 24;
 	this.attack_speed = 30;
 	this.damage = 1;
 	this.direction = 180;
-	this.radius = 8;
-
+	this.radius = 4;
+	this.mass = 1;
+	this.x = x;
+	this.y = y;
+	this.order = {action:"roaming",x:this.x, y:this.y, map:this.game.findPath({x:this.x,y:this.y})};
+	//this.map = this.game.findPath({x:this.x,y:this.y});
 	var frames = [];
 	var offsetX = index % 4 *72;
 	var offsetY = parseInt(index / 4) * 128;
@@ -85,14 +85,14 @@ Monster.prototype.initEventListener = function(){
 
 	this.addEventListener("rollover", function(event){
 		if(this.status !== "death"){
-			this.sprite.filters = [new createjs.ColorFilter(1,0,0,1)];
-			this.sprite.cache(-12,-16,24,32);
+			this.mouseover = true;
 			this.getStage().setTarget(this);
 		}
 	}.bind(this));
 
 	this.addEventListener("rollout", function(event){
 		if(this.status !== "death"){
+			this.mouseover = false;
 			this.sprite.filters = null;
 			this.sprite.uncache();
 			this.getStage().unsetTarget(this);
@@ -108,6 +108,24 @@ Monster.prototype.hit = function(attacker, damage){
 }
 
 Monster.prototype.tick = function(){
+	switch(this.order.action){
+		case "roaming":
+		var velocity = this.getVelocity(this.x, this.y, this.game.getUnitStage().getUnitsExceptMe(this));
+		this.x += velocity.vx;
+		this.y += velocity.vy;
+		this.rotate(velocity.vx,velocity.vy);
+	}
+
+	if(this.mouseover){
+		this.sprite.uncache();
+		this.sprite.filters = [new createjs.ColorFilter(1,0,0,1)];
+		this.sprite.cache(-12,-16,24,32);
+	}
+/*
+	
+	*/
+
+/*
 	if(this.status === "wait"){
 		if(this.ticks > this.wait){
 			this.status = "idle";
@@ -146,6 +164,6 @@ Monster.prototype.tick = function(){
 			this.target = null;
 			this.status = "idle";
 		}
-	}
+	}*/
 	this.ticks++;
 }

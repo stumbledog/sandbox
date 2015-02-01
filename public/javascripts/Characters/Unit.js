@@ -20,12 +20,7 @@ Unit.prototype.setTarget = function(unit){
 }
 
 Unit.prototype.move = function(x, y){
-	this.map = this.game.findPath(this, {x:this.x,y:this.y}, {x:x,y:y}, true);
-	if(this.map){
-		this.status = "move";
-	}else{
-		this.status = "stop";
-	}
+	this.order = {action:"move", x:x, y:y, map:this.game.findPath({x:x,y:y})}
 }
 
 Unit.prototype.follow = function(target_unit){
@@ -34,44 +29,61 @@ Unit.prototype.follow = function(target_unit){
 }
 
 Unit.prototype.getVelocity = function(x, y, units){
-	if(this.map){
-		var vx = vy = 0;
-		units.forEach(function(unit){
-			var distance = Math.sqrt(Math.pow(unit.x-this.x,2)+Math.pow(unit.y-this.y,2));
-			if(distance !== 0){
-				var magnitude = unit.mass*100 / (Math.pow(this.x-unit.x,2) + Math.pow(this.y-unit.y,2));
-				var direction = {
-					x:(unit.x - this.x) / distance * magnitude,
-					y:(unit.y - this.y) / distance * magnitude
-				};
-				vx -= direction.x;
-				vy -= direction.y;
-			}
-		},this);
-		
-		var indexX = Math.floor(this.x / 32);
-		var indexY = Math.floor(this.y / 32);
-
-		vx += this.map[indexY][indexX].vx;
-		vy += this.map[indexY][indexX].vy;
-		vx /= Math.sqrt(Math.pow(vx,2)+Math.pow(vy,2)) / this.speed / 2;
-		vy /= Math.sqrt(Math.pow(vx,2)+Math.pow(vy,2)) / this.speed / 2;
-
-		var indexVX = Math.floor((this.x +vx)/ 32);
-		var indexVY = Math.floor((this.y +vy)/ 32);
-
-		if(!this.map[indexVY] || !this.map[indexVY][indexVX] || this.map[indexVY][indexVX].block){			
-			if(this.map[indexY][indexVX] && !this.map[indexY][indexVX].block){
-				vy = 0;
-			}else if(this.map[indexVY] && !this.map[indexVY][indexX].block){
-				vx = 0;
+	var vx = vy = 0;	
+	units.forEach(function(unit){
+		var distance = Math.sqrt(Math.pow(unit.x-this.x,2)+Math.pow(unit.y-this.y,2));
+		if(distance !== 0){
+			if(this.team === unit.team){
+				var power = distance < this.radius + unit.radius ? 100 : 10;
 			}else{
-				vx = vy = 0;
+				var power = distance < this.radius + unit.radius ? 100 : 10;
 			}
+			var magnitude = unit.mass / this.mass * power / (Math.pow(this.x-unit.x,2) + Math.pow(this.y-unit.y,2));
+			var direction = {
+				x:(unit.x - this.x) / distance * magnitude,
+				y:(unit.y - this.y) / distance * magnitude
+			};
+			/*
+			if(direction.x>0 && direction.y>0){
+				direction.y *=-1;
+			}else if(direction.x>0 && direction.y<0){
+				direction.x *=-1;
+			}else if(direction.x<0 && direction.y<0){
+				direction.y *=-1;
+			}else if(direction.x>0 && direction.y<0){
+				direction.x *=-1;
+			}*/
+			vx -= direction.x;
+			vy -= direction.y;
 		}
+	},this);
 
-		return {vx:vx,vy:vy};
+	var indexX = Math.floor(this.x / 16);
+	var indexY = Math.floor(this.y / 16);
+	vx += this.order.map[indexY][indexX].vx;
+	vy += this.order.map[indexY][indexX].vy;
+	if(Math.abs(vx) < 0.5 && Math.abs(vy) < 0.5){
+		vx = vy = 0;
+	}else{
+		var vector_length = Math.sqrt(Math.pow(vx,2)+Math.pow(vy,2));
+		vx /= vector_length / this.speed;
+		vy /= vector_length / this.speed;
 	}
+
+	var indexVX = Math.floor((this.x +vx)/ 16);
+	var indexVY = Math.floor((this.y +vy)/ 16);
+
+	if(!this.order.map[indexVY] || !this.order.map[indexVY][indexVX] || this.order.map[indexVY][indexVX].block){
+		if(this.order.map[indexY][indexVX] && !this.order.map[indexY][indexVX].block){
+			vy = 0;
+		}else if(this.order.map[indexVY] && !this.order.map[indexVY][indexX].block){
+			vx = 0;
+		}else{
+			vx = vy = 0;
+		}
+	}
+
+	return {vx:vx,vy:vy};
 }
 
 Unit.prototype.rotate = function(dx, dy){
@@ -174,7 +186,7 @@ Unit.prototype.gainExp = function(exp){
 		this.level++;
 	}
 
-	if(this.type === "player"){
+	if(this.type === "player" || this.type === "hero"){
 		this.game.getUIStage().refreshExpBar();
 	}
 }

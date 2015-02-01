@@ -1,7 +1,7 @@
 function PathFinder(){}
 
 PathFinder.flowField = function(block_map, destination){
-	if(block_map[parseInt(destination.y/32)][parseInt(destination.x/32)] === 65535){
+	if(block_map[Math.floor(destination.y/16)][Math.floor(destination.x/16)] === 65535){
 		destination = this.findClosestPoint2(block_map, destination);
 	}
 	var costed_map = [];
@@ -11,13 +11,26 @@ PathFinder.flowField = function(block_map, destination){
 		vector_map.push(row.slice());
 	});
 	var queue = [];
-	queue.push({x:parseInt(destination.x/32),y:parseInt(destination.y/32),cost:1});
-	this.getVectorMap(vector_map, this.getCostedMap(queue, costed_map));
-	//console.log(vector_map);
+	queue.push({x:Math.floor(destination.x/16),y:Math.floor(destination.y/16),cost:1});
+	this.getVectorMap(vector_map, this.loopCostedMap(queue, costed_map));
 	return vector_map;
 }
 
-PathFinder.getCostedMap = function(queue, map){
+PathFinder.loopCostedMap = function(queue, map){
+	while(queue.length){
+		var tile = queue.shift();
+		if(map[tile.y] && map[tile.y][tile.x] && map[tile.y][tile.x] !== 65535 && (map[tile.y][tile.x] > tile.cost || map[tile.y][tile.x] === 'E')){
+			map[tile.y][tile.x] = tile.cost;
+			queue.push({x:tile.x+1,y:tile.y,cost:tile.cost+1});
+			queue.push({x:tile.x-1,y:tile.y,cost:tile.cost+1});
+			queue.push({x:tile.x,y:tile.y+1,cost:tile.cost+1});
+			queue.push({x:tile.x,y:tile.y-1,cost:tile.cost+1});
+		}
+	}
+	return map
+}
+
+PathFinder.queueCostedMap = function(queue, map){
 	if(queue.length){
 		var tile = queue.shift();
 		if(map[tile.y] && map[tile.y][tile.x] && map[tile.y][tile.x] !== 65535 && (map[tile.y][tile.x] > tile.cost || map[tile.y][tile.x] === 'E')){
@@ -89,9 +102,6 @@ PathFinder.getVectorMap = function(vector_map, costed_map){
 					dy = up - down;				
 				}
 
-				if(dx===0 && dy===0){
-				}
-
 				var distance = Math.sqrt(Math.pow(dx,2) + Math.pow(dy,2));
 				vector_map[i][j] = distance === 0 ? {vx:0, vy:0, block:false} : {vx:dx/distance, vy:dy/distance, block:false};
 			}
@@ -100,12 +110,12 @@ PathFinder.getVectorMap = function(vector_map, costed_map){
 }
 
 PathFinder.findPath = function(blocks, starting, destination){
-	if(blocks[parseInt(destination.y/16)][parseInt(destination.x/16)]){
+	if(blocks[Math.floor(destination.y/16)][Math.floor(destination.x/16)]){
 		destination = this.findClosestPoint(blocks, destination);
 	}
 	/*
-	if(parseInt(destination.y/16) === parseInt(starting.y/16) && parseInt(destination.x/16) === parseInt(starting.x/16)){
-		return [{x:parseInt(starting.x/16)*16+8,y:parseInt(starting.y/16)*16+8}];
+	if(Math.floor(destination.y/16) === Math.floor(starting.y/16) && Math.floor(destination.x/16) === Math.floor(starting.x/16)){
+		return [{x:Math.floor(starting.x/16)*16+8,y:Math.floor(starting.y/16)*16+8}];
 	}*/
 
 	var ret = this.aStar(blocks, starting, destination);
@@ -134,8 +144,8 @@ PathFinder.aStar = function(blocks, starting, destination){
 		grid.push(arr);
 	}
 	
-	var start = {g:0, f:0, h:0, pos:{x:parseInt(starting.x/16),y:parseInt(starting.y/16)}};
-	var end = {pos:{x:parseInt(destination.x/16),y:parseInt(destination.y/16)}};
+	var start = {g:0, f:0, h:0, pos:{x:Math.floor(starting.x/16),y:Math.floor(starting.y/16)}};
+	var end = {pos:{x:Math.floor(destination.x/16),y:Math.floor(destination.y/16)}};
 
 	var openList = [start];
 	var closedList = [];
@@ -219,8 +229,8 @@ PathFinder.heuristic = function(pos0, pos1) {
 PathFinder.filter = function(blocks, path){
 	var arr = [];
 	path.forEach(function(node, index){
-		var x = parseInt(node.pos.x/2);
-		var y = parseInt(node.pos.y/2);
+		var x = Math.floor(node.pos.x/2);
+		var y = Math.floor(node.pos.y/2);
 		if(index === path.length-1){
 			arr.push({x:node.pos.x,y:node.pos.y});
 		}else{
@@ -237,7 +247,7 @@ PathFinder.filter = function(blocks, path){
 
 PathFinder.findPath2 = function(blocks, starting, destination){
 
-	if(blocks[parseInt(destination.y/32)][parseInt(destination.x/32)]){
+	if(blocks[Math.floor(destination.y/16)][Math.floor(destination.x/16)]){
 		destination = this.findClosestPoint(blocks, destination);
 	}
 
@@ -250,7 +260,7 @@ PathFinder.findPath2 = function(blocks, starting, destination){
 		costs.push(arr);
 	});
 
-	this.calcCost(blocks, costs, parseInt(starting.x/32),parseInt(starting.y/32),0,1);
+	this.calcCost(blocks, costs, Math.floor(starting.x/32),Math.floor(starting.y/32),0,1);
 
 /*
 	var string = "";
@@ -263,7 +273,7 @@ PathFinder.findPath2 = function(blocks, starting, destination){
 	console.log(string);
 */
 
-	var path = this.getMinimum(blocks, costs, parseInt(destination.x/32), parseInt(destination.y/32));
+	var path = this.getMinimum(blocks, costs, Math.floor(destination.x/32), Math.floor(destination.y/32));
 	path = path.filter(function(point){
 		var x = point.x;
 		var y = point.y;
@@ -289,8 +299,8 @@ PathFinder.findClosestPoint = function(blocks, destination){
 	for(var i = 0.1;i<4;i+=0.1){
 		for(j=0;j<8;j++){
 			try{
-				if(!blocks[parseInt(destination.y/16 + Math.sin(Math.PI/4 * j) * i)][parseInt(destination.x/16 + Math.cos(Math.PI/4 * j) * i)]){
-					return {x:parseInt(destination.x/16 + Math.cos(Math.PI/4 * j) * i) * 16 + 8,y:parseInt(destination.y/16 + Math.sin(Math.PI/4 * j) * i) * 16 + 8};
+				if(!blocks[Math.floor(destination.y/16 + Math.sin(Math.PI/4 * j) * i)][Math.floor(destination.x/16 + Math.cos(Math.PI/4 * j) * i)]){
+					return {x:Math.floor(destination.x/16 + Math.cos(Math.PI/4 * j) * i) * 16 + 8,y:Math.floor(destination.y/16 + Math.sin(Math.PI/4 * j) * i) * 16 + 8};
 				}
 			}catch(e){}
 		}
@@ -302,8 +312,8 @@ PathFinder.findClosestPoint2 = function(blocks, destination){
 	for(var i = 0.1;i<4;i+=0.1){
 		for(j=0;j<8;j++){
 			try{
-				if(blocks[parseInt(destination.y/32 + Math.sin(Math.PI/4 * j) * i)][parseInt(destination.x/32 + Math.cos(Math.PI/4 * j) * i)] != 65535){
-					return {x:parseInt(destination.x/32 + Math.cos(Math.PI/4 * j) * i) * 32 + 16,y:parseInt(destination.y/32 + Math.sin(Math.PI/4 * j) * i) * 32 + 16};
+				if(blocks[Math.floor(destination.y/16 + Math.sin(Math.PI/4 * j) * i)][Math.floor(destination.x/16 + Math.cos(Math.PI/4 * j) * i)] !== 65535){
+					return {x:Math.floor(destination.x/16 + Math.cos(Math.PI/4 * j) * i) * 16,y:Math.floor(destination.y/16 + Math.sin(Math.PI/4 * j) * i) * 16};
 				}
 			}catch(e){}
 		}

@@ -107,9 +107,10 @@ Unit_Stage.prototype.initEvent = function(){
 				this.hero.setTarget(this.target);
 			}else{
 				this.hero.move(event.stageX/this.scaleX + this.regX, event.stageY/this.scaleY + this.regY);
+				/*
 				this.getAlliedUnits(this.hero).forEach(function(unit){
 					unit.follow(this.hero);
-				}, this);
+				}, this);*/
 				this.setCommand("move");
 			}
 		}else if(event.nativeEvent.button == 0){
@@ -162,27 +163,18 @@ Unit_Stage.prototype.initContainer = function(){
 	this.addChild(this.unit_container, this.ui_container);
 }
 
-Unit_Stage.prototype.addHero = function(hero, x, y){
+Unit_Stage.prototype.addHero = function(hero){
 	this.hero = hero;
 	this.unit_container.addChild(this.hero);
-	this.hero.x = x;
-	this.hero.y = y;
-	this.unit_coordinates[parseInt(y/16)][parseInt(x/16)] = this.hero;
 }
 
-Unit_Stage.prototype.addFollower = function(follower, x, y){
+Unit_Stage.prototype.addFollower = function(follower){
 	this.unit_container.addChild(follower);
-	follower.x = x;
-	follower.y = y;
-	this.unit_coordinates[parseInt(y/16)][parseInt(x/16)] = follower;
 	this.hero.followers.push(follower);
 }
 
 Unit_Stage.prototype.addUnit = function(unit, x, y){
 	this.unit_container.addChild(unit);
-	unit.x = x;
-	unit.y = y;
-	this.unit_coordinates[parseInt(y/16)][parseInt(x/16)] = unit;
 }
 
 Unit_Stage.prototype.removeUnit = function(target){
@@ -193,20 +185,20 @@ Unit_Stage.prototype.setCommand = function(type){
 	switch(type){
 		case "attack":
 			this.command = "attack";
-			document.getElementById("ui").classList.add("attack");
+			this.canvas.classList.add("attack");
 		break;
 		case "move":
 			this.command = "move";
-			document.getElementById("ui").classList.remove("attack");
+			this.canvas.classList.remove("attack");
 		break;
 		case "stop":
 			this.command = "move";
-			document.getElementById("ui").classList.remove("attack");
+			this.canvas.classList.remove("attack");
 			this.hero.stop();
 		break;
 		case "move_attack":
 			this.command = "move_attack"
-			document.getElementById("ui").classList.remove("attack");
+			this.canvas.classList.remove("attack");
 	}
 }
 
