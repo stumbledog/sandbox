@@ -13,17 +13,17 @@ Follower.prototype.follower_initialize = function(file, index, x, y){
 	this.type = "follower";
 	this.team = "player";
 	this.ticks = 0;
-	this.aggro_radius = 80;
+	this.aggro_radius = 160;
 	this.max_health = this.health = 10;
 	this.speed = 3;
-	this.range = 24;
+	this.range = 32;
 	this.attack_speed = 30;
 	this.damage = 2;
-	this.radius = 12;
+	this.radius = 16;
 	this.mass = 1;
 	this.x = x;
 	this.y = y;
-	
+	this.order = {action:"guard",x:this.x, y:this.y, map:this.game.findPath({x:this.x,y:this.y})};
 	
 	var frames = [];
 	var offsetX = index % 4 *72;
@@ -73,26 +73,8 @@ Follower.prototype.follower_initialize = function(file, index, x, y){
 	this.destination = null;
 	this.move_queue = [];
 	this.color = "#0C0";
+	this.damage_color = "#C00";
 
 	this.initHealthBar();
 }
 
-Follower.prototype.tick = function(){
-	var velocity = this.getVelocity(this.x, this.y, this.game.getUnitStage().getUnitsExceptMe(this));
-	this.x += velocity.vx;
-	this.y += velocity.vy;
-	this.rotate(velocity.vx,velocity.vy);		
-	/*
-	this.target = this.findClosestEnemy();
-	if(this.target && this.getSquareDistance(this.target) <= Math.pow(this.range,2)){
-		if(this.ticks > this.attack_speed){
-			this.ticks = 0;
-			this.attackTarget(this.target);
-		}
-	}else if(this.target){
-		this.followPath(this.target, false);
-	}else{
-		this.stop();
-	}
-	this.ticks++;*/
-}

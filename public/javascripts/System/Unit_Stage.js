@@ -27,7 +27,9 @@ Unit_Stage.prototype.initialize = function(width, height, rows){
 			return obj1.y>obj2.y?1:-1;
 		});
 		this.unit_container.children.forEach(function(unit){
-			unit.tick();
+			if(unit.status !== "death"){
+				unit.tick();
+			}
 		});
 
 		if(this.move_left && this.regX - this.scroll_speed >= 0){
@@ -53,11 +55,6 @@ Unit_Stage.prototype.initialize = function(width, height, rows){
 		this.update();
 	}.bind(this));
 	createjs.Ticker.setFPS(60);
-
-	this.unit_coordinates = [];
-	for(var i = 0 ; i < rows * 2 ; i++){
-		this.unit_coordinates.push([]);
-	}
 
 	this.initEvent();
 	this.initContainer();
@@ -104,7 +101,7 @@ Unit_Stage.prototype.initEvent = function(){
 		}
 		if(event.nativeEvent.button == 2){
 			if(this.target){
-				this.hero.setTarget(this.target);
+				this.hero.attack(this.target);
 			}else{
 				this.hero.move(event.stageX/this.scaleX + this.regX, event.stageY/this.scaleY + this.regY);
 				/*
@@ -118,7 +115,7 @@ Unit_Stage.prototype.initEvent = function(){
 				console.log("select");
 			}else if(this.command === "attack"){
 				if(this.target){
-					this.hero.setTarget(this.target);
+					this.hero.attack(this.target);
 					this.setCommand("move");
 				}else{
 					this.hero.moveAttack(event.stageX/this.scaleX + this.regX, event.stageY/this.scaleY + this.regY);
@@ -171,6 +168,7 @@ Unit_Stage.prototype.addHero = function(hero){
 Unit_Stage.prototype.addFollower = function(follower){
 	this.unit_container.addChild(follower);
 	this.hero.followers.push(follower);
+	follower.order = this.hero.order;
 }
 
 Unit_Stage.prototype.addUnit = function(unit, x, y){
@@ -210,7 +208,7 @@ Unit_Stage.prototype.getUnitsExceptMe = function(self){
 }
 
 Unit_Stage.prototype.getAlliedUnits = function(self){
-	return this.unit_container.children.filter(function(unit){return self.id !== unit.id && self.team === unit.team && unit.status !== "death";});
+	return this.unit_container.children.filter(function(unit){return self.team === unit.team && unit.status !== "death";});
 }
 
 Unit_Stage.prototype.getEnemies = function(self){

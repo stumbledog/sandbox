@@ -13,6 +13,7 @@ Hero.prototype.hero_initialize = function(data, x, y){
 
 	this.type = "hero";
 	this.team = "player";
+	this.status = "alive";
 	this.ticks = 0;
 	this.followers = [];
 
@@ -22,13 +23,13 @@ Hero.prototype.hero_initialize = function(data, x, y){
 	this.exp = data.exp;
 	this.resource_type = data.resource_type;
 	this.max_resource = this.resource = data.resource;
-	this.radius = 12;
+	this.radius = 16;
 	this.mass = 100;
 
 	this.aggro_radius = 80;
-	this.range = 24;
-	this.attack_speed = 20;
-	this.damage = 5;
+	this.range = 32;
+	this.attack_speed = 5;
+	this.damage = 3;
 	this.x = x;
 	this.y = y;
 	this.map = this.game.findPath({x:this.x,y:this.y});
@@ -41,7 +42,7 @@ Hero.prototype.hero_initialize = function(data, x, y){
 	}
 
 	var spriteSheet = new createjs.SpriteSheet({
-		images:[this.game.getLoader().getResult(data.id)],
+		images:[this.game.getLoader().getResult(data.src_id)],
 		frames:frames,
 		animations:{
 			front:{
@@ -82,7 +83,7 @@ Hero.prototype.hero_initialize = function(data, x, y){
 	this.destination = null;
 	this.move_queue = [];
 	this.color = "#0C0";
-
+	this.damage_color = "#C00";
 	this.initHealthBar();
 }
 
@@ -97,65 +98,4 @@ Hero.prototype.hit = function(attacker, damage){
 
 Hero.prototype.addFollower = function(follower){
 	this.followers.push(follower);
-}
-
-Hero.prototype.tick = function(){
-	switch(this.order.action){
-		case "move":
-		case "stop":
-			this.procMove(this.x, this.y, this.game.getUnitStage().getUnitsExceptMe(this), this.order.map);
-			break;
-		case "move_attack":
-			if(this.target && this.getSquareDistance(this.target) > Math.pow(this.aggro_radius,2)){
-				this.target = this.order.target_map = null;
-			}
-
-			if(!this.target && this.findClosestEnemy(this.aggro_radius)){
-				this.target = this.findClosestEnemy(this.aggro_radius);
-				this.order.target_map = this.game.findPath({x:this.target.x, y:this.target.y});
-			}else if(this.target && this.target.status === "death"){
-				this.target = this.order.target_map = null;
-			}
-
-			if(this.target){
-				if(this.getSquareDistance(this.target) <= Math.pow(this.range,2)){
-					if(this.ticks > this.attack_speed){
-						this.ticks = 0;
-						this.attackTarget(this.target);
-					}
-				}else if(this.isArrived() && this.getSquareDistance(this.target) > Math.pow(this.range,2)){
-					this.order.target_map = this.game.findPath({x:this.target.x, y:this.target.y});
-					this.procMove(this.x, this.y, this.game.getUnitStage().getUnitsExceptMe(this), this.order.target_map);
-				}else{
-					this.procMove(this.x, this.y, this.game.getUnitStage().getUnitsExceptMe(this), this.order.target_map);
-				}
-			}else{
-				this.procMove(this.x, this.y, this.game.getUnitStage().getUnitsExceptMe(this), this.order.map);
-			}
-
-			break;
-	}
-	/*
-	if(this.target && this.getSquareDistance(this.target) <= Math.pow(this.range,2)){
-		if(this.target.status === "death"){
-			this.target = null;
-		}else{
-			if(this.ticks > this.attack_speed){
-				this.ticks = 0;
-				this.attackTarget(this.target);
-			}
-		}
-	}else if(this.status === "move"){
-		this.followPath(this.move_queue[this.move_queue.length-1], true);
-	}else if(this.status === "move_attack"){
-		this.target = this.findClosestEnemy(this.aggro_radius);
-		this.followPath(null, null, true);
-	}else if(this.status === "attack"){
-		if(this.target){
-			this.followPath(this.target, true);
-		}else{
-			//this.stop();
-		}
-	}*/
-	this.ticks++;
 }

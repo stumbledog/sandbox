@@ -69,7 +69,6 @@ UI_Stage.prototype.renderHealthBar = function(){
 	var health_bar_border = new createjs.Shape();
 	health_bar_border.graphics.lf(["#4B4B4B","#414141","#373737"],[0,0.5,1],0,0,0,20).dr(0,0,200,20);
 
-
 	var resource_bar_border = new createjs.Shape();
 	resource_bar_border.graphics.lf(["#4B4B4B","#414141","#373737"],[0,0.5,1],0,20,0,32).dr(0,20,200,12);
 
@@ -116,19 +115,20 @@ UI_Stage.prototype.refreshExpBar = function(){
 	var exp_cap = this.hero.level * 100;
 	this.exp_bar.graphics.c().lf(["#FFE11A","#FD7400"],[0,1],0,0,0,8).dr(1,1,70 * this.hero.exp / exp_cap,8);
 	this.exp_text.text = Math.round(this.hero.exp)+"/"+exp_cap;
-
 	this.level.text = this.hero.level;
 	this.level.x = this.level.getMeasuredWidth()/2+1;
 	this.level_border.graphics.c().f("#000").lf(["#4B4B4B","#414141","#373737"],[0,0.5,1],8,0,8,16).dr(0,0,this.level.getMeasuredWidth()+2,16);
-	
 	this.update();
 }
 
 UI_Stage.prototype.refreshHealthBar = function(){
-	this.health_text.text = Math.round(this.hero.health)+"/"+Math.round(this.hero.max_health);
-	this.resource_text.text = Math.round(this.hero.resource)+"/"+Math.round(this.hero.max_resource);
+	this.health_text.setText(Math.round(this.hero.health)+"/"+Math.round(this.hero.max_health));
 	this.healbar.graphics.c().lf(["#96ED89","#45BF55","#167F39"],[0,0.5,1],0,0,0,20).dr(1,1,198*this.hero.health/this.hero.max_health,18);
-	this.resource_bar.graphics.c().lf(this.resource_color,[0,0.5,1],0,21,0,31).dr(1,21,198*this.hero.resource/this.hero.max_resource,10);
+	this.update();
+}
 
+UI_Stage.prototype.refreshResourceBar = function(){
+	this.resource_text.setText(Math.round(this.hero.resource)+"/"+Math.round(this.hero.max_resource));
+	this.resource_bar.graphics.c().lf(this.resource_color,[0,0.5,1],0,21,0,31).dr(1,21,198*this.hero.resource/this.hero.max_resource,10);
 	this.update();
 }

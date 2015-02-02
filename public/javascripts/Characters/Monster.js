@@ -16,17 +16,17 @@ Monster.prototype.initialize = function(file, index, x, y){
 	this.aggro_radius = 80;
 	this.exp = 20;
 	this.max_health = this.health = 10;
-	this.speed = .2;
-	this.range = 24;
-	this.attack_speed = 30;
+	this.speed = 1;
+	this.range = 32;
+	this.attack_speed = 20;
 	this.damage = 1;
 	this.direction = 180;
 	this.radius = 4;
 	this.mass = 1;
 	this.x = x;
 	this.y = y;
-	this.order = {action:"roaming",x:this.x, y:this.y, map:this.game.findPath({x:this.x,y:this.y})};
-	//this.map = this.game.findPath({x:this.x,y:this.y});
+	this.order = {action:"guard",map:this.game.findPath({x:this.x,y:this.y})};
+
 	var frames = [];
 	var offsetX = index % 4 *72;
 	var offsetY = parseInt(index / 4) * 128;
@@ -68,6 +68,7 @@ Monster.prototype.initialize = function(file, index, x, y){
 	this.destination = null;
 	this.move_queue = [];
 	this.color = "#C00";
+	this.damage_color = "#CC0";
 	this.vx = this.vy = 0
 
 	this.initEventListener();
@@ -100,68 +101,11 @@ Monster.prototype.initEventListener = function(){
 	}.bind(this));
 }
 
-Monster.prototype.hit = function(attacker, damage){
-	Unit.prototype.hit.call(this, attacker, damage);
-	if(this.status !== "attack"){
-		this.status = "attack";
-	}
-}
-
 Monster.prototype.tick = function(){
-	switch(this.order.action){
-		case "roaming":
-			this.procMove(this.x, this.y, this.game.getUnitStage().getUnitsExceptMe(this), this.order.map);
-			break;
-	}
-
+	Unit.prototype.tick.call(this);
 	if(this.mouseover){
 		this.sprite.uncache();
 		this.sprite.filters = [new createjs.ColorFilter(1,0,0,1)];
 		this.sprite.cache(-12,-16,24,32);
 	}
-/*
-	
-	*/
-
-/*
-	if(this.status === "wait"){
-		if(this.ticks > this.wait){
-			this.status = "idle";
-			this.ticks = 0;
-		}
-	}else if(this.target && this.getSquareDistance(this.target) <= Math.pow(this.range,2)){
-		if(this.ticks > this.attack_speed){
-			this.ticks = 0;
-			this.attackTarget(this.target);
-		}
-	}else if(this.status === "idle"){
-		this.target = this.findClosestEnemy(this.aggro_radius);
-		if(this.target){
-			this.status = "attack";
-		}else{
-			this.move_queue = this.getStage().findNeighbor(this, this.x, this.y);
-			if(this.move_queue.length){
-				this.status = "roaming";
-			}
-		}
-	}else if(this.status === "roaming"){
-		if(this.move_queue.length){
-			this.followPath(this.move_queue[0], true);
-		}else{
-			this.status = "idle";
-		}
-	}else if(this.status === "attack"){
-		if(this.target && this.getSquareDistance(this.target) < Math.pow(this.aggro_radius,2)){
-			this.followPath(this.target, true);
-			if(!this.move_queue.length){
-				this.status = "wait";
-				this.wait = 120;
-				console.log("wait");
-			}
-		}else{
-			this.target = null;
-			this.status = "idle";
-		}
-	}*/
-	this.ticks++;
 }
