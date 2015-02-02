@@ -103,35 +103,37 @@ Hero.prototype.tick = function(){
 	switch(this.order.action){
 		case "move":
 		case "stop":
-			//this.procMove()
-			var velocity = this.getVelocity(this.x, this.y, this.game.getUnitStage().getUnitsExceptMe(this));
-			this.x += velocity.vx;
-			this.y += velocity.vy;
-			this.rotate(velocity.vx, velocity.vy);
+			this.procMove(this.x, this.y, this.game.getUnitStage().getUnitsExceptMe(this), this.order.map);
 			break;
 		case "move_attack":
-			if(!this.target){
+			if(this.target && this.getSquareDistance(this.target) > Math.pow(this.aggro_radius,2)){
+				this.target = this.order.target_map = null;
+			}
+
+			if(!this.target && this.findClosestEnemy(this.aggro_radius)){
 				this.target = this.findClosestEnemy(this.aggro_radius);
-				if(this.target){
-					this.order.alter_map = this.order.map;
-					this.order.map = this.game.findPath({x:this.target.x,y:this.target.y});					
+				this.order.target_map = this.game.findPath({x:this.target.x, y:this.target.y});
+			}else if(this.target && this.target.status === "death"){
+				this.target = this.order.target_map = null;
+			}
+
+			if(this.target){
+				if(this.getSquareDistance(this.target) <= Math.pow(this.range,2)){
+					if(this.ticks > this.attack_speed){
+						this.ticks = 0;
+						this.attackTarget(this.target);
+					}
+				}else if(this.isArrived() && this.getSquareDistance(this.target) > Math.pow(this.range,2)){
+					this.order.target_map = this.game.findPath({x:this.target.x, y:this.target.y});
+					this.procMove(this.x, this.y, this.game.getUnitStage().getUnitsExceptMe(this), this.order.target_map);
+				}else{
+					this.procMove(this.x, this.y, this.game.getUnitStage().getUnitsExceptMe(this), this.order.target_map);
 				}
-			}else if(this.target.status === "death"){
-				this.target = null;
-				this.order.map = this.order.alter_map;
-			}
-
-			if(this.target && this.getSquareDistance(this.target) <= Math.pow(this.range,2) && this.ticks > this.attack_speed){
-				this.ticks = 0;
-				this.attackTarget(this.target);
 			}else{
-				var velocity = this.getVelocity(this.x, this.y, this.game.getUnitStage().getUnitsExceptMe(this));
-				this.x += velocity.vx;
-				this.y += velocity.vy;
-				this.rotate(velocity.vx, velocity.vy);				
+				this.procMove(this.x, this.y, this.game.getUnitStage().getUnitsExceptMe(this), this.order.map);
 			}
-			break;
 
+			break;
 	}
 	/*
 	if(this.target && this.getSquareDistance(this.target) <= Math.pow(this.range,2)){

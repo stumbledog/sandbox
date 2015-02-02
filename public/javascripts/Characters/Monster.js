@@ -110,10 +110,8 @@ Monster.prototype.hit = function(attacker, damage){
 Monster.prototype.tick = function(){
 	switch(this.order.action){
 		case "roaming":
-		var velocity = this.getVelocity(this.x, this.y, this.game.getUnitStage().getUnitsExceptMe(this));
-		this.x += velocity.vx;
-		this.y += velocity.vy;
-		this.rotate(velocity.vx,velocity.vy);
+			this.procMove(this.x, this.y, this.game.getUnitStage().getUnitsExceptMe(this), this.order.map);
+			break;
 	}
 
 	if(this.mouseover){

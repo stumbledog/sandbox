@@ -28,7 +28,7 @@ Unit.prototype.follow = function(target_unit){
 	this.map = target_unit.map;
 }
 
-Unit.prototype.getVelocity = function(x, y, units){
+Unit.prototype.procMove = function(x, y, units, map){
 	var vx = vy = 0;	
 	units.forEach(function(unit){
 		var distance = Math.sqrt(Math.pow(unit.x-this.x,2)+Math.pow(unit.y-this.y,2));
@@ -61,8 +61,8 @@ Unit.prototype.getVelocity = function(x, y, units){
 	var indexX = Math.floor(this.x / 16);
 	var indexY = Math.floor(this.y / 16);
 
-	vx += this.order.map[indexY][indexX].vx;
-	vy += this.order.map[indexY][indexX].vy;
+	vx += map[indexY][indexX].vx;
+	vy += map[indexY][indexX].vy;
 	if(Math.abs(vx) < 0.5 && Math.abs(vy) < 0.5){
 		vx = vy = 0;
 	}else{
@@ -74,17 +74,21 @@ Unit.prototype.getVelocity = function(x, y, units){
 	var indexVX = Math.floor((this.x +vx)/ 16);
 	var indexVY = Math.floor((this.y +vy)/ 16);
 
-	if(!this.order.map[indexVY] || !this.order.map[indexVY][indexVX] || this.order.map[indexVY][indexVX].block){
-		if(this.order.map[indexY][indexVX] && !this.order.map[indexY][indexVX].block){
+	if(!map[indexVY] || !map[indexVY][indexVX] || map[indexVY][indexVX].block){
+		if(map[indexY][indexVX] && !map[indexY][indexVX].block){
 			vy = 0;
-		}else if(this.order.map[indexVY] && !this.order.map[indexVY][indexX].block){
+		}else if(map[indexVY] && !map[indexVY][indexX].block){
 			vx = 0;
 		}else{
 			vx = vy = 0;
 		}
 	}
+	this.vx = vx;
+	this.vy = vy;
 
-	return {vx:vx,vy:vy};
+	this.x += this.vx;
+	this.y += this.vy;
+	this.rotate(this.vx, this.vy);
 }
 
 Unit.prototype.rotate = function(dx, dy){
@@ -143,13 +147,7 @@ Unit.prototype.rotate = function(dx, dy){
 }
 
 Unit.prototype.moveAttack = function(x, y){
-	this.order = {action:"move_attack", x:x, y:y, map:this.game.findPath({x:x,y:y})}
-	/*
-	this.destination = {x:x,y:y};
-	this.status = "move_attack";
-	this.target = this.findClosestEnemy(this.aggro_radius);
-	this.move_queue = this.game.findPath(this, {x:this.x,y:this.y}, {x:x,y:y}, false);
-	*/
+	this.order = {action:"move_attack", x:x, y:y, map:this.game.findPath({x:x,y:y})};
 }
 
 Unit.prototype.attackTarget = function(target, damage){
@@ -252,11 +250,7 @@ Unit.prototype.setTarget = function(target){
 }
 
 Unit.prototype.stop = function(){
-	this.order = {action:"stop", map:this.game.findPath({x:this.x,y:this.y})};/*
-	this.move_queue = [];
-	this.destination = null;
-	this.sprite.stop();
-	this.status = "stop";*/
+	this.order = {action:"stop", map:this.game.findPath({x:this.x,y:this.y})};
 }
 
 Unit.prototype.findClosestEnemy = function(range){
@@ -280,6 +274,10 @@ Unit.prototype.findClosestEnemy = function(range){
 
 Unit.prototype.getSquareDistance = function(target){
 	return Math.pow(this.x - target.x, 2)+Math.pow(this.y - target.y, 2);
+}
+
+Unit.prototype.isArrived = function(){
+	return this.vx === 0 && this.vy === 0;
 }
 
 Unit.prototype.followPath = function(destination, avoid_enemy, move_attack){
