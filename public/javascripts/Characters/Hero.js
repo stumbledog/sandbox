@@ -32,7 +32,7 @@ Hero.prototype.hero_initialize = function(data, x, y){
 	this.x = x;
 	this.y = y;
 	this.map = this.game.findPath({x:this.x,y:this.y});
-	this.order = null;
+	this.order = {action:"stop", map:this.game.findPath({x:this.x,y:this.y})};
 
 	var frames = [];
 
@@ -100,18 +100,38 @@ Hero.prototype.addFollower = function(follower){
 }
 
 Hero.prototype.tick = function(){
-	if(this.order){
-		switch(this.order.action){
-			case "move":
+	switch(this.order.action){
+		case "move":
+		case "stop":
+			//this.procMove()
 			var velocity = this.getVelocity(this.x, this.y, this.game.getUnitStage().getUnitsExceptMe(this));
 			this.x += velocity.vx;
 			this.y += velocity.vy;
-			if(velocity.vy!==0 && velocity.vx !==0){
-				//console.log(velocity);
-			}
 			this.rotate(velocity.vx, velocity.vy);
+			break;
+		case "move_attack":
+			if(!this.target){
+				this.target = this.findClosestEnemy(this.aggro_radius);
+				if(this.target){
+					this.order.alter_map = this.order.map;
+					this.order.map = this.game.findPath({x:this.target.x,y:this.target.y});					
+				}
+			}else if(this.target.status === "death"){
+				this.target = null;
+				this.order.map = this.order.alter_map;
+			}
 
-		}
+			if(this.target && this.getSquareDistance(this.target) <= Math.pow(this.range,2) && this.ticks > this.attack_speed){
+				this.ticks = 0;
+				this.attackTarget(this.target);
+			}else{
+				var velocity = this.getVelocity(this.x, this.y, this.game.getUnitStage().getUnitsExceptMe(this));
+				this.x += velocity.vx;
+				this.y += velocity.vy;
+				this.rotate(velocity.vx, velocity.vy);				
+			}
+			break;
+
 	}
 	/*
 	if(this.target && this.getSquareDistance(this.target) <= Math.pow(this.range,2)){

@@ -36,7 +36,7 @@ Unit.prototype.getVelocity = function(x, y, units){
 			if(this.team === unit.team){
 				var power = distance < this.radius + unit.radius ? 100 : 10;
 			}else{
-				var power = distance < this.radius + unit.radius ? 100 : 10;
+				var power = distance < this.radius + unit.radius ? 1000 : 10;
 			}
 			var magnitude = unit.mass / this.mass * power / (Math.pow(this.x-unit.x,2) + Math.pow(this.y-unit.y,2));
 			var direction = {
@@ -60,6 +60,7 @@ Unit.prototype.getVelocity = function(x, y, units){
 
 	var indexX = Math.floor(this.x / 16);
 	var indexY = Math.floor(this.y / 16);
+
 	vx += this.order.map[indexY][indexX].vx;
 	vy += this.order.map[indexY][indexX].vy;
 	if(Math.abs(vx) < 0.5 && Math.abs(vy) < 0.5){
@@ -142,10 +143,13 @@ Unit.prototype.rotate = function(dx, dy){
 }
 
 Unit.prototype.moveAttack = function(x, y){
+	this.order = {action:"move_attack", x:x, y:y, map:this.game.findPath({x:x,y:y})}
+	/*
 	this.destination = {x:x,y:y};
 	this.status = "move_attack";
 	this.target = this.findClosestEnemy(this.aggro_radius);
 	this.move_queue = this.game.findPath(this, {x:this.x,y:this.y}, {x:x,y:y}, false);
+	*/
 }
 
 Unit.prototype.attackTarget = function(target, damage){
@@ -248,10 +252,11 @@ Unit.prototype.setTarget = function(target){
 }
 
 Unit.prototype.stop = function(){
+	this.order = {action:"stop", map:this.game.findPath({x:this.x,y:this.y})};/*
 	this.move_queue = [];
 	this.destination = null;
 	this.sprite.stop();
-	this.status = "stop";
+	this.status = "stop";*/
 }
 
 Unit.prototype.findClosestEnemy = function(range){
