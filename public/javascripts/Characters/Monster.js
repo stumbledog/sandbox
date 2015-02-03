@@ -14,19 +14,19 @@ Monster.prototype.initialize = function(file, index, x, y){
 	this.team = "enemy";
 	this.ticks = 0;
 	this.aggro_radius = 80;
-	this.exp = 20;
-	this.max_health = this.health = 20;
+	this.exp = 50;
+	this.max_health = this.health = 10;
 	this.speed = 1;
 	this.range = 32;
-	this.attack_speed = 20;
+	this.attack_speed = 60;
 	this.damage = 1;
 	this.direction = 180;
 	this.radius = 16;
 	this.mass = 1;
 	this.x = x;
 	this.y = y;
-	this.scaleX = this.scaleY = 2;
-	this.order = {action:"guard",map:this.game.findPath({x:this.x,y:this.y})};
+	this.velocity = new Vector(0,0);
+	this.order = {action:"annihilate",map:this.game.findPath({x:this.x,y:this.y}),destination:new Vector(x,y)};
 
 	var frames = [];
 	var offsetX = index % 4 *72;
@@ -68,6 +68,7 @@ Monster.prototype.initialize = function(file, index, x, y){
 	this.status = "idle";
 	this.destination = null;
 	this.move_queue = [];
+	this.isAttack = false;
 	this.color = "#C00";
 	this.damage_color = "#CC0";
 	this.vx = this.vy = 0

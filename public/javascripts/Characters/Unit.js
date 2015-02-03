@@ -38,14 +38,14 @@ Unit.prototype.attack = function(target){
 	this.order.map = this.game.findPath({x:target.x,y:target.y});
 }
 
-Unit.prototype.follow = function(target, units, map){
+Unit.prototype.follow = function(target, units, map){/*
 	var vx = target.x - this.x;
 	var vy = target.y - this.y;
 	units.forEach(function(unit){
 		var distance = Math.sqrt(Math.pow(unit.x-this.x,2)+Math.pow(unit.y-this.y,2));
 		if(distance !== 0){
 			if(this.team === unit.team){
-				var power = distance < this.radius + unit.radius ? 100 : 10;
+				var power = distance < this.radius + unit.radius ? 1000 : 1;
 			}else{
 				var power = distance < this.radius + unit.radius ? 1000 : 1;
 			}
@@ -60,8 +60,12 @@ Unit.prototype.follow = function(target, units, map){
 	},this);
 
 	var vector_length = Math.sqrt(Math.pow(vx,2)+Math.pow(vy,2));
-	vx /= vector_length / this.speed;
-	vy /= vector_length / this.speed;
+	if(vector_length>1){
+		vx /= vector_length;
+		vy /= vector_length;
+	}
+	vx *= this.speed;
+	vy *= this.speed;
 
 	var indexX = Math.floor(this.x / 16);
 	var indexY = Math.floor(this.y / 16);
@@ -79,18 +83,161 @@ Unit.prototype.follow = function(target, units, map){
 	}
 	this.x += vx;
 	this.y += vy;
-	this.rotate(vx,vy);
+	this.rotate(vx,vy);*/
+	var steer = new Vector(0,0);
+	this.velocity = Vector.sub(target, this);
+	this.velocity.normalize();
+	units.forEach(function(unit){
+		var distance = Vector.dist(this, unit);
+		if(distance > 0 && distance < this.radius + unit.radius){
+			var diff = Vector.sub(this, unit);
+			diff.normalize();
+			diff.div(distance);
+			steer.add(diff);
+		}
+	},this);
+
+	steer.normalize();
+
+	this.velocity.add(steer);
+
+	var indexX = Math.floor(this.x / 16);
+	var indexY = Math.floor(this.y / 16);
+
+	var ahead = {x:this.x + this.velocity.x, y:this.y + this.velocity.y};
+	var steer = new Vector(0,0);
+
+	units.forEach(function(unit){
+		var distance = Vector.dist(ahead, unit);
+		if(distance > 0 && distance < this.radius + unit.radius){
+			var diff = Vector.sub(ahead, unit);
+			diff.normalize();
+			diff.div(distance);
+			steer.add(diff);
+		}
+	},this);
+
+	steer.normalize();
+
+	this.velocity.add(steer);
+	this.velocity.normalize();
+	this.velocity.mult(this.speed);
+
+	var indexVX = Math.floor((this.x + this.velocity.x)/ 16);
+	var indexVY = Math.floor((this.y + this.velocity.y)/ 16);
+
+	if(!map[indexVY] || !map[indexVY][indexVX] || map[indexVY][indexVX].block){
+		if(map[indexY][indexVX] && !map[indexY][indexVX].block){
+			this.velocity.y = 0;
+		}else if(map[indexVY] && !map[indexVY][indexX].block){
+			this.velocity.x = 0;
+		}else{
+			this.velocity.mult(0);
+		}
+	}
+
+	this.x += this.velocity.x;
+	this.y += this.velocity.y;
+	this.rotate(this.velocity.x, this.velocity.y);
+
+	this.velocity.mult(0);
 }
 
-Unit.prototype.procMove = function(x, y, units, map){
-	var vx = vy = 0;
+Unit.prototype.procMove = function(units, map){
+	/*
+	var sep = this.separate(units);
+	var ali = this.align(units);
+	var coh = this.cohesion(units);
+
+	sep.mult(1.5);
+	this.speed = .1;
+	this.acceleration.add(sep);
+	this.acceleration.add(ali);
+	this.acceleration.add(coh);
+
+	var indexX = Math.floor(this.x / 16);
+	var indexY = Math.floor(this.y / 16);
+
+	var map_force = new Vector(map[indexY][indexX].vx, map[indexY][indexX].vy);
+	map_force.normalize();
+	map_force.mult(this.speed);
+
+	this.acceleration.add(map_force);
+
+	this.velocity.add(this.acceleration);
+	this.acceleration.mult(0);
+
+	var indexVX = Math.floor((this.x + this.velocity.x)/ 16);
+	var indexVY = Math.floor((this.y + this.velocity.y)/ 16);
+
+	if(!map[indexVY] || !map[indexVY][indexVX] || map[indexVY][indexVX].block){
+		if(map[indexY][indexVX] && !map[indexY][indexVX].block){
+			this.velocity.y = 0;
+		}else if(map[indexVY] && !map[indexVY][indexX].block){
+			this.velocity.x = 0;
+		}else{
+			this.velocity.mult(0);
+		}
+	}
+
+	this.x += this.velocity.x;
+	this.y += this.velocity.y;
+	*/
+	var steer = new Vector(0,0);
+	var count = 0;
+	units.forEach(function(unit){
+		var distance = Vector.dist(this, unit);
+		if(distance > 0 && distance < this.radius + unit.radius){
+			var diff = Vector.sub(this, unit);
+			diff.normalize();
+			diff.div(distance);
+			steer.add(diff);
+			count++;
+		}
+	},this);
+
+	steer.normalize();
+	steer.mult(this.speed);
+
+	this.velocity.add(steer);
+
+	var indexX = Math.floor(this.x / 16);
+	var indexY = Math.floor(this.y / 16);
+
+	this.map_force = new Vector(map[indexY][indexX].vx, map[indexY][indexX].vy);
+	this.map_force.normalize();
+	this.map_force.mult(this.speed);
+
+	this.velocity.add(this.map_force);
+
+	this.velocity.limit(this.speed);
+
+	var indexVX = Math.floor((this.x + this.velocity.x)/ 16);
+	var indexVY = Math.floor((this.y + this.velocity.y)/ 16);
+
+	if(!map[indexVY] || !map[indexVY][indexVX] || map[indexVY][indexVX].block){
+		if(map[indexY][indexVX] && !map[indexY][indexVX].block){
+			this.velocity.y = 0;
+		}else if(map[indexVY] && !map[indexVY][indexX].block){
+			this.velocity.x = 0;
+		}else{
+			this.velocity.mult(0);
+		}
+	}
+
+	this.x += this.velocity.x;
+	this.y += this.velocity.y;
+	this.rotate(this.velocity.x, this.velocity.y);
+
+	this.velocity.mult(0);
+	/*
 	units.forEach(function(unit){
 		var distance = Math.sqrt(Math.pow(unit.x-this.x,2)+Math.pow(unit.y-this.y,2));
 		if(distance !== 0){
 			if(this.team === unit.team){
-				var power = distance < this.radius + unit.radius ? 100 : 10;
+				var power = distance < this.radius + unit.radius ? 1000 : 0;
 			}else{
-				var power = distance < this.radius + unit.radius ? 1000 : 1;
+				var power = distance < this.radius + unit.radius ? 1000 : 0;
 			}
 			var magnitude = unit.mass / this.mass * power / (Math.pow(this.x-unit.x,2) + Math.pow(this.y-unit.y,2));
 			var direction = {
@@ -113,8 +260,12 @@ Unit.prototype.procMove = function(x, y, units, map){
 		vx = vy = 0;
 	}else{
 		var vector_length = Math.sqrt(Math.pow(vx,2)+Math.pow(vy,2));
-		vx /= vector_length / this.speed;
-		vy /= vector_length / this.speed;
+		if(vector_length>1){
+			vx /= vector_length;
+			vy /= vector_length;
+		}
+		vx *= this.speed;
+		vy *= this.speed;
 	}
 
 	var indexVX = Math.floor((this.x +vx)/ 16);
@@ -133,6 +284,84 @@ Unit.prototype.procMove = function(x, y, units, map){
 	this.x += vx;
 	this.y += vy;
 	this.rotate(vx, vy);
+	*/
+}
+
+Unit.prototype.separate = function(units){
+	var steer = new Vector(0,0);
+	var desired_separation = 32;
+	var count = 0;
+	units.forEach(function(unit){
+		var distance = Vector.dist(this, unit);
+		if(distance > 0 && distance < desired_separation){
+			var diff = Vector.sub(this, unit);
+			diff.normalize();
+			diff.div(distance);
+			steer.add(diff);
+			count++;
+		}
+	}, this);
+
+	if(count > 0){
+		steer.div(count);
+	}
+
+	if(steer.mag() > 0){
+		steer.normalize();
+		steer.mult(this.speed);
+		steer.sub(this.velocity);
+		steer.limit(0.03);
+	}
+	return steer;
+}
+
+Unit.prototype.align = function(units){
+	var neighbor_distance = 64;
+	var sum = new Vector(0,0);
+	var count = 0;
+	units.forEach(function(unit){
+		var distance = Vector.dist(this, unit);
+		if(distance > 0 && distance < neighbor_distance){
+			sum.add(unit.velocity);
+			count++;
+		}
+	});
+
+	if(count > 0){
+		sum.duv(count);
+		sum.normalize();
+		sum.mult(this.speed);
+		var steer = Vector.sub(sum, this.velocity);
+		steer.limit(0.03);
+		return steer;
+	}else{
+		return new Vector(0,0);
+	}
+}
+
+Unit.prototype.cohesion = function(units){
+	var neighbor_distance = 64;
+	var sum = new Vector(0,0);
+	var count = 0;
+	units.forEach(function(unit){
+		var distance = Vector.dist(this, unit);
+		if(distance > 0 && distance < neighbor_distance){
+			sum.add(unit);
+			count++;
+		}
+	});
+
+	if(count > 0){
+		sum.div(count);
+		var desired = Vector.sub(target, this);
+		desired.normalize();
+		desired.mult(this.speed);
+		var steer = Vector.sub(desired, this.velocity);
+		steer.limit(0.03);
+		return steer;
+	}else{
+		return new Vector(0,0);
+	}
 }
 
 Unit.prototype.rotate = function(dx, dy){
@@ -195,9 +424,9 @@ Unit.prototype.attackTarget = function(target, damage){
 		target.hit(this, this.damage);
 		this.rotate(target.x - this.x, target.y - this.y);
 		if(this.weapon){
-			createjs.Tween.get(this.weapon).to({rotation:this.weapon.rotation + this.weapon.swing},this.attack_speed*10, createjs.Ease.backOut).to({rotation:this.weapon.rotation},this.attack_speed*10, createjs.Ease.backOut);
+			createjs.Tween.get(this.weapon).to({rotation:this.weapon.rotation + this.weapon.swing},this.attack_speed*5, createjs.Ease.backOut).to({rotation:this.weapon.rotation},this.attack_speed*5, createjs.Ease.backOut);
 		}else{
-			createjs.Tween.get(this.sprite).to({y:-8},this.attack_speed*10, createjs.Ease.backOut).to({y:0},this.attack_speed*10, createjs.Ease.backOut);
+			createjs.Tween.get(this.sprite).to({y:-8},this.attack_speed*5, createjs.Ease.backOut).to({y:0},this.attack_speed*5, createjs.Ease.backOut);
 		}
 	}
 }
@@ -208,6 +437,7 @@ Unit.prototype.hit = function(attacker, damage){
 		var damage_text = new OutlineText(damage,"bold 12px Arial",this.damage_color,"#000",4);
 		damage_text.x = this.x;
 		damage_text.y = this.y;
+		damage_text.alpha = 0.8;
 		this.getStage().addChild(damage_text);
 		var dx = Math.random() * 32-16;
 		var stage = this.getStage();
@@ -238,14 +468,12 @@ Unit.prototype.gainExp = function(exp){
 	}
 
 	var exp_text = new OutlineText("+" + Math.round(exp)+" exp","bold 12px Arial","#fff","#000",4);
-	exp_text.x = this.x;
-	exp_text.y = this.y;
-	this.getStage().addChild(exp_text);
-	var dx = Math.random()*32-16;
-	var stage = this.getStage();
-	createjs.Tween.get(exp_text).to({x:this.x + dx,y:this.y - 32},1000, createjs.Ease.cubicOut).wait(500).call(function(item){
-		stage.removeChild(exp_text);
-	});
+	exp_text.x = -exp_text.getMeasuredWidth()/2;
+	exp_text.alpha = 0.8;
+	this.addChild(exp_text);
+	createjs.Tween.get(exp_text).to({y:-32},1000, createjs.Ease.cubicOut).wait(500).call(function(item){
+		this.removeChild(exp_text);
+	},[],this);
 
 	if(this.type === "player" || this.type === "hero"){
 		this.game.getUIStage().refreshExpBar();
@@ -316,7 +544,7 @@ Unit.prototype.tick = function(){
 	switch(this.order.action){
 		case "move":
 		case "stop":
-			this.procMove(this.x, this.y, this.game.getUnitStage().getUnitsExceptMe(this), this.order.map);
+			this.procMove(this.game.getUnitStage().getUnitsExceptMe(this), this.order.map);
 			break;
 		case "attack":
 			if(this.order.target && this.order.target.status !== "death"){
@@ -326,7 +554,7 @@ Unit.prototype.tick = function(){
 						this.attackTarget(this.order.target);
 					}
 				}else{
-					this.procMove(this.x, this.y, this.game.getUnitStage().getUnitsExceptMe(this), this.order.map);
+					this.follow(this.order.target, this.game.getUnitStage().getUnitsExceptMe(this), this.order.map);
 				}
 			}
 			break;
@@ -339,15 +567,28 @@ Unit.prototype.tick = function(){
 						this.attackTarget(this.target);
 					}
 				}else{
-					if(this.getSquareDistance(this.target) > Math.pow(this.aggro_radius,2)){
-						this.target = null;
-					}else{
-						this.follow(this.target, this.game.getUnitStage().getUnitsExceptMe(this), this.order.map);
-					}
+					this.follow(this.target, this.game.getUnitStage().getUnitsExceptMe(this), this.order.map);
+					this.target = this.findClosestEnemy(this.aggro_radius);
 				}
 			}else{
 				this.target = this.findClosestEnemy(this.aggro_radius);
-				this.procMove(this.x, this.y, this.game.getUnitStage().getUnitsExceptMe(this), this.order.map);
+				this.procMove(this.game.getUnitStage().getUnitsExceptMe(this), this.order.map);
+			}
+			break;
+		case "annihilate":
+			if(this.target && this.target.status !== "death"){
+				if(this.getSquareDistance(this.target) <= Math.pow(this.range,2)){
+					if(this.ticks > this.attack_speed){
+						this.ticks = 0;
+						this.attackTarget(this.target);
+					}
+				}else{
+					this.follow(this.target, this.game.getUnitStage().getUnitsExceptMe(this), this.order.map);
+					this.target = this.findClosestEnemy();
+				}
+			}else{
+				this.target = this.findClosestEnemy();
+				this.procMove(this.game.getUnitStage().getUnitsExceptMe(this), this.order.map);
 			}
 			break;
 	}

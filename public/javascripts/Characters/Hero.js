@@ -22,17 +22,19 @@ Hero.prototype.hero_initialize = function(data, x, y){
 	this.exp = data.exp;
 	this.resource_type = data.resource_type;
 	this.max_resource = this.resource = data.resource;
-	this.radius = 16;
-	this.mass = 100;
+	this.radius = 12;
+	this.mass = 10;
 
 	this.aggro_radius = 80;
-	this.range = 32;
-	this.attack_speed = 5;
+	this.range = 64;
+	this.attack_speed = 60;
 	this.damage = 3;
 	this.x = x;
 	this.y = y;
+	this.velocity = new Vector(0,0);
+	this.acceleration = new Vector(0,0);
 	this.map = this.game.findPath({x:this.x,y:this.y});
-	this.order = {action:"guard", map:this.game.findPath({x:this.x,y:this.y})};
+	this.order = {action:"annihilate", map:this.game.findPath({x:this.x,y:this.y})};
 
 	var frames = [];
 
@@ -84,6 +86,7 @@ Hero.prototype.hero_initialize = function(data, x, y){
 	this.color = "#0C0";
 	this.damage_color = "#C00";
 	this.initHealthBar();
+	this.isAttack = false;
 }
 
 Hero.prototype.getPortrait = function(){

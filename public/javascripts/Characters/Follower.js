@@ -12,17 +12,19 @@ Follower.prototype.follower_initialize = function(file, index, x, y){
 	this.game = Game.getInstance();
 	this.type = "follower";
 	this.team = "player";
-	this.ticks = 0;
-	this.aggro_radius = 80;
+	this.ticks = 60;
+	this.aggro_radius = 200;
 	this.max_health = this.health = 10;
 	this.speed = 3;
 	this.range = 32;
-	this.attack_speed = 30;
+	this.attack_speed = 60;
 	this.damage = 2;
-	this.radius = 16;
+	this.radius = 12;
 	this.mass = 1;
 	this.x = x;
 	this.y = y;
+	this.velocity = new Vector(0,0);
+	this.acceleration = new Vector(0,0);
 	this.order = {action:"guard",x:this.x, y:this.y, map:this.game.findPath({x:this.x,y:this.y})};
 	
 	var frames = [];
@@ -68,7 +70,7 @@ Follower.prototype.follower_initialize = function(file, index, x, y){
 
 	this.rotate(0,0);
 	this.shadow = new createjs.Shadow("#333",3,3,10);
-	this.status = "stop";
+	this.isAttack = false;
 	this.target = null;
 	this.destination = null;
 	this.move_queue = [];
