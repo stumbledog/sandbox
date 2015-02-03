@@ -198,7 +198,7 @@ var Game = (function(){
 			initUnit();
 
 			createHero();
-			for(var i=0;i<1;i++){
+			for(var i=0;i<2;i++){
 				createUnits();
 				createEnemy();
 			}
@@ -225,7 +225,7 @@ var Game = (function(){
 
 		function createUnits(){
 			unit_stage.addFollower(new Follower("soldier", 0, 31*16+8, 15*16+8));
-			unit_stage.addFollower(new Follower("soldier", 1, 31*16+8, 16*16+8));
+			unit_stage.addFollower(new Follower("soldier", 1, 31*16+8, 16*16+8));/*
 			unit_stage.addFollower(new Follower("soldier", 2, 31*16+8, 17*16+8));
 			unit_stage.addFollower(new Follower("soldier", 3, 31*16+8, 18*16+8));
 			unit_stage.addFollower(new Follower("soldier", 0, 31*16+8, 19*16+8));
@@ -235,22 +235,22 @@ var Game = (function(){
 			unit_stage.addFollower(new Follower("soldier", 0, 31*16+8, 23*16+8));
 			unit_stage.addFollower(new Follower("soldier", 1, 31*16+8, 24*16+8));
 			unit_stage.addFollower(new Follower("soldier", 2, 31*16+8, 25*16+8));
-			unit_stage.addFollower(new Follower("soldier", 3, 31*16+8, 26*16+8));
+			unit_stage.addFollower(new Follower("soldier", 3, 31*16+8, 26*16+8));*/
 		}
 
 		function createEnemy(){
-			unit_stage.addUnit(new Monster("monster29", 0, 37*16+8, 15*16+8));
-			unit_stage.addUnit(new Monster("monster29", 1, 37*16+8, 16*16+8));
-			unit_stage.addUnit(new Monster("monster29", 2, 37*16+8, 17*16+8));
-			unit_stage.addUnit(new Monster("monster29", 3, 37*16+8, 18*16+8));
-			unit_stage.addUnit(new Monster("monster29", 0, 37*16+8, 19*16+8));
-			unit_stage.addUnit(new Monster("monster29", 1, 37*16+8, 20*16+8));
-			unit_stage.addUnit(new Monster("monster29", 2, 37*16+8, 21*16+8));
-			unit_stage.addUnit(new Monster("monster29", 3, 37*16+8, 22*16+8));
-			unit_stage.addUnit(new Monster("monster29", 0, 37*16+8, 23*16+8));
-			unit_stage.addUnit(new Monster("monster29", 1, 37*16+8, 24*16+8));
-			unit_stage.addUnit(new Monster("monster29", 2, 37*16+8, 25*16+8));
-			unit_stage.addUnit(new Monster("monster29", 3, 37*16+8, 26*16+8));
+			unit_stage.addUnit(new Monster("monster29", 0, 47*16+8, 15*16+8));
+			unit_stage.addUnit(new Monster("monster29", 1, 47*16+8, 16*16+8));/*
+			unit_stage.addUnit(new Monster("monster29", 2, 47*16+8, 17*16+8));
+			unit_stage.addUnit(new Monster("monster29", 3, 47*16+8, 18*16+8));
+			unit_stage.addUnit(new Monster("monster29", 0, 47*16+8, 19*16+8));
+			unit_stage.addUnit(new Monster("monster29", 1, 47*16+8, 20*16+8));
+			unit_stage.addUnit(new Monster("monster29", 2, 47*16+8, 21*16+8));
+			unit_stage.addUnit(new Monster("monster29", 3, 47*16+8, 22*16+8));
+			unit_stage.addUnit(new Monster("monster29", 0, 47*16+8, 23*16+8));
+			unit_stage.addUnit(new Monster("monster29", 1, 47*16+8, 24*16+8));
+			unit_stage.addUnit(new Monster("monster29", 2, 47*16+8, 25*16+8));
+			unit_stage.addUnit(new Monster("monster29", 3, 47*16+8, 26*16+8));*/
 		}
 
 		return {

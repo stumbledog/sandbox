@@ -15,8 +15,7 @@ Hero.prototype.hero_initialize = function(data, x, y){
 	this.team = "player";
 	this.status = "alive";
 	this.ticks = 0;
-	this.followers = [];
-
+	
 	this.max_health = this.health = data.health;
 	this.speed = data.move_speed;
 	this.level = data.level;
@@ -33,7 +32,7 @@ Hero.prototype.hero_initialize = function(data, x, y){
 	this.x = x;
 	this.y = y;
 	this.map = this.game.findPath({x:this.x,y:this.y});
-	this.order = {action:"stop", map:this.game.findPath({x:this.x,y:this.y})};
+	this.order = {action:"guard", map:this.game.findPath({x:this.x,y:this.y})};
 
 	var frames = [];
 
@@ -94,8 +93,4 @@ Hero.prototype.getPortrait = function(){
 Hero.prototype.hit = function(attacker, damage){
 	Unit.prototype.hit.call(this, attacker, damage);
 	this.game.getUIStage().refreshHealthBar();
-}
-
-Hero.prototype.addFollower = function(follower){
-	this.followers.push(follower);
 }

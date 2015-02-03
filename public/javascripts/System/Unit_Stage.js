@@ -17,8 +17,6 @@ Unit_Stage.prototype.initialize = function(width, height, rows){
 	this.map = this.game.getMapStage();
 	this.mapSize = this.map.getSize();
 
-	this.target = null;
-
 	this.scroll_speed = 8;
 
 	this.offsetX = this.offsetY = 0;
@@ -54,7 +52,8 @@ Unit_Stage.prototype.initialize = function(width, height, rows){
 
 		this.update();
 	}.bind(this));
-	createjs.Ticker.setFPS(60);
+	createjs.Ticker.timingMode = createjs.Ticker.RAF_SYNCHED;
+	createjs.Ticker.setFPS(30);
 
 	this.initEvent();
 	this.initContainer();
@@ -167,7 +166,6 @@ Unit_Stage.prototype.addHero = function(hero){
 
 Unit_Stage.prototype.addFollower = function(follower){
 	this.unit_container.addChild(follower);
-	this.hero.followers.push(follower);
 	follower.order = this.hero.order;
 }
 
@@ -213,39 +211,6 @@ Unit_Stage.prototype.getAlliedUnits = function(self){
 
 Unit_Stage.prototype.getEnemies = function(self){
 	return this.unit_container.children.filter(function(unit){return self.team !== unit.team && unit.status !== "death";});
-}
-
-Unit_Stage.prototype.findNeighbor = function(self, x, y){
-	var new_blocks = [];
-	blocks.forEach(function(row){
-		new_blocks.push(row.slice(0));
-	});
-	this.unit_container.children.forEach(function(unit){
-		if(unit.id !== self.id){
-			new_blocks[parseInt(unit.y/16)][parseInt(unit.x/16)] = 1;
-			if(unit.vx>0){
-				new_blocks[parseInt(unit.y/16)][parseInt(unit.x/16)+1] = 1;
-			}else if(unit.vx < 0){
-				new_blocks[parseInt(unit.y/16)][parseInt(unit.x/16)-1] = 1;
-			}
-			if(unit.vy > 0 && new_blocks[parseInt(unit.y/16)+1]){
-				new_blocks[parseInt(unit.y/16)+1][parseInt(unit.x/16)] = 1;
-			}else if(unit.vy<0 && new_blocks[parseInt(unit.y/16)-1]){
-				new_blocks[parseInt(unit.y/16)-1][parseInt(unit.x/16)] = 1;
-			}
-		}
-	});
-	var random = parseInt(Math.random() * 4);
-	if(new_blocks[parseInt(y/16)+1] && new_blocks[parseInt(y/16)+1][parseInt(x/16)] === 0 && random === 0){
-		return PathFinder.findPath(new_blocks, {x:x,y:y}, {x:x, y:y+16});
-	}else if(new_blocks[parseInt(y/16)-1] && new_blocks[parseInt(y/16)-1][parseInt(x/16)] === 0 && random === 1){
-		return PathFinder.findPath(new_blocks, {x:x,y:y}, {x:x, y:y-16});
-	}else if(typeof new_blocks[parseInt(y/16)][parseInt(x/16)+1] !== "undefined" && new_blocks[parseInt(y/16)][parseInt(x/16)+1] === 0 && random === 2){
-		return PathFinder.findPath(new_blocks, {x:x,y:y}, {x:x+16, y:y});
-	}else if(typeof new_blocks[parseInt(y/16)][parseInt(x/16)-1] !== "undefined" && new_blocks[parseInt(y/16)][parseInt(x/16)-1] === 0 && random === 3){
-		return PathFinder.findPath(new_blocks, {x:x,y:y}, {x:x-16, y:y});
-	}
-	return [];
 }
 
 Unit_Stage.prototype.setCanvasSize = function(width, height){

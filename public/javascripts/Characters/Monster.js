@@ -15,16 +15,17 @@ Monster.prototype.initialize = function(file, index, x, y){
 	this.ticks = 0;
 	this.aggro_radius = 80;
 	this.exp = 20;
-	this.max_health = this.health = 10;
+	this.max_health = this.health = 20;
 	this.speed = 1;
 	this.range = 32;
 	this.attack_speed = 20;
 	this.damage = 1;
 	this.direction = 180;
-	this.radius = 4;
+	this.radius = 16;
 	this.mass = 1;
 	this.x = x;
 	this.y = y;
+	this.scaleX = this.scaleY = 2;
 	this.order = {action:"guard",map:this.game.findPath({x:this.x,y:this.y})};
 
 	var frames = [];

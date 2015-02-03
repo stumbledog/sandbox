@@ -83,7 +83,7 @@ Unit.prototype.follow = function(target, units, map){
 }
 
 Unit.prototype.procMove = function(x, y, units, map){
-	var vx = vy = 0;	
+	var vx = vy = 0;
 	units.forEach(function(unit){
 		var distance = Math.sqrt(Math.pow(unit.x-this.x,2)+Math.pow(unit.y-this.y,2));
 		if(distance !== 0){
@@ -99,6 +99,8 @@ Unit.prototype.procMove = function(x, y, units, map){
 			};
 			vx -= direction.x;
 			vy -= direction.y;
+		}else{
+			vx = vy = 1;
 		}
 	},this);
 
@@ -204,11 +206,14 @@ Unit.prototype.hit = function(attacker, damage){
 	if(this.status !== "death"){
 		this.health -= damage;
 		var damage_text = new OutlineText(damage,"bold 12px Arial",this.damage_color,"#000",4);
-		this.addChild(damage_text);
-		var dx = Math.random()*32-16;
-		createjs.Tween.get(damage_text).to({x:dx/2,y:-32},200, createjs.Ease.cubicOut).to({x:dx, y:0},200, createjs.Ease.cubicIn).wait(200).call(function(item){
-			this.removeChild(damage_text);
-		},[],this);
+		damage_text.x = this.x;
+		damage_text.y = this.y;
+		this.getStage().addChild(damage_text);
+		var dx = Math.random() * 32-16;
+		var stage = this.getStage();
+		createjs.Tween.get(damage_text).to({x:this.x + dx/2,y:this.y - 32},500, createjs.Ease.cubicOut).to({x:this.x + dx, y:this.y},500, createjs.Ease.cubicIn).wait(500).call(function(item){
+			stage.removeChild(damage_text);
+		});
 		if(this.health <= 0){
 			this.health = 0;
 			this.die(attacker);
@@ -232,6 +237,16 @@ Unit.prototype.gainExp = function(exp){
 		this.level++;
 	}
 
+	var exp_text = new OutlineText("+" + Math.round(exp)+" exp","bold 12px Arial","#fff","#000",4);
+	exp_text.x = this.x;
+	exp_text.y = this.y;
+	this.getStage().addChild(exp_text);
+	var dx = Math.random()*32-16;
+	var stage = this.getStage();
+	createjs.Tween.get(exp_text).to({x:this.x + dx,y:this.y - 32},1000, createjs.Ease.cubicOut).wait(500).call(function(item){
+		stage.removeChild(exp_text);
+	});
+
 	if(this.type === "player" || this.type === "hero"){
 		this.game.getUIStage().refreshExpBar();
 	}
@@ -250,31 +265,26 @@ Unit.prototype.die = function(attacker){
 		},this);
 	}
 	createjs.Tween.get(this).call(function(event){
-		event.target.sprite.filters = [new createjs.ColorFilter(1,1,1,0)];
-		event.target.sprite.cache(-12,-16,24,32);
+		die_animation(event.target, new createjs.ColorFilter(1,1,1,0));
 	}).wait(300).call(function(event){
-		event.target.sprite.uncache();
-		event.target.sprite.filters = [new createjs.ColorFilter(1,1,1,1)];
-		event.target.sprite.cache(-12,-16,24,32);
+		die_animation(event.target, new createjs.ColorFilter(1,1,1,1));
 	}).wait(300).call(function(event){
-		event.target.sprite.uncache();
-		event.target.sprite.filters = [new createjs.ColorFilter(1,1,1,0)];
-		event.target.sprite.cache(-12,-16,24,32);
+		die_animation(event.target, new createjs.ColorFilter(1,1,1,0));
 	}).wait(200).call(function(event){
-		event.target.sprite.uncache();
-		event.target.sprite.filters = [new createjs.ColorFilter(1,1,1,1)];
-		event.target.sprite.cache(-12,-16,24,32);
+		die_animation(event.target, new createjs.ColorFilter(1,1,1,1));
 	}).wait(200).call(function(event){
-		event.target.sprite.uncache();
-		event.target.sprite.filters = [new createjs.ColorFilter(1,1,1,0)];
-		event.target.sprite.cache(-12,-16,24,32);
+		die_animation(event.target, new createjs.ColorFilter(1,1,1,0));
 	}).wait(100).call(function(event){
-		event.target.sprite.uncache();
-		event.target.sprite.filters = [new createjs.ColorFilter(1,1,1,1)];
-		event.target.sprite.cache(-12,-16,24,32);
+		die_animation(event.target, new createjs.ColorFilter(1,1,1,1));
 	}).wait(100).call(function(event){
 		event.target.getStage().removeUnit(event.target);
 	});
+
+	function die_animation(unit, filter){
+		unit.sprite.uncache();
+		unit.sprite.filters = [filter];
+		unit.sprite.cache(-12,-16,24,32);
+	}
 }
 
 Unit.prototype.findClosestEnemy = function(range){
@@ -322,21 +332,21 @@ Unit.prototype.tick = function(){
 			break;
 		case "guard":
 		case "move_attack":
-			if(this.order.target && this.order.target.status !== "death"){
-				if(this.getSquareDistance(this.order.target) <= Math.pow(this.range,2)){
+			if(this.target && this.target.status !== "death"){
+				if(this.getSquareDistance(this.target) <= Math.pow(this.range,2)){
 					if(this.ticks > this.attack_speed){
 						this.ticks = 0;
-						this.attackTarget(this.order.target);
+						this.attackTarget(this.target);
 					}
 				}else{
-					if(this.getSquareDistance(this.order.target) > Math.pow(this.aggro_radius,2)){
-						this.order.target = null;
+					if(this.getSquareDistance(this.target) > Math.pow(this.aggro_radius,2)){
+						this.target = null;
 					}else{
-						this.follow(this.order.target, this.game.getUnitStage().getUnitsExceptMe(this), this.order.map);
+						this.follow(this.target, this.game.getUnitStage().getUnitsExceptMe(this), this.order.map);
 					}
 				}
 			}else{
-				this.order.target = this.findClosestEnemy(this.aggro_radius);
+				this.target = this.findClosestEnemy(this.aggro_radius);
 				this.procMove(this.x, this.y, this.game.getUnitStage().getUnitsExceptMe(this), this.order.map);
 			}
 			break;
