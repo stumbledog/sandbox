@@ -1,5 +1,9 @@
 function PathFinder(){}
 
+PathFinder.navMesh = function(block_map){
+	
+}
+
 PathFinder.flowField = function(block_map, destination){
 	if(block_map[Math.floor(destination.y/16)][Math.floor(destination.x/16)] === 65535){
 		destination = this.findClosestPoint2(block_map, destination);
@@ -50,7 +54,7 @@ PathFinder.getVectorMap = function(vector_map, costed_map){
 	for(var i = 0; i < costed_map.length ; i++){
 		for(var j = 0; j < costed_map[i].length ; j++){
 			if(costed_map[i][j] === 65535){
-				vector_map[i][j] = {vx:0, vy:0, block:true};
+				vector_map[i][j] = {v: new Vector(0,0), block:true};
 			}else{
 				var left = costed_map[i] && costed_map[i][j-1] && costed_map[i][j-1] !== 65535 ? costed_map[i][j-1] : null;
 				var right = costed_map[i] && costed_map[i][j+1] && costed_map[i][j+1] !== 65535 ? costed_map[i][j+1] : null;
@@ -103,7 +107,7 @@ PathFinder.getVectorMap = function(vector_map, costed_map){
 				}
 
 				var distance = Math.sqrt(Math.pow(dx,2) + Math.pow(dy,2));
-				vector_map[i][j] = distance === 0 ? {vx:0, vy:0, block:false} : {vx:dx/distance, vy:dy/distance, block:false};
+				vector_map[i][j] = distance === 0 ? {v: new Vector(0,0), block:false} : {v: new Vector(dx/distance,dy/distance), block:false};
 			}
 		}
 	}
@@ -345,31 +349,31 @@ PathFinder.calcCost = function(blocks, costs, x, y, direction, new_cost){
 }
 
 PathFinder.getMinimum = function(blocks, costs, x, y, path){
-		var min = costs[y][x];
-		var point = {};
+	var min = costs[y][x];
+	var point = {};
 
-		[[-1,0],[1,0],[0,-1],[0,1]].forEach(function(offset){
-			var i = offset[0];
-			var j = offset[1];
-			try{
-				if(blocks[y+i][x+j]===0 && costs[y+i][x+j] < min){
-					min = costs[y+i][x+j];
-					point.x = x+j;
-					point.y = y+i;
-				}
-			}catch(e){}
-		});
-		if(min === 1){
-			if (point){
-				return [point];
-			}else{
-				return [];
+	[[-1,0],[1,0],[0,-1],[0,1]].forEach(function(offset){
+		var i = offset[0];
+		var j = offset[1];
+		try{
+			if(blocks[y+i][x+j]===0 && costs[y+i][x+j] < min){
+				min = costs[y+i][x+j];
+				point.x = x+j;
+				point.y = y+i;
 			}
+		}catch(e){}
+	});
+	if(min === 1){
+		if (point){
+			return [point];
 		}else{
-			if(point){
-				return this.getMinimum(blocks, costs, point.x,point.y, path).concat(point);
-			}else{
-				return this.getMinimum(blocks, costs, point.x,point.y, path);
-			}
+			return [];
+		}
+	}else{
+		if(point){
+			return this.getMinimum(blocks, costs, point.x,point.y, path).concat(point);
+		}else{
+			return this.getMinimum(blocks, costs, point.x,point.y, path);
 		}
 	}
+}

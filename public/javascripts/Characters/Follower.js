@@ -25,7 +25,9 @@ Follower.prototype.follower_initialize = function(file, index, x, y){
 	this.y = y;
 	this.velocity = new Vector(0,0);
 	this.acceleration = new Vector(0,0);
-	this.order = {action:"guard",x:this.x, y:this.y, map:this.game.findPath({x:this.x,y:this.y})};
+	//this.order = {action:"guard",x:this.x, y:this.y, map:this.game.findPath({x:this.x,y:this.y})};
+	this.order = {action:"annihilate", map:this.game.findPath({x:this.x,y:this.y})};
+	this.max_force = 0.3;
 	
 	var frames = [];
 	var offsetX = index % 4 *72;
@@ -68,7 +70,8 @@ Follower.prototype.follower_initialize = function(file, index, x, y){
 
 	this.addChild(this.sprite, this.weapon);
 
-	this.rotate(0,0);
+	this.direction = "back";
+	this.rotate(0,1);
 	this.shadow = new createjs.Shadow("#333",3,3,10);
 	this.isAttack = false;
 	this.target = null;

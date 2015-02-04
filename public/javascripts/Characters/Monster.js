@@ -27,6 +27,7 @@ Monster.prototype.initialize = function(file, index, x, y){
 	this.y = y;
 	this.velocity = new Vector(0,0);
 	this.order = {action:"annihilate",map:this.game.findPath({x:this.x,y:this.y}),destination:new Vector(x,y)};
+	this.max_force = 0.3;
 
 	var frames = [];
 	var offsetX = index % 4 *72;
@@ -63,7 +64,8 @@ Monster.prototype.initialize = function(file, index, x, y){
 	this.sprite.z = 0;
 	this.addChild(this.sprite);
 
-	this.rotate(0,0);
+	this.direction = "back";
+	this.rotate(0,1);
 	this.shadow = new createjs.Shadow("#333",3,3,10);
 	this.status = "idle";
 	this.destination = null;

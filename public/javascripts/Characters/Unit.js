@@ -98,66 +98,29 @@ Unit.prototype.follow = function(target, units, map){
 	this.velocity.mult(0);
 }
 
-Unit.prototype.procMove = function(units, target){
+Unit.prototype.procMove = function(units, map, target){
 	var sep = this.separate(units);
-	var seek = this.seek(target);
+	//var ali = this.align(units);
+	var coh = this.cohesion(units);
+	var flo = this.flowField(map);
 
-//	sep.mult(0.5);
-//	seek.mult(1.5);
-
+	if(target){
+		var seek = this.seek(target);
+		seek.mult(2.0);
+		this.velocity.add(seek);
+	}
+	sep.mult(1.0);
+	coh.mult(1.0);
+	flo.mult(1.0);
 	this.velocity.add(sep);
 	//this.velocity.add(ali);
-	//this.velocity.add(coh);
-	seek.mult(2.0);
-	this.velocity.add(seek);
-	//this.velocity.normalize();
-	//this.velocity.mult(this.speed);
+	this.velocity.add(coh);
+	this.velocity.add(flo);
+	this.velocity.limit(this.speed);
 
-	this.x += this.velocity.x;
-	this.y += this.velocity.y;
-
-	if(this.x > 640){
-		this.x = 0;
-	}else if(this.x < 0 ){
-		this.x = 640;
-	}
-
-	if(this.y > 640){
-		this.y = 0;
-	}else if(this.y < 0){
-		this.y = 640;
-	}
-
-	/*
-	var steer = new Vector(0,0);
-	var count = 0;
-	units.forEach(function(unit){
-		var distance = Vector.dist(this, unit);
-		if(distance > 0 && distance < this.radius + unit.radius){
-			var diff = Vector.sub(this, unit);
-			diff.normalize();
-			diff.div(distance);
-			steer.add(diff);
-			count++;
-		}
-	},this);
-
-	steer.normalize();
-	steer.mult(this.speed);
-
-	this.velocity.add(steer);
 
 	var indexX = Math.floor(this.x / 16);
 	var indexY = Math.floor(this.y / 16);
-
-	this.map_force = new Vector(map[indexY][indexX].vx, map[indexY][indexX].vy);
-	this.map_force.normalize();
-	this.map_force.mult(this.speed);
-
-	this.velocity.add(this.map_force);
-
-	this.velocity.limit(this.speed);
-
 	var indexVX = Math.floor((this.x + this.velocity.x)/ 16);
 	var indexVY = Math.floor((this.y + this.velocity.y)/ 16);
 
@@ -173,19 +136,17 @@ Unit.prototype.procMove = function(units, target){
 
 	this.x += this.velocity.x;
 	this.y += this.velocity.y;
-	this.rotate(this.velocity.x, this.velocity.y);
-
-	this.velocity.mult(0);
-	*/
+	if(this.ticks % 10 === 0){
+		this.rotate(this.velocity.x, this.velocity.y);
+	}
 }
 
 Unit.prototype.separate = function(units){
 	var steer = new Vector(0,0);
-	var desired_separation = 32;
 	var count = 0;
 	units.forEach(function(unit){
 		var distance = Vector.dist(this, unit);
-		if(distance > 0 && distance < desired_separation){
+		if(distance > 0 && distance < this.radius + unit.radius){
 			var diff = Vector.sub(this, unit);
 			diff.normalize();
 			diff.div(distance);
@@ -199,7 +160,7 @@ Unit.prototype.separate = function(units){
 		steer.normalize();
 		steer.mult(this.speed);
 		steer.sub(this.velocity);
-		steer.limit(0.03);
+		steer.limit(this.max_force);
 	}
 	return steer;
 }
@@ -213,7 +174,7 @@ Unit.prototype.align = function(units){
     sum.normalize();
     sum.mult(this.speed);
     var steer = Vector.sub(sum, this.velocity);
-    steer.limit(0.03);
+    steer.limit(this.max_force);
     return steer;
 
 
@@ -234,7 +195,7 @@ Unit.prototype.align = function(units){
 		sum.normalize();
 		sum.mult(this.speed);
 		var steer = Vector.sub(sum, this.velocity);
-		steer.limit(0.03);
+		steer.limit(this.max_force);
 		return steer;
 	}else{
 		return new Vector(0,0);
@@ -242,12 +203,11 @@ Unit.prototype.align = function(units){
 }
 
 Unit.prototype.cohesion = function(units){
-	var neighbor_distance = 32;
 	var sum = new Vector(0,0);
 	var count = 0;
 	units.forEach(function(unit){
 		var distance = Vector.dist(this, unit);
-		if(distance > 0 && distance < neighbor_distance){
+		if(distance > 0 && distance < this.radius + unit.radius){
 			sum.add(unit);
 			count++;
 		}
@@ -259,7 +219,7 @@ Unit.prototype.cohesion = function(units){
 		desired.normalize();
 		desired.mult(this.speed);
 		var steer = Vector.sub(desired, this.velocity);
-		steer.limit(0.03);
+		steer.limit(this.max_force);
 		return steer;
 	}else{
 		return new Vector(0,0);
@@ -267,70 +227,78 @@ Unit.prototype.cohesion = function(units){
 }
 
 Unit.prototype.seek = function(target){
-	//var indexX = Math.floor(this.x / 16);
-	//var indexY = Math.floor(this.y / 16);
-	//var desired = new Vector(map[indexY][indexX].vx, map[indexY][indexX].vy);
 	var location = new Vector(this.x, this.y);
 	var desired = Vector.sub(target, location);
 	desired.normalize();
 	desired.mult(this.speed);
 	var steer = Vector.sub(desired, this.velocity);
-	steer.limit(0.03);
+	steer.limit(this.max_force);
+	return steer;
+}
+
+Unit.prototype.flowField = function(map){
+	var desired = map[Math.floor(this.y / 16)][Math.floor(this.x / 16)].v;
+	desired.normalize();
+	desired.mult(this.speed);
+	var steer = Vector.sub(desired, this.velocity);
+	steer.limit(this.max_force);
 	return steer;
 }
 
 Unit.prototype.rotate = function(dx, dy){
-	var direction;
-	if(Math.abs(dx) > Math.abs(dy)){
-		if(dx > 0){
-			direction = "right";
+	if(this.direction === "right" && dx <= 0 || this.direction === "left" && dx >= 0 || this.direction === "front" && dy <= 0 || this.direction === "back" && dy >= 0 || true){
+		var direction;
+		if(Math.abs(dx) > Math.abs(dy)){
+			if(dx > 0){
+				direction = "right";
+			}else{
+				direction = "left";
+			}
 		}else{
-			direction = "left";
+			if(dy < 0){
+				direction = "back";
+			}else{
+				direction = "front";
+			}
 		}
-	}else{
-		if(dy < 0){
-			direction = "back";
-		}else{
-			direction = "front";
-		}
-	}
 
-	if(direction !== this.direction){
-		this.direction = direction;
-		if(this.direction === "back"){
-			if(this.weapon){
-				this.sortChildren(function(obj1, obj2){return obj1.z<obj2.z?1:-1;});
-				this.weapon.rotation = 90;
-				this.swing = -90;
-				this.weapon.x = 6;
-				this.weapon.y = 6;
+		if(direction !== this.direction){
+			this.direction = direction;
+			if(this.direction === "back"){
+				if(this.weapon){
+					this.sortChildren(function(obj1, obj2){return obj1.z<obj2.z?1:-1;});
+					this.weapon.rotation = 90;
+					this.swing = -90;
+					this.weapon.x = 6;
+					this.weapon.y = 6;
+				}
+			}else if(this.direction === "right"){
+				if(this.weapon){
+					this.sortChildren(function(obj1, obj2){return obj1.z>obj2.z?1:-1;});
+					this.weapon.rotation = 90;
+					this.weapon.swing = 90;
+					this.weapon.x = 0;
+					this.weapon.y = 10;
+				}
+			}else if(this.direction === "front"){
+				if(this.weapon){
+					this.sortChildren(function(obj1, obj2){return obj1.z>obj2.z?1:-1;});
+					this.weapon.rotation = -90;
+					this.weapon.swing = -90;
+					this.weapon.x = -6;
+					this.weapon.y = 10;
+				}
+			}else if(this.direction === "left"){
+				if(this.weapon){
+					this.sortChildren(function(obj1, obj2){return obj1.z<obj2.z?1:-1;});
+					this.weapon.rotation = 0;
+					this.weapon.swing = -90;
+					this.weapon.x = 0;
+					this.weapon.y = 10;
+				}
 			}
-		}else if(this.direction === "right"){
-			if(this.weapon){
-				this.sortChildren(function(obj1, obj2){return obj1.z>obj2.z?1:-1;});
-				this.weapon.rotation = 90;
-				this.weapon.swing = 90;
-				this.weapon.x = 0;
-				this.weapon.y = 10;
-			}
-		}else if(this.direction === "front"){
-			if(this.weapon){
-				this.sortChildren(function(obj1, obj2){return obj1.z>obj2.z?1:-1;});
-				this.weapon.rotation = -90;
-				this.weapon.swing = -90;
-				this.weapon.x = -6;
-				this.weapon.y = 10;
-			}
-		}else if(this.direction === "left"){
-			if(this.weapon){
-				this.sortChildren(function(obj1, obj2){return obj1.z<obj2.z?1:-1;});
-				this.weapon.rotation = 0;
-				this.weapon.swing = -90;
-				this.weapon.x = 0;
-				this.weapon.y = 10;
-			}
+			this.sprite.gotoAndPlay(this.direction);
 		}
-		this.sprite.gotoAndPlay(this.direction);
 	}
 }
 
@@ -459,7 +427,7 @@ Unit.prototype.tick = function(){
 	switch(this.order.action){
 		case "move":
 		case "stop":
-			this.procMove(this.game.getUnitStage().getUnitsExceptMe(this), new Vector(320,320));//, this.order.map);
+			this.procMove(this.game.getUnitStage().getUnitsExceptMe(this), this.order.map);//, this.order.map);
 			break;
 		case "attack":
 			if(this.order.target && this.order.target.status !== "death"){
@@ -469,7 +437,7 @@ Unit.prototype.tick = function(){
 						this.attackTarget(this.order.target);
 					}
 				}else{
-					this.follow(this.order.target, this.game.getUnitStage().getUnitsExceptMe(this), this.order.map);
+					this.procMove(this.game.getUnitStage().getUnitsExceptMe(this), this.order.map, this.order.target);
 				}
 			}
 			break;
@@ -482,12 +450,12 @@ Unit.prototype.tick = function(){
 						this.attackTarget(this.target);
 					}
 				}else{
-					this.follow(this.target, this.game.getUnitStage().getUnitsExceptMe(this), this.order.map);
 					this.target = this.findClosestEnemy(this.aggro_radius);
+					this.procMove(this.game.getUnitStage().getUnitsExceptMe(this), this.order.map, this.target);
 				}
 			}else{
 				this.target = this.findClosestEnemy(this.aggro_radius);
-				this.procMove(this.game.getUnitStage().getUnitsExceptMe(this), this.order.map);
+				this.procMove(this.game.getUnitStage().getUnitsExceptMe(this), this.order.map, this.target);
 			}
 			break;
 		case "annihilate":
@@ -498,15 +466,12 @@ Unit.prototype.tick = function(){
 						this.attackTarget(this.target);
 					}
 				}else{
-					//this.procMove(this.game.getUnitStage().getUnitsExceptMe(this), this.order.map);
-					this.procMove(this.game.getUnitStage().getUnitsExceptMe(this), this.target);
-					//this.follow(this.target, this.game.getUnitStage().getUnitsExceptMe(this), this.order.map);
 					this.target = this.findClosestEnemy();
+					this.procMove(this.game.getUnitStage().getUnitsExceptMe(this), this.order.map, this.target);
 				}
 			}else{
 				this.target = this.findClosestEnemy();
-//				this.procMove(this.game.getUnitStage().getUnitsExceptMe(this), this.order.map);
-				this.procMove(this.game.getUnitStage().getUnitsExceptMe(this), this.target);
+				this.procMove(this.game.getUnitStage().getUnitsExceptMe(this), this.order.map, this.target);
 			}
 			break;
 	}

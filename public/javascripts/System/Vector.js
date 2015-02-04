@@ -24,8 +24,10 @@ Vector.prototype.div = function(division){
 }
 
 Vector.prototype.limit = function(limit){
-	this.x=this.x>limit?limit:this.x<-limit?-limit:this.x;
-	this.y=this.y>limit?limit:this.y<-limit?-limit:this.y;
+	if(this.mag() > limit){
+		this.normalize();
+		this.mult(limit);
+	}
 }
 
 Vector.prototype.orthogonal = function(){

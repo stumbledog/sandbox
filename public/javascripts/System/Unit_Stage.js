@@ -6,6 +6,8 @@ createjs.extend(Unit_Stage, createjs.Stage);
 Unit_Stage = createjs.promote(Unit_Stage, "Stage");
 
 Unit_Stage.prototype.initialize = function(width, height, rows){
+	this.width = width;
+	this.height = height;
 	this.canvas = document.getElementById("unit");
 	this.canvas.width = window.innerWidth;
 	this.canvas.height = window.innerHeight;
@@ -49,7 +51,6 @@ Unit_Stage.prototype.initialize = function(width, height, rows){
 			this.map.regY+=this.scroll_speed;
 			this.map.update();
 		}
-
 		this.update();
 	}.bind(this));
 	createjs.Ticker.timingMode = createjs.Ticker.RAF_SYNCHED;
@@ -93,7 +94,7 @@ Unit_Stage.prototype.initEvent = function(){
 			this.move_up = false;
 		}		
 	}, this);
-	
+
 	this.on("stagemousedown", function(event){
 		if(this.target && this.target.status === "death"){
 			this.target = null;
@@ -102,11 +103,9 @@ Unit_Stage.prototype.initEvent = function(){
 			if(this.target){
 				this.hero.attack(this.target);
 			}else{
-				this.hero.move(event.stageX/this.scaleX + this.regX, event.stageY/this.scaleY + this.regY);
-				/*
-				this.getAlliedUnits(this.hero).forEach(function(unit){
-					unit.follow(this.hero);
-				}, this);*/
+				if(event.stageX/this.scaleX + this.regX < this.width && event.stageY/this.scaleY + this.regY < this.height){
+					this.hero.move(event.stageX/this.scaleX + this.regX, event.stageY/this.scaleY + this.regY);
+				}
 				this.setCommand("move");
 			}
 		}else if(event.nativeEvent.button == 0){
@@ -117,12 +116,13 @@ Unit_Stage.prototype.initEvent = function(){
 					this.hero.attack(this.target);
 					this.setCommand("move");
 				}else{
-					this.hero.moveAttack(event.stageX/this.scaleX + this.regX, event.stageY/this.scaleY + this.regY);
-					this.setCommand("move_attack");
+					if(event.stageX/this.scaleX + this.regX < this.width && event.stageY/this.scaleY + this.regY < this.height){
+						this.hero.moveAttack(event.stageX/this.scaleX + this.regX, event.stageY/this.scaleY + this.regY);
+						this.setCommand("move_attack");						
+					}
 				}
 			}
 		}
-		//this.update();
 	}, this);
 
 	document.onkeydown = function(event){
@@ -166,7 +166,7 @@ Unit_Stage.prototype.addHero = function(hero){
 
 Unit_Stage.prototype.addFollower = function(follower){
 	this.unit_container.addChild(follower);
-	follower.order = this.hero.order;
+	//follower.order = this.hero.order;
 }
 
 Unit_Stage.prototype.addUnit = function(unit, x, y){

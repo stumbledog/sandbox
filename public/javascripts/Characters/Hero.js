@@ -33,8 +33,8 @@ Hero.prototype.hero_initialize = function(data, x, y){
 	this.y = y;
 	this.velocity = new Vector(0,0);
 	this.acceleration = new Vector(0,0);
-	this.map = this.game.findPath({x:this.x,y:this.y});
 	this.order = {action:"annihilate", map:this.game.findPath({x:this.x,y:this.y})};
+	this.max_force = 0.3;
 
 	var frames = [];
 
@@ -77,7 +77,8 @@ Hero.prototype.hero_initialize = function(data, x, y){
 	this.portrait = new createjs.Bitmap(this.game.getLoader().getResult(data.portrait_id));
 	this.portrait.sourceRect = new createjs.Rectangle(data.index % 4 *96,parseInt(data.index / 4) * 96,96,96);
 
-	this.rotate(0,0);
+	this.direction = "back";
+	this.rotate(0,1);
 	this.shadow = new createjs.Shadow("#333",3,3,10);
 	this.status = "stop";
 	this.target = null;
