@@ -26,7 +26,7 @@ Hero.prototype.hero_initialize = function(data, x, y){
 	this.mass = 10;
 
 	this.aggro_radius = 80;
-	this.range = 64;
+	this.range = 32;
 	this.attack_speed = 60;
 	this.damage = 3;
 	this.x = x;

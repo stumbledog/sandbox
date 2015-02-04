@@ -127,7 +127,7 @@ var Game = (function(){
 			initUnit();
 
 			createHero();
-			for(var i=0;i<30;i++){
+			for(var i=0;i<10;i++){
 				createUnits();
 				createEnemy();
 			}
