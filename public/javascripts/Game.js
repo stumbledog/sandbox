@@ -127,7 +127,7 @@ var Game = (function(){
 			initUnit();
 
 			createHero();
-			for(var i=0;i<200;i++){
+			for(var i=0;i<20;i++){
 				createUnits();
 				createEnemy();
 			}
@@ -145,6 +145,7 @@ var Game = (function(){
 		function initMap(){
 			map_stage = new Map_Stage(map_data);
 			blocks = map_stage.getBlock();
+			PathFinder.navMesh(blocks);
 		}
 
 		function createHero(){

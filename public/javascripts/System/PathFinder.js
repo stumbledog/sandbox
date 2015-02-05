@@ -1,7 +1,18 @@
 function PathFinder(){}
 
-PathFinder.navMesh = function(block_map){
-	
+PathFinder.navMesh = function(map){
+	return this.matchingSquares(map);
+}
+
+PathFinder.matchingSquares = function(map){
+
+	map.forEach(function(row, row_index){
+		row.forEach(function(cell, col_index){
+			if(cell === 65535){
+				
+			}
+		});
+	});
 }
 
 PathFinder.flowField = function(block_map, destination){

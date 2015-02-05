@@ -166,7 +166,7 @@ Unit_Stage.prototype.addHero = function(hero){
 
 Unit_Stage.prototype.addFollower = function(follower){
 	this.unit_container.addChild(follower);
-	//follower.order = this.hero.order;
+	follower.order = this.hero.order;
 }
 
 Unit_Stage.prototype.addUnit = function(unit, x, y){
