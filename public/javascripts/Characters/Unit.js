@@ -15,9 +15,13 @@ Unit.prototype.renderHealthBar = function(){
 }
 
 Unit.prototype.move = function(x, y){
+	var path = this.game.getMapStage().getPath(new Point(this.x,this.y), new Point(x,y));
+	console.log(path);
+	/*
 	this.order.action = "move";
 	this.order.target = null;
 	this.order.map = this.game.findPath({x:x,y:y});
+	*/
 }
 
 Unit.prototype.stop = function(){
@@ -424,6 +428,14 @@ Unit.prototype.getSquareDistance = function(target){
 }
 
 Unit.prototype.tick = function(){
+	/*
+	this.current_mesh.shape.graphics.c().s("#fff").ss(5)
+		.mt(this.current_mesh.GetPoint(0).x, this.current_mesh.GetPoint(0).y)
+		.lt(this.current_mesh.GetPoint(1).x, this.current_mesh.GetPoint(1).y)
+		.lt(this.current_mesh.GetPoint(2).x, this.current_mesh.GetPoint(2).y)
+		.lt(this.current_mesh.GetPoint(0).x, this.current_mesh.GetPoint(0).y);
+	this.game.getMapStage().update();
+	*/	
 	switch(this.order.action){
 		case "move":
 		case "stop":

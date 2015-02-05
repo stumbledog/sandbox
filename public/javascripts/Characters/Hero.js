@@ -36,6 +36,8 @@ Hero.prototype.hero_initialize = function(data, x, y){
 	this.order = {action:"annihilate", map:this.game.findPath({x:this.x,y:this.y})};
 	this.max_force = 0.3;
 
+	this.current_mesh = this.game.getMapStage().getTriangles(new Point(this.x,this.y));
+
 	var frames = [];
 
 	for(var i=0 ;i < 12; i++){

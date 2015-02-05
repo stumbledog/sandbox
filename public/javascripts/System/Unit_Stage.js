@@ -96,6 +96,21 @@ Unit_Stage.prototype.initEvent = function(){
 	}, this);
 
 	this.on("stagemousedown", function(event){
+		var p = new Point(event.stageX/this.scaleX + this.regX, event.stageY/this.scaleY + this.regY);
+		var triangle = this.game.getMapStage().getTriangles(p);
+		/*
+		if(triangle.length){
+			//console.log(triangle);
+			triangle.shape.graphics.c().s("#fff").ss(1)
+			.mt(triangle.GetPoint(0).x,triangle.GetPoint(0).y)
+			.lt(triangle.GetPoint(1).x,triangle.GetPoint(1).y)
+			.lt(triangle.GetPoint(2).x,triangle.GetPoint(2).y)
+			.lt(triangle.GetPoint(0).x,triangle.GetPoint(0).y);
+			this.game.getMapStage().update();
+		}else{
+			console.log("NA");
+		}*/
+
 		if(this.target && this.target.status === "death"){
 			this.target = null;
 		}
