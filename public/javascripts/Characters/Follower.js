@@ -13,6 +13,7 @@ Follower.prototype.follower_initialize = function(file, index, x, y){
 	this.type = "follower";
 	this.team = "player";
 	this.ticks = 60;
+	this.order_tick = 0;
 	this.aggro_radius = 200;
 	this.max_health = this.health = 10;
 	this.speed = 3;

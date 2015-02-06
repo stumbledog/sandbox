@@ -15,13 +15,10 @@ Unit.prototype.renderHealthBar = function(){
 }
 
 Unit.prototype.move = function(x, y){
-	var path = this.game.getMapStage().getPath(new Point(this.x,this.y), new Point(x,y));
-	console.log(path);
-	/*
+	//var path = this.game.getMapStage().getPath(new Point(this.x,this.y), new Point(x,y));
 	this.order.action = "move";
 	this.order.target = null;
 	this.order.map = this.game.findPath({x:x,y:y});
-	*/
 }
 
 Unit.prototype.stop = function(){
@@ -108,14 +105,9 @@ Unit.prototype.procMove = function(units, map, target){
 	var coh = this.cohesion(units);
 	var flo = this.flowField(map);
 
-	if(target){
-		var seek = this.seek(target);
-		seek.mult(2.0);
-		this.velocity.add(seek);
-	}
-	sep.mult(1.0);
+	sep.mult(2.0);
 	coh.mult(1.0);
-	flo.mult(1.0);
+	flo.mult(2.0);
 	this.velocity.add(sep);
 	//this.velocity.add(ali);
 	this.velocity.add(coh);
@@ -428,14 +420,6 @@ Unit.prototype.getSquareDistance = function(target){
 }
 
 Unit.prototype.tick = function(){
-	/*
-	this.current_mesh.shape.graphics.c().s("#fff").ss(5)
-		.mt(this.current_mesh.GetPoint(0).x, this.current_mesh.GetPoint(0).y)
-		.lt(this.current_mesh.GetPoint(1).x, this.current_mesh.GetPoint(1).y)
-		.lt(this.current_mesh.GetPoint(2).x, this.current_mesh.GetPoint(2).y)
-		.lt(this.current_mesh.GetPoint(0).x, this.current_mesh.GetPoint(0).y);
-	this.game.getMapStage().update();
-	*/	
 	switch(this.order.action){
 		case "move":
 		case "stop":
@@ -479,13 +463,38 @@ Unit.prototype.tick = function(){
 					}
 				}else{
 					this.target = this.findClosestEnemy();
-					this.procMove(this.game.getUnitStage().getUnitsExceptMe(this), this.order.map, this.target);
+					if(this.target){
+						if(this.order_tick > 60){
+							this.order_tick = 0;
+							this.order.target_map = this.game.findPath({x:this.target.x,y:this.target.y});
+						}
+						if(this.order.target_map){
+							this.procMove(this.game.getUnitStage().getUnitsExceptMe(this), this.order.target_map);
+						}else{
+							this.procMove(this.game.getUnitStage().getUnitsExceptMe(this), this.order.map);
+						}
+					}else{
+						this.procMove(this.game.getUnitStage().getUnitsExceptMe(this), this.order.map);
+					}
 				}
 			}else{
 				this.target = this.findClosestEnemy();
-				this.procMove(this.game.getUnitStage().getUnitsExceptMe(this), this.order.map, this.target);
+				if(this.target){
+					if(this.order_tick > 60){
+						this.order_tick = 0;
+						this.order.target_map = this.game.findPath({x:this.target.x,y:this.target.y});
+					}
+					if(this.order.target_map){
+						this.procMove(this.game.getUnitStage().getUnitsExceptMe(this), this.order.target_map);
+					}else{
+						this.procMove(this.game.getUnitStage().getUnitsExceptMe(this), this.order.map);
+					}
+				}else{
+					this.procMove(this.game.getUnitStage().getUnitsExceptMe(this), this.order.map);
+				}
 			}
 			break;
 	}
 	this.ticks++;
+	this.order_tick++;
 }

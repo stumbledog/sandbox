@@ -15,7 +15,8 @@ Hero.prototype.hero_initialize = function(data, x, y){
 	this.team = "player";
 	this.status = "alive";
 	this.ticks = 0;
-	
+	this.order_tick = 0;
+
 	this.max_health = this.health = data.health;
 	this.speed = data.move_speed;
 	this.level = data.level;

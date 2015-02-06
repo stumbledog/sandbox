@@ -132,7 +132,7 @@ Map_Stage.prototype.initialize = function(){
 			}
 		});
 	},this);
-
+	/*
 	this.nav_mesh.forEach(function(triangle){
 		triangle.shape = new createjs.Shape();
 		triangle.shape.graphics.s("#c0c").ss(1)
@@ -142,7 +142,7 @@ Map_Stage.prototype.initialize = function(){
 			.lt(triangle.GetPoint(0).x,triangle.GetPoint(0).y);
 		this.addChild(triangle.shape);
 	}, this);
-
+	*/
 	this.update();
 }
 

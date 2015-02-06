@@ -13,6 +13,7 @@ Monster.prototype.initialize = function(file, index, x, y){
 	this.type = "monster";
 	this.team = "enemy";
 	this.ticks = 0;
+	this.order_tick = 0;
 	this.aggro_radius = 80;
 	this.exp = 50;
 	this.max_health = this.health = 10;
