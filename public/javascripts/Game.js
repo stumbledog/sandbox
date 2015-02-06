@@ -3,7 +3,7 @@ var Game = (function(){
 	var instance;
 
 	function init(){
-		var unit_stage, map_stage, ui_stage, loader, hero;
+		var unit_stage, map_stage, ui_stage, loader, hero, blocks;
 		var cols = rows = 20;
 		var scale = 1;
 
@@ -14,7 +14,7 @@ var Game = (function(){
 			unit_stage.update();
 		};
 
-		var hero_data = {
+		var hero_builder = {
 			src:"assets/Graphics/Characters/01 - Hero.png",
 			src_id:"01 - Hero",
 			portrait_src:"assets/Graphics/Faces/ds_face01-02.png",
@@ -30,8 +30,87 @@ var Game = (function(){
 			armor:2,
 			move_speed:5,
 			critical_rate:0.1,
-			critical_damage:2
-		}
+			critical_damage:2,
+			radius:12,
+			aggro_radius:160,
+			range:32,
+			type:"hero",
+			team:"player",
+			health_color:"#0C0",
+			damage_color:"#C00",
+			weapon:{
+				type:"melee",
+				src:"assets/Graphics/System/Icons/IconSet.png",
+				src_id:"IconSet",
+				cropX:292,
+				cropY:100,
+				width:16,
+				height:16,
+				regX:12,
+				regY:12,
+				scale:0.8,
+			}
+		};
+
+		var follow_builder = {
+			src:"assets/Graphics/Characters/23 - Soldier.png",
+			src_id:"23 - Soldier",
+			index:0,
+			level:1,
+			exp:0,
+			resource_type:"fury",
+			resource:100,
+			health:20,
+			damage:2,
+			attack_speed:60,
+			armor:2,
+			move_speed:5,
+			critical_rate:0.1,
+			critical_damage:2,
+			radius:12,
+			aggro_radius:160,
+			range:32,
+			type:"follow",
+			team:"player",
+			health_color:"#0C0",
+			damage_color:"#C00",
+			weapon:{
+				type:"melee",
+				src:"assets/Graphics/System/Icons/IconSet.png",
+				src_id:"IconSet",
+				cropX:292,
+				cropY:100,
+				width:16,
+				height:16,
+				regX:12,
+				regY:12,
+				scale:0.8,
+			}
+		};
+
+		var monster_builder = {
+			src:"assets/Graphics/Characters/29 - Monster.png",
+			src_id:"29 - Monster",
+			index:0,
+			level:1,
+			exp:20,
+			resource_type:"mana",
+			resource:20,
+			health:10,
+			damage:1,
+			attack_speed:60,
+			armor:0,
+			move_speed:2,
+			critical_rate:0.0,
+			critical_damage:1,
+			radius:4,
+			aggro_radius:160,
+			range:32,
+			type:"monster",
+			team:"enemy",
+			health_color:"#C00",
+			damage_color:"#CC0",
+		};
 
 		var map_data = {
 			maps:[{
@@ -68,24 +147,24 @@ var Game = (function(){
 				},{
 				tiles:[
 					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 				], 
 				tile_map:[
@@ -105,69 +184,75 @@ var Game = (function(){
 			height:rows*32,
 			cols:cols,
 			rows:rows,
+			start_point:[32,32],
 		};
 
-		var manifest = [
-			{src:"assets/Graphics/System/Icons/IconSet.png", id:"icon"},
-			{src:"assets/Graphics/Characters/23 - Soldier.png", id:"soldier"},
-			{src:"assets/Graphics/Characters/29 - Monster.png", id:"monster29"},
-		];
+		var manifest = [];
 
-		manifest.push({src:hero_data.src,id:hero_data.src_id});
-		manifest.push({src:hero_data.portrait_src,id:hero_data.portrait_id});
+		manifest.push({src:hero_builder.src,id:hero_builder.src_id});
+		manifest.push({src:hero_builder.portrait_src,id:hero_builder.portrait_id});
+		manifest.push({src:hero_builder.weapon.src,id:hero_builder.weapon.src_id});
+		manifest.push({src:follow_builder.src,id:follow_builder.src_id});
+		manifest.push({src:monster_builder.src,id:monster_builder.src_id});
+
 		map_data.maps.forEach(function(map){
 			manifest.push({src:map.src,id:map.id});
 		});
+
 		loader = new createjs.LoadQueue(false);
 		loader.addEventListener("complete", handleLoadComplete);
 		loader.loadManifest(manifest);
 
 		function handleLoadComplete(){
-			initMap();
-			initUnit();
+			initMapStage();
+			initUnitStage();
 
-			createHero();
-			for(var i=0;i<100;i++){
-				createUnits();
-				createEnemy();
+			createHero(hero_builder);
+			for(var i=0;i<10;i++){
+				createFollower(follow_builder);
+				createEnemy(monster_builder);
 			}
-			initUI();
+			initUIStage();
 		}
 
-		function initUnit(){
+		function initMapStage(){
+			map_stage = new Map_Stage(map_data);
+			blocks = map_stage.getBlock();
+		}
+
+		function initUnitStage(){
 			unit_stage = new Unit_Stage(cols * 32 * scale, rows * 32 * scale, 20);
 		}
 
-		function initUI(){
+		function initUIStage(){
 			ui_stage = new UI_Stage(hero);
 		}
 
-		function initMap(){
-			map_stage = new Map_Stage(map_data);
-			blocks = map_stage.getBlock();
-			PathFinder.navMesh(blocks);
-		}
-
-		function createHero(){
-			hero = new Hero(hero_data, 10*32+8, 10*32+8);
+		function createHero(builder){
+			builder.x = map_data.start_point[0];
+			builder.y = map_data.start_point[1];
+			builder.blocks = blocks;
+			hero = new Hero(builder);
 			unit_stage.addHero(hero);
 		}
 
-		function createUnits(){
-			unit_stage.addFollower(new Follower("soldier", 0, Math.floor(Math.random()*cols)*32+8, Math.floor(Math.random()*rows)*32+8));
-			//unit_stage.addFollower(new Follower("soldier", 0, 10*32+8, 10*32+8));
+		function createFollower(builder){
+			builder.x = map_data.start_point[0] + Math.random();
+			builder.y = map_data.start_point[1] + Math.random();
+			builder.blocks = blocks;
+			unit_stage.addFollower(new Follower(builder));
 		}
 
-		function createEnemy(){
-			unit_stage.addUnit(new Monster("monster29", 0, Math.floor(Math.random()*cols)*32+8, Math.floor(Math.random()*rows)*32+8));
+		function createEnemy(builder){
+			builder.x = Math.floor(Math.random()*cols)*32+8;
+			builder.y = Math.floor(Math.random()*rows)*32+8;
+			builder.blocks = blocks;
+			unit_stage.addUnit(new Monster(builder));
 		}
 
 		return {
 			getLoader:function(){
 				return loader;
-			},
-			findPath:function(destination){
-				return PathFinder.flowField(blocks, destination);
 			},
 			getMapStage:function(){
 				return map_stage;

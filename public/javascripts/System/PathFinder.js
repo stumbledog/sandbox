@@ -1,20 +1,5 @@
 function PathFinder(){}
 
-PathFinder.navMesh = function(map){
-	return this.matchingSquares(map);
-}
-
-PathFinder.matchingSquares = function(map){
-
-	map.forEach(function(row, row_index){
-		row.forEach(function(cell, col_index){
-			if(cell === 65535){
-				
-			}
-		});
-	});
-}
-
 PathFinder.flowField = function(block_map, destination){
 	if(block_map[Math.floor(destination.y/16)][Math.floor(destination.x/16)] === 65535){
 		destination = this.findClosestPoint2(block_map, destination);

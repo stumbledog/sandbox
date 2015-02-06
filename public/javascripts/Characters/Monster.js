@@ -1,83 +1,15 @@
-function Monster(file, index, x, y){
-	this.initialize(file, index, x, y);
+function Monster(builder){
+	this.initialize(builder);
 }
 
 Monster.prototype = new Unit();
 
 Monster.prototype.constructor = Monster;
-Monster.prototype.container_initialize = Monster.prototype.initialize;
+Monster.prototype.unit_initialize = Monster.prototype.initialize;
 
-Monster.prototype.initialize = function(file, index, x, y){
-	this.container_initialize();
-	this.game = Game.getInstance();
-	this.type = "monster";
-	this.team = "enemy";
-	this.ticks = 0;
-	this.order_tick = 0;
-	this.aggro_radius = 80;
-	this.exp = 50;
-	this.max_health = this.health = 10;
-	this.speed = 1;
-	this.range = 32;
-	this.attack_speed = 60;
-	this.damage = 1;
-	this.direction = 180;
-	this.radius = 16;
-	this.mass = 1;
-	this.x = x;
-	this.y = y;
-	this.velocity = new Vector(0,0);
-	this.order = {action:"annihilate",map:this.game.findPath({x:this.x,y:this.y}),destination:new Vector(x,y)};
-	this.max_force = 0.3;
-
-	var frames = [];
-	var offsetX = index % 4 *72;
-	var offsetY = parseInt(index / 4) * 128;
-
-	for(var i=0 ;i < 12; i++){
-		frames.push([offsetX+(i%3)*24,offsetY+parseInt(i/3)*32+1,24,32,0,12,16]);
-	}
-	
-	var spriteSheet = new createjs.SpriteSheet({
-		images:[this.game.getLoader().getResult(file)],
-		frames:frames,
-		animations:{
-			front:{
-				frames:[0,1,2],
-				speed:0.1
-			},
-			left:{
-				frames:[3,4,5],
-				speed:0.1
-			},
-			right:{
-				frames:[6,7,8],
-				speed:0.1
-			},
-			back:{
-				frames:[9,10,11],
-				speed:0.1
-			},
-		}
-	});
-
-	this.sprite = new createjs.Sprite(spriteSheet);
-	this.sprite.z = 0;
-	this.addChild(this.sprite);
-
-	this.direction = "back";
-	this.rotate(0,1);
-	this.shadow = new createjs.Shadow("#333",3,3,10);
-	this.status = "idle";
-	this.destination = null;
-	this.move_queue = [];
-	this.isAttack = false;
-	this.color = "#C00";
-	this.damage_color = "#CC0";
-	this.vx = this.vy = 0
-
+Monster.prototype.initialize = function(builder){
+	this.unit_initialize(builder);
 	this.initEventListener();
-	this.initHealthBar();
 }
 
 Monster.prototype.initEventListener = function(){
@@ -104,6 +36,16 @@ Monster.prototype.initEventListener = function(){
 			this.getStage().unsetTarget(this);
 		}
 	}.bind(this));
+}
+
+
+Monster.prototype.die = function(attacker){
+	var allied_units = this.game.getUnitStage().getAlliedUnits(attacker);
+	allied_units.forEach(function(unit){
+		unit.gainExp(this.exp/allied_units.length);
+	},this);
+
+	Unit.prototype.die.call(this, attacker);
 }
 
 Monster.prototype.tick = function(){

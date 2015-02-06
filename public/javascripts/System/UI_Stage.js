@@ -7,7 +7,7 @@ UI_Stage = createjs.promote(UI_Stage, "Stage");
 
 UI_Stage.prototype.initialize = function(hero){
 	this.canvas = document.getElementById("ui");
-	this.canvas.width = 300;
+	this.canvas.width = 275;
 	this.canvas.height = 82;
 
 	this.Stage_constructor(this.canvas);
