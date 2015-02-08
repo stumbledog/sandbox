@@ -1,11 +1,11 @@
-function UI_Stage(hero){
-	this.initialize(hero);
+function UI_Stage(){
+	this.initialize();
 }
 
 createjs.extend(UI_Stage, createjs.Stage);
 UI_Stage = createjs.promote(UI_Stage, "Stage");
 
-UI_Stage.prototype.initialize = function(hero){
+UI_Stage.prototype.initialize = function(){
 	this.canvas = document.getElementById("ui");
 	this.canvas.width = 275;
 	this.canvas.height = 82;
@@ -15,7 +15,9 @@ UI_Stage.prototype.initialize = function(hero){
 	
 	this.game = Game.getInstance();
 	this.map = this.game.getMapStage();
+}
 
+UI_Stage.prototype.initHeroUI = function(hero){
 	this.hero = hero;
 	this.renderPortrait();
 	this.renderSkill();

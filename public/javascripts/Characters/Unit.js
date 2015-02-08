@@ -9,6 +9,7 @@ Unit.prototype.initialize = function(builder){
 	this.game = Game.getInstance();
 	this.loader = this.game.getLoader();
 	this.unit_stage = this.game.getUnitStage();
+	this.ui_stage = this.game.getUIStage();
 
 	this.ticks = 60;
 	this.order_tick = 29;
@@ -42,12 +43,28 @@ Unit.prototype.initialize = function(builder){
 	if(builder.weapon){
 		this.renderWeapon(builder.weapon);
 	}
+
+	if(builder.skills){
+		this.initSkills(builder.skills);
+	}
+
 	this.initHealthBar();
 
 	this.order = {action:"annihilate", map:this.findPath({x:this.x,y:this.y})};
 	this.velocity = new Vector(0,0);
 }
 
+Unit.prototype.initSkills = function(skills){
+	this.skills = [];
+	skills.forEach(function(skill){
+		skill.unit = this;
+		this.skills[skill.key] = new Skill(skill);
+	}, this);
+}
+
+Unit.prototype.useSkill = function(key, mouse_position){
+	this.skills[key].useSkill(mouse_position);
+}
 
 Unit.prototype.renderUnit = function(src_id, index){
 	var frames = [];
@@ -438,7 +455,7 @@ Unit.prototype.tick = function(){
 			break;
 		case "attack":
 			if(this.order.target && this.order.target.status !== "death"){
-				if(this.getSquareDistance(this.order.target) <= Math.pow(this.range,2)){
+				if(this.getSquareDistance(this.order.target) <= Math.pow(this.range+this.target.radius,2)){
 					this.velocity = new Vector(0,0);
 					if(this.ticks > this.attack_speed){
 						this.ticks = 0;
@@ -452,7 +469,7 @@ Unit.prototype.tick = function(){
 		case "guard":
 		case "move_attack":
 			if(this.target && this.target.status !== "death"){
-				if(this.getSquareDistance(this.target) <= Math.pow(this.range,2)){
+				if(this.getSquareDistance(this.target) <= Math.pow(this.range+this.target.radius,2)){
 					this.velocity = new Vector(0,0);
 					if(this.ticks > this.attack_speed){
 						this.ticks = 0;
@@ -463,7 +480,9 @@ Unit.prototype.tick = function(){
 						this.target = this.findClosestEnemy(this.aggro_radius) || this.target;
 						this.target_map = this.findPath({x:this.target.x,y:this.target.y});
 					}
-					this.procMove(this.target_map);
+					if(this.target_map){
+						this.procMove(this.target_map);
+					}
 				}
 			}else{
 				this.target = this.findClosestEnemy(this.aggro_radius);
@@ -472,7 +491,7 @@ Unit.prototype.tick = function(){
 			break;
 		case "annihilate":
 			if(this.target && this.target.status !== "death"){
-				if(this.getSquareDistance(this.target) <= Math.pow(this.range,2)){
+				if(this.getSquareDistance(this.target) <= Math.pow(this.range+this.target.radius,2)){
 					this.velocity = new Vector(0,0);
 					if(this.ticks > this.attack_speed){
 						this.ticks = 0;
@@ -489,6 +508,7 @@ Unit.prototype.tick = function(){
 				}
 			}else{
 				this.target = this.findClosestEnemy();
+				this.procMove(this.order.map);
 			}
 			break;
 	}

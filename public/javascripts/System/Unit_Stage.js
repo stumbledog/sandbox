@@ -56,6 +56,8 @@ Unit_Stage.prototype.initialize = function(width, height, rows){
 	createjs.Ticker.timingMode = createjs.Ticker.RAF_SYNCHED;
 	createjs.Ticker.setFPS(30);
 
+	this.mouse_position = new Vector(0,0);
+
 	this.initEvent();
 	this.initContainer();
 }
@@ -70,25 +72,27 @@ Unit_Stage.prototype.unsetTarget = function(enemy){
 
 Unit_Stage.prototype.initEvent = function(){
 	this.on("stagemousemove", function(event){
-		if(event.stageX > window.innerWidth - 50){
+		this.mouse_position.x = event.stageX/this.scaleX + this.regX;
+		this.mouse_position.y = event.stageY/this.scaleY + this.regY;
+		if(event.stageX > window.innerWidth - 20){
 			this.move_right = true;
 		}else{
 			this.move_right = false;
 		}
 
-		if(event.stageX < 50){
+		if(event.stageX < 20){
 			this.move_left = true;
 		}else{
 			this.move_left = false;
 		}
 
-		if(event.stageY > window.innerHeight - 50){
+		if(event.stageY > window.innerHeight - 20){
 			this.move_down = true;
 		}else{
 			this.move_down = false;
 		}
 
-		if(event.stageY < 50){
+		if(event.stageY < 20){
 			this.move_up = true;
 		}else{
 			this.move_up = false;
@@ -99,6 +103,7 @@ Unit_Stage.prototype.initEvent = function(){
 		if(this.target && this.target.status === "death"){
 			this.target = null;
 		}
+		this.hero.hideRange();
 		if(event.nativeEvent.button == 2){
 			if(this.target){
 				this.hero.attack(this.target);
@@ -139,6 +144,19 @@ Unit_Stage.prototype.initEvent = function(){
 				break;
 			case 65://a
 				this.setCommand("attack");
+				this.hero.showRange();
+				break;
+			case 81://q
+				this.hero.useSkill('q', this.mouse_position);
+				break;
+			case 87://w
+				this.hero.useSkill('w', this.mouse_position);
+				break;
+			case 69://e
+				this.hero.useSkill('e', this.mouse_position);
+				break;
+			case 82://r
+				this.hero.useSkill('r', this.mouse_position);
 				break;
 		}
 		this.update();
@@ -155,7 +173,8 @@ Unit_Stage.prototype.initEvent = function(){
 Unit_Stage.prototype.initContainer = function(){
 	this.unit_container = new createjs.Container();
 	this.ui_container = new createjs.Container();
-	this.addChild(this.unit_container, this.ui_container);
+	this.effect_container = new createjs.Container();
+	this.addChild(this.unit_container, this.ui_container, this.effect_container);
 }
 
 Unit_Stage.prototype.addHero = function(hero){
@@ -165,7 +184,7 @@ Unit_Stage.prototype.addHero = function(hero){
 
 Unit_Stage.prototype.addFollower = function(follower){
 	this.unit_container.addChild(follower);
-	follower.order = this.hero.order;
+	//follower.order = this.hero.order;
 }
 
 Unit_Stage.prototype.addUnit = function(unit, x, y){
@@ -181,6 +200,7 @@ Unit_Stage.prototype.setCommand = function(type){
 		case "attack":
 			this.command = "attack";
 			this.canvas.classList.add("attack");
+			this.hero.showRange();
 		break;
 		case "move":
 			this.command = "move";

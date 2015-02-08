@@ -49,7 +49,20 @@ var Game = (function(){
 				regX:12,
 				regY:12,
 				scale:0.8,
-			}
+			},
+			skills:[
+				{
+					key:"q",
+					name:"Furious Cleave",
+					description:"Slam the ground and cause a wave of destruction that deals 620% weapon damage to enemies up to 45 yards in front of you.",
+					range:80,
+					angle:90,
+					type:"cone",
+					damage:200,
+					cost:25,
+					cooldown:5,
+				}
+			]
 		};
 
 		var follow_builder = {
@@ -206,13 +219,16 @@ var Game = (function(){
 		function handleLoadComplete(){
 			initMapStage();
 			initUnitStage();
+			initUIStage();
 
 			createHero(hero_builder);
-			for(var i=0;i<10;i++){
-				createFollower(follow_builder);
+			for(var i=0;i<40;i++){
+				//createFollower(follow_builder);
 				createEnemy(monster_builder);
 			}
-			initUIStage();
+
+			ui_stage.initHeroUI(hero);
+
 		}
 
 		function initMapStage(){
@@ -225,7 +241,7 @@ var Game = (function(){
 		}
 
 		function initUIStage(){
-			ui_stage = new UI_Stage(hero);
+			ui_stage = new UI_Stage();
 		}
 
 		function createHero(builder){
