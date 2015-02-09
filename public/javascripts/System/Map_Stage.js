@@ -2,9 +2,8 @@ function Map_Stage(){
 	this.initialize(arguments);
 }
 
-Map_Stage.prototype = new createjs.Stage();
-
-Map_Stage.prototype.stage_initialize = Map_Stage.prototype.initialize;
+createjs.extend(Map_Stage, createjs.Stage);
+Map_Stage = createjs.promote(Map_Stage, "Stage");
 
 Map_Stage.prototype.initialize = function(){
 	var args = Array.prototype.slice.call(arguments[0])[0];
@@ -18,7 +17,7 @@ Map_Stage.prototype.initialize = function(){
 	this.canvas.width = window.innerWidth;
 	this.canvas.height = window.innerHeight;
 	
-	this.stage_initialize(this.canvas);
+	this.Stage_constructor(this.canvas);
 	
 	this.game = Game.getInstance();
 

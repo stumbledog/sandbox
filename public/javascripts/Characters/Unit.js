@@ -8,6 +8,7 @@ Unit.prototype.initialize = function(builder){
 	this.container_initialize();
 	this.game = Game.getInstance();
 	this.loader = this.game.getLoader();
+	this.map_stage = this.game.getMapStage();
 	this.unit_stage = this.game.getUnitStage();
 	this.ui_stage = this.game.getUIStage();
 
@@ -386,7 +387,7 @@ Unit.prototype.hit = function(attacker, damage){
 			createjs.Tween.get(this).call(function(event){
 				event.target.sprite.filters = [new createjs.ColorFilter(1,0,0,1)];
 				event.target.sprite.cache(-12,-16,24,32);
-			}).wait(50).call(function(event){
+			}).wait(400).call(function(event){
 				event.target.sprite.filters = null;
 				event.target.sprite.uncache();
 			});

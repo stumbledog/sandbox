@@ -76,6 +76,7 @@ Unit_Stage.prototype.initEvent = function(){
 	this.on("stagemousemove", function(event){
 		this.mouse_position.x = event.stageX/this.scaleX + this.regX;
 		this.mouse_position.y = event.stageY/this.scaleY + this.regY;
+		/*
 		if(event.stageX > window.innerWidth - 20){
 			this.move_right = true;
 		}else{
@@ -98,10 +99,12 @@ Unit_Stage.prototype.initEvent = function(){
 			this.move_up = true;
 		}else{
 			this.move_up = false;
-		}		
+		}*/		
 	}, this);
 
 	this.on("stagemousedown", function(event){
+		var x = event.stageX/this.scaleX + this.regX;
+		var y = event.stageY/this.scaleY + this.regY;
 		if(this.target && this.target.status === "death"){
 			this.target = null;
 		}
@@ -110,8 +113,8 @@ Unit_Stage.prototype.initEvent = function(){
 			if(this.target){
 				this.hero.attack(this.target);
 			}else{
-				if(event.stageX/this.scaleX + this.regX < this.width && event.stageY/this.scaleY + this.regY < this.height){
-					this.hero.move(event.stageX/this.scaleX + this.regX, event.stageY/this.scaleY + this.regY);
+				if(x >= 0 && x <= this.width && y >= 0 && y <= this.height){
+					this.hero.move(x,y);
 				}
 				this.setCommand("move");
 			}
@@ -122,8 +125,8 @@ Unit_Stage.prototype.initEvent = function(){
 					this.hero.attack(this.target);
 					this.setCommand("move");
 				}else{
-					if(event.stageX/this.scaleX + this.regX < this.width && event.stageY/this.scaleY + this.regY < this.height){
-						this.hero.moveAttack(event.stageX/this.scaleX + this.regX, event.stageY/this.scaleY + this.regY);
+					if(x >= 0 && x <= this.width && y >= 0 && y <= this.height){
+						this.hero.moveAttack(x,y);
 						this.setCommand("move_attack");						
 					}
 				}

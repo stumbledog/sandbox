@@ -5,7 +5,7 @@ var Game = (function(){
 	function init(){
 		var unit_stage, map_stage, ui_stage, loader, hero, blocks;
 		var cols = rows = 20;
-		var scale = 1;
+		var scale = 5;
 
 		window.onresize = function(){
 			map_stage.canvas.width = unit_stage.canvas.width = window.innerWidth;
@@ -56,7 +56,7 @@ var Game = (function(){
 					name:"Furious Cleave",
 					description:"Swing your weapon in a wide arc to deal 200% weapon damage to all enemies caught in the swing.",
 					src:"assets/Graphics/icons/50x50/129.png",
-					radius:50,
+					radius:128,
 					angle:60,
 					type:"cone",
 					damage:200,
@@ -282,17 +282,6 @@ var Game = (function(){
 		manifest.push({src:follow_builder.src,id:follow_builder.src_id});
 		manifest.push({src:monster_builder.src,id:monster_builder.src_id});
 
-		/*
-		manifest.push({src:"assets/Graphics/effects/shooter_fx/lava_shot_impact1.png",id:"lava_shot_impact1"});
-		manifest.push({src:"assets/Graphics/effects/shooter_fx/lava_shot_impact2.png",id:"lava_shot_impact2"});
-		manifest.push({src:"assets/Graphics/effects/shooter_fx/lava_shot_impact3.png",id:"lava_shot_impact3"});
-		manifest.push({src:"assets/Graphics/effects/shooter_fx/lava_shot_impact4.png",id:"lava_shot_impact4"});
-
-		manifest.push({src:"assets/Graphics/effects/impacts/orange_impx_0.png",id:"orange_impx_0"});
-		manifest.push({src:"assets/Graphics/effects/impacts/orange_impx_1.png",id:"orange_impx_1"});
-		manifest.push({src:"assets/Graphics/effects/impacts/orange_impx_2.png",id:"orange_impx_2"});
-		*/
-
 		map_data.maps.forEach(function(map){
 			manifest.push({src:map.src,id:map.id});
 		});
@@ -316,13 +305,13 @@ var Game = (function(){
 			initUIStage();
 
 			createHero(hero_builder);
+			createFollower(follow_builder);
+			createFollower(follow_builder);
 			for(var i=0;i<40;i++){
-				//createFollower(follow_builder);
 				createEnemy(monster_builder);
 			}
 
 			ui_stage.initHeroUI(hero);
-
 		}
 
 		function initMapStage(){
@@ -331,11 +320,16 @@ var Game = (function(){
 		}
 
 		function initUnitStage(){
-			unit_stage = new Unit_Stage(cols * 32 * scale, rows * 32 * scale, 20);
+			unit_stage = new Unit_Stage(cols * 32, rows * 32, 20);
 		}
 
 		function initUIStage(){
 			ui_stage = new UI_Stage();
+			map_stage.scaleX = map_stage.scaleY = scale;
+			unit_stage.scaleX = unit_stage.scaleY = scale;
+			map_stage.update();
+			console.log(window.innerWidth/5);
+
 		}
 
 		function createHero(builder){
@@ -375,9 +369,23 @@ var Game = (function(){
 			},
 			setScale:function(delta){
 				scale += delta;
-				scale = scale < 1 ? 1 :scale > 4 ? 4 : scale;
+				scale = scale < 2 ? 2 :scale > 5 ? 5 : scale;
 				map_stage.scaleX = map_stage.scaleY = scale;
 				unit_stage.scaleX = unit_stage.scaleY = scale;
+				map_stage.update();
+			},
+			viewport:function(){
+				var regX = hero.x - window.innerWidth / scale / 2;
+				var regY = hero.y - window.innerHeight / scale / 2;
+
+				var maxX = (cols * 32) - window.innerWidth / scale;
+				var maxY = (rows * 32) - window.innerHeight / scale;
+
+				regX = regX < 0 ? 0 : regX > maxX ? maxX : regX;
+				regY = regY < 0 ? 0 : regY > maxY ? maxY : regY;
+
+				map_stage.regX = unit_stage.regX = regX;
+				map_stage.regY = unit_stage.regY = regY;
 				map_stage.update();
 			}
 		}

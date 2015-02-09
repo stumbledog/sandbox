@@ -57,4 +57,5 @@ Hero.prototype.tick = function(){
 	Unit.prototype.tick.call(this);
 	this.range_shape.x = this.x;
 	this.range_shape.y = this.y;
+	this.game.viewport();
 }
