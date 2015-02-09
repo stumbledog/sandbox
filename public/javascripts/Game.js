@@ -25,14 +25,14 @@ var Game = (function(){
 			resource_type:"fury",
 			resource:100,
 			health:200,
-			damage:3,
-			attack_speed:60,
+			damage:5,
+			attack_speed:30,
 			armor:2,
-			move_speed:5,
+			move_speed:2.5,
 			critical_rate:0.1,
 			critical_damage:2,
 			radius:12,
-			aggro_radius:160,
+			aggro_radius:80,
 			range:32,
 			type:"hero",
 			team:"player",
@@ -151,11 +151,11 @@ var Game = (function(){
 			damage:2,
 			attack_speed:60,
 			armor:2,
-			move_speed:5,
+			move_speed:2,
 			critical_rate:0.1,
 			critical_damage:2,
 			radius:12,
-			aggro_radius:160,
+			aggro_radius:80,
 			range:32,
 			type:"follow",
 			team:"player",
@@ -187,11 +187,11 @@ var Game = (function(){
 			damage:1,
 			attack_speed:60,
 			armor:0,
-			move_speed:2,
+			move_speed:1,
 			critical_rate:0.0,
 			critical_damage:1,
 			radius:4,
-			aggro_radius:160,
+			aggro_radius:80,
 			range:32,
 			type:"monster",
 			team:"enemy",
@@ -305,8 +305,9 @@ var Game = (function(){
 			initUIStage();
 
 			createHero(hero_builder);
-			createFollower(follow_builder);
-			createFollower(follow_builder);
+			for(var i=0;i<5;i++){
+				createFollower(follow_builder);
+			}
 			for(var i=0;i<40;i++){
 				createEnemy(monster_builder);
 			}
@@ -328,8 +329,6 @@ var Game = (function(){
 			map_stage.scaleX = map_stage.scaleY = scale;
 			unit_stage.scaleX = unit_stage.scaleY = scale;
 			map_stage.update();
-			console.log(window.innerWidth/5);
-
 		}
 
 		function createHero(builder){

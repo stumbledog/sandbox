@@ -12,7 +12,7 @@ UI_Stage.prototype.initialize = function(){
 
 	this.Stage_constructor(this.canvas);
 	this.enableMouseOver();
-	
+
 	this.game = Game.getInstance();
 	this.map = this.game.getMapStage();
 	this.loader = this.game.getLoader();
@@ -47,7 +47,6 @@ UI_Stage.prototype.renderSkill = function(){
 	this.renderSkillButton('W',1, this.hero.skills['w']);
 	this.renderSkillButton('E',2, this.hero.skills['e']);
 	this.renderSkillButton('R',3, this.hero.skills['r']);
-
 }
 
 UI_Stage.prototype.renderSkillButton = function(hotkey, index, skill){
@@ -114,7 +113,6 @@ UI_Stage.prototype.renderExpBar = function(){
 	container.addChild(border, this.exp_bar, this.exp_text);
 	this.addChild(container);
 }
-
 
 UI_Stage.prototype.refreshExpBar = function(){
 	var exp_cap = this.hero.level * 100;

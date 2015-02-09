@@ -11,6 +11,11 @@ Hero.prototype.hero_initialize = function(builder){
 	this.unit_initialize(builder);
 	this.renderPortrait(builder.portrait_id, builder.index);
 	this.renderRange();
+	this.order = {action:"stop", map:this.findPath({x:this.x,y:this.y})};
+
+	for(key in this.skills){
+		this.skills[key].remain_cooldown = 0
+	}
 }
 
 Hero.prototype.renderRange = function(){
@@ -58,4 +63,9 @@ Hero.prototype.tick = function(){
 	this.range_shape.x = this.x;
 	this.range_shape.y = this.y;
 	this.game.viewport();
+	for(key in this.skills){
+		this.skills[key].remain_cooldown -= 1/30;
+		this.skills[key].remain_cooldown = this.skills[key].remain_cooldown < 0 ? 0 : this.skills[key].remain_cooldown; 
+	}
+
 }

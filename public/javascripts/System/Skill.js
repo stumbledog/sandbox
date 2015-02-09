@@ -21,14 +21,15 @@ Skill.prototype.useSkill = function(mouse_position){
 
 	var degree = mouse_vector.getDegree();
 	this.enemies = this.unit.unit_stage.getEnemies(this.unit);
-	switch(this.type){
-		case "cone":
-			if(this.unit.resource >= this.cost){
-				this.unit.resource -= this.cost;
-				if(this.unit.type === "hero"){
-					this.unit.ui_stage.refreshResourceBar();
-				}
 
+	if(this.unit.resource >= this.cost && this.remain_cooldown === 0){
+		this.unit.resource -= this.cost;
+		if(this.unit.type === "hero"){
+			this.unit.ui_stage.refreshResourceBar();
+		}
+		this.remain_cooldown = this.cooldown;
+		switch(this.type){
+			case "cone":
 				this.animate(degree);
 
 				this.enemies.forEach(function(enemy){
@@ -36,15 +37,8 @@ Skill.prototype.useSkill = function(mouse_position){
 						enemy.hit(this.unit, this.unit.damage * this.damage/100);
 					}
 				}, this);
-			}
 			break;
 		case "impact":
-			if(this.unit.resource >= this.cost){
-				this.unit.resource -= this.cost;
-				if(this.unit.type === "hero"){
-					this.unit.ui_stage.refreshResourceBar();
-				}
-
 				this.animate(this.animation.rotate);
 
 				this.enemies.forEach(function(enemy){
@@ -53,30 +47,14 @@ Skill.prototype.useSkill = function(mouse_position){
 					}
 				}, this);
 
-			}
 			break;
 		case "buff":
 
 			break;
+		}
 	}
 }
 
 Skill.prototype.animate = function(degree){
 	this.effect.play(this.animation, this.unit.x, this.unit.y, degree);
-}
-
-Skill.prototype.renderArea = function(){
-
-}
-
-Skill.prototype.showDiscription = function(){
-
-}
-
-Skill.prototype.toggle = function(){
-
-}
-
-Skill.prototype.active = function(){
-
 }

@@ -26,7 +26,7 @@ Unit.prototype.initialize = function(builder){
 	this.resource_type = builder.resource_type;
 	this.max_resource = this.resource = builder.resource;
 	this.radius = builder.radius;
-	this.aggro_radius = builder.arrgo_radius;
+	this.aggro_radius = builder.aggro_radius;
 	this.range = builder.range;
 	this.attack_speed = builder.attack_speed;
 	this.damage = builder.damage;
@@ -52,7 +52,6 @@ Unit.prototype.initialize = function(builder){
 
 	this.initHealthBar();
 
-	this.order = {action:"annihilate", map:this.findPath({x:this.x,y:this.y})};
 	this.velocity = new Vector(0,0);
 }
 
@@ -72,7 +71,7 @@ Unit.prototype.renderUnit = function(src_id, index){
 	var frames = [];
 
 	for(var i=0 ;i < 12; i++){
-		frames.push([index % 4 *72+(i%3)*24,parseInt(index / 4) * 128+parseInt(i/3)*32+1,24,32,0,12,16]);
+		frames.push([index % 4 *72 + (i % 3) * 24, parseInt(index / 4) * 128 + parseInt(i / 3) * 32 + 1, 24, 32, 0, 12, 16]);
 	}
 
 	var spriteSheet = new createjs.SpriteSheet({
@@ -81,19 +80,19 @@ Unit.prototype.renderUnit = function(src_id, index){
 		animations:{
 			front:{
 				frames:[0,1,2],
-				speed:this.speed/10,
+				speed:this.speed/5,
 			},
 			left:{
 				frames:[3,4,5],
-				speed:this.speed/10,
+				speed:this.speed/5,
 			},
 			right:{
 				frames:[6,7,8],
-				speed:this.speed/10,
+				speed:this.speed/5,
 			},
 			back:{
 				frames:[9,10,11],
-				speed:this.speed/10,
+				speed:this.speed/5,
 			},
 		}
 	});
@@ -147,6 +146,7 @@ Unit.prototype.stop = function(){
 Unit.prototype.moveAttack = function(x, y){
 	this.order.action = "move_attack";
 	this.target = null;
+	this.target_map = null;
 	this.order.map = this.findPath({x:x,y:y});
 }
 
@@ -157,6 +157,9 @@ Unit.prototype.attack = function(target){
 }
 
 Unit.prototype.procMove = function(map){
+	if(!map){
+		return;
+	}
 	var units = this.unit_stage.getUnits();
 	var sep = this.separate(units);
 	var ali = this.align(units);
@@ -282,66 +285,63 @@ Unit.prototype.flowField = function(map){
 }
 
 Unit.prototype.rotate = function(dx, dy){
-	var direction;
+	if(!dx && !dy) return;
 	if(Math.abs(dx) > Math.abs(dy)){
 		if(dx > 0){
-			direction = "right";
+			this.direction = "right";
 		}else{
-			direction = "left";
+			this.direction = "left";
 		}
 	}else{
 		if(dy < 0){
-			direction = "back";
+			this.direction = "back";
 		}else{
-			direction = "front";
+			this.direction = "front";
 		}
 	}
 
-	if(direction !== this.direction){
-		this.direction = direction;
-		if(this.direction === "back"){
-			if(this.weapon && this.weapon.type === "melee"){
-				if(this.getChildIndex(this.weapon) === 1){
-					this.swapChildren(this.weapon, this.sprite);
-				}
-				this.weapon.rotation = 90;
-				this.swing = -90;
-				this.weapon.x = 6;
-				this.weapon.y = 6;
+	if(this.direction === "back"){
+		if(this.weapon && this.weapon.type === "melee"){
+			if(this.getChildIndex(this.weapon) === 1){
+				this.swapChildren(this.weapon, this.sprite);
 			}
-		}else if(this.direction === "right"){
-			if(this.weapon && this.weapon.type === "melee"){
-				if(this.getChildIndex(this.weapon) === 0){
-					this.swapChildren(this.weapon, this.sprite);
-				}
-				this.weapon.rotation = 90;
-				this.weapon.swing = 90;
-				this.weapon.x = 0;
-				this.weapon.y = 10;
-			}
-		}else if(this.direction === "front"){
-			if(this.weapon && this.weapon.type === "melee"){
-				if(this.getChildIndex(this.weapon) === 0){
-					this.swapChildren(this.weapon, this.sprite);
-				}
-				this.weapon.rotation = -90;
-				this.weapon.swing = -90;
-				this.weapon.x = -6;
-				this.weapon.y = 10;
-			}
-		}else if(this.direction === "left"){
-			if(this.weapon && this.weapon.type === "melee"){
-				if(this.getChildIndex(this.weapon) === 1){
-					this.swapChildren(this.weapon, this.sprite);
-				}
-				this.weapon.rotation = 0;
-				this.weapon.swing = -90;
-				this.weapon.x = 0;
-				this.weapon.y = 10;
-			}
+			this.weapon.rotation = 90;
+			this.weapon.swing = -90;
+			this.weapon.x = 6;
+			this.weapon.y = 6;
 		}
-		this.sprite.gotoAndPlay(this.direction);
+	}else if(this.direction === "right"){
+		if(this.weapon && this.weapon.type === "melee"){
+			if(this.getChildIndex(this.weapon) === 0){
+				this.swapChildren(this.weapon, this.sprite);
+			}
+			this.weapon.rotation = 90;
+			this.weapon.swing = 90;
+			this.weapon.x = 0;
+			this.weapon.y = 10;
+		}
+	}else if(this.direction === "front"){
+		if(this.weapon && this.weapon.type === "melee"){
+			if(this.getChildIndex(this.weapon) === 0){
+				this.swapChildren(this.weapon, this.sprite);
+			}
+			this.weapon.rotation = -90;
+			this.weapon.swing = -90;
+			this.weapon.x = -6;
+			this.weapon.y = 10;
+		}
+	}else if(this.direction === "left"){
+		if(this.weapon && this.weapon.type === "melee"){
+			if(this.getChildIndex(this.weapon) === 1){
+				this.swapChildren(this.weapon, this.sprite);
+			}
+			this.weapon.rotation = 0;
+			this.weapon.swing = -90;
+			this.weapon.x = -4;
+			this.weapon.y = 8;
+		}
 	}
+	this.sprite.gotoAndPlay(this.direction);
 }
 
 Unit.prototype.attackTarget = function(target, damage){
@@ -349,15 +349,22 @@ Unit.prototype.attackTarget = function(target, damage){
 		this.resource += 5;
 		this.resource = this.resource > this.max_resource ? this.max_resource : this.resource;
 	}
-	target.hit(this, this.damage);
+
 	this.rotate(target.x - this.x, target.y - this.y);
+
 	if(this.weapon){
 		createjs.Tween.get(this.weapon)
 			.to({rotation:this.weapon.rotation + this.weapon.swing},this.attack_speed * 5, createjs.Ease.backOut)
+			.call(function(){
+				target.hit(this, this.damage);
+			}.bind(this))
 			.to({rotation:this.weapon.rotation},this.attack_speed * 5, createjs.Ease.backOut);
 	}else{
 		createjs.Tween.get(this.sprite)
 			.to({y:-8},this.attack_speed * 5, createjs.Ease.backOut)
+			.call(function(){
+				target.hit(this, this.damage);
+			}.bind(this))
 			.to({y:0},this.attack_speed * 5, createjs.Ease.backOut);
 	}
 }
@@ -377,7 +384,7 @@ Unit.prototype.hit = function(attacker, damage){
 		this.getStage().addChild(damage_text);
 		var dx = Math.random() * 32-16;
 		var stage = this.getStage();
-		createjs.Tween.get(damage_text).to({x:this.x + dx,y:this.y - 32},500, createjs.Ease.cubicOut)/*.to({x:this.x + dx, y:this.y},500, createjs.Ease.cubicIn)*/.wait(500).call(function(item){
+		createjs.Tween.get(damage_text).to({x:this.x + dx,y:this.y - 32},500, createjs.Ease.cubicOut).wait(500).call(function(item){
 			stage.removeChild(damage_text);
 		});
 		if(this.health <= 0){
@@ -387,7 +394,7 @@ Unit.prototype.hit = function(attacker, damage){
 			createjs.Tween.get(this).call(function(event){
 				event.target.sprite.filters = [new createjs.ColorFilter(1,0,0,1)];
 				event.target.sprite.cache(-12,-16,24,32);
-			}).wait(400).call(function(event){
+			}).wait(200).call(function(event){
 				event.target.sprite.filters = null;
 				event.target.sprite.uncache();
 			});
@@ -466,6 +473,41 @@ Unit.prototype.getSquareDistance = function(target){
 	return Math.pow(this.x - target.x, 2)+Math.pow(this.y - target.y, 2);
 }
 
+Unit.prototype.attackTick = function(){
+	if(this.order.target && this.order.target.status !== "death"){
+		if(this.getSquareDistance(this.order.target) <= Math.pow(this.range+this.order.target.radius,2)){
+			this.velocity = new Vector(0,0);
+			if(this.ticks > this.attack_speed){
+				this.ticks = 0;
+				this.attackTarget(this.order.target);
+			}
+		}else{
+			this.procMove(this.order.map);
+		}
+	}	
+}
+
+Unit.prototype.moveAttackTick = function(distance){
+	if(this.target && this.target.status !== "death"){
+		if(this.getSquareDistance(this.target) <= Math.pow(this.range+this.target.radius,2)){
+			this.velocity = new Vector(0,0);
+			if(this.ticks > this.attack_speed){
+				this.ticks = 0;
+				this.attackTarget(this.target);
+			}
+		}else{
+			if(this.order_tick % 30 === 0 || !this.target_map){
+				this.target = this.findClosestEnemy(this.aggro_radius) || this.target;
+				this.target_map = this.findPath({x:this.target.x,y:this.target.y});
+			}
+			this.procMove(this.target_map);
+		}
+	}else{
+		this.target = this.findClosestEnemy(distance);
+		this.procMove(this.order.map);
+	}	
+}
+
 Unit.prototype.tick = function(){
 	switch(this.order.action){
 		case "move":
@@ -473,62 +515,14 @@ Unit.prototype.tick = function(){
 			this.procMove(this.order.map);
 			break;
 		case "attack":
-			if(this.order.target && this.order.target.status !== "death"){
-				if(this.getSquareDistance(this.order.target) <= Math.pow(this.range+this.target.radius,2)){
-					this.velocity = new Vector(0,0);
-					if(this.ticks > this.attack_speed){
-						this.ticks = 0;
-						this.attackTarget(this.order.target);
-					}
-				}else{
-					this.procMove(this.order.map);
-				}
-			}
+			this.attackTick();
 			break;
 		case "guard":
 		case "move_attack":
-			if(this.target && this.target.status !== "death"){
-				if(this.getSquareDistance(this.target) <= Math.pow(this.range+this.target.radius,2)){
-					this.velocity = new Vector(0,0);
-					if(this.ticks > this.attack_speed){
-						this.ticks = 0;
-						this.attackTarget(this.target);
-					}
-				}else{
-					if(this.order_tick % 30 === 0){
-						this.target = this.findClosestEnemy(this.aggro_radius) || this.target;
-						this.target_map = this.findPath({x:this.target.x,y:this.target.y});
-					}
-					if(this.target_map){
-						this.procMove(this.target_map);
-					}
-				}
-			}else{
-				this.target = this.findClosestEnemy(this.aggro_radius);
-				this.procMove(this.order.map);
-			}
+			this.moveAttackTick(this.aggro_radius);
 			break;
 		case "annihilate":
-			if(this.target && this.target.status !== "death"){
-				if(this.getSquareDistance(this.target) <= Math.pow(this.range+this.target.radius,2)){
-					this.velocity = new Vector(0,0);
-					if(this.ticks > this.attack_speed){
-						this.ticks = 0;
-						this.attackTarget(this.target);
-					}
-				}else{
-					if(this.order_tick % 30 === 0){
-						this.target = this.findClosestEnemy(this.aggro_radius) || this.target;
-						this.target_map = this.findPath({x:this.target.x,y:this.target.y});
-					}
-					if(this.target_map){
-						this.procMove(this.target_map);
-					}
-				}
-			}else{
-				this.target = this.findClosestEnemy();
-				this.procMove(this.order.map);
-			}
+			this.moveAttackTick(null);
 			break;
 	}
 	this.ticks++;

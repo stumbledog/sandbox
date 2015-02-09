@@ -32,7 +32,7 @@ Unit_Stage.prototype.initialize = function(width, height, rows){
 				unit.tick();
 			}
 		});
-
+		/*
 		if(this.move_left && this.regX - this.scroll_speed >= 0){
 			this.regX -= this.scroll_speed;
 			this.map.regX -= this.scroll_speed;
@@ -51,7 +51,7 @@ Unit_Stage.prototype.initialize = function(width, height, rows){
 			this.regY += this.scroll_speed;
 			this.map.regY += this.scroll_speed;
 			this.map.update();
-		}
+		}*/
 		this.update();
 	}.bind(this));
 	createjs.Ticker.timingMode = createjs.Ticker.RAF_SYNCHED;
@@ -167,6 +167,7 @@ Unit_Stage.prototype.initEvent = function(){
 
 	document.addEventListener("mousewheel", function(event){
 		this.game.setScale(event.wheelDelta/1000);
+		this.game.viewport();
 	}.bind(this), false);
 	document.addEventListener("DOMMouseScroll", function(event){
 		this.game.setScale(event.detail/100);
@@ -187,7 +188,7 @@ Unit_Stage.prototype.addHero = function(hero){
 
 Unit_Stage.prototype.addFollower = function(follower){
 	this.unit_container.addChild(follower);
-	//follower.order = this.hero.order;
+	follower.order = this.hero.order;
 }
 
 Unit_Stage.prototype.addUnit = function(unit, x, y){

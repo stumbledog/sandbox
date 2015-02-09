@@ -10,6 +10,7 @@ Monster.prototype.unit_initialize = Monster.prototype.initialize;
 Monster.prototype.initialize = function(builder){
 	this.unit_initialize(builder);
 	this.initEventListener();
+	this.order = {action:"guard", map:this.findPath({x:this.x,y:this.y})};
 }
 
 Monster.prototype.initEventListener = function(){

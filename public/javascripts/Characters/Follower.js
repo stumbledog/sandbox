@@ -9,5 +9,6 @@ Follower.prototype.unit_initialize = Follower.prototype.initialize;
 
 Follower.prototype.follower_initialize = function(builder){
 	this.unit_initialize(builder);
+	this.order = {action:"annihilate", map:this.findPath({x:this.x,y:this.y})};
 }
 
