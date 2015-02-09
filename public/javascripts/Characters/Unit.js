@@ -17,6 +17,7 @@ Unit.prototype.initialize = function(builder){
 	this.blocks = builder.blocks;
 	this.x = builder.x;
 	this.y = builder.y;
+
 	this.max_health = this.health = builder.health;
 	this.speed = builder.move_speed;
 	this.level = builder.level;
@@ -299,7 +300,9 @@ Unit.prototype.rotate = function(dx, dy){
 		this.direction = direction;
 		if(this.direction === "back"){
 			if(this.weapon && this.weapon.type === "melee"){
-				this.sortChildren(function(obj1, obj2){return obj1.z<obj2.z?1:-1;});
+				if(this.getChildIndex(this.weapon) === 1){
+					this.swapChildren(this.weapon, this.sprite);
+				}
 				this.weapon.rotation = 90;
 				this.swing = -90;
 				this.weapon.x = 6;
@@ -307,7 +310,9 @@ Unit.prototype.rotate = function(dx, dy){
 			}
 		}else if(this.direction === "right"){
 			if(this.weapon && this.weapon.type === "melee"){
-				this.sortChildren(function(obj1, obj2){return obj1.z>obj2.z?1:-1;});
+				if(this.getChildIndex(this.weapon) === 0){
+					this.swapChildren(this.weapon, this.sprite);
+				}
 				this.weapon.rotation = 90;
 				this.weapon.swing = 90;
 				this.weapon.x = 0;
@@ -315,7 +320,9 @@ Unit.prototype.rotate = function(dx, dy){
 			}
 		}else if(this.direction === "front"){
 			if(this.weapon && this.weapon.type === "melee"){
-				this.sortChildren(function(obj1, obj2){return obj1.z>obj2.z?1:-1;});
+				if(this.getChildIndex(this.weapon) === 0){
+					this.swapChildren(this.weapon, this.sprite);
+				}
 				this.weapon.rotation = -90;
 				this.weapon.swing = -90;
 				this.weapon.x = -6;
@@ -323,7 +330,9 @@ Unit.prototype.rotate = function(dx, dy){
 			}
 		}else if(this.direction === "left"){
 			if(this.weapon && this.weapon.type === "melee"){
-				this.sortChildren(function(obj1, obj2){return obj1.z<obj2.z?1:-1;});
+				if(this.getChildIndex(this.weapon) === 1){
+					this.swapChildren(this.weapon, this.sprite);
+				}
 				this.weapon.rotation = 0;
 				this.weapon.swing = -90;
 				this.weapon.x = 0;
@@ -335,6 +344,10 @@ Unit.prototype.rotate = function(dx, dy){
 }
 
 Unit.prototype.attackTarget = function(target, damage){
+	if(this.resource_type === "fury"){
+		this.resource += 5;
+		this.resource = this.resource > this.max_resource ? this.max_resource : this.resource;
+	}
 	target.hit(this, this.damage);
 	this.rotate(target.x - this.x, target.y - this.y);
 	if(this.weapon){
@@ -349,6 +362,11 @@ Unit.prototype.attackTarget = function(target, damage){
 }
 
 Unit.prototype.hit = function(attacker, damage){
+	if(this.resource_type === "fury"){
+		this.resource += 1;
+		this.resource = this.resource > this.max_resource ? this.max_resource : this.resource;
+	}
+
 	if(this.status !== "death"){
 		this.health -= damage;
 		var damage_text = new OutlineText(damage,"bold 12px Arial",this.damage_color,"#000",4);

@@ -28,9 +28,16 @@ Hero.prototype.getPortrait = function(){
 	return this.portrait;
 }
 
+Hero.prototype.attackTarget = function(target, damage){
+	Unit.prototype.attackTarget.call(this, target, damage);
+	this.game.getUIStage().refreshHealthBar();
+	this.game.getUIStage().refreshResourceBar();
+}
+
 Hero.prototype.hit = function(attacker, damage){
 	Unit.prototype.hit.call(this, attacker, damage);
 	this.game.getUIStage().refreshHealthBar();
+	this.game.getUIStage().refreshResourceBar();
 }
 
 Hero.prototype.gainExp = function(exp){

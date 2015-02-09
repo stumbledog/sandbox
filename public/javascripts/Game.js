@@ -25,7 +25,7 @@ var Game = (function(){
 			resource_type:"fury",
 			resource:100,
 			health:200,
-			damage:5,
+			damage:3,
 			attack_speed:60,
 			armor:2,
 			move_speed:5,
@@ -54,13 +54,84 @@ var Game = (function(){
 				{
 					key:"q",
 					name:"Furious Cleave",
+					description:"Swing your weapon in a wide arc to deal 200% weapon damage to all enemies caught in the swing.",
+					src:"assets/Graphics/icons/50x50/129.png",
+					radius:50,
+					angle:60,
+					type:"cone",
+					damage:200,
+					cost:5,
+					cooldown:5,
+					animation:{
+						width:163,
+						height:167,
+						regX:81,
+						regY:167,
+						images:[
+							{src:"assets/Graphics/effects/shooter_fx/lava_shot_impact1.png",id:"lava_shot_impact1"},
+							{src:"assets/Graphics/effects/shooter_fx/lava_shot_impact2.png",id:"lava_shot_impact2"},
+							{src:"assets/Graphics/effects/shooter_fx/lava_shot_impact3.png",id:"lava_shot_impact3"},
+							{src:"assets/Graphics/effects/shooter_fx/lava_shot_impact4.png",id:"lava_shot_impact4"},
+						]						
+					}
+				},{
+					key:"w",
+					name:"a",
 					description:"Slam the ground and cause a wave of destruction that deals 620% weapon damage to enemies up to 45 yards in front of you.",
-					range:80,
+					src:"assets/Graphics/icons/50x50/107.png",
+					radius:80,
+					angle:90,
+					type:"impact",
+					damage:200,
+					cost:25,
+					cooldown:5,
+					animation:{
+						width:160,
+						height:160,
+						regX:80,
+						regY:80,
+						images:[
+							{src:"assets/Graphics/effects/impacts/orange_impx_0.png",id:"orange_impx_0"},
+							{src:"assets/Graphics/effects/impacts/orange_impx_1.png",id:"orange_impx_1"},
+							{src:"assets/Graphics/effects/impacts/orange_impx_2.png",id:"orange_impx_2"},
+						]
+					}
+				},{
+					key:"e",
+					name:"b",
+					description:"Slam the ground and cause a wave of destruction that deals 620% weapon damage to enemies up to 45 yards in front of you.",
+					src:"assets/Graphics/icons/50x50/129.png",
+					radius:80,
 					angle:90,
 					type:"cone",
 					damage:200,
 					cost:25,
 					cooldown:5,
+					animation:{
+						images:[
+							{src:"assets/Graphics/effects/impacts/orange_impx_0.png",id:"orange_impx_0"},
+							{src:"assets/Graphics/effects/impacts/orange_impx_1.png",id:"orange_impx_1"},
+							{src:"assets/Graphics/effects/impacts/orange_impx_2.png",id:"orange_impx_2"},
+						]
+					}
+				},{
+					key:"r",
+					name:"c",
+					description:"Slam the ground and cause a wave of destruction that deals 620% weapon damage to enemies up to 45 yards in front of you.",
+					src:"assets/Graphics/icons/50x50/129.png",
+					radius:80,
+					angle:90,
+					type:"cone",
+					damage:200,
+					cost:25,
+					cooldown:5,
+					animation:{
+						images:[
+							{src:"assets/Graphics/effects/impacts/orange_impx_0.png",id:"orange_impx_0"},
+							{src:"assets/Graphics/effects/impacts/orange_impx_1.png",id:"orange_impx_1"},
+							{src:"assets/Graphics/effects/impacts/orange_impx_2.png",id:"orange_impx_2"},
+						]
+					}
 				}
 			]
 		};
@@ -208,8 +279,28 @@ var Game = (function(){
 		manifest.push({src:follow_builder.src,id:follow_builder.src_id});
 		manifest.push({src:monster_builder.src,id:monster_builder.src_id});
 
+		/*
+		manifest.push({src:"assets/Graphics/effects/shooter_fx/lava_shot_impact1.png",id:"lava_shot_impact1"});
+		manifest.push({src:"assets/Graphics/effects/shooter_fx/lava_shot_impact2.png",id:"lava_shot_impact2"});
+		manifest.push({src:"assets/Graphics/effects/shooter_fx/lava_shot_impact3.png",id:"lava_shot_impact3"});
+		manifest.push({src:"assets/Graphics/effects/shooter_fx/lava_shot_impact4.png",id:"lava_shot_impact4"});
+
+		manifest.push({src:"assets/Graphics/effects/impacts/orange_impx_0.png",id:"orange_impx_0"});
+		manifest.push({src:"assets/Graphics/effects/impacts/orange_impx_1.png",id:"orange_impx_1"});
+		manifest.push({src:"assets/Graphics/effects/impacts/orange_impx_2.png",id:"orange_impx_2"});
+		*/
+
 		map_data.maps.forEach(function(map){
 			manifest.push({src:map.src,id:map.id});
+		});
+
+		hero_builder.skills.forEach(function(skill){
+			manifest.push({src:skill.src,id:skill.name});
+			if(skill.animation.images){
+				skill.animation.images.forEach(function(frame){
+					manifest.push({src:frame.src,id:frame.id});
+				});				
+			}
 		});
 
 		loader = new createjs.LoadQueue(false);

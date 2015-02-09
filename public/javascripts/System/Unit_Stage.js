@@ -16,6 +16,7 @@ Unit_Stage.prototype.initialize = function(width, height, rows){
 	this.enableMouseOver();
 	
 	this.game = Game.getInstance();
+	this.loader = this.game.getLoader();
 	this.map = this.game.getMapStage();
 	this.mapSize = this.map.getSize();
 
@@ -33,22 +34,22 @@ Unit_Stage.prototype.initialize = function(width, height, rows){
 		});
 
 		if(this.move_left && this.regX - this.scroll_speed >= 0){
-			this.regX-=this.scroll_speed;
-			this.map.regX-=this.scroll_speed;
+			this.regX -= this.scroll_speed;
+			this.map.regX -= this.scroll_speed;
 			this.map.update();
 		}else if(this.move_right &&  this.canvas.width/this.scaleX + this.regX + this.scroll_speed <= this.mapSize.width){
-			this.regX+=this.scroll_speed;
-			this.map.regX+=this.scroll_speed;
+			this.regX += this.scroll_speed;
+			this.map.regX += this.scroll_speed;
 			this.map.update();
 		}
 
 		if(this.move_up && this.regY - this.scroll_speed >= 0){
-			this.regY-=this.scroll_speed;
-			this.map.regY-=this.scroll_speed;
+			this.regY -= this.scroll_speed;
+			this.map.regY -= this.scroll_speed;
 			this.map.update();
 		}else if(this.move_down &&  this.canvas.height/this.scaleY + this.regY + this.scroll_speed <= this.mapSize.height){
-			this.regY+=this.scroll_speed;
-			this.map.regY+=this.scroll_speed;
+			this.regY += this.scroll_speed;
+			this.map.regY += this.scroll_speed;
 			this.map.update();
 		}
 		this.update();
@@ -60,6 +61,7 @@ Unit_Stage.prototype.initialize = function(width, height, rows){
 
 	this.initEvent();
 	this.initContainer();
+	this.effect = new Effect(this.effect_container, this.loader);
 }
 
 Unit_Stage.prototype.setTarget = function(enemy){
@@ -133,8 +135,6 @@ Unit_Stage.prototype.initEvent = function(){
 		switch(event.keyCode){
 			case 27://esc
 				this.setCommand("move");
-				break;
-			case 87://w
 				break;
 			case 68://d
 				this.setCommand("assemble");
@@ -235,4 +235,8 @@ Unit_Stage.prototype.getEnemies = function(self){
 Unit_Stage.prototype.setCanvasSize = function(width, height){
 	this.canvas.width = width;
 	this.canvas.height = height;
+}
+
+Unit_Stage.prototype.getEffect = function(){
+	return this.effect;
 }

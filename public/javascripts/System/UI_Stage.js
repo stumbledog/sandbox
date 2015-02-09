@@ -15,6 +15,7 @@ UI_Stage.prototype.initialize = function(){
 	
 	this.game = Game.getInstance();
 	this.map = this.game.getMapStage();
+	this.loader = this.game.getLoader();
 }
 
 UI_Stage.prototype.initHeroUI = function(hero){
@@ -42,13 +43,14 @@ UI_Stage.prototype.renderPortrait = function(){
 }
 
 UI_Stage.prototype.renderSkill = function(){
-	this.renderSkillButton('Q',0);
-	this.renderSkillButton('W',1);
-	this.renderSkillButton('E',2);
-	this.renderSkillButton('R',3);
+	this.renderSkillButton('Q',0, this.hero.skills['q']);
+	this.renderSkillButton('W',1, this.hero.skills['w']);
+	this.renderSkillButton('E',2, this.hero.skills['e']);
+	this.renderSkillButton('R',3, this.hero.skills['r']);
+
 }
 
-UI_Stage.prototype.renderSkillButton = function(hotkey, index){
+UI_Stage.prototype.renderSkillButton = function(hotkey, index, skill){
 	var container = new createjs.Container();
 	container.x = (index + 1) * 50 + 25;
 	container.y = 34;
@@ -61,7 +63,8 @@ UI_Stage.prototype.renderSkillButton = function(hotkey, index){
 	hotkey_text.textBaseline = "middle";
 	hotkey_text.x = 7;
 	hotkey_text.y = 8;
-	container.addChild(border, hotkey_border, hotkey_text);
+	var icon = new createjs.Bitmap(this.loader.getResult(skill.name));
+	container.addChild(border, icon, hotkey_border, hotkey_text);
 	this.addChild(container);
 }
 
