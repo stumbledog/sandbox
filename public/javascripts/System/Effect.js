@@ -30,6 +30,7 @@ Effect.prototype.play = function(animation, x, y, degree){
 	sprite.y = y;
 	sprite.rotation = degree + 90;
 	sprite.gotoAndPlay("animation");
+	sprite.scaleX = sprite.scaleY = animation.scale;
 	sprite.addEventListener("animationend", function(event){
 		this.effect_container.removeChild(sprite);
 	}.bind(this));

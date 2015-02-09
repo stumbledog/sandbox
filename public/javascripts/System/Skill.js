@@ -21,7 +21,6 @@ Skill.prototype.useSkill = function(mouse_position){
 
 	var degree = mouse_vector.getDegree();
 	this.enemies = this.unit.unit_stage.getEnemies(this.unit);
-	console.log(this.type);
 	switch(this.type){
 		case "cone":
 			if(this.unit.resource >= this.cost){
@@ -40,10 +39,24 @@ Skill.prototype.useSkill = function(mouse_position){
 			}
 			break;
 		case "impact":
-			this.animate(degree);
+			if(this.unit.resource >= this.cost){
+				this.unit.resource -= this.cost;
+				if(this.unit.type === "hero"){
+					this.unit.ui_stage.refreshResourceBar();
+				}
+
+				this.animate(this.animation.rotate);
+
+				this.enemies.forEach(function(enemy){
+					if(Vector.dist(this.unit, enemy) <= this.radius){
+						enemy.hit(this.unit, this.unit.damage * this.damage/100);
+					}
+				}, this);
+
+			}
 			break;
 		case "buff":
-			
+
 			break;
 	}
 }

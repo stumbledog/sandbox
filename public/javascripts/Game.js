@@ -63,6 +63,7 @@ var Game = (function(){
 					cost:5,
 					cooldown:5,
 					animation:{
+						scale:0.5,
 						width:163,
 						height:167,
 						regX:81,
@@ -86,6 +87,8 @@ var Game = (function(){
 					cost:25,
 					cooldown:5,
 					animation:{
+						scale:1,
+						rotate:-45,
 						width:160,
 						height:160,
 						regX:80,
