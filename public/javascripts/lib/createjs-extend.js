@@ -23,6 +23,11 @@ OutlineText.prototype.textAlign = function(textAlign){
 	this.outline.textAlign = textAlign;
 }
 
+OutlineText.prototype.textBaseline = function(textBaseline){
+	this.text.textBaseline = textBaseline;
+	this.outline.textBaseline = textBaseline;	
+}
+
 OutlineText.prototype.setText = function(text){
 	this.text.text = text;
 	this.outline.text = text;

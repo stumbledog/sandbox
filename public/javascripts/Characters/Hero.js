@@ -64,8 +64,10 @@ Hero.prototype.tick = function(){
 	this.range_shape.y = this.y;
 	this.game.viewport();
 	for(key in this.skills){
-		this.skills[key].remain_cooldown -= 1/30;
-		this.skills[key].remain_cooldown = this.skills[key].remain_cooldown < 0 ? 0 : this.skills[key].remain_cooldown; 
+		if(this.skills[key].remain_cooldown > 0){
+			this.skills[key].remain_cooldown -= 1/30;
+			this.skills[key].remain_cooldown = this.skills[key].remain_cooldown < 0 ? 0 : this.skills[key].remain_cooldown;
+			this.ui_stage.renderCooldown(key, this.skills[key].remain_cooldown, this.skills[key].cooldown);
+		}
 	}
-
 }

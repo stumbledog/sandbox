@@ -16,6 +16,8 @@ UI_Stage.prototype.initialize = function(){
 	this.game = Game.getInstance();
 	this.map = this.game.getMapStage();
 	this.loader = this.game.getLoader();
+
+	this.skills = [];
 }
 
 UI_Stage.prototype.initHeroUI = function(hero){
@@ -43,10 +45,10 @@ UI_Stage.prototype.renderPortrait = function(){
 }
 
 UI_Stage.prototype.renderSkill = function(){
-	this.renderSkillButton('Q',0, this.hero.skills['q']);
-	this.renderSkillButton('W',1, this.hero.skills['w']);
-	this.renderSkillButton('E',2, this.hero.skills['e']);
-	this.renderSkillButton('R',3, this.hero.skills['r']);
+	this.skills['q'] = this.renderSkillButton('Q',0, this.hero.skills['q']);
+	this.skills['w'] = this.renderSkillButton('W',1, this.hero.skills['w']);
+	this.skills['e'] = this.renderSkillButton('E',2, this.hero.skills['e']);
+	this.skills['r'] = this.renderSkillButton('R',3, this.hero.skills['r']);
 }
 
 UI_Stage.prototype.renderSkillButton = function(hotkey, index, skill){
@@ -54,7 +56,7 @@ UI_Stage.prototype.renderSkillButton = function(hotkey, index, skill){
 	container.x = (index + 1) * 50 + 25;
 	container.y = 34;
 	var border = new createjs.Shape();
-	border.graphics.ss(1).s("#fff").f("#ccc").dr(0,0,48,48);
+	border.graphics.ss(1).s("#fff").f("#ccc").dr(0,0,50,50);
 	var hotkey_border = new createjs.Shape();
 	hotkey_border.graphics.f("#000").lf(["#4B4B4B","#414141","#373737"],[0,0.5,1],8,0,8,16).dr(0,0,16,16);
 	var hotkey_text = new createjs.Text(hotkey,"12px monospace","#FFF");
@@ -63,8 +65,31 @@ UI_Stage.prototype.renderSkillButton = function(hotkey, index, skill){
 	hotkey_text.x = 7;
 	hotkey_text.y = 8;
 	var icon = new createjs.Bitmap(this.loader.getResult(skill.name));
-	container.addChild(border, icon, hotkey_border, hotkey_text);
+	var cooldown = new createjs.Shape();
+	cooldown.graphics.f("#666").dr(0,0,50,50);
+	cooldown.alpha = 0.8;
+	var mask = new createjs.Shape();
+	mask.graphics.mt(25,25).arc(25,25,50,-Math.PI/2,-Math.PI/2,true);
+	cooldown.mask = mask;
+	var cc_text = new OutlineText("","bold 24px Arial", "#fff", "#000", 5);
+	cc_text.y = 25;
+	cc_text.textBaseline("middle");
+	container.addChild(border, icon, hotkey_border, hotkey_text, cooldown, cc_text);
 	this.addChild(container);
+	return container;
+}
+
+UI_Stage.prototype.renderCooldown = function(key, remain_cc, cc){
+	var skill = this.skills[key];
+	var mask = skill.children[4].mask;
+	var text = skill.children[5];
+
+	mask.graphics.c().mt(25,25).arc(25,25,50,-Math.PI/2,-Math.PI*2*remain_cc/cc-Math.PI/2);
+	remain_cc = remain_cc > 1 ? Math.floor(remain_cc) : remain_cc === 0 ? "" : Math.floor(remain_cc*10)/10;
+	text.x = 25 - text.getMeasuredWidth() / 2;
+	text.setText(remain_cc);
+
+	this.update();
 }
 
 UI_Stage.prototype.renderHealthBar = function(){
