@@ -503,6 +503,7 @@ Unit.prototype.moveAttackTick = function(distance){
 			this.procMove(this.target_map);
 		}
 	}else{
+		this.target_map = null;
 		this.target = this.findClosestEnemy(distance);
 		this.procMove(this.order.map);
 	}	

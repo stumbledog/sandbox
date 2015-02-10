@@ -20,7 +20,8 @@ Unit_Stage.prototype.initialize = function(width, height, rows){
 	this.map = this.game.getMapStage();
 	this.mapSize = this.map.getSize();
 
-	this.scroll_speed = 8;
+	//this.scroll_speed = 8;
+	this.followership_type = "follow"
 
 	this.offsetX = this.offsetY = 0;
 	createjs.Ticker.addEventListener("tick", function(){
@@ -149,6 +150,9 @@ Unit_Stage.prototype.initEvent = function(){
 				this.setCommand("attack");
 				this.hero.showRange();
 				break;
+			case 70:
+				this.toggleFollowerShipType();
+				break;
 			case 81://q
 				this.hero.useSkill('q', this.mouse_position);
 				break;
@@ -181,6 +185,27 @@ Unit_Stage.prototype.initContainer = function(){
 	this.addChild(this.unit_container, this.ui_container, this.effect_container);
 }
 
+Unit_Stage.prototype.toggleFollowerShipType = function(){
+	switch(this.followership_type){
+		case "annihilate":
+			this.followership_type = "follow";
+			this.unit_container.children.forEach(function(unit){
+				if(unit.type === "follow"){
+					unit.order = this.hero.order;
+				}
+			},this);
+			break;
+		case "follow":
+			this.followership_type = "annihilate";
+			this.unit_container.children.forEach(function(unit){
+				if(unit.type === "follow"){
+					unit.order = {action:"annihilate", map:unit.findPath({x:unit.x,y:unit.y})};
+				}
+			},this);
+			break;
+	}
+}
+
 Unit_Stage.prototype.addHero = function(hero){
 	this.hero = hero;
 	this.unit_container.addChild(this.hero);
@@ -188,7 +213,7 @@ Unit_Stage.prototype.addHero = function(hero){
 
 Unit_Stage.prototype.addFollower = function(follower){
 	this.unit_container.addChild(follower);
-	follower.order = this.hero.order;
+	//follower.order = this.hero.order;
 }
 
 Unit_Stage.prototype.addUnit = function(unit, x, y){
