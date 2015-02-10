@@ -23,9 +23,9 @@ canvas#unit.attack{
 canvas#ui{
 	z-index: 2;
 	position: fixed;
-	bottom:0px;
+	bottom:4px;
 	height:82px;
-	width:300px;
+	width:275px;
 	left:50%;
 	margin-left:-150px;
 	cursor:url('../assets/Graphics/System/Icons/swordIcon.png'), auto;

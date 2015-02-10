@@ -32,3 +32,8 @@ OutlineText.prototype.setText = function(text){
 	this.text.text = text;
 	this.outline.text = text;
 }
+
+OutlineText.prototype.setAlpha = function(alpha){
+	this.text.alpha = alpha;
+	this.outline.alpha = alpha;	
+}

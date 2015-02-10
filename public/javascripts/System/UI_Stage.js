@@ -84,7 +84,7 @@ UI_Stage.prototype.renderCooldown = function(key, remain_cc, cc){
 	var mask = skill.children[4].mask;
 	var text = skill.children[5];
 
-	mask.graphics.c().mt(25,25).arc(25,25,50,-Math.PI/2,-Math.PI*2*remain_cc/cc-Math.PI/2);
+	mask.graphics.c().mt(25,25).arc(25,25,50,-Math.PI/2,-Math.PI*2*remain_cc/cc-Math.PI/2, true);
 	remain_cc = remain_cc > 1 ? Math.floor(remain_cc) : remain_cc === 0 ? "" : Math.floor(remain_cc*10)/10;
 	text.x = 25 - text.getMeasuredWidth() / 2;
 	text.setText(remain_cc);
