@@ -3,7 +3,7 @@ var Game = (function(){
 	var instance;
 
 	function init(){
-		var unit_stage, map_stage, ui_stage, loader, hero, blocks;
+		var unit_stage, map_stage, ui_stage, loader, tooltip_stage, hero, blocks;
 		var cols = rows = 40;
 		var scale = 5;
 
@@ -25,10 +25,10 @@ var Game = (function(){
 			resource_type:"fury",
 			resource:100,
 			health:200,
-			damage:5,
+			damage:1,
 			attack_speed:30,
 			armor:2,
-			move_speed:2.5,
+			movement_speed:1.5,
 			critical_rate:0.1,
 			critical_damage:2,
 			radius:12,
@@ -53,14 +53,15 @@ var Game = (function(){
 			skills:[
 				{
 					key:"q",
-					name:"Furious Cleave",
-					description:"Swing your weapon in a wide arc to deal 200% weapon damage to all enemies caught in the swing.",
+					name:"Shockwave",
+					description:"Send a wave that deals 200% weapon damage to enemies up to 10 yards in a cone.",
 					src:"assets/Graphics/icons/50x50/129.png",
-					radius:128,
+					resource:"fury",
+					radius:160,
 					angle:60,
 					type:"cone",
 					damage:200,
-					cost:5,
+					cost:15,
 					cooldown:5,
 					animation:{
 						scale:0.5,
@@ -77,15 +78,16 @@ var Game = (function(){
 					}
 				},{
 					key:"w",
-					name:"a",
-					description:"Slam the ground and cause a wave of destruction that deals 620% weapon damage to enemies up to 45 yards in front of you.",
-					src:"assets/Graphics/icons/50x50/107.png",
+					name:"Bladestorm",
+					description:"Deal 150% weapon damage to all enemies within 5 yards",
+					src:"assets/Graphics/icons/50x50/115.png",
+					resource:"fury",
 					radius:80,
 					angle:90,
 					type:"impact",
-					damage:200,
-					cost:25,
-					cooldown:5,
+					damage:150,
+					cost:30,
+					cooldown:10,
 					animation:{
 						scale:1,
 						rotate:-45,
@@ -101,33 +103,47 @@ var Game = (function(){
 					}
 				},{
 					key:"e",
-					name:"b",
-					description:"Slam the ground and cause a wave of destruction that deals 620% weapon damage to enemies up to 45 yards in front of you.",
-					src:"assets/Graphics/icons/50x50/129.png",
+					name:"Regeneration",
+					description:"",
+					src:"assets/Graphics/icons/50x50/108.png",
+					resource:"fury",
 					radius:80,
 					angle:90,
-					type:"cone",
+					type:"heal",
+					target:"self",
 					damage:200,
 					cost:25,
 					cooldown:5,
 					animation:{
+						scale:0.5,
+						rotate:0,
+						width:160,
+						height:160,
+						regX:80,
+						regY:80,
 						images:[
-							{src:"assets/Graphics/effects/impacts/orange_impx_0.png",id:"orange_impx_0"},
-							{src:"assets/Graphics/effects/impacts/orange_impx_1.png",id:"orange_impx_1"},
-							{src:"assets/Graphics/effects/impacts/orange_impx_2.png",id:"orange_impx_2"},
+							{src:"assets/Graphics/effects/shooter_fx/ring_shot_impact1.png",id:"ring_shot_impact1"},
+							{src:"assets/Graphics/effects/shooter_fx/ring_shot_impact2.png",id:"ring_shot_impact2"},
+							{src:"assets/Graphics/effects/shooter_fx/ring_shot_impact3.png",id:"ring_shot_impact3"},
 						]
 					}
 				},{
 					key:"r",
-					name:"c",
-					description:"Slam the ground and cause a wave of destruction that deals 620% weapon damage to enemies up to 45 yards in front of you.",
-					src:"assets/Graphics/icons/50x50/129.png",
-					radius:80,
+					name:"Berserk",
+					description:"Increases all damage, attack speed, and movement speed 50% for 15 seconds",
+					src:"assets/Graphics/icons/50x50/107.png",
+					resource:"fury",
 					angle:90,
-					type:"cone",
-					damage:200,
-					cost:25,
-					cooldown:5,
+					type:"buff",
+					buff:{
+						damage:0.5,
+						attack_speed:0.5,
+						movement_speed:0.5,
+					},
+					filter:[0.6,0,0,1],
+					cost:10,
+					cooldown:60,
+					duration:15,
 					animation:{
 						images:[
 							{src:"assets/Graphics/effects/impacts/orange_impx_0.png",id:"orange_impx_0"},
@@ -151,7 +167,7 @@ var Game = (function(){
 			damage:2,
 			attack_speed:60,
 			armor:2,
-			move_speed:2,
+			movement_speed:1.5,
 			critical_rate:0.1,
 			critical_damage:2,
 			radius:12,
@@ -187,7 +203,7 @@ var Game = (function(){
 			damage:1,
 			attack_speed:60,
 			armor:0,
-			move_speed:1,
+			movement_speed:2,
 			critical_rate:0.0,
 			critical_damage:1,
 			radius:4,
@@ -341,6 +357,7 @@ var Game = (function(){
 		function handleLoadComplete(){
 			initMapStage();
 			initUnitStage();
+			initTooltipStage();
 			initUIStage();
 
 			createHero(hero_builder);
@@ -369,6 +386,10 @@ var Game = (function(){
 			map_stage.scaleX = map_stage.scaleY = scale;
 			unit_stage.scaleX = unit_stage.scaleY = scale;
 			map_stage.update();
+		}
+
+		function initTooltipStage(){
+			tooltip_stage = new Tooltip_Stage();
 		}
 
 		function createHero(builder){
@@ -405,6 +426,9 @@ var Game = (function(){
 			},
 			getUIStage:function(){
 				return ui_stage;
+			},
+			getTooltipStage:function(){
+				return tooltip_stage;
 			},
 			setScale:function(delta){
 				scale += delta;

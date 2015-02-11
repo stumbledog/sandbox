@@ -16,6 +16,7 @@ UI_Stage.prototype.initialize = function(){
 	this.game = Game.getInstance();
 	this.map = this.game.getMapStage();
 	this.loader = this.game.getLoader();
+	this.tooltip_stage = this.game.getTooltipStage();
 
 	this.skills = [];
 }
@@ -42,6 +43,14 @@ UI_Stage.prototype.renderPortrait = function(){
 	this.level.x = this.level.getMeasuredWidth()/2+1;
 	this.level.y = 8;
 	this.addChild(shape, portrait, this.level_border, this.level);
+}
+
+UI_Stage.prototype.addBuff = function(icon, desc){
+	console.log(icon, desc);
+}
+
+UI_Stage.prototype.removeBuff = function(){
+	
 }
 
 UI_Stage.prototype.renderSkill = function(){
@@ -71,11 +80,18 @@ UI_Stage.prototype.renderSkillButton = function(hotkey, index, skill){
 	var mask = new createjs.Shape();
 	mask.graphics.mt(25,25).arc(25,25,50,-Math.PI/2,-Math.PI/2,true);
 	cooldown.mask = mask;
-	var cc_text = new OutlineText("","bold 24px Arial", "#fff", "#000", 5);
+	var cc_text = new OutlineText("","24px Arial", "#fff", "#000", 5);
 	cc_text.y = 25;
 	cc_text.textBaseline("middle");
 	container.addChild(border, icon, hotkey_border, hotkey_text, cooldown, cc_text);
 	this.addChild(container);
+	icon.on("rollover", function(event){
+		this.tooltip_stage.showSkillTooltip(event, skill);
+	}.bind(this));
+	icon.on("rollout", function(event){
+		this.tooltip_stage.hideSkillTooltip();
+	}.bind(this));
+	
 	return container;
 }
 

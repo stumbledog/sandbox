@@ -3,6 +3,7 @@ function Skill(builder){
 	this.key = builder.key;
 	this.name = builder.name;
 	this.description = builder.description;
+	this.resource = builder.resource;
 	this.radius = builder.radius;
 	this.type = builder.type;
 	this.damage = builder.damage;
@@ -10,6 +11,9 @@ function Skill(builder){
 	this.cooldown = builder.cooldown;
 	this.angle = builder.angle;
 	this.animation = builder.animation;
+	this.duration = builder.duration;
+	this.buff = builder.buff;
+	this.filter = builder.filter;
 	this.effect = this.unit.unit_stage.getEffect();
 }
 
@@ -34,22 +38,36 @@ Skill.prototype.useSkill = function(mouse_position){
 
 				this.enemies.forEach(function(enemy){
 					if(Vector.dist(this.unit, enemy) <= this.radius && mouse_vector.diffDegree(Vector.sub(enemy, current_position)) < this.angle/2){
-						enemy.hit(this.unit, this.unit.damage * this.damage/100);
+						enemy.hit(this.unit, this.unit.getDamage() * this.damage/100);
 					}
 				}, this);
 			break;
-		case "impact":
+			case "impact":
 				this.animate(this.animation.rotate);
 
 				this.enemies.forEach(function(enemy){
 					if(Vector.dist(this.unit, enemy) <= this.radius){
-						enemy.hit(this.unit, this.unit.damage * this.damage/100);
+						enemy.hit(this.unit, this.unit.getDamage() * this.damage/100);
 					}
 				}, this);
 
 			break;
-		case "buff":
+			case "buff":
+				for(key in this.buff){
+					this.unit.buff[key] += this.buff[key];
+				}
 
+				this.unit.filter = [new createjs.ColorFilter(this.filter[0],this.filter[1],this.filter[2],this.filter[3])];
+
+				setTimeout(function(){ 
+					for(key in this.buff){
+						this.unit.buff[key] -= this.buff[key];
+					}
+					this.unit.filter = "uncache";
+				}.bind(this), this.duration * 1000);
+			break;
+			case "heal":
+				this.animate(this.animation.rotate);
 			break;
 		}
 	}

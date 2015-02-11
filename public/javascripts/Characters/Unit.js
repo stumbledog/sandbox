@@ -20,7 +20,7 @@ Unit.prototype.initialize = function(builder){
 	this.y = builder.y;
 
 	this.max_health = this.health = builder.health;
-	this.speed = builder.move_speed;
+	this.movement_speed = builder.movement_speed;
 	this.level = builder.level;
 	this.exp = builder.exp;
 	this.resource_type = builder.resource_type;
@@ -31,6 +31,12 @@ Unit.prototype.initialize = function(builder){
 	this.attack_speed = builder.attack_speed;
 	this.damage = builder.damage;
 
+	this.buff = {
+		damage:1,
+		attack_speed:1,
+		movement_speed:1,
+	};
+
 	this.type = builder.type;
 	this.team = builder.team;
 	this.max_force = 0.3;
@@ -39,6 +45,7 @@ Unit.prototype.initialize = function(builder){
 
 	this.health_color = builder.health_color;
 	this.damage_color = builder.damage_color;
+	this.filter = null;
 
 	this.shadow = new createjs.Shadow("#333",3,3,10);
 	this.renderUnit(builder.src_id, builder.index);
@@ -53,6 +60,18 @@ Unit.prototype.initialize = function(builder){
 	this.initHealthBar();
 
 	this.velocity = new Vector(0,0);
+}
+
+Unit.prototype.getDamage = function(){
+	return this.damage * this.buff.damage;
+}
+
+Unit.prototype.getAttackSpeed = function(){
+	return this.attack_speed / this.buff.attack_speed;
+}
+
+Unit.prototype.getMovementSpeed = function(){
+	return this.movement_speed * this.buff.movement_speed;
 }
 
 Unit.prototype.initSkills = function(skills){
@@ -80,19 +99,19 @@ Unit.prototype.renderUnit = function(src_id, index){
 		animations:{
 			front:{
 				frames:[0,1,2],
-				speed:this.speed/5,
+				speed:this.getMovementSpeed()/5,
 			},
 			left:{
 				frames:[3,4,5],
-				speed:this.speed/5,
+				speed:this.getMovementSpeed()/5,
 			},
 			right:{
 				frames:[6,7,8],
-				speed:this.speed/5,
+				speed:this.getMovementSpeed()/5,
 			},
 			back:{
 				frames:[9,10,11],
-				speed:this.speed/5,
+				speed:this.getMovementSpeed()/5,
 			},
 		}
 	});
@@ -175,7 +194,7 @@ Unit.prototype.procMove = function(map){
 	this.velocity.add(ali);
 	this.velocity.add(coh);
 	this.velocity.add(flo);
-	this.velocity.limit(this.speed);
+	this.velocity.limit(this.getMovementSpeed());
 
 	var indexX = Math.floor(this.x / 16);
 	var indexY = Math.floor(this.y / 16);
@@ -216,7 +235,7 @@ Unit.prototype.separate = function(units){
 	if(count > 0){
 		steer.div(count);
 		steer.normalize();
-		steer.mult(this.speed);
+		steer.mult(this.getMovementSpeed());
 		steer.sub(this.velocity);
 		steer.limit(this.max_force);
 	}
@@ -238,7 +257,7 @@ Unit.prototype.align = function(units){
 	if(count > 0){
 		sum.duv(count);
 		sum.normalize();
-		sum.mult(this.speed);
+		sum.mult(this.getMovementSpeed());
 		var steer = Vector.sub(sum, this.velocity);
 		steer.limit(this.max_force);
 		return steer;
@@ -262,7 +281,7 @@ Unit.prototype.cohesion = function(units){
 		sum.div(count);
 		var desired = Vector.sub(target, this);
 		desired.normalize();
-		desired.mult(this.speed);
+		desired.mult(this.getMovementSpeed());
 		var steer = Vector.sub(desired, this.velocity);
 		steer.limit(this.max_force);
 		return steer;
@@ -274,7 +293,7 @@ Unit.prototype.cohesion = function(units){
 Unit.prototype.flowField = function(map){
 	var desired = map[Math.floor(this.y / 16)][Math.floor(this.x / 16)].v;
 	desired.normalize();
-	desired.mult(this.speed);
+	desired.mult(this.getMovementSpeed());
 	if(desired.mag() === 0){
 		this.velocity.mult(0);
 		return new Vector(0,0);
@@ -354,18 +373,18 @@ Unit.prototype.attackTarget = function(target, damage){
 
 	if(this.weapon){
 		createjs.Tween.get(this.weapon)
-			.to({rotation:this.weapon.rotation + this.weapon.swing},this.attack_speed * 5, createjs.Ease.backOut)
+			.to({rotation:this.weapon.rotation + this.weapon.swing},this.getAttackSpeed() * 5, createjs.Ease.backOut)
 			.call(function(){
-				target.hit(this, this.damage);
+				target.hit(this, this.getDamage());
 			}.bind(this))
-			.to({rotation:this.weapon.rotation},this.attack_speed * 5, createjs.Ease.backOut);
+			.to({rotation:this.weapon.rotation},this.getAttackSpeed() * 5, createjs.Ease.backOut);
 	}else{
 		createjs.Tween.get(this.sprite)
-			.to({y:-8},this.attack_speed * 5, createjs.Ease.backOut)
+			.to({y:-8},this.getAttackSpeed() * 5, createjs.Ease.backOut)
 			.call(function(){
-				target.hit(this, this.damage);
+				target.hit(this, this.getDamage());
 			}.bind(this))
-			.to({y:0},this.attack_speed * 5, createjs.Ease.backOut);
+			.to({y:0},this.getAttackSpeed() * 5, createjs.Ease.backOut);
 	}
 }
 
@@ -477,7 +496,7 @@ Unit.prototype.attackTick = function(){
 	if(this.order.target && this.order.target.status !== "death"){
 		if(this.getSquareDistance(this.order.target) <= Math.pow(this.range+this.order.target.radius,2)){
 			this.velocity = new Vector(0,0);
-			if(this.ticks > this.attack_speed){
+			if(this.ticks > this.getAttackSpeed()){
 				this.ticks = 0;
 				this.attackTarget(this.order.target);
 			}
@@ -491,7 +510,7 @@ Unit.prototype.moveAttackTick = function(distance){
 	if(this.target && this.target.status !== "death"){
 		if(this.getSquareDistance(this.target) <= Math.pow(this.range+this.target.radius,2)){
 			this.velocity = new Vector(0,0);
-			if(this.ticks > this.attack_speed){
+			if(this.ticks > this.getAttackSpeed()){
 				this.ticks = 0;
 				this.attackTarget(this.target);
 			}
@@ -526,6 +545,18 @@ Unit.prototype.tick = function(){
 			this.moveAttackTick(null);
 			break;
 	}
+
+	if(this.filter === "uncache"){
+		this.sprite.uncache();
+		this.filter = null;
+	}else if(this.filter){
+		this.sprite.uncache();
+		this.sprite.filters = this.filter;
+		this.sprite.cache(-12,-16,24,32);
+	}
+
+
+
 	this.ticks++;
 	this.order_tick++;
 }
