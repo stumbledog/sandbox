@@ -12,9 +12,10 @@ Hero.prototype.hero_initialize = function(builder){
 	this.renderPortrait(builder.portrait_id, builder.index);
 	this.renderRange();
 	this.order = {action:"stop", map:this.findPath({x:this.x,y:this.y})};
+	this.rotate(0,1);
 
 	for(key in this.skills){
-		this.skills[key].remain_cooldown = 0
+		this.skills[key].remain_cooldown = 0;
 	}
 }
 
@@ -26,7 +27,7 @@ Hero.prototype.renderRange = function(){
 
 Hero.prototype.renderPortrait = function(portrait_id, index){
 	this.portrait = new createjs.Bitmap(this.loader.getResult(portrait_id));
-	this.portrait.sourceRect = new createjs.Rectangle(index % 4 *96,parseInt(index / 4) * 96,96,96);
+	this.portrait.sourceRect = new createjs.Rectangle(index % 4 * 96, parseInt(index / 4) * 96, 96, 96);
 }
 
 Hero.prototype.getPortrait = function(){
@@ -70,4 +71,5 @@ Hero.prototype.tick = function(){
 			this.ui_stage.renderCooldown(key, this.skills[key].remain_cooldown, this.skills[key].cooldown);
 		}
 	}
+	this.ui_stage.refreshSkillButton();
 }

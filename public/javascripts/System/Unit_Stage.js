@@ -19,11 +19,14 @@ Unit_Stage.prototype.initialize = function(width, height, rows){
 	this.loader = this.game.getLoader();
 	this.map = this.game.getMapStage();
 	this.mapSize = this.map.getSize();
+	this.minimap = this.game.getMinimapStage();
 
 	//this.scroll_speed = 8;
 	this.followership_type = "follow"
 
 	this.offsetX = this.offsetY = 0;
+	this.ticks = 0;
+
 	createjs.Ticker.addEventListener("tick", function(){
 		this.unit_container.sortChildren(function(obj1, obj2){
 			return obj1.y>obj2.y?1:-1;
@@ -53,7 +56,11 @@ Unit_Stage.prototype.initialize = function(width, height, rows){
 			this.map.regY += this.scroll_speed;
 			this.map.update();
 		}*/
+		if(this.ticks % 10 === 0){
+			this.minimap.renderUnits(this.getUnits());
+		}
 		this.update();
+		this.ticks++;
 	}.bind(this));
 	createjs.Ticker.timingMode = createjs.Ticker.RAF_SYNCHED;
 	createjs.Ticker.setFPS(30);
@@ -221,6 +228,7 @@ Unit_Stage.prototype.addUnit = function(unit, x, y){
 }
 
 Unit_Stage.prototype.removeUnit = function(target){
+	this.minimap.removeMinimapBlock(target);
 	this.unit_container.removeChild(target);
 }
 

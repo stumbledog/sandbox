@@ -14,6 +14,7 @@ function Skill(builder){
 	this.duration = builder.duration;
 	this.buff = builder.buff;
 	this.filter = builder.filter;
+	this.heal = builder.heal;
 	this.effect = this.unit.unit_stage.getEffect();
 }
 
@@ -68,6 +69,13 @@ Skill.prototype.useSkill = function(mouse_position){
 			break;
 			case "heal":
 				this.animate(this.animation.rotate);
+				if(this.heal.unit === "%"){
+					this.unit.health = this.unit.health + this.unit[this.heal.type] * this.heal.amount / 100 > this.unit.max_health ? this.unit.max_health : this.unit.health + this.unit[this.heal.type] * this.heal.amount / 100;
+				}
+				this.unit.renderHealthBar();
+				if(this.unit.type === "hero"){
+					this.unit.ui_stage.refreshHealthBar();
+				}
 			break;
 		}
 	}

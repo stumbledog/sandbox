@@ -45,14 +45,6 @@ UI_Stage.prototype.renderPortrait = function(){
 	this.addChild(shape, portrait, this.level_border, this.level);
 }
 
-UI_Stage.prototype.addBuff = function(icon, desc){
-	console.log(icon, desc);
-}
-
-UI_Stage.prototype.removeBuff = function(){
-	
-}
-
 UI_Stage.prototype.renderSkill = function(){
 	this.skills['q'] = this.renderSkillButton('Q',0, this.hero.skills['q']);
 	this.skills['w'] = this.renderSkillButton('W',1, this.hero.skills['w']);
@@ -74,6 +66,9 @@ UI_Stage.prototype.renderSkillButton = function(hotkey, index, skill){
 	hotkey_text.x = 7;
 	hotkey_text.y = 8;
 	var icon = new createjs.Bitmap(this.loader.getResult(skill.name));
+	var available = new createjs.Shape();
+	available.graphics.f("#c00").dr(0,0,50,50);
+	available.alpha = 0;
 	var cooldown = new createjs.Shape();
 	cooldown.graphics.f("#666").dr(0,0,50,50);
 	cooldown.alpha = 0.8;
@@ -83,11 +78,13 @@ UI_Stage.prototype.renderSkillButton = function(hotkey, index, skill){
 	var cc_text = new OutlineText("","24px Arial", "#fff", "#000", 5);
 	cc_text.y = 25;
 	cc_text.textBaseline("middle");
-	container.addChild(border, icon, hotkey_border, hotkey_text, cooldown, cc_text);
+	container.addChild(border, icon, hotkey_border, hotkey_text, available, cooldown, cc_text);
 	this.addChild(container);
+
 	icon.on("rollover", function(event){
 		this.tooltip_stage.showSkillTooltip(event, skill);
 	}.bind(this));
+
 	icon.on("rollout", function(event){
 		this.tooltip_stage.hideSkillTooltip();
 	}.bind(this));
@@ -95,10 +92,24 @@ UI_Stage.prototype.renderSkillButton = function(hotkey, index, skill){
 	return container;
 }
 
+UI_Stage.prototype.refreshSkillButton = function(){
+	for(key in this.skills){
+		var skill_button = this.skills[key];
+		var skill = this.hero.skills[key];
+		var available = skill_button.children[4];
+		if(skill.cost <= this.hero.resource){
+			available.alpha = 0;
+		}else{
+			available.alpha = 0.5;
+		}
+	}
+	this.update();
+}
+
 UI_Stage.prototype.renderCooldown = function(key, remain_cc, cc){
 	var skill = this.skills[key];
-	var mask = skill.children[4].mask;
-	var text = skill.children[5];
+	var mask = skill.children[5].mask;
+	var text = skill.children[6];
 
 	mask.graphics.c().mt(25,25).arc(25,25,50,-Math.PI/2,-Math.PI*2*remain_cc/cc-Math.PI/2, true);
 	remain_cc = remain_cc > 1 ? Math.floor(remain_cc) : remain_cc === 0 ? "" : Math.floor(remain_cc*10)/10;
@@ -123,8 +134,7 @@ UI_Stage.prototype.renderHealthBar = function(){
 	this.resource_color = this.hero.resource_type === "mana"?["#1A8BB2","#127899","#0E5066"]:this.hero.resource_type === "fury"?["#FF1D23","#94090D","#450003"]:["#FFF5A5","#FFE30A","#7F7105"];
 
 	this.resource_bar = new createjs.Shape();
-	this.resource_bar.graphics.lf(this.resource_color,[0,0.5,1],0,21,0,31).dr(1,21,198,10)
-
+	this.resource_bar.graphics.lf(this.resource_color,[0,0.5,1],0,21,0,31).dr(1,21,198*this.hero.resource/this.hero.max_resource,10);
 	this.health_text = new OutlineText(Math.round(this.hero.health)+"/"+Math.round(this.hero.max_health),"bold 10px Arial","#fff","#000",2);
 	this.health_text.textAlign("center");
 	this.health_text.x = 100;

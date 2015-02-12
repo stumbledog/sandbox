@@ -40,6 +40,12 @@ Monster.prototype.initEventListener = function(){
 	}.bind(this));
 }
 
+Monster.prototype.hit = function(attacker, damage){
+	Unit.prototype.hit.call(this, attacker, damage);
+	if(!this.target){
+		this.target = attacker;
+	}
+}
 
 Monster.prototype.die = function(attacker){
 	var allied_units = this.game.getUnitStage().getAlliedUnits(attacker);

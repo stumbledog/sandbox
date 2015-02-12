@@ -102,8 +102,11 @@ PathFinder.getVectorMap = function(vector_map, costed_map){
 					dy = up - down;				
 				}
 
+				dx = !dx ? 0 : dx;
+				dy = !dy ? 0 : dy;
+
 				var distance = Math.sqrt(Math.pow(dx,2) + Math.pow(dy,2));
-				vector_map[i][j] = distance === 0 ? {v: new Vector(0,0), block:false} : {v: new Vector(dx/distance,dy/distance), block:false};
+				vector_map[i][j] = distance === 0 ? {v: new Vector(0,0), block:false} : {v: new Vector(dx/distance,dy/distance), block:false};					
 			}
 		}
 	}

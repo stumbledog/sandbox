@@ -3,7 +3,7 @@ var Game = (function(){
 	var instance;
 
 	function init(){
-		var unit_stage, map_stage, ui_stage, loader, tooltip_stage, hero, blocks;
+		var unit_stage, map_stage, ui_stage, loader, minimap_stage, tooltip_stage, hero, blocks;
 		var cols = rows = 40;
 		var scale = 5;
 
@@ -23,8 +23,9 @@ var Game = (function(){
 			level:1,
 			exp:0,
 			resource_type:"fury",
-			resource:100,
-			health:200,
+			resource:0,
+			max_resource:100,
+			health:100,
 			damage:1,
 			attack_speed:30,
 			armor:2,
@@ -60,7 +61,7 @@ var Game = (function(){
 					radius:160,
 					angle:60,
 					type:"cone",
-					damage:200,
+					damage:300,
 					cost:15,
 					cooldown:5,
 					animation:{
@@ -74,7 +75,7 @@ var Game = (function(){
 							{src:"assets/Graphics/effects/shooter_fx/lava_shot_impact2.png",id:"lava_shot_impact2"},
 							{src:"assets/Graphics/effects/shooter_fx/lava_shot_impact3.png",id:"lava_shot_impact3"},
 							{src:"assets/Graphics/effects/shooter_fx/lava_shot_impact4.png",id:"lava_shot_impact4"},
-						]						
+						]
 					}
 				},{
 					key:"w",
@@ -85,7 +86,7 @@ var Game = (function(){
 					radius:80,
 					angle:90,
 					type:"impact",
-					damage:150,
+					damage:200,
 					cost:30,
 					cooldown:10,
 					animation:{
@@ -104,16 +105,20 @@ var Game = (function(){
 				},{
 					key:"e",
 					name:"Regeneration",
-					description:"",
+					description:"Heal you for 10% of your maximum health",
 					src:"assets/Graphics/icons/50x50/108.png",
 					resource:"fury",
 					radius:80,
 					angle:90,
 					type:"heal",
 					target:"self",
-					damage:200,
+					heal:{
+						type:"max_health",
+						unit:"%",
+						amount:10,
+					},
 					cost:25,
-					cooldown:5,
+					cooldown:10,
 					animation:{
 						scale:0.5,
 						rotate:0,
@@ -141,7 +146,7 @@ var Game = (function(){
 						movement_speed:0.5,
 					},
 					filter:[0.6,0,0,1],
-					cost:10,
+					cost:50,
 					cooldown:60,
 					duration:15,
 					animation:{
@@ -162,8 +167,9 @@ var Game = (function(){
 			level:1,
 			exp:0,
 			resource_type:"fury",
-			resource:100,
-			health:20,
+			resource:0,
+			max_resource:100,
+			health:50,
 			damage:2,
 			attack_speed:60,
 			armor:2,
@@ -175,7 +181,7 @@ var Game = (function(){
 			range:32,
 			type:"follow",
 			team:"player",
-			health_color:"#0C0",
+			health_color:"#046380",
 			damage_color:"#C00",
 			weapon:{
 				type:"melee",
@@ -199,11 +205,12 @@ var Game = (function(){
 			exp:20,
 			resource_type:"mana",
 			resource:20,
+			max_resource:20,
 			health:10,
 			damage:1,
 			attack_speed:60,
 			armor:0,
-			movement_speed:2,
+			movement_speed:1,
 			critical_rate:0.0,
 			critical_damage:1,
 			radius:4,
@@ -269,10 +276,10 @@ var Game = (function(){
 				},{
 				tiles:[
 					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,3,0],
+					[0,2,3,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0],
+					[0,1,0,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+					[0,1,0,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -346,7 +353,7 @@ var Game = (function(){
 			if(skill.animation.images){
 				skill.animation.images.forEach(function(frame){
 					manifest.push({src:frame.src,id:frame.id});
-				});				
+				});
 			}
 		});
 
@@ -356,20 +363,22 @@ var Game = (function(){
 
 		function handleLoadComplete(){
 			initMapStage();
+			initMinimapStage();
 			initUnitStage();
 			initTooltipStage();
 			initUIStage();
 
 			createHero(hero_builder);
-			for(var i=0;i<5;i++){
+			for(var i=0;i<10;i++){
 				createFollower(follow_builder);
 			}
 
-			for(var i=0;i<40;i++){
+			for(var i=0;i<100;i++){
 				createEnemy(monster_builder);
 			}
 
 			ui_stage.initHeroUI(hero);
+			minimap_stage.initUnits(unit_stage.getUnits());
 		}
 
 		function initMapStage(){
@@ -386,6 +395,10 @@ var Game = (function(){
 			map_stage.scaleX = map_stage.scaleY = scale;
 			unit_stage.scaleX = unit_stage.scaleY = scale;
 			map_stage.update();
+		}
+
+		function initMinimapStage(){
+			minimap_stage = new Minimap_Stage();
 		}
 
 		function initTooltipStage(){
@@ -429,6 +442,9 @@ var Game = (function(){
 			},
 			getTooltipStage:function(){
 				return tooltip_stage;
+			},
+			getMinimapStage:function(){
+				return minimap_stage;
 			},
 			setScale:function(delta){
 				scale += delta;

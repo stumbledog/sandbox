@@ -24,7 +24,8 @@ Unit.prototype.initialize = function(builder){
 	this.level = builder.level;
 	this.exp = builder.exp;
 	this.resource_type = builder.resource_type;
-	this.max_resource = this.resource = builder.resource;
+	this.resource = builder.resource;
+	this.max_resource = builder.max_resource;
 	this.radius = builder.radius;
 	this.aggro_radius = builder.aggro_radius;
 	this.range = builder.range;
@@ -554,8 +555,6 @@ Unit.prototype.tick = function(){
 		this.sprite.filters = this.filter;
 		this.sprite.cache(-12,-16,24,32);
 	}
-
-
 
 	this.ticks++;
 	this.order_tick++;
