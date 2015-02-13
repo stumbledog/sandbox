@@ -4,11 +4,35 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+mongoose = require('mongoose');
+Schema = mongoose.Schema;
+var fs = require('fs');
+var routePaths = ['./models/'];
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
+mongoose.connect('mongodb://localhost/condottiere');
+
+var db = mongoose.connection;
+
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function (callback) {
+    console.log("db connected");
+});
+
+
 
 var app = express();
+
+routePaths.forEach(function(routePath){
+    fs.readdirSync(routePath).forEach(function(file){
+        var route = routePath + file;
+        console.log(route);
+        require(route);
+    });
+});
+
+UserController = require('./controllers/UserController');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

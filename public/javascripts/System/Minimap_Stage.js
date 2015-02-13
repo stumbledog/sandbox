@@ -34,7 +34,7 @@ Minimap_Stage.prototype.renderBlock = function(){
 		rows.forEach(function(cell, index_col){
 			if(cell === 65535){
 				var block_shape = new createjs.Shape();
-				block_shape.graphics.f("#000").dr(index_col / this.max_side * 160 * 16, index_row / this.max_side * 160 * 16, 160 / this.max_side * 16, 160 / this.max_side * 16);
+				block_shape.graphics.f("#A7A37E").dr(index_col / this.max_side * 160 * 16, index_row / this.max_side * 160 * 16, 160 / this.max_side * 16, 160 / this.max_side * 16);
 				this.addChild(block_shape);
 			}
 		}, this);

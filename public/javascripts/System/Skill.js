@@ -51,7 +51,6 @@ Skill.prototype.useSkill = function(mouse_position){
 						enemy.hit(this.unit, this.unit.getDamage() * this.damage/100);
 					}
 				}, this);
-
 			break;
 			case "buff":
 				for(key in this.buff){
@@ -70,7 +69,8 @@ Skill.prototype.useSkill = function(mouse_position){
 			case "heal":
 				this.animate(this.animation.rotate);
 				if(this.heal.unit === "%"){
-					this.unit.health = this.unit.health + this.unit[this.heal.type] * this.heal.amount / 100 > this.unit.max_health ? this.unit.max_health : this.unit.health + this.unit[this.heal.type] * this.heal.amount / 100;
+					this.unit.heal(this.unit[this.heal.type] * this.heal.amount / 100);
+					//this.unit.health = this.unit.health + this.unit[this.heal.type] * this.heal.amount / 100 > this.unit.max_health ? this.unit.max_health : this.unit.health + this.unit[this.heal.type] * this.heal.amount / 100;
 				}
 				this.unit.renderHealthBar();
 				if(this.unit.type === "hero"){

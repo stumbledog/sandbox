@@ -397,10 +397,10 @@ Unit.prototype.hit = function(attacker, damage){
 
 	if(this.status !== "death"){
 		this.health -= damage;
-		var damage_text = new OutlineText(damage,"bold 12px Arial",this.damage_color,"#000",4);
+		var damage_text = new OutlineText(damage,"bold 12px Arial",this.damage_color,"#000",2);
 		damage_text.x = this.x;
 		damage_text.y = this.y;
-		damage_text.alpha = 0.8;
+		//damage_text.alpha = 0.8;
 		this.getStage().addChild(damage_text);
 		var dx = Math.random() * 32-16;
 		var stage = this.getStage();
@@ -423,23 +423,48 @@ Unit.prototype.hit = function(attacker, damage){
 	}
 }
 
+Unit.prototype.heal = function(heal){
+	this.health = this.health + heal > this.max_health ? this.max_health : this.health + heal;
+	var health_text = new OutlineText(Math.floor(heal), "bold 12px Arial", this.health_color, "#000", 2);
+	health_text.x = this.x;
+	health_text.y = this.y;
+	//health_text.alpha = 0.8;
+	this.getStage().addChild(health_text);
+	var dx = Math.random() * 32-16;
+	var stage = this.getStage();
+	createjs.Tween.get(health_text).to({x:this.x + dx,y:this.y - 32},500, createjs.Ease.cubicOut).wait(500).call(function(item){
+		stage.removeChild(health_text);
+	});
+	this.renderHealthBar();
+}
+
 Unit.prototype.gainExp = function(exp){
 	this.exp += exp;
-	while(this.exp >= this.level * 100){
-		this.exp -= this.level * 100;
-		this.level++;
-	}
-
-	var exp_text = new OutlineText("+" + Math.round(exp)+" exp","bold 8px Arial","#fff","#000",4);
+	var exp_text = new OutlineText("+" + Math.round(exp)+" exp","bold 8px Arial","#fff","#000",2);
 	exp_text.x = -exp_text.getMeasuredWidth()/2;
-	exp_text.alpha = 0.8;
+	//exp_text.alpha = 0.8;
 	this.addChild(exp_text);
-	createjs.Tween.get(exp_text).to({y:-32},1000, createjs.Ease.cubicOut).wait(500).call(function(item){
+	
+	createjs.Tween.get(exp_text).to({y:-28},1000, createjs.Ease.cubicOut).wait(500).call(function(item){
 		this.removeChild(exp_text);
 	},[],this);
+
+	while(this.exp >= this.level * 100){
+		this.exp -= this.level * 100;
+		this.levelUp();
+	}
 }
 
 Unit.prototype.levelUp = function(){
+	this.level++;
+	this.heal(this.max_health/10);
+	var levelup_text = new OutlineText("Level Up","bold 10px Arial","#E9A119","#000",2);
+	levelup_text.x = -levelup_text.getMeasuredWidth()/2;
+	//levelup_text.alpha = 0.8;
+	this.addChild(levelup_text);
+	createjs.Tween.get(levelup_text).to({y:-42},1000, createjs.Ease.cubicOut).wait(500).call(function(item){
+		this.removeChild(levelup_text);
+	},[],this);
 
 }
 
@@ -495,7 +520,7 @@ Unit.prototype.getSquareDistance = function(target){
 
 Unit.prototype.attackTick = function(){
 	if(this.order.target && this.order.target.status !== "death"){
-		if(this.getSquareDistance(this.order.target) <= Math.pow(this.range+this.order.target.radius,2)){
+		if(this.getSquareDistance(this.order.target) <= Math.pow(this.range + this.radius + this.target.radius,2)){
 			this.velocity = new Vector(0,0);
 			if(this.ticks > this.getAttackSpeed()){
 				this.ticks = 0;
@@ -509,7 +534,7 @@ Unit.prototype.attackTick = function(){
 
 Unit.prototype.moveAttackTick = function(distance){
 	if(this.target && this.target.status !== "death"){
-		if(this.getSquareDistance(this.target) <= Math.pow(this.range+this.target.radius,2)){
+		if(this.getSquareDistance(this.target) <= Math.pow(this.range + this.radius + this.target.radius,2)){
 			this.velocity = new Vector(0,0);
 			if(this.ticks > this.getAttackSpeed()){
 				this.ticks = 0;

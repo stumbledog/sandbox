@@ -34,7 +34,7 @@ var Game = (function(){
 			critical_damage:2,
 			radius:12,
 			aggro_radius:80,
-			range:32,
+			range:16,
 			type:"hero",
 			team:"player",
 			health_color:"#0C0",
@@ -71,10 +71,10 @@ var Game = (function(){
 						regX:81,
 						regY:167,
 						images:[
-							{src:"assets/Graphics/effects/shooter_fx/lava_shot_impact1.png",id:"lava_shot_impact1"},
-							{src:"assets/Graphics/effects/shooter_fx/lava_shot_impact2.png",id:"lava_shot_impact2"},
-							{src:"assets/Graphics/effects/shooter_fx/lava_shot_impact3.png",id:"lava_shot_impact3"},
-							{src:"assets/Graphics/effects/shooter_fx/lava_shot_impact4.png",id:"lava_shot_impact4"},
+							{src:"assets/Graphics/effects/shooter_fx/lava_shot_impact1.png",index:"lava_shot_impact1"},
+							{src:"assets/Graphics/effects/shooter_fx/lava_shot_impact2.png",index:"lava_shot_impact2"},
+							{src:"assets/Graphics/effects/shooter_fx/lava_shot_impact3.png",index:"lava_shot_impact3"},
+							{src:"assets/Graphics/effects/shooter_fx/lava_shot_impact4.png",index:"lava_shot_impact4"},
 						]
 					}
 				},{
@@ -97,9 +97,9 @@ var Game = (function(){
 						regX:80,
 						regY:80,
 						images:[
-							{src:"assets/Graphics/effects/impacts/orange_impx_0.png",id:"orange_impx_0"},
-							{src:"assets/Graphics/effects/impacts/orange_impx_1.png",id:"orange_impx_1"},
-							{src:"assets/Graphics/effects/impacts/orange_impx_2.png",id:"orange_impx_2"},
+							{src:"assets/Graphics/effects/impacts/orange_impx_0.png",index:"orange_impx_0"},
+							{src:"assets/Graphics/effects/impacts/orange_impx_1.png",index:"orange_impx_1"},
+							{src:"assets/Graphics/effects/impacts/orange_impx_2.png",index:"orange_impx_2"},
 						]
 					}
 				},{
@@ -127,9 +127,9 @@ var Game = (function(){
 						regX:80,
 						regY:80,
 						images:[
-							{src:"assets/Graphics/effects/shooter_fx/ring_shot_impact1.png",id:"ring_shot_impact1"},
-							{src:"assets/Graphics/effects/shooter_fx/ring_shot_impact2.png",id:"ring_shot_impact2"},
-							{src:"assets/Graphics/effects/shooter_fx/ring_shot_impact3.png",id:"ring_shot_impact3"},
+							{src:"assets/Graphics/effects/shooter_fx/ring_shot_impact1.png",index:"ring_shot_impact1"},
+							{src:"assets/Graphics/effects/shooter_fx/ring_shot_impact2.png",index:"ring_shot_impact2"},
+							{src:"assets/Graphics/effects/shooter_fx/ring_shot_impact3.png",index:"ring_shot_impact3"},
 						]
 					}
 				},{
@@ -151,9 +151,9 @@ var Game = (function(){
 					duration:15,
 					animation:{
 						images:[
-							{src:"assets/Graphics/effects/impacts/orange_impx_0.png",id:"orange_impx_0"},
-							{src:"assets/Graphics/effects/impacts/orange_impx_1.png",id:"orange_impx_1"},
-							{src:"assets/Graphics/effects/impacts/orange_impx_2.png",id:"orange_impx_2"},
+							{src:"assets/Graphics/effects/impacts/orange_impx_0.png",index:"orange_impx_0"},
+							{src:"assets/Graphics/effects/impacts/orange_impx_1.png",index:"orange_impx_1"},
+							{src:"assets/Graphics/effects/impacts/orange_impx_2.png",index:"orange_impx_2"},
 						]
 					}
 				}
@@ -178,7 +178,7 @@ var Game = (function(){
 			critical_damage:2,
 			radius:12,
 			aggro_radius:80,
-			range:32,
+			range:16,
 			type:"follow",
 			team:"player",
 			health_color:"#046380",
@@ -202,7 +202,7 @@ var Game = (function(){
 			src_id:"29 - Monster",
 			index:0,
 			level:1,
-			exp:20,
+			exp:200,
 			resource_type:"mana",
 			resource:20,
 			max_resource:20,
@@ -215,7 +215,7 @@ var Game = (function(){
 			critical_damage:1,
 			radius:4,
 			aggro_radius:80,
-			range:32,
+			range:16,
 			type:"monster",
 			team:"enemy",
 			health_color:"#C00",
@@ -271,7 +271,7 @@ var Game = (function(){
 					[160,0,32,32],
 				], 
 				src:"assets/Graphics/Tilesets/A5/Exterior_Forest_TileA5.png", 
-				id:"A5/Exterior_Forest_TileA5",
+				index:"A5/Exterior_Forest_TileA5",
 				block:false
 				},{
 				tiles:[
@@ -326,7 +326,7 @@ var Game = (function(){
 					[64,160,32,32],
 				], 
 				src:"assets/Graphics/Tilesets/E/Exterior_Walls_TileE.png", 
-				id:"E/Exterior_Walls_TileE",
+				index:"E/Exterior_Walls_TileE",
 				block:true
 			}],
 			width:cols*32,
@@ -345,14 +345,14 @@ var Game = (function(){
 		manifest.push({src:monster_builder.src,id:monster_builder.src_id});
 
 		map_data.maps.forEach(function(map){
-			manifest.push({src:map.src,id:map.id});
+			manifest.push({src:map.src,id:map.index});
 		});
 
 		hero_builder.skills.forEach(function(skill){
 			manifest.push({src:skill.src,id:skill.name});
 			if(skill.animation.images){
 				skill.animation.images.forEach(function(frame){
-					manifest.push({src:frame.src,id:frame.id});
+					manifest.push({src:frame.src,id:frame.index});
 				});
 			}
 		});
@@ -369,7 +369,7 @@ var Game = (function(){
 			initUIStage();
 
 			createHero(hero_builder);
-			for(var i=0;i<10;i++){
+			for(var i=0;i<9;i++){
 				createFollower(follow_builder);
 			}
 
