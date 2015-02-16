@@ -1,5 +1,23 @@
 exports.authenticate = function(req, res, callback){
-	callback();
+	if(req.session.user){
+		UserModel.findById(req.session.user, function(err, user){
+			callback(user);
+		});
+	}else{
+		if(req.cookies.user_id){
+			var self = this;
+			UserModel.findById(req.cookies.user_id, function(err, user){
+				if(user){
+					req.session.user = user._id;
+					callback(user);
+				}else{
+					self.createUser(req, res, callback);
+				}
+			});
+		}else{
+			this.createUser(req, res, callback);
+		}
+	}
 }
 
 exports.createUser = function(req, res, callback){
