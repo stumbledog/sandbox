@@ -8,10 +8,17 @@ mongoose = require('mongoose');
 Schema = mongoose.Schema;
 var fs = require('fs');
 var routePaths = ['./models/'];
+var session = require('express-session');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
 mongoose.connect('mongodb://localhost/condottiere');
+
+app.use(session({
+    secret:"hello",
+    resave:false,
+    saveUninitialized:true
+}));
 
 var db = mongoose.connection;
 
@@ -19,8 +26,6 @@ db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function (callback) {
     console.log("db connected");
 });
-
-
 
 var app = express();
 
