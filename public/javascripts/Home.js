@@ -2,31 +2,32 @@ var Home = (function(){
 
 	var instance;
 
-	function init(){
-		var home_stage;
-
-		initStage();
+	function init(user_builder){
+		var user = new User(user_builder);
+		var home_stage = new Home_Stage();
 
 		window.onresize = function(){
 			home_stage.canvas.width = window.innerWidth;
 			home_stage.canvas.height = window.innerHeight;
 			home_stage.resize();
-			home_stage.update();
 		};
 
-		function initStage(){
-			home_stage = new Home_Stage();
+		return {
+			getHomeStage:function(){
+				return home_stage;
+			},
+			getUser:function(){
+				return user;
+			}
 		}
 	}
 
 	return {
-		getInstance:function(){
+		getInstance:function(user_builder){
 			if(!instance){
-				instance = init();
+				instance = init(user_builder);
 			}
 			return instance;
 		}
 	}
 })();
-
-Home.getInstance();

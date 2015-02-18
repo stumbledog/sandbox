@@ -1,5 +1,5 @@
 extends index_include
-
 block content
   canvas#home
-  script(type='text/javascript' src='/javascripts/Home.js')
+  script(type='text/javascript').
+    Home.getInstance(!{JSON.stringify(user)});

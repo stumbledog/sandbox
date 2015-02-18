@@ -7,7 +7,7 @@ var bodyParser = require('body-parser');
 mongoose = require('mongoose');
 Schema = mongoose.Schema;
 var fs = require('fs');
-var routePaths = ['./models/'];
+var routePaths = ['./models/', './controllers/'];
 var session = require('express-session');
 
 var routes = require('./routes/index');
@@ -32,12 +32,9 @@ app.use(session({
 routePaths.forEach(function(routePath){
     fs.readdirSync(routePath).forEach(function(file){
         var route = routePath + file;
-        console.log(route);
         require(route);
     });
 });
-
-UserController = require('./controllers/UserController');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

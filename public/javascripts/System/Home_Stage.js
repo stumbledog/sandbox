@@ -64,4 +64,9 @@ Home_Stage.prototype.resize = function(){
 	this.local_save_button.x = this.canvas.width / 2 - this.local_save_button.getBounds().width - 50;
 	this.network_save_button.x = this.canvas.width / 2 + 50;
 	this.local_save_button.y = this.network_save_button.y = this.canvas.height / 2;
+	this.update();
+}
+
+Home_Stage.prototype.createHero = function(){
+
 }

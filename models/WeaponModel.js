@@ -1,4 +1,4 @@
-var WeaponModel = new Schema({
+var WeaponSchema = new Schema({
 	type:String,
 	src:String,
 	src_id:String,
@@ -11,4 +11,4 @@ var WeaponModel = new Schema({
 	scale:Number,
 });
 
-mongoose.model('Weapon', WeaponModel);
+mongoose.model('Weapon', WeaponSchema);

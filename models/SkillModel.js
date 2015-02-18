@@ -1,4 +1,4 @@
-var SkillModel = new Schema({
+var SkillSchema = new Schema({
 	key:String,
 	name:String,
 	description:String,
@@ -20,4 +20,4 @@ var SkillModel = new Schema({
 	}
 });
 
-mongoose.model('Skill', SkillModel);
+mongoose.model('Skill', SkillSchema);

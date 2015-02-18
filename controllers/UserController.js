@@ -1,31 +1,43 @@
-exports.authenticate = function(req, res, callback){
-	if(req.session.user){
-		UserModel.findById(req.session.user, function(err, user){
-			callback(user);
-		});
-	}else{
-		if(req.cookies.user_id){
-			var self = this;
-			UserModel.findById(req.cookies.user_id, function(err, user){
-				if(user){
-					req.session.user = user._id;
-					callback(user);
-				}else{
-					self.createUser(req, res, callback);
-				}
-			});
+UserController = {
+	authenticate:function(req, res, callback){
+		console.log("Authenticate user");
+		if(req.session.user_id){
+			console.log("Login by session: " + req.session.user_id);
+			this.loginById(req.session.user_id, req, res, callback);
+		}else if(req.cookies.user_id){
+			console.log("Login by cookie: " + req.cookies.user_id);
+			this.loginById(req.cookies.user_id, req, res, callback);
 		}else{
 			this.createUser(req, res, callback);
 		}
-	}
-}
+	},
+	createUser:function(req, res, callback){
+		console.log("Create new user");
+		var user = new UserModel();
+		var gold = 100;
+		user.save(function(){
+			req.session.user_id = user._id;
+			res.cookie('user_id', user._id, {maxAge: 10 * 365 * 24 * 60 * 60 * 1000, httpOnly: true });
+			callback(user);
+		});
+	},
+	loginById:function(id, req, res, callback){
+		UserModel.findById(id, function(err, user){
+			if(user){
+				console.log("Found matching user in db");
+				user.last_logged_in = new Date();
+				user.save(function(){
+					req.session.user_id = user._id;
+					res.cookie('user_id', user._id, {maxAge: 10 * 365 * 24 * 60 * 60 * 1000, httpOnly: true });
+					callback(user);
+				});
+			}else{
+				console.log("No matching data found in db");
+				this.createUser(req, res, callback);
+			}
+		}.bind(this));
+	},
+	logout:function(req, res, callback){
 
-exports.createUser = function(req, res, callback){
-	var user = new UserModel();
-	var gold = 100;
-	user.save(function(){
-		req.session.user = user._id;
-		res.cookie('user_id', user._id, {maxAge: 10 * 365 * 24 * 60 * 60 * 1000, httpOnly: true });
-		callback();
-	});
-}
+	}
+};

@@ -1,4 +1,4 @@
-var MapModel = new Schema({
+var MapSchema = new Schema({
 	maps:[{
 		tiles:[Schema.Types.Mixed],
 		tile_map:[Schema.Types.Mixed],
@@ -13,4 +13,4 @@ var MapModel = new Schema({
 	start_point:[Number]
 });
 
-mongoose.model('Map', MapModel);
+mongoose.model('Map', MapSchema);
