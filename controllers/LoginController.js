@@ -25,3 +25,7 @@ exports.saveOnLocalStorage = function(req, res, callback){
 exports.saveOnNetwork = function(req, res, callback){
 	
 }
+
+exports.APIlogin = function(req, res, callback){
+
+}

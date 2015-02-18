@@ -3,6 +3,7 @@ html, body {
 	padding:0px;
 }
 
+canvas#home,
 canvas#bg,
 canvas#unit,
 canvas#tooltip,

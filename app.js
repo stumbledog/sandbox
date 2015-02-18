@@ -14,12 +14,6 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 mongoose.connect('mongodb://localhost/condottiere');
 
-app.use(session({
-    secret:"hello",
-    resave:false,
-    saveUninitialized:true
-}));
-
 var db = mongoose.connection;
 
 db.on('error', console.error.bind(console, 'connection error:'));
@@ -28,6 +22,12 @@ db.once('open', function (callback) {
 });
 
 var app = express();
+
+app.use(session({
+    secret:"hello",
+    resave:false,
+    saveUninitialized:true
+}));
 
 routePaths.forEach(function(routePath){
     fs.readdirSync(routePath).forEach(function(file){

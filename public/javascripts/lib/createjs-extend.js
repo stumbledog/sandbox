@@ -25,7 +25,7 @@ OutlineText.prototype.textAlign = function(textAlign){
 
 OutlineText.prototype.textBaseline = function(textBaseline){
 	this.text.textBaseline = textBaseline;
-	this.outline.textBaseline = textBaseline;	
+	this.outline.textBaseline = textBaseline;
 }
 
 OutlineText.prototype.setText = function(text){
@@ -35,5 +35,30 @@ OutlineText.prototype.setText = function(text){
 
 OutlineText.prototype.setAlpha = function(alpha){
 	this.text.alpha = alpha;
-	this.outline.alpha = alpha;	
+	this.outline.alpha = alpha;
+}
+
+function Button(text, button){
+	this.initialize(text, button);
+}
+
+createjs.extend(Button, createjs.Container);
+Button = createjs.promote(Button, "Container");
+
+Button.prototype.initialize = function(text, button){
+	this.Container_constructor();
+	this.text = new createjs.Text(text.text, text.style, text.color);
+	this.text.x = 10;
+	this.text.y = 10;
+	this.button = new createjs.Shape();
+	this.button.graphics.s(button.border_color).ss(button.border_width).f(button.background).rr(0, 0, this.text.getMeasuredWidth() + button.padding * 2, this.text.getMeasuredHeight() + button.padding * 2, 5);
+	this.addChild(this.button);
+
+	if(text.outline){
+		this.outline = this.text.clone();
+		this.outline.color = text.outline.color;
+		this.outline.outline = text.outline.width;
+		this.addChild(this.outline);
+	}
+	this.addChild(this.text);
 }
