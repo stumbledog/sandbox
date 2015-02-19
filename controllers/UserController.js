@@ -18,7 +18,9 @@ UserController = {
 		user.save(function(){
 			req.session.user_id = user._id;
 			res.cookie('user_id', user._id, {maxAge: 10 * 365 * 24 * 60 * 60 * 1000, httpOnly: true });
-			callback(user);
+			UnitController.createUnit({},function(unit){
+				callback(user,unit);
+			});
 		});
 	},
 	loginById:function(id, req, res, callback){
@@ -36,8 +38,5 @@ UserController = {
 				this.createUser(req, res, callback);
 			}
 		}.bind(this));
-	},
-	logout:function(req, res, callback){
-
 	}
 };

@@ -23,6 +23,10 @@ var UnitSchema = new Schema({
 	team:String,
 	health_color:String,
 	damage_color:String,
+	_user:{
+		type:Schema.Types.ObjectId,
+		ref:'User'
+	},
 	_weapon:{
 		type:Schema.Types.ObjectId,
 		ref:'Weapon'
@@ -33,4 +37,4 @@ var UnitSchema = new Schema({
 	}]
 });
 
-mongoose.model('Unit', UnitSchema);
+UnitModel = mongoose.model('Unit', UnitSchema);
