@@ -15,11 +15,12 @@ UserController = {
 		console.log("Create new user");
 		var user = new UserModel();
 		var gold = 100;
-		user.save(function(){
+		user.save(function(err, user){
+			if(err) return console.error(err);
 			req.session.user_id = user._id;
 			res.cookie('user_id', user._id, {maxAge: 10 * 365 * 24 * 60 * 60 * 1000, httpOnly: true });
-			UnitController.createUnit({},function(unit){
-				callback(user,unit);
+			UnitController.createUnit(1, user._id, function(err, unit){
+				callback(user, unit);
 			});
 		});
 	},
@@ -28,10 +29,13 @@ UserController = {
 			if(user){
 				console.log("Found matching user in db");
 				user.last_logged_in = new Date();
-				user.save(function(){
+				user.save(function(err, user){
+					if(err) return console.error(err);
 					req.session.user_id = user._id;
 					res.cookie('user_id', user._id, {maxAge: 10 * 365 * 24 * 60 * 60 * 1000, httpOnly: true });
-					callback(user);
+					UnitController.getUnitsByUserId(user._id, function(err, units){
+						callback(user, units);
+					});
 				});
 			}else{
 				console.log("No matching data found in db");

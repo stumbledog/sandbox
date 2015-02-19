@@ -13,4 +13,4 @@ var MapSchema = new Schema({
 	start_point:[Number]
 });
 
-mongoose.model('Map', MapSchema);
+MapModel = mongoose.model('Map', MapSchema);

@@ -1,4 +1,5 @@
-var UnitSchema = new Schema({
+var PrototypeUnitSchema = new Schema({
+	_id:Number,
 	src:String,
 	src_id:String,
 	portrait_src:String,
@@ -23,10 +24,6 @@ var UnitSchema = new Schema({
 	team:String,
 	health_color:String,
 	damage_color:String,
-	_user:{
-		type:Schema.Types.ObjectId,
-		ref:'User'
-	},
 	_items:[{
 		type:Schema.Types.ObjectId,
 		ref:'Item'
@@ -37,4 +34,4 @@ var UnitSchema = new Schema({
 	}]
 });
 
-UnitModel = mongoose.model('Unit', UnitSchema);
+PrototypeUnitModel = mongoose.model('PrototypeUnit', PrototypeUnitSchema);

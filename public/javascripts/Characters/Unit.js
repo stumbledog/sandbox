@@ -5,6 +5,7 @@ Unit.prototype.constructor = Unit;
 Unit.prototype.container_initialize = Unit.prototype.initialize;
 
 Unit.prototype.initialize = function(builder){
+	console.log(builder);
 	this.container_initialize();
 	this.game = Game.getInstance();
 	this.loader = this.game.getLoader();

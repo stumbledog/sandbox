@@ -2,4 +2,4 @@ extends index_include
 block content
   canvas#home
   script(type='text/javascript').
-    Home.getInstance(!{JSON.stringify(user)});
+    Home.getInstance(!{JSON.stringify(user)}, !{JSON.stringify(units)});

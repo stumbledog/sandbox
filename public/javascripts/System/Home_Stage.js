@@ -14,6 +14,7 @@ Home_Stage.prototype.initialize = function(){
 	this.enableMouseOver();
 
 	this.showSaveType();
+	this.initEventListener();
 }
 
 Home_Stage.prototype.showSaveType = function(){
@@ -45,7 +46,6 @@ Home_Stage.prototype.showSaveType = function(){
 
 	this.local_save_button.x = this.canvas.width / 2 - this.local_save_button.getBounds().width - 50;
 	this.network_save_button.x = this.canvas.width / 2 + 50;
-
 	this.local_save_button.y = this.network_save_button.y = this.canvas.height / 2;
 	this.local_save_button.cursor = this.network_save_button.cursor = "pointer";
 
@@ -55,16 +55,18 @@ Home_Stage.prototype.showSaveType = function(){
 
 	this.addChild(this.local_save_button, this.network_save_button);
 	this.update();
-
-	localStorage.button = JSON.stringify({name:"edward",age:32});
-	console.log(JSON.parse(localStorage.button));
+	/*localStorage.button = JSON.stringify({name:"edward",age:32});console.log(JSON.parse(localStorage.button));*/
 }
 
-Home_Stage.prototype.resize = function(){
-	this.local_save_button.x = this.canvas.width / 2 - this.local_save_button.getBounds().width - 50;
-	this.network_save_button.x = this.canvas.width / 2 + 50;
-	this.local_save_button.y = this.network_save_button.y = this.canvas.height / 2;
-	this.update();
+Home_Stage.prototype.initEventListener = function(){
+	window.onresize = function(){
+		this.canvas.width = window.innerWidth;
+		this.canvas.height = window.innerHeight;
+		this.local_save_button.x = this.canvas.width / 2 - this.local_save_button.getBounds().width - 50;
+		this.network_save_button.x = this.canvas.width / 2 + 50;
+		this.local_save_button.y = this.network_save_button.y = this.canvas.height / 2;
+		this.update();
+	}.bind(this);
 }
 
 Home_Stage.prototype.createHero = function(){

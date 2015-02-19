@@ -2,15 +2,16 @@ var Home = (function(){
 
 	var instance;
 
-	function init(user_builder){
+	function init(user_builder, unit_builder_array){
 		var user = new User(user_builder);
-		var home_stage = new Home_Stage();
+		var units = [];
+		unit_builder_array.forEach(function(unit_builder){
+			units.push(new Hero(unit_builder));
+		});
 
-		window.onresize = function(){
-			home_stage.canvas.width = window.innerWidth;
-			home_stage.canvas.height = window.innerHeight;
-			home_stage.resize();
-		};
+		console.log(units);
+
+		var home_stage = new Home_Stage();
 
 		return {
 			getHomeStage:function(){
@@ -23,9 +24,9 @@ var Home = (function(){
 	}
 
 	return {
-		getInstance:function(user_builder){
+		getInstance:function(user_builder, unit_builder_array){
 			if(!instance){
-				instance = init(user_builder);
+				instance = init(user_builder, unit_builder_array);
 			}
 			return instance;
 		}
