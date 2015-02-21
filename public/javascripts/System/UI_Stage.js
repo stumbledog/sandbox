@@ -46,10 +46,12 @@ UI_Stage.prototype.renderPortrait = function(){
 }
 
 UI_Stage.prototype.renderSkill = function(){
-	this.skills['q'] = this.renderSkillButton('Q',0, this.hero.skills['q']);
-	this.skills['w'] = this.renderSkillButton('W',1, this.hero.skills['w']);
-	this.skills['e'] = this.renderSkillButton('E',2, this.hero.skills['e']);
-	this.skills['r'] = this.renderSkillButton('R',3, this.hero.skills['r']);
+	if(this.hero.skills){
+		this.skills['q'] = this.renderSkillButton('Q',0, this.hero.skills['q']);
+		this.skills['w'] = this.renderSkillButton('W',1, this.hero.skills['w']);
+		this.skills['e'] = this.renderSkillButton('E',2, this.hero.skills['e']);
+		this.skills['r'] = this.renderSkillButton('R',3, this.hero.skills['r']);
+	}
 }
 
 UI_Stage.prototype.renderSkillButton = function(hotkey, index, skill){

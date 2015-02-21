@@ -14,6 +14,5 @@ InventoryController = {
 			inventory.slots = slots;
 			inventory.save(callback);
 		});
-
 	}
 }

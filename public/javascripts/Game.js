@@ -2,18 +2,17 @@ var Game = (function(){
 
 	var instance;
 
-	function init(){
+	function init(user_builder, unit_builder_array){
 		var unit_stage, map_stage, ui_stage, loader, minimap_stage, tooltip_stage, hero, blocks;
 		var cols = rows = 40;
 		var scale = 5;
-
 		window.onresize = function(){
 			map_stage.canvas.width = unit_stage.canvas.width = window.innerWidth;
 			map_stage.canvas.height = unit_stage.canvas.height = window.innerHeight;
 			map_stage.update();
 			unit_stage.update();
 		};
-
+		/*
 		var hero_builder = {
 			src:"assets/Graphics/Characters/01 - Hero.png",
 			src_id:"01 - Hero",
@@ -221,7 +220,7 @@ var Game = (function(){
 			health_color:"#C00",
 			damage_color:"#CC0",
 		};
-
+		*/
 		var map_data = {
 			maps:[{
 				tiles:[
@@ -337,17 +336,18 @@ var Game = (function(){
 		};
 
 		var manifest = [];
-
-		manifest.push({src:hero_builder.src,id:hero_builder.src_id});
-		manifest.push({src:hero_builder.portrait_src,id:hero_builder.portrait_id});
+		manifest.push({src:unit_builder_array[0].src,id:unit_builder_array[0].src_id});
+		manifest.push({src:unit_builder_array[0].portrait_src,id:unit_builder_array[0].portrait_id});
+		/*
 		manifest.push({src:hero_builder.weapon.src,id:hero_builder.weapon.src_id});
 		manifest.push({src:follow_builder.src,id:follow_builder.src_id});
 		manifest.push({src:monster_builder.src,id:monster_builder.src_id});
+		*/
 
 		map_data.maps.forEach(function(map){
 			manifest.push({src:map.src,id:map.index});
 		});
-
+		/*
 		hero_builder.skills.forEach(function(skill){
 			manifest.push({src:skill.src,id:skill.name});
 			if(skill.animation.images){
@@ -356,7 +356,7 @@ var Game = (function(){
 				});
 			}
 		});
-
+		*/
 		loader = new createjs.LoadQueue(false);
 		loader.addEventListener("complete", handleLoadComplete);
 		loader.loadManifest(manifest);
@@ -368,6 +368,7 @@ var Game = (function(){
 			initTooltipStage();
 			initUIStage();
 
+			/*
 			createHero(hero_builder);
 			for(var i=0;i<9;i++){
 				createFollower(follow_builder);
@@ -376,7 +377,8 @@ var Game = (function(){
 			for(var i=0;i<100;i++){
 				createEnemy(monster_builder);
 			}
-
+			*/
+			createHero(unit_builder_array[0]);
 			ui_stage.initHeroUI(hero);
 			minimap_stage.initUnits(unit_stage.getUnits());
 		}
@@ -471,13 +473,11 @@ var Game = (function(){
 	}
 
 	return {
-		getInstance:function(){
+		getInstance:function(user_builder, unit_builder_array){
 			if(!instance){
-				instance = init();
+				instance = init(user_builder, unit_builder_array);
 			}
 			return instance;
 		}
 	}
 })();
-
-Game.getInstance();

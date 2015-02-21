@@ -1,5 +1,10 @@
 extends index_include
 block content
-  canvas#home
+  canvas#bg
+  canvas#unit
+  canvas#ui
+  canvas#tooltip
+  canvas#minimap
   script(type='text/javascript').
-    Home.getInstance(!{JSON.stringify(user)}, !{JSON.stringify(units)});
+    console.log(!{JSON.stringify(user)}, !{JSON.stringify(units)});
+    Game.getInstance(!{JSON.stringify(user)}, !{JSON.stringify(units)});
