@@ -6,6 +6,8 @@ var MapSchema = new Schema({
 		index:String,
 		block:Boolean,
 	}],
+	act:Number,
+	chapter:Number,
 	width:Number,
 	height:Number,
 	cols:Number,

@@ -2,9 +2,10 @@ var Game = (function(){
 
 	var instance;
 
-	function init(user_builder, unit_builder_array){
+	function init(user_builder, unit_builder_array, map_builder){
 		var unit_stage, map_stage, ui_stage, loader, minimap_stage, tooltip_stage, hero, blocks;
-		var cols = rows = 40;
+		var cols = map_builder.cols;
+		var rows = map_builder.rows;
 		var scale = 5;
 		window.onresize = function(){
 			map_stage.canvas.width = unit_stage.canvas.width = window.innerWidth;
@@ -336,6 +337,7 @@ var Game = (function(){
 		};
 
 		var manifest = [];
+		console.log(unit_builder_array);
 		manifest.push({src:unit_builder_array[0].src,id:unit_builder_array[0].src_id});
 		manifest.push({src:unit_builder_array[0].portrait_src,id:unit_builder_array[0].portrait_id});
 		/*
@@ -344,7 +346,7 @@ var Game = (function(){
 		manifest.push({src:monster_builder.src,id:monster_builder.src_id});
 		*/
 
-		map_data.maps.forEach(function(map){
+		map_builder.maps.forEach(function(map){
 			manifest.push({src:map.src,id:map.index});
 		});
 		/*
@@ -384,7 +386,7 @@ var Game = (function(){
 		}
 
 		function initMapStage(){
-			map_stage = new Map_Stage(map_data);
+			map_stage = new Map_Stage(map_builder);
 			blocks = map_stage.getBlock();
 		}
 
@@ -408,8 +410,8 @@ var Game = (function(){
 		}
 
 		function createHero(builder){
-			builder.x = map_data.start_point[0];
-			builder.y = map_data.start_point[1];
+			builder.x = map_stage.getStartPosition().x - 160;
+			builder.y = map_stage.getStartPosition().y - 160;
 			builder.blocks = blocks;
 			hero = new Hero(builder);
 			unit_stage.addHero(hero);
@@ -473,9 +475,9 @@ var Game = (function(){
 	}
 
 	return {
-		getInstance:function(user_builder, unit_builder_array){
+		getInstance:function(user_builder, unit_builder_array, map_builder){
 			if(!instance){
-				instance = init(user_builder, unit_builder_array);
+				instance = init(user_builder, unit_builder_array, map_builder);
 			}
 			return instance;
 		}

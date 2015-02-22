@@ -28,26 +28,40 @@ Map_Stage.prototype.initialize = function(){
 	}
 
 	this.loader = this.game.getLoader();
+
+	for(i = 0 ; i < this.cols ; i++){
+		for(j = 0 ; j < this.rows ; j++){
+			this.block[2*i][2*j] =  this.block[2*i+1][2*j] = this.block[2*i][2*j+1]= this.block[2*i+1][2*j+1] = 'E';
+		}
+	}
+
 	this.maps.forEach(function(map){
 		for(i=0;i<map.tiles.length;i++){
 			for(j=0;j<map.tiles[i].length;j++){
 				if(map.tiles[i][j]>0){
 					var index = map.tiles[i][j] - 1;
-					var bitmap = new createjs.Bitmap(this.loader.getResult(map.id));
+					var bitmap = new createjs.Bitmap(this.loader.getResult(map.index));
 					bitmap.sourceRect = new createjs.Rectangle(map.tile_map[index][0],map.tile_map[index][1],map.tile_map[index][2],map.tile_map[index][3]);
 					bitmap.cache(0,0,32,32);
 					bitmap.x = j * 32;
 					bitmap.y = i * 32;
 					this.addChild(bitmap);
 				}
-				if(map.block){
-					this.block[2*i][2*j] =  this.block[2*i+1][2*j] = this.block[2*i][2*j+1]= this.block[2*i+1][2*j+1] = map.tiles[i][j] > 0 ? 65535 : 'E';
+
+				if(map.block && map.tiles[i][j] > 0){
+					this.block[2*i][2*j] =  this.block[2*i+1][2*j] = this.block[2*i][2*j+1]= this.block[2*i+1][2*j+1] = 65535;
 				}
 			}
 		}
 	}, this);
 
+	this.start_position = args.start_point;
+
 	this.update();
+}
+
+Map_Stage.prototype.getStartPosition = function(){
+	return {x:this.start_position[0], y:this.start_position[1]}
 }
 
 Map_Stage.prototype.getBlock = function(){

@@ -17,12 +17,10 @@ UserController = {
 		var gold = 100;
 		user.save(function(err, user){
 			if(err) return console.error(err);
-			req.session.user_id = user._id;
-			res.cookie('user_id', user._id, {maxAge: 10 * 365 * 24 * 60 * 60 * 1000, httpOnly: true });
-			UnitController.createUnit(1, user._id, function(err, unit){
-				callback(user, unit);
-			});
-		});
+			UnitController.createUnit(0, user._id, function(err, unit){
+				this.loginById(user._id, req, res, callback);
+			}.bind(this));
+		}.bind(this));
 	},
 	loginById:function(id, req, res, callback){
 		UserModel.findById(id, function(err, user){
@@ -34,7 +32,9 @@ UserController = {
 					req.session.user_id = user._id;
 					res.cookie('user_id', user._id, {maxAge: 10 * 365 * 24 * 60 * 60 * 1000, httpOnly: true });
 					UnitController.getUnitsByUserId(user._id, function(err, units){
-						callback(user, units);
+						MapModel.findOne({act:1,chapter:1}, function(err, map){
+							callback(user, units, map);
+						})
 					});
 				});
 			}else{

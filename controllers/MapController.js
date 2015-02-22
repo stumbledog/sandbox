@@ -1,0 +1,5 @@
+MapController = {
+	loadMap:function(){
+		
+	}
+}
