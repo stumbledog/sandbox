@@ -337,20 +337,30 @@ var Game = (function(){
 		};
 
 		var manifest = [];
+		unit_builder_array.forEach(function(unit_builder){
+			var id = unit_builder.src.split('/').pop();
+			manifest.push({src:unit_builder.src, id:id});
+			if(unit_builder.portrait_src){
+				var id = unit_builder.portrait_src.split('/').pop();
+				manifest.push({src:unit_builder.portrait_src, id:id});
+			}
+		});
+		/*
 		manifest.push({src:unit_builder_array[0].src,id:unit_builder_array[0].src_id});
 		manifest.push({src:unit_builder_array[0].portrait_src,id:unit_builder_array[0].portrait_id});
-		/*
 		manifest.push({src:hero_builder.weapon.src,id:hero_builder.weapon.src_id});
 		manifest.push({src:follow_builder.src,id:follow_builder.src_id});
 		manifest.push({src:monster_builder.src,id:monster_builder.src_id});
 		*/
 
 		map_builder.maps.forEach(function(map){
-			manifest.push({src:map.src,id:map.index});
+			var id = map.src.split('/').pop();
+			manifest.push({src:map.src, id:id});
 		});
 
 		map_builder.units.forEach(function(unit){
-			manifest.push({src:unit.prototype_unit.src, id:unit.prototype_unit.src_id});
+			var id = unit.prototype_unit.src.split('/').pop();
+			manifest.push({src:unit.prototype_unit.src, id:id});
 		})
 		/*
 		hero_builder.skills.forEach(function(skill){
@@ -387,7 +397,14 @@ var Game = (function(){
 			map_builder.units.forEach(function(unit_builder){
 				unit_builder.prototype_unit.x =  unit_builder.position.x;
 				unit_builder.prototype_unit.y =  unit_builder.position.y;
-				createEnemy(unit_builder.prototype_unit);
+				switch(unit_builder.prototype_unit.team){
+					case "enemy":
+						createEnemy(unit_builder.prototype_unit);
+						break;
+					case "player":
+						createNPC(unit_builder.prototype_unit);
+						break;
+				}
 			});
 
 			ui_stage.initHeroUI(hero);
@@ -436,6 +453,11 @@ var Game = (function(){
 		function createEnemy(builder){
 			builder.blocks = blocks;
 			unit_stage.addUnit(new Monster(builder));
+		}
+
+		function createNPC(builder){
+			builder.blocks = blocks;
+			unit_stage.addUnit(new NPC(builder));	
 		}
 
 		return {

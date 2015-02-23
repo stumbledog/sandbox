@@ -1,9 +1,7 @@
 var PrototypeUnitSchema = new Schema({
 	_id:Number,
 	src:String,
-	src_id:String,
 	portrait_src:String,
-	portrait_id:String,
 	index:Number,
 	level:Number,
 	exp:Number,
@@ -24,6 +22,8 @@ var PrototypeUnitSchema = new Schema({
 	team:String,
 	health_color:String,
 	damage_color:String,
+	regX:Number,
+	regY:Number,
 	_items:[{
 		type:Schema.Types.ObjectId,
 		ref:'Item'

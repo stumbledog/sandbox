@@ -49,7 +49,8 @@ Unit.prototype.initialize = function(builder){
 	this.filter = null;
 
 	this.shadow = new createjs.Shadow("#333",3,3,10);
-	this.renderUnit(builder.src_id, builder.index);
+	this.renderUnit(builder.src.split('/').pop(), builder.index, builder.regX, builder.regY);
+
 	if(builder.weapon){
 		this.renderWeapon(builder.weapon);
 	}
@@ -57,8 +58,6 @@ Unit.prototype.initialize = function(builder){
 	if(builder.skills){
 		this.initSkills(builder.skills);
 	}
-
-	this.initHealthBar();
 
 	this.velocity = new Vector(0,0);
 }
@@ -87,7 +86,7 @@ Unit.prototype.useSkill = function(key, mouse_position){
 	this.skills[key].useSkill(mouse_position);
 }
 
-Unit.prototype.renderUnit = function(src_id, index){
+Unit.prototype.renderUnit = function(src_id, index, regX, regY){
 	var frames = [];
 
 	for(var i=0 ;i < 12; i++){
@@ -114,11 +113,28 @@ Unit.prototype.renderUnit = function(src_id, index){
 				frames:[9,10,11],
 				speed:this.getMovementSpeed()/5,
 			},
+			stop:{
+				frames:[1]
+			}
 		}
 	});
 	this.sprite = new createjs.Sprite(spriteSheet);
+	this.sprite.regX = regX;
+	this.sprite.regY = regY;
 	this.sprite.z = 0;
-	this.addChild(this.sprite);
+	this.outline = this.sprite.clone();
+	this.outline.scaleX = this.outline.scaleY = 1.1;
+	this.outline.visible = false;
+	this.addChild(this.outline, this.sprite);
+}
+
+Unit.prototype.renderPortrait = function(portrait_id, index){
+	this.portrait = new createjs.Bitmap(this.loader.getResult(portrait_id));
+	this.portrait.sourceRect = new createjs.Rectangle(index % 4 * 96, parseInt(index / 4) * 96, 96, 96);
+}
+
+Unit.prototype.getPortrait = function(){
+	return this.portrait;
 }
 
 Unit.prototype.renderWeapon = function(weapon){
@@ -362,6 +378,7 @@ Unit.prototype.rotate = function(dx, dy){
 		}
 	}
 	this.sprite.gotoAndPlay(this.direction);
+	this.outline.gotoAndPlay(this.direction);
 }
 
 Unit.prototype.attackTarget = function(target, damage){
@@ -385,6 +402,9 @@ Unit.prototype.attackTarget = function(target, damage){
 			.call(function(){
 				target.hit(this, this.getDamage());
 			}.bind(this))
+			.to({y:0},this.getAttackSpeed() * 5, createjs.Ease.backOut);
+		createjs.Tween.get(this.outline)
+			.to({y:-8},this.getAttackSpeed() * 5, createjs.Ease.backOut)
 			.to({y:0},this.getAttackSpeed() * 5, createjs.Ease.backOut);
 	}
 }
@@ -465,7 +485,6 @@ Unit.prototype.levelUp = function(){
 	createjs.Tween.get(levelup_text).to({y:-42},1000, createjs.Ease.cubicOut).wait(500).call(function(item){
 		this.removeChild(levelup_text);
 	},[],this);
-
 }
 
 Unit.prototype.die = function(attacker){
@@ -554,6 +573,16 @@ Unit.prototype.moveAttackTick = function(distance){
 	}	
 }
 
+Unit.prototype.interactNPC = function(){
+	if(this.getSquareDistance(this.order.npc) <= Math.pow(this.radius + this.order.npc.radius,2)){
+		this.velocity = new Vector(0,0);
+		this.order.npc.interaction(this);
+		this.order = {action:"stop", map:this.findPath({x:this.x,y:this.y})};
+	}else{
+		this.procMove(this.order.map);
+	}
+}
+
 Unit.prototype.tick = function(){
 	switch(this.order.action){
 		case "move":
@@ -569,6 +598,9 @@ Unit.prototype.tick = function(){
 			break;
 		case "annihilate":
 			this.moveAttackTick(null);
+			break;
+		case "interact_npc":
+			this.interactNPC();
 			break;
 	}
 

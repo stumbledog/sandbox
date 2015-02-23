@@ -3,12 +3,12 @@ function Monster(builder){
 }
 
 Monster.prototype = new Unit();
-
 Monster.prototype.constructor = Monster;
 Monster.prototype.unit_initialize = Monster.prototype.initialize;
 
 Monster.prototype.initialize = function(builder){
 	this.unit_initialize(builder);
+	this.initHealthBar();
 	this.initEventListener();
 	this.rotate(0,1);
 	this.order = {action:"guard", map:this.findPath({x:this.x,y:this.y})};
@@ -26,16 +26,18 @@ Monster.prototype.initEventListener = function(){
 	this.addEventListener("rollover", function(event){
 		if(this.status !== "death"){
 			this.mouseover = true;
-			this.getStage().setTarget(this);
+			this.outline.visible = true;
+			//this.getStage().setTarget(this);
 		}
 	}.bind(this));
 
 	this.addEventListener("rollout", function(event){
 		if(this.status !== "death"){
 			this.mouseover = false;
-			this.sprite.filters = null;
-			this.sprite.uncache();
-			this.getStage().unsetTarget(this);
+			this.outline.visible = false;
+			this.outline.filters = null;
+			this.outline.uncache();
+			//this.getStage().unsetTarget(this);
 		}
 	}.bind(this));
 }
@@ -59,8 +61,8 @@ Monster.prototype.die = function(attacker){
 Monster.prototype.tick = function(){
 	Unit.prototype.tick.call(this);
 	if(this.mouseover){
-		this.sprite.uncache();
-		this.sprite.filters = [new createjs.ColorFilter(1,0,0,1)];
-		this.sprite.cache(-12,-16,24,32);
+		this.outline.uncache();
+		this.outline.filters = [new createjs.ColorFilter(0,0,0,1,255,0,0,0)];
+		this.outline.cache(-12,-16,24,32);
 	}
 }

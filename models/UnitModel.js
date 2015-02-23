@@ -1,9 +1,8 @@
 var UnitSchema = new Schema({
 	src:String,
-	src_id:String,
 	portrait_src:String,
-	portrait_id:String,
 	index:Number,
+	rate:Number,
 	level:Number,
 	exp:Number,
 	resource_type:String,

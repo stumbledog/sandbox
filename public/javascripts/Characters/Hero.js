@@ -9,7 +9,8 @@ Hero.prototype.unit_initialize = Hero.prototype.initialize;
 
 Hero.prototype.hero_initialize = function(builder){
 	this.unit_initialize(builder);
-	this.renderPortrait(builder.portrait_id, builder.index);
+	this.initHealthBar();
+	this.renderPortrait(builder.portrait_src.split('/').pop(), builder.index);
 	this.renderRange();
 	this.order = {action:"stop", map:this.findPath({x:this.x,y:this.y})};
 	this.rotate(0,1);
@@ -23,15 +24,6 @@ Hero.prototype.renderRange = function(){
 	this.range_shape = new createjs.Shape();
 	this.range_shape.graphics.s("#F00").ss(2).dc(0,0,this.radius + this.range);
 	this.range_shape.alpha = 0.5;
-}
-
-Hero.prototype.renderPortrait = function(portrait_id, index){
-	this.portrait = new createjs.Bitmap(this.loader.getResult(portrait_id));
-	this.portrait.sourceRect = new createjs.Rectangle(index % 4 * 96, parseInt(index / 4) * 96, 96, 96);
-}
-
-Hero.prototype.getPortrait = function(){
-	return this.portrait;
 }
 
 Hero.prototype.attackTarget = function(target, damage){
