@@ -56,7 +56,6 @@ Map_Stage.prototype.initialize = function(){
 	}, this);
 
 	this.start_position = args.start_point;
-
 	this.update();
 }
 

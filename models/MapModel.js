@@ -6,6 +6,13 @@ var MapSchema = new Schema({
 		index:String,
 		block:Boolean,
 	}],
+	units:[{
+		prototype_unit:{type:Number, ref:"PrototypeUnit"},
+		position:{
+			x:Number,
+			y:Number,
+		}
+	}],
 	act:Number,
 	chapter:Number,
 	width:Number,

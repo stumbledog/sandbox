@@ -520,7 +520,7 @@ Unit.prototype.getSquareDistance = function(target){
 
 Unit.prototype.attackTick = function(){
 	if(this.order.target && this.order.target.status !== "death"){
-		if(this.getSquareDistance(this.order.target) <= Math.pow(this.range + this.radius + this.target.radius,2)){
+		if(this.getSquareDistance(this.order.target) <= Math.pow(this.range + this.radius + this.order.target.radius,2)){
 			this.velocity = new Vector(0,0);
 			if(this.ticks > this.getAttackSpeed()){
 				this.ticks = 0;

@@ -337,7 +337,6 @@ var Game = (function(){
 		};
 
 		var manifest = [];
-		console.log(unit_builder_array);
 		manifest.push({src:unit_builder_array[0].src,id:unit_builder_array[0].src_id});
 		manifest.push({src:unit_builder_array[0].portrait_src,id:unit_builder_array[0].portrait_id});
 		/*
@@ -349,6 +348,10 @@ var Game = (function(){
 		map_builder.maps.forEach(function(map){
 			manifest.push({src:map.src,id:map.index});
 		});
+
+		map_builder.units.forEach(function(unit){
+			manifest.push({src:unit.prototype_unit.src, id:unit.prototype_unit.src_id});
+		})
 		/*
 		hero_builder.skills.forEach(function(skill){
 			manifest.push({src:skill.src,id:skill.name});
@@ -370,17 +373,23 @@ var Game = (function(){
 			initTooltipStage();
 			initUIStage();
 
-			/*
-			createHero(hero_builder);
-			for(var i=0;i<9;i++){
-				createFollower(follow_builder);
-			}
+			unit_builder_array.forEach(function(unit_builder){
+				switch(unit_builder.type){
+					case "hero":
+					createHero(unit_builder);
+					break;
+					case "follow":
+					createFollower(unit_builder);
+					break;
+				}
+			});
 
-			for(var i=0;i<100;i++){
-				createEnemy(monster_builder);
-			}
-			*/
-			createHero(unit_builder_array[0]);
+			map_builder.units.forEach(function(unit_builder){
+				unit_builder.prototype_unit.x =  unit_builder.position.x;
+				unit_builder.prototype_unit.y =  unit_builder.position.y;
+				createEnemy(unit_builder.prototype_unit);
+			});
+
 			ui_stage.initHeroUI(hero);
 			minimap_stage.initUnits(unit_stage.getUnits());
 		}
@@ -410,23 +419,21 @@ var Game = (function(){
 		}
 
 		function createHero(builder){
-			builder.x = map_stage.getStartPosition().x - 160;
-			builder.y = map_stage.getStartPosition().y - 160;
+			builder.x = map_stage.getStartPosition().x;
+			builder.y = map_stage.getStartPosition().y;
 			builder.blocks = blocks;
 			hero = new Hero(builder);
 			unit_stage.addHero(hero);
 		}
 
 		function createFollower(builder){
-			builder.x = map_data.start_point[0] + Math.random();
-			builder.y = map_data.start_point[1] + Math.random();
+			builder.x = map_stage.getStartPosition().x + Math.random();
+			builder.y = map_stage.getStartPosition().y + Math.random();
 			builder.blocks = blocks;
 			unit_stage.addFollower(new Follower(builder));
 		}
 
 		function createEnemy(builder){
-			builder.x = Math.floor(Math.random()*cols)*32+8;
-			builder.y = Math.floor(Math.random()*rows)*32+8;
 			builder.blocks = blocks;
 			unit_stage.addUnit(new Monster(builder));
 		}

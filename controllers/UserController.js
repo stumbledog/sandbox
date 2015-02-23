@@ -32,9 +32,12 @@ UserController = {
 					req.session.user_id = user._id;
 					res.cookie('user_id', user._id, {maxAge: 10 * 365 * 24 * 60 * 60 * 1000, httpOnly: true });
 					UnitController.getUnitsByUserId(user._id, function(err, units){
+						MapController.loadMap(1,1, function(err, map){
+							callback(user, units, map);
+						});/*
 						MapModel.findOne({act:1,chapter:1}, function(err, map){
 							callback(user, units, map);
-						})
+						});*/
 					});
 				});
 			}else{
