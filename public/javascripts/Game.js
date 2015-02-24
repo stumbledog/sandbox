@@ -7,12 +7,14 @@ var Game = (function(){
 		var cols = map_builder.cols;
 		var rows = map_builder.rows;
 		var scale = 5;
+
 		window.onresize = function(){
 			map_stage.canvas.width = unit_stage.canvas.width = window.innerWidth;
 			map_stage.canvas.height = unit_stage.canvas.height = window.innerHeight;
 			map_stage.update();
 			unit_stage.update();
 		};
+
 		/*
 		var hero_builder = {
 			src:"assets/Graphics/Characters/01 - Hero.png",
