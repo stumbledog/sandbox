@@ -41,7 +41,7 @@ Map_Stage.prototype.initialize = function(){
 				if(map.tiles[i][j]>0){
 					var index = map.tiles[i][j] - 1;
 					var bitmap = new createjs.Bitmap(this.loader.getResult(map.src.split('/').pop()));
-					bitmap.sourceRect = new createjs.Rectangle(map.tile_map[index][0],map.tile_map[index][1],map.tile_map[index][2],map.tile_map[index][3]);
+					bitmap.sourceRect = new createjs.Rectangle(map.tile_map[index][0], map.tile_map[index][1], 32, 32);
 					bitmap.cache(0,0,32,32);
 					bitmap.x = j * 32;
 					bitmap.y = i * 32;
