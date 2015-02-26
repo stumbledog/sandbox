@@ -498,8 +498,8 @@ var Game = (function(){
 				regX = regX < 0 ? 0 : regX > maxX ? maxX : regX;
 				regY = regY < 0 ? 0 : regY > maxY ? maxY : regY;
 
-				map_stage.regX = unit_stage.regX = regX;
-				map_stage.regY = unit_stage.regY = regY;
+				map_stage.regX = unit_stage.regX = map_stage.width < window.innerWidth / scale ? 0 : regX;
+				map_stage.regY = unit_stage.regY = map_stage.height < window.innerHeight / scale ? 0 : regY;
 				map_stage.update();
 			}
 		}

@@ -33,6 +33,8 @@ function savePrototypeUnit(){
 	units.push(initPrototypeUnit(100, "assets/Graphics/Characters/29 - Monster.png", null, 0, 1, 10, "mana", 100, 100, 5, 1, 60, 0, 1, 0, 1, 4, 80, 16, "monster", "enemy", "#C00", "#CC0", 0, 8));
 	units.push(initPrototypeUnit(101, "assets/Graphics/Characters/12 - Merchant.png", null, 0, 1, 10, "mana", 100, 100, 5, 1, 60, 0, 0.5, 0, 1, 12, 80, 16, "npc", "player", "#C00", "#CC0", 0, 0));
 	units.push(initPrototypeUnit(102, "assets/Graphics/Characters/12 - Merchant.png", null, 1, 1, 10, "mana", 100, 100, 5, 1, 60, 0, 0.5, 0, 1, 12, 80, 16, "npc", "player", "#C00", "#CC0", 0, 0));
+	units.push(initPrototypeUnit(103, "assets/Graphics/Characters/12 - Merchant.png", null, 2, 1, 10, "mana", 100, 100, 5, 1, 60, 0, 0.5, 0, 1, 12, 80, 16, "npc", "player", "#C00", "#CC0", 0, 0));
+	units.push(initPrototypeUnit(104, "assets/Graphics/Characters/23 - Soldier.png", null, 0, 1, 10, "mana", 100, 100, 5, 1, 60, 0, 0.5, 0, 1, 12, 80, 16, "npc", "player", "#C00", "#CC0", 0, 0));
 
 	var count = 0;
 	units.forEach(function(unit){
@@ -73,12 +75,12 @@ function saveMap(){
 				tiles:[
 					[ 0, 0, 1, 2, 3, 3, 4, 5, 0, 0],
 					[ 0, 0, 6, 7, 8, 8, 9,10, 0, 0],
-					[ 0, 0,11,12,13,13,14,15, 0, 0],
-					[ 0, 0,16,17,18,18,19,20, 0, 0],
+					[ 0, 0,11,12,21,13,14,15, 0, 0],
+					[ 0, 0,16,17,22,18,19,20, 0, 0],
 					[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-					[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-					[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-					[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+					[23,24,25, 0, 0, 0, 0, 0, 0, 0],
+					[26,27,28, 0, 0, 0, 0, 0, 0, 0],
+					[29,30,31, 0, 0, 0, 0, 0, 0, 0],
 					[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 					[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 				],
@@ -103,6 +105,17 @@ function saveMap(){
 					[32*10,	32*6],
 					[32*11,	32*6],
 					[32*12,	32*6],
+					[32*14,	32*3],
+					[32*14,	32*4],
+					[32*5,	32*13],
+					[32*6,	32*13],
+					[32*7,	32*13],
+					[32*5,	32*14],
+					[32*6,	32*14],
+					[32*7,	32*14],
+					[32*5,	32*15],
+					[32*6,	32*15],
+					[32*7,	32*15],
 				], 
 				src:"assets/Graphics/Tilesets/B/Exterior_Forest_TileB.png",
 				block:true
@@ -111,11 +124,19 @@ function saveMap(){
 		[
 			{
 				prototype_unit:101,
-				position:{x:48, y:96},
+				position:{x:32*4, y:32*4},
 			},
 			{
 				prototype_unit:102,
-				position:{x:176, y:96},
+				position:{x:32*6, y:32*4},
+			},
+			{
+				prototype_unit:103,
+				position:{x:32*3, y:32*7},
+			},
+			{
+				prototype_unit:104,
+				position:{x:32*7, y:32*7},
 			}
 
 		],
