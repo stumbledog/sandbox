@@ -1,4 +1,5 @@
 var UnitSchema = new Schema({
+	name:String,
 	src:String,
 	portrait_src:String,
 	index:Number,

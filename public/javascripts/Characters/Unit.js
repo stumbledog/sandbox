@@ -19,6 +19,7 @@ Unit.prototype.initialize = function(builder){
 	this.x = builder.x;
 	this.y = builder.y;
 
+	this.name = builder.name;
 	this.max_health = this.health = builder.health;
 	this.movement_speed = builder.movement_speed;
 	this.level = builder.level;

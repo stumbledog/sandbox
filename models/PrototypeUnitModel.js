@@ -1,5 +1,6 @@
 var PrototypeUnitSchema = new Schema({
 	_id:Number,
+	name:String,
 	src:String,
 	portrait_src:String,
 	index:Number,

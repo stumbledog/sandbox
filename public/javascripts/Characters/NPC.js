@@ -11,6 +11,11 @@ NPC.prototype.npc_initialize = function(builder){
 	this.outline.gotoAndPlay("stop");
 	this.sprite.gotoAndPlay("stop");
 	this.initEventListener();
+	this.health_color = "#FFB03B";
+}
+
+NPC.prototype.displayName = function(){
+	console.log(this.name);
 }
 
 NPC.prototype.initEventListener = function(){
@@ -23,6 +28,7 @@ NPC.prototype.initEventListener = function(){
 	}.bind(this));
 
 	this.addEventListener("rollover", function(event){
+		this.displayName();
 		this.mouseover = true;
 		this.outline.visible = true;
 	}.bind(this));
