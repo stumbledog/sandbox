@@ -12,10 +12,10 @@ NPC.prototype.npc_initialize = function(builder){
 	this.sprite.gotoAndPlay("stop");
 	this.initEventListener();
 	this.health_color = "#FFB03B";
-}
-
-NPC.prototype.displayName = function(){
-	console.log(this.name);
+	this.name_text = new OutlineText(this.name,"bold 6px Arial",this.health_color,"#000",2);
+	this.name_text.textAlign("center");
+	this.name_text.y = -20;
+	this.addChild(this.name_text);
 }
 
 NPC.prototype.initEventListener = function(){
@@ -28,7 +28,6 @@ NPC.prototype.initEventListener = function(){
 	}.bind(this));
 
 	this.addEventListener("rollover", function(event){
-		this.displayName();
 		this.mouseover = true;
 		this.outline.visible = true;
 	}.bind(this));
