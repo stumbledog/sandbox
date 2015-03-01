@@ -1,6 +1,10 @@
 var PrototypeUnitSchema = new Schema({
 	_id:Number,
 	name:String,
+	strength:Number,
+	agilty:Number,
+	intelligence:Number,
+	stamina:Number,
 	src:String,
 	portrait_src:String,
 	index:Number,

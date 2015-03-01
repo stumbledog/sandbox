@@ -20,6 +20,11 @@ Unit.prototype.initialize = function(builder){
 	this.y = builder.y;
 
 	this.name = builder.name;
+	this.strength = builder.strength;
+	this.agilty = builder.agilty;
+	this.intelligence = builder.intelligence;
+	this.stamina = builder.stamina;
+
 	this.max_health = this.health = builder.health;
 	this.movement_speed = builder.movement_speed;
 	this.level = builder.level;

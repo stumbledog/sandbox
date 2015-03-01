@@ -1,8 +1,9 @@
-var ItemSchema = new Schema({
-	name:String,
+var PrototypeItemSchema = new Schema({
+	_id:Number,
 	type:String,
+	rating:String,
 	src:String,
-	src_id:String,
+	icon:String,
 	cropX:Number,
 	cropY:Number,
 	width:Number,
@@ -23,4 +24,4 @@ var ItemSchema = new Schema({
 	}
 });
 
-ItemModel = mongoose.model('Item', ItemSchema);
+PrototypeItemModel = mongoose.model('PrototypeItem', PrototypeItemSchema);
