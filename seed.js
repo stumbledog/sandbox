@@ -162,39 +162,68 @@ function saveMap(){
 
 function saveItem(){
 	var items = [];
-	items.push(initPrototypeItem());
+	items.push(initPrototypeItem(1,"meleeweapon","normal","long sword","assets/Graphics/System/Icons/IconSet.png",292,100,16,16,12,12,0.8,{damage:3, attack_speed:60, one_hand:true}));
 }
 
 /*
-	_id:Number,
-	type:String,
-	src:String,
-	src_id:String,
-	cropX:Number,
-	cropY:Number,
-	width:Number,
-	height:Number,
-	regX:Number,
-	regY:Number,
-	scale:Number,
-	stats:{
-		strength:Number,
-		agility:Number,
-		intelligence:Number,
-		stamina:Number,
-		damage:Number,
-		attack_speed:Number,
-		movement_speed:Number,
-		critical_rate:Number,
-		critical_damage:Number,
-	}
+
+src:"assets/Graphics/System/Icons/IconSet.png",
+src_id:"IconSet",
+cropX:292,
+cropY:100,
+width:16,
+height:16,
+regX:12,
+regY:12,
+scale:0.8,
+
+_id:Number,
+_id:Number,
+type:String,
+rating:String,
+name:String,
+type:String,
+src:String,
+src_id:String,
+cropX:Number,
+cropY:Number,
+width:Number,
+height:Number,
+regX:Number,
+regY:Number,
+scale:Number,
+stats:{
+	strength:Number,
+	agility:Number,
+	intelligence:Number,
+	stamina:Number,
+	damage:Number,
+	attack_speed:Number,
+	movement_speed:Number,
+	critical_rate:Number,
+	critical_damage:Number,
+}
 */
 
-function initPrototypeItem(id,){
-
+function initPrototypeItem(id, type, rating, name, src, cropX, cropY, width, height, regX, regY, scale, stats){
+	var prototype_item = new ItemModel({
+		_id:id,
+		type:type,
+		rating:rating,
+		name:name,
+		src:src,
+		cropX:cropX,
+		cropY:cropY,
+		width:width,
+		height:height,
+		regX:regX,
+		regY:regY,
+		scale:scale,
+		stats:stats
+	});
 }
 
-function initPrototypeUnit(id, name, strength, agilty, intelligence, stamina,
+function initPrototypeUnit(id, name, strength, dexterity, intelligence, vitality,
 	src, portrait_src,
 	index, level, exp, resource_type, resource,
 	max_resource, health, damage, attack_speed, armor,
@@ -213,7 +242,10 @@ function initPrototypeUnit(id, name, strength, agilty, intelligence, stamina,
 		resource:resource,
 		max_resource:max_resource,
 		health:health,
-		damage:damage,
+		strength:strength,
+		dexterity:dexterity,
+		intelligence:intelligence,
+		vitality:vitality,
 		attack_speed:attack_speed,
 		armor:armor,
 		movement_speed:movement_speed,

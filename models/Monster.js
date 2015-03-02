@@ -1,13 +1,13 @@
-var UnitSchema = new Schema({
+var MonsterSchema = new Schema({
+	_id:Number,
 	name:String,
 	strength:Number,
-	dexterity:Number,
+	cexterity:Number,
 	intelligence:Number,
 	vitality:Number,
 	src:String,
 	portrait_src:String,
 	index:Number,
-	rate:Number,
 	level:Number,
 	exp:Number,
 	resource_type:String,
@@ -27,10 +27,8 @@ var UnitSchema = new Schema({
 	team:String,
 	health_color:String,
 	damage_color:String,
-	_user:{
-		type:Schema.Types.ObjectId,
-		ref:'User'
-	},
+	regX:Number,
+	regY:Number,
 	_items:[{
 		type:Schema.Types.ObjectId,
 		ref:'Item'
@@ -41,4 +39,4 @@ var UnitSchema = new Schema({
 	}]
 });
 
-UnitModel = mongoose.model('Unit', UnitSchema);
+MonsterModel = mongoose.model('Monster', MonsterSchema);

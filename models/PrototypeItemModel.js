@@ -2,6 +2,7 @@ var PrototypeItemSchema = new Schema({
 	_id:Number,
 	type:String,
 	rating:String,
+	name:String,
 	src:String,
 	icon:String,
 	cropX:Number,
