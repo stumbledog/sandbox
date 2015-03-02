@@ -162,36 +162,10 @@ function saveMap(){
 
 function saveItem(){
 	var items = [];
-	items.push(initPrototypeItem(1,"meleeweapon","normal","long sword","assets/Graphics/System/Icons/IconSet.png",292,100,16,16,12,12,0.8,{damage:3, attack_speed:60, one_hand:true}));
+	items.push(initPrototypeItem(1,"melee-weapon","normal","long sword","assets/Graphics/System/Icons/IconSet.png",292,100,16,16,12,12,0.8,{damage:3, attack_speed:60, one_hand:true}));
 }
 
 /*
-
-src:"assets/Graphics/System/Icons/IconSet.png",
-src_id:"IconSet",
-cropX:292,
-cropY:100,
-width:16,
-height:16,
-regX:12,
-regY:12,
-scale:0.8,
-
-_id:Number,
-_id:Number,
-type:String,
-rating:String,
-name:String,
-type:String,
-src:String,
-src_id:String,
-cropX:Number,
-cropY:Number,
-width:Number,
-height:Number,
-regX:Number,
-regY:Number,
-scale:Number,
 stats:{
 	strength:Number,
 	agility:Number,
