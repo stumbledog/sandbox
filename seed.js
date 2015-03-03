@@ -2,6 +2,7 @@ mongoose = require('mongoose');
 Schema = mongoose.Schema;
 fs = require('fs');
 require('./models/PrototypeUnitModel');
+require('./models/PrototypeWeaponModel');
 require('./models/MapModel');
 
 mongoose.connect('mongodb://localhost/condottiere');
@@ -154,48 +155,76 @@ function saveMap(){
 			count++;
 			if(count === maps.length){
 				console.log(count + " maps are created");
+				saveWeapon();
+			}
+		});
+	});
+}
+
+function saveWeapon(){
+	var weapons = [];
+	weapons.push(new PrototypeWeaponModel({_id:1, hand:"1-hand", type:"melee", rating:"common", name:"long sword",
+		sprite:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:292,cropY:100,width:16,height:16,regX:12,regY:12,scale:0.8},
+		icon:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:292,cropY:100,width:16,height:16,regX:12,regY:12,scale:0.8},
+		min_damage:1,max_damage:2,attack_speed:60,
+	}));
+	weapons.push(new PrototypeWeaponModel({_id:2, hand:"2-hand", type:"melee", rating:"common", name:"great sword",
+		sprite:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:292,cropY:100,width:16,height:16,regX:12,regY:12,scale:0.8},
+		icon:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:292,cropY:100,width:16,height:16,regX:12,regY:12,scale:0.8},
+		min_damage:2,max_damage:3,attack_speed:90,
+	}));
+
+	var count = 0;
+	weapons.forEach(function(weapon){
+		weapon.save(function(){
+			count++;
+			if(count === weapons.length){
+				console.log(count + " weapons are created");
 				process.exit(0);
 			}
 		});
-	});	
-}
-
-function saveItem(){
-	var items = [];
-	items.push(initPrototypeItem(1,"melee-weapon","normal","long sword","assets/Graphics/System/Icons/IconSet.png",292,100,16,16,12,12,0.8,{damage:3, attack_speed:60, one_hand:true}));
+	});
 }
 
 /*
-stats:{
-	strength:Number,
-	agility:Number,
-	intelligence:Number,
-	stamina:Number,
-	damage:Number,
-	attack_speed:Number,
-	movement_speed:Number,
-	critical_rate:Number,
-	critical_damage:Number,
-}
+_id:Number,
+hand:String,	// 1-hand, 2-hand
+type:String,	// melee, range
+rating:String,	// common, magic, rare, epic, legendary
+name:String,
+sprite:{
+	source:String,
+	cropX:Number,
+	cropY:Number,
+	width:Number,
+	height:Number,
+	regX:Number,
+	regY:Number,
+	scale:Number,
+},
+icon:{
+	source:String,
+	cropX:Number,
+	cropY:Number,
+	width:Number,
+	height:Number,
+	regX:Number,
+	regY:Number,
+	scale:Number,
+},
+min_damage:Number,
+max_damage:Number,
+attack_speed:Number,
+movement_speed:Number,
+strength:Number,
+agility:Number,
+intelligence:Number,
+stamina:Number,
+critical_rate:Number,
+critical_damage:Number,
+life_steal:Number,
+armor:Number,
 */
-
-function initPrototypeItem(id, type, rating, name, src, cropX, cropY, width, height, regX, regY, scale, stats){
-	var prototype_item = new ItemModel({
-		_id:id,
-		type:type,
-		rating:rating,
-		name:name,
-		src:src,
-		cropX:cropX,
-		cropY:cropY,
-		width:width,
-		height:height,
-		regX:regX,
-		regY:regY,
-		scale:scale,
-		stats:stats
-	});
-}
 
 function initPrototypeUnit(id, name, strength, dexterity, intelligence, vitality,
 	src, portrait_src,
