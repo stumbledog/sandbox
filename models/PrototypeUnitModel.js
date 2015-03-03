@@ -1,6 +1,7 @@
 var PrototypeUnitSchema = new Schema({
 	_id:Number,
 	name:String,
+	primary_attribute:String,
 	strength:Number,
 	cexterity:Number,
 	intelligence:Number,
@@ -29,6 +30,7 @@ var PrototypeUnitSchema = new Schema({
 	damage_color:String,
 	regX:Number,
 	regY:Number,
+	recruitable:Boolean,
 	_items:[{
 		type:Schema.Types.ObjectId,
 		ref:'Item'

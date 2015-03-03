@@ -3,6 +3,7 @@ var WeaponSchema = new Schema({
 	type:String,	// melee, range
 	rating:String,	// common, magic, rare, epic, legendary
 	name:String,
+	price:Number,
 	sprite:{
 		source:String,
 		cropX:Number,
@@ -25,6 +26,7 @@ var WeaponSchema = new Schema({
 	},
 	min_damage:Number,
 	max_damage:Number,
+	range:Number,
 	attack_speed:Number,
 	movement_speed:Number,
 	strength:Number,
@@ -35,6 +37,11 @@ var WeaponSchema = new Schema({
 	critical_damage:Number,
 	life_steal:Number,
 	armor:Number,
+});
+
+WeaponSchema.pre('save', function(next){
+	this.price = (min_damage + max_damage) / 2 / this.attack_speed * 100;
+	next();
 });
 
 WeaponModel = mongoose.model('Weapon', WeaponSchema);

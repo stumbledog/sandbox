@@ -6,6 +6,8 @@ var Game = (function(){
 		var unit_stage, map_stage, ui_stage, loader, minimap_stage, tooltip_stage, hero, blocks;
 		var cols = map_builder.cols;
 		var rows = map_builder.rows;
+		var merchartable_items = map_builder.merchartable_items;
+		var recruitable_units = map_builder.recruitable_units;
 		var scale = 5;
 
 		window.onresize = function(){
@@ -223,7 +225,6 @@ var Game = (function(){
 			health_color:"#C00",
 			damage_color:"#CC0",
 		};
-		*/
 		var map_data = {
 			maps:[{
 				tiles:[
@@ -337,6 +338,7 @@ var Game = (function(){
 			rows:rows,
 			start_point:[32,32],
 		};
+		*/
 
 		var manifest = [];
 		unit_builder_array.forEach(function(unit_builder){
@@ -360,9 +362,9 @@ var Game = (function(){
 			manifest.push({src:map.src, id:id});
 		});
 
-		map_builder.units.forEach(function(unit){
-			var id = unit.prototype_unit.src.split('/').pop();
-			manifest.push({src:unit.prototype_unit.src, id:id});
+		map_builder.npcs.forEach(function(npc){
+			var id = npc.npc.sprite.split('/').pop();
+			//manifest.push({src:npc.prototype_unit.src, id:id});
 		})
 		/*
 		hero_builder.skills.forEach(function(skill){
@@ -396,7 +398,7 @@ var Game = (function(){
 				}
 			});
 
-			map_builder.units.forEach(function(unit_builder){
+			map_builder.npcs.forEach(function(unit_builder){
 				unit_builder.prototype_unit.x =  unit_builder.position.x;
 				unit_builder.prototype_unit.y =  unit_builder.position.y;
 				switch(unit_builder.prototype_unit.team){

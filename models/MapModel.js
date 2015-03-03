@@ -5,8 +5,15 @@ var MapSchema = new Schema({
 		src:String, 
 		block:Boolean,
 	}],
-	units:[{
-		prototype_unit:{type:Number, ref:"PrototypeUnit"},
+	monsters:[{
+		_monster:{type:Number, ref:"Monster"},
+		position:{
+			x:Number,
+			y:Number,
+		}
+	}],
+	npcs:[{
+		_npc:{type:Number, ref:"NPC"},
 		position:{
 			x:Number,
 			y:Number,
@@ -14,10 +21,14 @@ var MapSchema = new Schema({
 	}],
 	act:Number,
 	chapter:Number,
+	merchant:Boolean,
+	recruiter:Boolean,
 	width:Number,
 	height:Number,
 	cols:Number,
 	rows:Number,
+	merchartable_items:Schema.Types.Mixed,
+	recruitable_units:Schema.Types.Mixed,
 	start_point:[Number]
 });
 

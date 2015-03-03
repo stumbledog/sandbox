@@ -11,5 +11,8 @@ UnitController = {
 	getUnitsByUserId:function(user_id, callback){
 		console.log("Load units by user id");
 		UnitModel.find({_user:user_id}, callback);
+	},
+	loadRecruitableUnit:function(callback){
+		PrototypeUnitModel.find({recruitable:true}, callback);
 	}
 }

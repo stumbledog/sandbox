@@ -3,7 +3,9 @@ Schema = mongoose.Schema;
 fs = require('fs');
 require('./models/PrototypeUnitModel');
 require('./models/PrototypeWeaponModel');
+require('./models/PrototypeArmorModel');
 require('./models/MapModel');
+require('./models/NPCModel');
 
 mongoose.connect('mongodb://localhost/condottiere');
 
@@ -11,31 +13,53 @@ mongoose.connect('mongodb://localhost/condottiere');
 var connection = mongoose.connection;
 connection.on("error", console.error.bind(console, 'connection error:'));
 connection.once("open", function(){
-	PrototypeUnitModel.remove().exec().then(function(number_of_deleted_prototype_unit){
-		console.log(number_of_deleted_prototype_unit + " prototype units are deleted");
+	PrototypeUnitModel.remove().exec().then(function(count){
+		console.log(count + " prototype units are deleted");
 		return MapModel.remove().exec();
-	}).then(function(number_of_deleted_map){
-		console.log(number_of_deleted_map + " maps are deleted");
+	}).then(function(count){
+		console.log(count + " maps are deleted");
+		return PrototypeWeaponModel.remove().exec();
+	}).then(function(count){
+		console.log(count + " maps are deleted");
+		return NPCModel.remove().exec();
+	}).then(function(count){
+		console.log(count + " NPCs are deleted");
 		savePrototypeUnit();
 	});
 });
 
 function savePrototypeUnit(){
 	var units = [];
-	units.push(initPrototypeUnit(  0, 'Hero', 10, 3, 2, 10, "assets/Graphics/Characters/01 - Hero.png", "assets/Graphics/Faces/ds_face01-02.png", 0, 1, 0, "fury", 0, 100, 100, 1, 30, 2, 1.5, 0.1, 2, 12, 80, 16, "hero", "player", "#0C0", "#C00", 0, 0));
-	units.push(initPrototypeUnit(  1, 'Hero', 10, 3, 2, 10, "assets/Graphics/Characters/01 - Hero.png", "assets/Graphics/Faces/ds_face01-02.png", 1, 1, 0, "fury", 0, 100, 100, 1, 30, 2, 1.5, 0.1, 2, 12, 80, 16, "hero", "player", "#0C0", "#C00", 0, 0));
-	units.push(initPrototypeUnit(  2, 'Hero', 10, 3, 2, 10, "assets/Graphics/Characters/01 - Hero.png", "assets/Graphics/Faces/ds_face01-02.png", 2, 1, 0, "fury", 0, 100, 100, 1, 30, 2, 1.5, 0.1, 2, 12, 80, 16, "hero", "player", "#0C0", "#C00", 0, 0));
-	units.push(initPrototypeUnit(  3, 'Hero', 10, 3, 2, 10, "assets/Graphics/Characters/01 - Hero.png", "assets/Graphics/Faces/ds_face01-02.png", 3, 1, 0, "fury", 0, 100, 100, 1, 30, 2, 1.5, 0.1, 2, 12, 80, 16, "hero", "player", "#0C0", "#C00", 0, 0));
-	units.push(initPrototypeUnit(  4, 'Hero', 10, 3, 2, 10, "assets/Graphics/Characters/01 - Hero.png", "assets/Graphics/Faces/ds_face01-02.png", 4, 1, 0, "fury", 0, 100, 100, 1, 30, 2, 1.5, 0.1, 2, 12, 80, 16, "hero", "player", "#0C0", "#C00", 0, 0));
-	units.push(initPrototypeUnit(  5, 'Hero', 10, 3, 2, 10, "assets/Graphics/Characters/01 - Hero.png", "assets/Graphics/Faces/ds_face01-02.png", 5, 1, 0, "fury", 0, 100, 100, 1, 30, 2, 1.5, 0.1, 2, 12, 80, 16, "hero", "player", "#0C0", "#C00", 0, 0));
-	units.push(initPrototypeUnit(  6, 'Hero', 10, 3, 2, 10, "assets/Graphics/Characters/01 - Hero.png", "assets/Graphics/Faces/ds_face01-02.png", 6, 1, 0, "fury", 0, 100, 100, 1, 30, 2, 1.5, 0.1, 2, 12, 80, 16, "hero", "player", "#0C0", "#C00", 0, 0));
-	units.push(initPrototypeUnit(  7, 'Hero', 10, 3, 2, 10, "assets/Graphics/Characters/01 - Hero.png", "assets/Graphics/Faces/ds_face01-02.png", 7, 1, 0, "fury", 0, 100, 100, 1, 30, 2, 1.5, 0.1, 2, 12, 80, 16, "hero", "player", "#0C0", "#C00", 0, 0));
+	units.push(initPrototypeUnit(  0, 'Hero', 10, 3, 2, 10, "assets/Graphics/Characters/01 - Hero.png", "assets/Graphics/Faces/ds_face01-02.png", 0, 1, 0, "fury", 0, 100, 100, 1, 30, 2, 1.5, 0.1, 2, 12, 80, 16, "hero", "player", "#0C0", "#C00", 0, 0, false));
+	units.push(initPrototypeUnit(  1, 'Hero', 10, 3, 2, 10, "assets/Graphics/Characters/01 - Hero.png", "assets/Graphics/Faces/ds_face01-02.png", 1, 1, 0, "fury", 0, 100, 100, 1, 30, 2, 1.5, 0.1, 2, 12, 80, 16, "hero", "player", "#0C0", "#C00", 0, 0, false));
+	units.push(initPrototypeUnit(  2, 'Hero', 10, 3, 2, 10, "assets/Graphics/Characters/01 - Hero.png", "assets/Graphics/Faces/ds_face01-02.png", 2, 1, 0, "fury", 0, 100, 100, 1, 30, 2, 1.5, 0.1, 2, 12, 80, 16, "hero", "player", "#0C0", "#C00", 0, 0, false));
+	units.push(initPrototypeUnit(  3, 'Hero', 10, 3, 2, 10, "assets/Graphics/Characters/01 - Hero.png", "assets/Graphics/Faces/ds_face01-02.png", 3, 1, 0, "fury", 0, 100, 100, 1, 30, 2, 1.5, 0.1, 2, 12, 80, 16, "hero", "player", "#0C0", "#C00", 0, 0, false));
+	units.push(initPrototypeUnit(  4, 'Hero', 10, 3, 2, 10, "assets/Graphics/Characters/01 - Hero.png", "assets/Graphics/Faces/ds_face01-02.png", 4, 1, 0, "fury", 0, 100, 100, 1, 30, 2, 1.5, 0.1, 2, 12, 80, 16, "hero", "player", "#0C0", "#C00", 0, 0, false));
+	units.push(initPrototypeUnit(  5, 'Hero', 10, 3, 2, 10, "assets/Graphics/Characters/01 - Hero.png", "assets/Graphics/Faces/ds_face01-02.png", 5, 1, 0, "fury", 0, 100, 100, 1, 30, 2, 1.5, 0.1, 2, 12, 80, 16, "hero", "player", "#0C0", "#C00", 0, 0, false));
+	units.push(initPrototypeUnit(  6, 'Hero', 10, 3, 2, 10, "assets/Graphics/Characters/01 - Hero.png", "assets/Graphics/Faces/ds_face01-02.png", 6, 1, 0, "fury", 0, 100, 100, 1, 30, 2, 1.5, 0.1, 2, 12, 80, 16, "hero", "player", "#0C0", "#C00", 0, 0, false));
+	units.push(initPrototypeUnit(  7, 'Hero', 10, 3, 2, 10, "assets/Graphics/Characters/01 - Hero.png", "assets/Graphics/Faces/ds_face01-02.png", 7, 1, 0, "fury", 0, 100, 100, 1, 30, 2, 1.5, 0.1, 2, 12, 80, 16, "hero", "player", "#0C0", "#C00", 0, 0, false));
 
-	units.push(initPrototypeUnit(100, 'slaim', 10, 3, 2, 10, "assets/Graphics/Characters/29 - Monster.png", null, 0, 1, 10, "mana", 100, 100, 5, 1, 60, 0, 1, 0, 1, 4, 80, 16, "monster", "enemy", "#C00", "#CC0", 0, 8));
-	units.push(initPrototypeUnit(101, 'Item Merchant', 10, 3, 2, 10, "assets/Graphics/Characters/12 - Merchant.png", null, 0, 1, 10, "mana", 100, 100, 5, 1, 60, 0, 0.5, 0, 1, 12, 80, 16, "npc", "player", "#C00", "#CC0", 0, 0));
-	units.push(initPrototypeUnit(102, 'Merchant', 10, 3, 2, 10, "assets/Graphics/Characters/12 - Merchant.png", null, 1, 1, 10, "mana", 100, 100, 5, 1, 60, 0, 0.5, 0, 1, 12, 80, 16, "npc", "player", "#C00", "#CC0", 0, 0));
-	units.push(initPrototypeUnit(103, 'Merchant', 10, 3, 2, 10, "assets/Graphics/Characters/12 - Merchant.png", null, 2, 1, 10, "mana", 100, 100, 5, 1, 60, 0, 0.5, 0, 1, 12, 80, 16, "npc", "player", "#C00", "#CC0", 0, 0));
-	units.push(initPrototypeUnit(104, 'Battlemaster', 10, 3, 2, 10, "assets/Graphics/Characters/23 - Soldier.png", null, 0, 1, 10, "mana", 100, 100, 5, 1, 60, 0, 0.5, 0, 1, 12, 80, 16, "npc", "player", "#C00", "#CC0", 0, 0));
+	units.push(new NPCModel({_id:100, name:"Merchant",		sprite:"assets/Graphics/Characters/12 - Merchant.png", index:0, type:"merchant"}));
+	units.push(new NPCModel({_id:101, name:"Recruiter",		sprite:"assets/Graphics/Characters/12 - Merchant.png", index:1, type:"recruiter"}));
+	units.push(new NPCModel({_id:102, name:"Blacksmith",	sprite:"assets/Graphics/Characters/12 - Merchant.png", index:2, type:"blacksmith"}));
+	units.push(new NPCModel({_id:103, name:"Battlemaster",	sprite:"assets/Graphics/Characters/12 - Merchant.png", index:3, type:"battlemaster"}));
+
+	/*
+	units.push(initPrototypeUnit(101, 'Recruiter', 10, 3, 2, 10, "assets/Graphics/Characters/12 - Merchant.png", null, 1, 1, 10, "mana", 100, 100, 5, 1, 60, 0, 0.5, 0, 1, 12, 80, 16, "npc", "player", "#C00", "#CC0", 0, 0, false));
+	units.push(initPrototypeUnit(102, 'Blacksmith', 10, 3, 2, 10, "assets/Graphics/Characters/12 - Merchant.png", null, 2, 1, 10, "mana", 100, 100, 5, 1, 60, 0, 0.5, 0, 1, 12, 80, 16, "npc", "player", "#C00", "#CC0", 0, 0, false));
+	units.push(initPrototypeUnit(103, 'Battlemaster', 10, 3, 2, 10, "assets/Graphics/Characters/23 - Soldier.png", null, 0, 1, 10, "mana", 100, 100, 5, 1, 60, 0, 0.5, 0, 1, 12, 80, 16, "npc", "player", "#C00", "#CC0", 0, 0, false));
+	*/
+	units.push(initPrototypeUnit(200, 'slime', 10, 3, 2, 10, "assets/Graphics/Characters/29 - Monster.png", null, 0, 1, 10, "mana", 100, 100, 5, 1, 60, 0, 1, 0, 1, 4, 80, 16, "monster", "enemy", "#C00", "#CC0", 0, 8, true));
+
+	units.push(initPrototypeUnit(300, 'slime', 10, 3, 2, 10, "assets/Graphics/Characters/29 - Monster.png", null, 0, 1, 10, "mana", 100, 100, 5, 1, 60, 0, 1, 0, 1, 4, 80, 16, "monster", "enemy", "#C00", "#CC0", 0, 8, false));
+
+/*
+	_id:Number,
+	name:String,
+	sprite:String,
+	index:Number,
+	type:String,	//recruiter, merchant, blacksmith, battlemaster
+*/
 
 	var count = 0;
 	units.forEach(function(unit){
@@ -86,68 +110,30 @@ function saveMap(){
 					[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 				],
 				tile_map:[
-					[32*8,	32*3],
-					[32*9,	32*3],
-					[32*10,	32*3],
-					[32*11,	32*3],
-					[32*12,	32*3],
-					[32*8,	32*4],
-					[32*9,	32*4],
-					[32*10,	32*4],
-					[32*11,	32*4],
-					[32*12,	32*4],
-					[32*8,	32*5],
-					[32*9,	32*5],
-					[32*10,	32*5],
-					[32*11,	32*5],
-					[32*12,	32*5],
-					[32*8,	32*6],
-					[32*9,	32*6],
-					[32*10,	32*6],
-					[32*11,	32*6],
-					[32*12,	32*6],
-					[32*14,	32*3],
-					[32*14,	32*4],
-					[32*5,	32*13],
-					[32*6,	32*13],
-					[32*7,	32*13],
-					[32*5,	32*14],
-					[32*6,	32*14],
-					[32*7,	32*14],
-					[32*5,	32*15],
-					[32*6,	32*15],
-					[32*7,	32*15],
+					[32*8,	32*3],	[32*9,	32*3],	[32*10,	32*3],
+					[32*11,	32*3],	[32*12,	32*3],	[32*8,	32*4],
+					[32*9,	32*4],	[32*10,	32*4],	[32*11,	32*4],
+					[32*12,	32*4],	[32*8,	32*5],	[32*9,	32*5],
+					[32*10,	32*5],	[32*11,	32*5],	[32*12,	32*5],
+					[32*8,	32*6],	[32*9,	32*6], 
+					[32*10,	32*6],	[32*11,	32*6],	[32*12,	32*6],
+					[32*14,	32*3],	[32*14,	32*4],
+					[32*5,	32*13],	[32*6,	32*13],	[32*7,	32*13],
+					[32*5,	32*14],	[32*6,	32*14],	[32*7,	32*14],
+					[32*5,	32*15],	[32*6,	32*15],	[32*7,	32*15],
 				], 
 				src:"assets/Graphics/Tilesets/B/Exterior_Forest_TileB.png",
 				block:true
 			}
 		],
 		[
-			{
-				prototype_unit:101,
-				position:{x:32*4, y:32*4},
-			},
-			{
-				prototype_unit:102,
-				position:{x:32*6, y:32*4},
-			},
-			{
-				prototype_unit:103,
-				position:{x:32*3, y:32*7},
-			},
-			{
-				prototype_unit:104,
-				position:{x:32*7, y:32*7},
-			}
+			{npc:100, position:{x:32*4, y:32*4}},
+			{npc:101, position:{x:32*6, y:32*4}},
+			{npc:102, position:{x:32*3, y:32*7}},
+			{npc:103, position:{x:32*7, y:32*7}}
 
 		],
-		1,
-		1,
-		320,
-		320,
-		10,
-		10,
-		[160,160]
+		[],1,1,true,true,320,320,10,10,[160,160]
 	));
 	var count = 0;
 	maps.forEach(function(map){
@@ -163,15 +149,23 @@ function saveMap(){
 
 function saveWeapon(){
 	var weapons = [];
-	weapons.push(new PrototypeWeaponModel({_id:1, hand:"1-hand", type:"melee", rating:"common", name:"long sword",
+
+	weapons.push(new PrototypeWeaponModel({_id:1, level:1, hand:"1-hand", type:"melee", rating:"common", name:"dagger", merchantable:true,
 		sprite:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:292,cropY:100,width:16,height:16,regX:12,regY:12,scale:0.8},
 		icon:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:292,cropY:100,width:16,height:16,regX:12,regY:12,scale:0.8},
-		min_damage:1,max_damage:2,attack_speed:60,
+		min_damage:1,max_damage:2,range:16,attack_speed:30,
 	}));
-	weapons.push(new PrototypeWeaponModel({_id:2, hand:"2-hand", type:"melee", rating:"common", name:"great sword",
+
+	weapons.push(new PrototypeWeaponModel({_id:2, level:1, hand:"1-hand", type:"melee", rating:"common", name:"long sword", merchantable:true,
 		sprite:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:292,cropY:100,width:16,height:16,regX:12,regY:12,scale:0.8},
 		icon:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:292,cropY:100,width:16,height:16,regX:12,regY:12,scale:0.8},
-		min_damage:2,max_damage:3,attack_speed:90,
+		min_damage:2,max_damage:4,range:16,attack_speed:60,
+	}));
+
+	weapons.push(new PrototypeWeaponModel({_id:3, level:1, hand:"2-hand", type:"melee", rating:"common", name:"great sword", merchantable:true,
+		sprite:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:292,cropY:100,width:16,height:16,regX:12,regY:12,scale:0.8},
+		icon:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:292,cropY:100,width:16,height:16,regX:12,regY:12,scale:0.8},
+		min_damage:3,max_damage:6,range:32,attack_speed:90,
 	}));
 
 	var count = 0;
@@ -186,54 +180,14 @@ function saveWeapon(){
 	});
 }
 
-/*
-_id:Number,
-hand:String,	// 1-hand, 2-hand
-type:String,	// melee, range
-rating:String,	// common, magic, rare, epic, legendary
-name:String,
-sprite:{
-	source:String,
-	cropX:Number,
-	cropY:Number,
-	width:Number,
-	height:Number,
-	regX:Number,
-	regY:Number,
-	scale:Number,
-},
-icon:{
-	source:String,
-	cropX:Number,
-	cropY:Number,
-	width:Number,
-	height:Number,
-	regX:Number,
-	regY:Number,
-	scale:Number,
-},
-min_damage:Number,
-max_damage:Number,
-attack_speed:Number,
-movement_speed:Number,
-strength:Number,
-agility:Number,
-intelligence:Number,
-stamina:Number,
-critical_rate:Number,
-critical_damage:Number,
-life_steal:Number,
-armor:Number,
-*/
-
 function initPrototypeUnit(id, name, strength, dexterity, intelligence, vitality,
 	src, portrait_src,
 	index, level, exp, resource_type, resource,
 	max_resource, health, damage, attack_speed, armor,
 	movement_speed, critical_rate, critical_damage, radius, aggro_radius,
 	range, type, team, health_color, damage_color,
-	regX, regY){
-	var prototype_unit = new PrototypeUnitModel({
+	regX, regY, recruitable){
+	return new PrototypeUnitModel({
 		_id:id,
 		name:name,
 		src:src,
@@ -263,23 +217,23 @@ function initPrototypeUnit(id, name, strength, dexterity, intelligence, vitality
 		damage_color:damage_color,
 		regX:regX,
 		regY:regY,
+		recruitable:recruitable,
 	});
-
-	return prototype_unit;
 }
 
-function initMap(maps, units, act, chapter, width, height, cols, rows, start_point){
-	var map = new MapModel({
+function initMap(maps, npcs, monsters, act, chapter, merchant, recruiter, width, height, cols, rows, start_point){
+	return new MapModel({
 		maps:maps,
-		units:units,
+		npcs:npcs,
+		monsters:monsters,
 		act:act,
 		chapter:chapter,
+		merchant:merchant,
+		recruiter:recruiter,
 		width:width,
 		height:height,
 		cols:cols,
 		rows:rows,
 		start_point:start_point,
 	});
-
-	return map;
 }

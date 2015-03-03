@@ -1,8 +1,27 @@
 MapController = {
 	loadMap:function(act, chapter, callback){
-		MapModel.findOne({act:act,chapter:chapter}).populate("units.prototype_unit").exec(callback);
+		MapModel.findOne({act:act,chapter:chapter}).populate("npcs.npc").exec(function(err, map){
+			this.loadMerchantItem(map, callback);
+		}.bind(this));
 	},
-	loadUnits:function(req, res, callback){
-
-	}
+	loadMerchantItem:function(map, callback){
+		if(map.merchant){
+			ItemController.loadMerchantItem(function(err, items){
+				map.merchartable_items = items;
+				this.loadRecruiterUnit(map, callback);
+			}.bind(this));
+		}else{
+			this.loadRecruiterUnit(map, callback);
+		}
+	},
+	loadRecruiterUnit:function(map, callback){
+		if(map.recruiter){
+			UnitController.loadRecruitableUnit(function(err, units){
+				map.recruitable_units = units;
+				callback(map);
+			});
+		}else{
+			callback(map);
+		}
+	},
 }

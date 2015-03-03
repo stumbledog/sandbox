@@ -1,5 +1,6 @@
 var UnitSchema = new Schema({
 	name:String,
+	primary_attribute:String,
 	strength:Number,
 	dexterity:Number,
 	intelligence:Number,

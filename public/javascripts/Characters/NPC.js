@@ -16,6 +16,7 @@ NPC.prototype.npc_initialize = function(builder){
 	this.name_text.textAlign("center");
 	this.name_text.y = -20;
 	this.addChild(this.name_text);
+	this.store = new Store(this.name);
 }
 
 NPC.prototype.initEventListener = function(){

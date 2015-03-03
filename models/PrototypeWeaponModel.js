@@ -1,9 +1,11 @@
 var PrototypeWeaponSchema = new Schema({
 	_id:Number,
+	level:Number,
 	hand:String,	// 1-hand, 2-hand
 	type:String,	// melee, range
 	rating:String,	// common, magic, rare, epic, legendary
 	name:String,
+	merchantable:Boolean,
 	sprite:{
 		source:String,
 		cropX:Number,

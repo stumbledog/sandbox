@@ -21,3 +21,7 @@ Store.prototype.purchase = function(item){
 Store.prototype.refund = function(item){
 	
 }
+
+Store.prototype.recruitUnit = function(unit){
+
+}
