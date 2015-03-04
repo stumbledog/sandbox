@@ -8,6 +8,8 @@ Monster.prototype.unit_initialize = Monster.prototype.initialize;
 
 Monster.prototype.initialize = function(builder){
 	this.unit_initialize(builder);
+	this.health_color = "#C00";
+	this.damage_color = "#CC0";
 	this.initHealthBar();
 	this.initEventListener();
 	this.rotate(0,1);

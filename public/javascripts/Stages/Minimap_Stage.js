@@ -45,8 +45,8 @@ Minimap_Stage.prototype.initUnits = function(units){
 	units.forEach(function(unit){
 		unit.minimap_block = new createjs.Shape();
 		unit.minimap_block.graphics.f(unit.health_color).dr(0, 0, 160 / this.max_side * 32, 160 / this.max_side * 32);
-		unit.minimap_block.x = unit.x / this.max_side * 160;
-		unit.minimap_block.y = unit.y / this.max_side * 160;
+		unit.minimap_block.x = unit.x / this.max_side * 160 - 160 * 16 / this.max_side;
+		unit.minimap_block.y = unit.y / this.max_side * 160 - 160 * 16 / this.max_side;
 		this.addChild(unit.minimap_block);
 	}, this);
 }

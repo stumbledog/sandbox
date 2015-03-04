@@ -116,7 +116,6 @@ Unit_Stage.prototype.initEvent = function(){
 		if(this.target && this.target.status === "death"){
 			this.target = null;
 		}
-
 		this.hero.hideRange();
 		if(event.nativeEvent.button == 2){
 			if(this.target){
@@ -255,9 +254,22 @@ Unit_Stage.prototype.setCommand = function(type){
 	}
 }
 
-Unit_Stage.prototype.getUnits = function(self){
+Unit_Stage.prototype.getAllUnits = function(){
 	return this.unit_container.children;
 }
+
+Unit_Stage.prototype.getUnits = function(){
+	return this.unit_container.children.filter(function(unit){
+		return unit.constructor.name !== "NPC";
+	});
+}
+
+Unit_Stage.prototype.getNPCUnits = function(){
+	return this.unit_container.children.filter(function(unit){
+		return unit.constructor.name === "NPC";
+	});
+}
+
 Unit_Stage.prototype.getUnitsExceptMe = function(self){
 	return this.unit_container.children.filter(function(unit){return self.id !== unit.id && unit.status !== "death";});
 }

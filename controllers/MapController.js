@@ -1,6 +1,6 @@
 MapController = {
 	loadMap:function(act, chapter, callback){
-		MapModel.findOne({act:act,chapter:chapter}).populate("npcs.npc").exec(function(err, map){
+		MapModel.findOne({act:act,chapter:chapter}).populate("npcs.attribute").exec(function(err, map){
 			this.loadMerchantItem(map, callback);
 		}.bind(this));
 	},

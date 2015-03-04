@@ -5,19 +5,13 @@ var UnitSchema = new Schema({
 	dexterity:Number,
 	intelligence:Number,
 	vitality:Number,
-	src:String,
-	portrait_src:String,
+	sprite:String,
+	portrait:String,
 	index:Number,
 	rate:Number,
 	level:Number,
 	exp:Number,
 	resource_type:String,
-	//resource:Number,
-	//max_resource:Number,
-	//health:Number,
-	//damage:Number,
-	//attack_speed:Number,
-	//armor:Number,
 	movement_speed:Number,
 	critical_rate:Number,
 	critical_damage:Number,
@@ -28,18 +22,9 @@ var UnitSchema = new Schema({
 	team:String,
 	health_color:String,
 	damage_color:String,
-	_user:{
-		type:Schema.Types.ObjectId,
-		ref:'User'
-	},
-	_items:[{
-		type:Schema.Types.ObjectId,
-		ref:'Item'
-	}],
-	_skills:[{
-		type:Schema.Types.ObjectId,
-		ref:'Skill'
-	}]
+	_user:{type:Schema.Types.ObjectId, ref:'User'},
+	_items:[{type:Schema.Types.ObjectId, ref:'Item'}],
+	_skills:[{type:Schema.Types.ObjectId, ref:'Skill'}]
 });
 
 UnitModel = mongoose.model('Unit', UnitSchema);

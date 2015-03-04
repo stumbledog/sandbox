@@ -6,14 +6,14 @@ var MapSchema = new Schema({
 		block:Boolean,
 	}],
 	monsters:[{
-		_monster:{type:Number, ref:"Monster"},
+		attribute:{type:Number, ref:"Monster"},
 		position:{
 			x:Number,
 			y:Number,
 		}
 	}],
 	npcs:[{
-		_npc:{type:Number, ref:"NPC"},
+		attribute:{type:Number, ref:"NPC"},
 		position:{
 			x:Number,
 			y:Number,

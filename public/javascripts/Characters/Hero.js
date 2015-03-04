@@ -9,8 +9,29 @@ Hero.prototype.unit_initialize = Hero.prototype.initialize;
 
 Hero.prototype.hero_initialize = function(builder){
 	this.unit_initialize(builder);
-	this.initHealthBar();
-	this.renderPortrait(builder.portrait_src.split('/').pop(), builder.index);
+	this.health_color = "#0C0";
+	this.damage_color = "#C00";
+
+	this.blocks = builder.blocks;
+	this.strength = builder.strength;
+	this.dexterity = builder.dexterity;
+	this.intelligence = builder.intelligence;
+	this.vitality = builder.vitality;
+
+	this.max_health = this.health = builder.health;
+	this.movement_speed = builder.movement_speed;
+	this.level = builder.level;
+	this.exp = builder.exp;
+	this.resource_type = builder.resource_type;
+	this.resource = builder.resource;
+	this.max_resource = builder.max_resource;
+	this.radius = builder.radius;
+	this.aggro_radius = builder.aggro_radius;
+	this.range = builder.range;
+	this.attack_speed = builder.attack_speed;
+	this.damage = builder.damage;
+
+	this.renderPortrait(builder.portrait.split('/').pop(), builder.index);
 	this.renderRange();
 	this.order = {action:"stop", map:this.findPath({x:this.x,y:this.y})};
 	this.rotate(0,1);
@@ -18,6 +39,8 @@ Hero.prototype.hero_initialize = function(builder){
 	for(key in this.skills){
 		this.skills[key].remain_cooldown = 0;
 	}
+
+	this.initHealthBar();
 }
 
 Hero.prototype.renderRange = function(){

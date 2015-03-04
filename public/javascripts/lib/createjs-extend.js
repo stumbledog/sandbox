@@ -38,6 +38,10 @@ OutlineText.prototype.setAlpha = function(alpha){
 	this.outline.alpha = alpha;
 }
 
+OutlineText.prototype.setColor = function(color){
+	this.text.color = color;
+}
+
 function Button(text, button){
 	this.initialize(text, button);
 }

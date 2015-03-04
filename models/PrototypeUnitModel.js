@@ -3,21 +3,15 @@ var PrototypeUnitSchema = new Schema({
 	name:String,
 	primary_attribute:String,
 	strength:Number,
-	cexterity:Number,
+	dexterity:Number,
 	intelligence:Number,
 	vitality:Number,
-	src:String,
-	portrait_src:String,
+	sprite:String,
+	portrait:String,
 	index:Number,
 	level:Number,
 	exp:Number,
 	resource_type:String,
-	//resource:Number,
-	//max_resource:Number,
-	//health:Number,
-	//damage:Number,
-	//attack_speed:Number,
-	//armor:Number,
 	movement_speed:Number,
 	critical_rate:Number,
 	critical_damage:Number,
@@ -31,14 +25,8 @@ var PrototypeUnitSchema = new Schema({
 	regX:Number,
 	regY:Number,
 	recruitable:Boolean,
-	_items:[{
-		type:Schema.Types.ObjectId,
-		ref:'Item'
-	}],
-	_skills:[{
-		type:Schema.Types.ObjectId,
-		ref:'Skill'
-	}]
+	_items:[{type:Schema.Types.ObjectId, ref:'Item'}],
+	_skills:[{type:Schema.Types.ObjectId, ref:'Skill'}]
 });
 
 PrototypeUnitModel = mongoose.model('PrototypeUnit', PrototypeUnitSchema);

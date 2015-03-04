@@ -15,28 +15,10 @@ Unit.prototype.initialize = function(builder){
 	this.ticks = 60;
 	this.order_tick = 29;
 
-	this.blocks = builder.blocks;
 	this.x = builder.x;
 	this.y = builder.y;
 
 	this.name = builder.name;
-	this.strength = builder.strength;
-	this.dexterity = builder.dexterity;
-	this.intelligence = builder.intelligence;
-	this.vitality = builder.vitality;
-
-	this.max_health = this.health = builder.health;
-	this.movement_speed = builder.movement_speed;
-	this.level = builder.level;
-	this.exp = builder.exp;
-	this.resource_type = builder.resource_type;
-	this.resource = builder.resource;
-	this.max_resource = builder.max_resource;
-	this.radius = builder.radius;
-	this.aggro_radius = builder.aggro_radius;
-	this.range = builder.range;
-	this.attack_speed = builder.attack_speed;
-	this.damage = builder.damage;
 
 	this.buff = {
 		damage:1,
@@ -49,13 +31,10 @@ Unit.prototype.initialize = function(builder){
 	this.max_force = 0.3;
 	this.status = "alive";
 	this.target = null;
-
-	this.health_color = builder.health_color;
-	this.damage_color = builder.damage_color;
 	this.filter = null;
 
 	this.shadow = new createjs.Shadow("#333",3,3,10);
-	this.renderUnit(builder.src.split('/').pop(), builder.index, builder.regX, builder.regY);
+	this.renderUnit(builder.sprite.split('/').pop(), builder.index, builder.regX, builder.regY);
 
 	if(builder.weapon){
 		this.renderWeapon(builder.weapon);
@@ -93,6 +72,9 @@ Unit.prototype.useSkill = function(key, mouse_position){
 }
 
 Unit.prototype.renderUnit = function(src_id, index, regX, regY){
+	regX = typeof regX !== 'undefined' ? regX : 0;
+	regY = typeof regY !== 'undefined' ? regY : 0;
+
 	var frames = [];
 
 	for(var i=0 ;i < 12; i++){
@@ -105,19 +87,15 @@ Unit.prototype.renderUnit = function(src_id, index, regX, regY){
 		animations:{
 			front:{
 				frames:[0,1,2],
-				speed:this.getMovementSpeed()/5,
 			},
 			left:{
 				frames:[3,4,5],
-				speed:this.getMovementSpeed()/5,
 			},
 			right:{
 				frames:[6,7,8],
-				speed:this.getMovementSpeed()/5,
 			},
 			back:{
 				frames:[9,10,11],
-				speed:this.getMovementSpeed()/5,
 			},
 			stop:{
 				frames:[1]
@@ -385,6 +363,7 @@ Unit.prototype.rotate = function(dx, dy){
 	}
 	this.sprite.gotoAndPlay(this.direction);
 	this.outline.gotoAndPlay(this.direction);
+	this.sprite._animation.speed = this.getMovementSpeed() / 5;
 }
 
 Unit.prototype.attackTarget = function(target, damage){

@@ -39,10 +39,10 @@ function savePrototypeUnit(){
 	units.push(initPrototypeUnit(  6, 'Hero', 10, 3, 2, 10, "assets/Graphics/Characters/01 - Hero.png", "assets/Graphics/Faces/ds_face01-02.png", 6, 1, 0, "fury", 0, 100, 100, 1, 30, 2, 1.5, 0.1, 2, 12, 80, 16, "hero", "player", "#0C0", "#C00", 0, 0, false));
 	units.push(initPrototypeUnit(  7, 'Hero', 10, 3, 2, 10, "assets/Graphics/Characters/01 - Hero.png", "assets/Graphics/Faces/ds_face01-02.png", 7, 1, 0, "fury", 0, 100, 100, 1, 30, 2, 1.5, 0.1, 2, 12, 80, 16, "hero", "player", "#0C0", "#C00", 0, 0, false));
 
-	units.push(new NPCModel({_id:100, name:"Merchant",		sprite:"assets/Graphics/Characters/12 - Merchant.png", index:0, type:"merchant"}));
-	units.push(new NPCModel({_id:101, name:"Recruiter",		sprite:"assets/Graphics/Characters/12 - Merchant.png", index:1, type:"recruiter"}));
-	units.push(new NPCModel({_id:102, name:"Blacksmith",	sprite:"assets/Graphics/Characters/12 - Merchant.png", index:2, type:"blacksmith"}));
-	units.push(new NPCModel({_id:103, name:"Battlemaster",	sprite:"assets/Graphics/Characters/12 - Merchant.png", index:3, type:"battlemaster"}));
+	units.push(new NPCModel({_id:100, name:"Merchant",		sprite:"assets/Graphics/Characters/12 - Merchant.png",	index:0, type:"merchant"}));
+	units.push(new NPCModel({_id:101, name:"Recruiter",		sprite:"assets/Graphics/Characters/12 - Merchant.png",	index:1, type:"recruiter"}));
+	units.push(new NPCModel({_id:102, name:"Blacksmith",	sprite:"assets/Graphics/Characters/12 - Merchant.png",	index:2, type:"blacksmith"}));
+	units.push(new NPCModel({_id:103, name:"Battlemaster",	sprite:"assets/Graphics/Characters/23 - Soldier.png",	index:0, type:"battlemaster"}));
 
 	/*
 	units.push(initPrototypeUnit(101, 'Recruiter', 10, 3, 2, 10, "assets/Graphics/Characters/12 - Merchant.png", null, 1, 1, 10, "mana", 100, 100, 5, 1, 60, 0, 0.5, 0, 1, 12, 80, 16, "npc", "player", "#C00", "#CC0", 0, 0, false));
@@ -127,10 +127,10 @@ function saveMap(){
 			}
 		],
 		[
-			{npc:100, position:{x:32*4, y:32*4}},
-			{npc:101, position:{x:32*6, y:32*4}},
-			{npc:102, position:{x:32*3, y:32*7}},
-			{npc:103, position:{x:32*7, y:32*7}}
+			{attribute:100, position:{x:32*4, y:32*4}},
+			{attribute:101, position:{x:32*6, y:32*4}},
+			{attribute:102, position:{x:32*3, y:32*7}},
+			{attribute:103, position:{x:32*7, y:32*7}}
 
 		],
 		[],1,1,true,true,320,320,10,10,[160,160]
@@ -181,7 +181,7 @@ function saveWeapon(){
 }
 
 function initPrototypeUnit(id, name, strength, dexterity, intelligence, vitality,
-	src, portrait_src,
+	sprite, portrait,
 	index, level, exp, resource_type, resource,
 	max_resource, health, damage, attack_speed, armor,
 	movement_speed, critical_rate, critical_damage, radius, aggro_radius,
@@ -190,8 +190,8 @@ function initPrototypeUnit(id, name, strength, dexterity, intelligence, vitality
 	return new PrototypeUnitModel({
 		_id:id,
 		name:name,
-		src:src,
-		portrait_src:portrait_src,
+		sprite:sprite,
+		portrait:portrait,
 		index:index,
 		level:level,
 		exp:exp,

@@ -342,13 +342,12 @@ var Game = (function(){
 
 		var manifest = [];
 		unit_builder_array.forEach(function(unit_builder){
-			var id = unit_builder.src.split('/').pop();
-			manifest.push({src:unit_builder.src, id:id});
-			if(unit_builder.portrait_src){
-				var id = unit_builder.portrait_src.split('/').pop();
-				manifest.push({src:unit_builder.portrait_src, id:id});
+			manifest.push({src:unit_builder.sprite, id:unit_builder.sprite.split('/').pop()});
+			if(unit_builder.portrait){
+				manifest.push({src:unit_builder.portrait, id:unit_builder.portrait.split('/').pop()});
 			}
 		});
+
 		/*
 		manifest.push({src:unit_builder_array[0].src,id:unit_builder_array[0].src_id});
 		manifest.push({src:unit_builder_array[0].portrait_src,id:unit_builder_array[0].portrait_id});
@@ -358,14 +357,13 @@ var Game = (function(){
 		*/
 
 		map_builder.maps.forEach(function(map){
-			var id = map.src.split('/').pop();
-			manifest.push({src:map.src, id:id});
+			manifest.push({src:map.src, id:map.src.split('/').pop()});
 		});
 
 		map_builder.npcs.forEach(function(npc){
-			var id = npc.npc.sprite.split('/').pop();
-			//manifest.push({src:npc.prototype_unit.src, id:id});
-		})
+			manifest.push({src:npc.attribute.sprite, id:npc.attribute.sprite.split('/').pop()});
+		});
+
 		/*
 		hero_builder.skills.forEach(function(skill){
 			manifest.push({src:skill.src,id:skill.name});
@@ -376,6 +374,7 @@ var Game = (function(){
 			}
 		});
 		*/
+
 		loader = new createjs.LoadQueue(false);
 		loader.addEventListener("complete", handleLoadComplete);
 		loader.loadManifest(manifest);
@@ -398,20 +397,22 @@ var Game = (function(){
 				}
 			});
 
+			/*
 			map_builder.npcs.forEach(function(unit_builder){
-				unit_builder.prototype_unit.x =  unit_builder.position.x;
-				unit_builder.prototype_unit.y =  unit_builder.position.y;
-				switch(unit_builder.prototype_unit.team){
-					case "enemy":
-						createEnemy(unit_builder.prototype_unit);
-						break;
-					case "player":
-						createNPC(unit_builder.prototype_unit);
-						break;
-				}
+				unit_builder.attribute.x =  unit_builder.position.x;
+				unit_builder.attribute.y =  unit_builder.position.y;
+				createEnemy(unit_builder.attribute);
+			});
+			*/
+
+			map_builder.npcs.forEach(function(unit_builder){
+				unit_builder.attribute.x =  unit_builder.position.x;
+				unit_builder.attribute.y =  unit_builder.position.y;
+				createNPC(unit_builder.attribute);
 			});
 
 			ui_stage.initHeroUI(hero);
+			minimap_stage.initUnits(unit_stage.getNPCUnits());
 			minimap_stage.initUnits(unit_stage.getUnits());
 		}
 
@@ -460,8 +461,7 @@ var Game = (function(){
 		}
 
 		function createNPC(builder){
-			builder.blocks = blocks;
-			unit_stage.addUnit(new NPC(builder));	
+			unit_stage.addUnit(new NPC(builder));
 		}
 
 		return {
@@ -485,7 +485,7 @@ var Game = (function(){
 			},
 			setScale:function(delta){
 				scale += delta;
-				scale = scale < 2 ? 2 :scale > 5 ? 5 : scale;
+				scale = scale < 1 ? 1 :scale > 5 ? 5 : scale;
 				map_stage.scaleX = map_stage.scaleY = scale;
 				unit_stage.scaleX = unit_stage.scaleY = scale;
 				map_stage.update();

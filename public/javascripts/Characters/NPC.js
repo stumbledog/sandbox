@@ -11,8 +11,9 @@ NPC.prototype.npc_initialize = function(builder){
 	this.outline.gotoAndPlay("stop");
 	this.sprite.gotoAndPlay("stop");
 	this.initEventListener();
-	this.health_color = "#FFB03B";
-	this.name_text = new OutlineText(this.name,"bold 6px Arial",this.health_color,"#000",2);
+	this.radius = 16;
+	this.health_color = this.name_text_color = "#FFB03B";
+	this.name_text = new OutlineText(this.name,"bold 6px Arial",this.name_text_color,"#000",2);
 	this.name_text.textAlign("center");
 	this.name_text.y = -20;
 	this.addChild(this.name_text);
@@ -31,6 +32,8 @@ NPC.prototype.initEventListener = function(){
 	this.addEventListener("rollover", function(event){
 		this.mouseover = true;
 		this.outline.visible = true;
+		this.name_text.setColor("#45BF55");
+		this.shadow = null;
 	}.bind(this));
 
 	this.addEventListener("rollout", function(event){
@@ -38,13 +41,15 @@ NPC.prototype.initEventListener = function(){
 		this.outline.visible = false;
 		this.outline.filters = null;
 		this.outline.uncache();
+		this.name_text.setColor(this.name_text_color);
+		this.shadow = new createjs.Shadow("#333",3,3,10);
 	}.bind(this));
 }
 
 NPC.prototype.tick = function(){
 	if(this.mouseover){
 		this.outline.uncache();
-		this.outline.filters = [new createjs.ColorFilter(0,0,0,1,0,255,0,0)];
+		this.outline.filters = [new createjs.ColorFilter(0,0,0,1,69,191,85,0)];
 		this.outline.cache(-12,-16,24,32);
 	}
 }

@@ -12,6 +12,7 @@ Map_Stage.prototype.initialize = function(){
 	this.height = args.height;
 	this.rows = args.rows;
 	this.cols = args.cols;
+	this.npcs = args.npcs;
 
 	this.canvas = document.getElementById("bg");
 	this.canvas.width = window.innerWidth;
@@ -54,7 +55,14 @@ Map_Stage.prototype.initialize = function(){
 			}
 		}
 	}, this);
-
+	/*
+	this.npcs.forEach(function(npc){
+		this.block[parseInt(npc.position.y/16)-1][parseInt(npc.position.x/16)-1] = 65535;
+		this.block[parseInt(npc.position.y/16)-1][parseInt(npc.position.x/16)] = 65535;
+		this.block[parseInt(npc.position.y/16)][parseInt(npc.position.x/16)-1] = 65535;
+		this.block[parseInt(npc.position.y/16)][parseInt(npc.position.x/16)] = 65535;
+	}.bind(this));
+	*/
 	this.start_position = args.start_point;
 	this.update();
 }
