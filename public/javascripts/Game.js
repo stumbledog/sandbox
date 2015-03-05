@@ -3,7 +3,7 @@ var Game = (function(){
 	var instance;
 
 	function init(user_builder, unit_builder_array, map_builder){
-		var unit_stage, map_stage, ui_stage, loader, minimap_stage, tooltip_stage, hero, blocks;
+		var unit_stage, map_stage, ui_stage, loader, minimap_stage, tooltip_stage, menu_stage, hero, blocks;
 		var cols = map_builder.cols;
 		var rows = map_builder.rows;
 		var merchartable_items = map_builder.merchartable_items;
@@ -11,9 +11,10 @@ var Game = (function(){
 		var scale = 5;
 
 		window.onresize = function(){
-			map_stage.canvas.width = unit_stage.canvas.width = window.innerWidth;
-			map_stage.canvas.height = unit_stage.canvas.height = window.innerHeight;
+			menu_stage.canvas.width = map_stage.canvas.width = unit_stage.canvas.width = window.innerWidth;
+			menu_stage.canvas.height = map_stage.canvas.height = unit_stage.canvas.height = window.innerHeight;
 			map_stage.update();
+			menu_stage.update();
 			unit_stage.update();
 		};
 
@@ -380,11 +381,12 @@ var Game = (function(){
 		loader.loadManifest(manifest);
 
 		function handleLoadComplete(){
-			initMapStage();
+/*			initMapStage();
 			initMinimapStage();
 			initUnitStage();
 			initTooltipStage();
-			initUIStage();
+			initUIStage();*/
+			initStages();
 
 			unit_builder_array.forEach(function(unit_builder){
 				switch(unit_builder.type){
@@ -416,13 +418,26 @@ var Game = (function(){
 			minimap_stage.initUnits(unit_stage.getUnits());
 		}
 
+		function initStages(){
+			map_stage = new Map_Stage(map_builder);
+			blocks = map_stage.getBlock();
+			minimap_stage = new Minimap_Stage();
+			unit_stage = new Unit_Stage(cols * 32, rows * 32);
+			tooltip_stage = new Tooltip_Stage();
+			ui_stage = new UI_Stage();
+			map_stage.scaleX = map_stage.scaleY = scale;
+			unit_stage.scaleX = unit_stage.scaleY = scale;
+			map_stage.update();
+			menu_stage = new Menu_Stage(cols * 32, rows * 32);
+		}
+
 		function initMapStage(){
 			map_stage = new Map_Stage(map_builder);
 			blocks = map_stage.getBlock();
 		}
 
 		function initUnitStage(){
-			unit_stage = new Unit_Stage(cols * 32, rows * 32, 20);
+			unit_stage = new Unit_Stage(cols * 32, rows * 32);
 		}
 
 		function initUIStage(){
@@ -482,6 +497,9 @@ var Game = (function(){
 			},
 			getMinimapStage:function(){
 				return minimap_stage;
+			},
+			getMenuStage:function(){
+				return menu_stage;
 			},
 			setScale:function(delta){
 				scale += delta;

@@ -1,11 +1,11 @@
-function Unit_Stage(width, height, rows){
-	this.initialize(width, height, rows);
+function Unit_Stage(width, height){
+	this.initialize(width, height);
 }
 
 createjs.extend(Unit_Stage, createjs.Stage);
 Unit_Stage = createjs.promote(Unit_Stage, "Stage");
 
-Unit_Stage.prototype.initialize = function(width, height, rows){
+Unit_Stage.prototype.initialize = function(width, height){
 	this.width = width;
 	this.height = height;
 	this.canvas = document.getElementById("unit");

@@ -7,7 +7,8 @@ canvas#home,
 canvas#bg,
 canvas#unit,
 canvas#tooltip,
-canvas#minimap
+canvas#minimap,
+canvas#menu
 {
 	position:absolute;
 }
@@ -51,4 +52,8 @@ canvas#minimap{
 	height:160px;
 	cursor:url('../assets/Graphics/System/Icons/swordIcon.png'), auto;
 	border: 1px solid #000;
+}
+
+canvas#menu{
+	z-index:-1;
 }

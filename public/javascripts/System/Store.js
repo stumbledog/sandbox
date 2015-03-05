@@ -1,17 +1,29 @@
-function Store(){}
+function Store(type){
+	this.initialize(type);
+}
 
 Store.prototype = new createjs.Container();
 Store.prototype.constructor = Store;
 Store.prototype.container_initialize = Store.prototype.initialize;
 
-Store.prototype.initialize = function(builder){
+Store.prototype.initialize = function(type){
 	this.container_initialize();
-	this.name = builder.name;
-	this.type = builder.type;
+	this.game = Game.getInstance();
+	this.menu_stage = this.game.getMenuStage();
+	this.type = type;
+
+	this.render();
 }
 
-Store.prototype.openStore = function(){
-	
+Store.prototype.render = function(){
+	var shape = new createjs.Shape();
+	shape.graphics.f("").dr(0,0,72,72);
+	this.addChild(shape);
+}
+
+Store.prototype.open = function(){
+	console.log(this.type + " is opened");
+	this.menu_stage.addMenu(this);
 }
 
 Store.prototype.purchase = function(item){

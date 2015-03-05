@@ -10,14 +10,17 @@ NPC.prototype.npc_initialize = function(builder){
 	this.unit_initialize(builder);
 	this.outline.gotoAndPlay("stop");
 	this.sprite.gotoAndPlay("stop");
-	this.initEventListener();
 	this.radius = 16;
 	this.health_color = this.name_text_color = "#FFB03B";
+
 	this.name_text = new OutlineText(this.name,"bold 6px Arial",this.name_text_color,"#000",2);
 	this.name_text.textAlign("center");
 	this.name_text.y = -20;
 	this.addChild(this.name_text);
-	this.store = new Store(this.name);
+
+	//this.store = new Store(builder.type);
+	this.initEventListener();
+	this.initInteraction(builder.type);
 }
 
 NPC.prototype.initEventListener = function(){
@@ -46,6 +49,14 @@ NPC.prototype.initEventListener = function(){
 	}.bind(this));
 }
 
+NPC.prototype.initInteraction = function(type){
+	if(type === "battlemaster"){
+		//this.interaction = new Store(type);
+	}else{
+		this.interaction = new Store(type);
+	}
+}
+
 NPC.prototype.tick = function(){
 	if(this.mouseover){
 		this.outline.uncache();
@@ -54,6 +65,6 @@ NPC.prototype.tick = function(){
 	}
 }
 
-NPC.prototype.interaction = function(target){
-	console.log("target");
+NPC.prototype.interact = function(target){
+	this.interaction.open();
 }
