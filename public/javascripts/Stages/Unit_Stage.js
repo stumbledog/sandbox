@@ -279,7 +279,7 @@ Unit_Stage.prototype.getAlliedUnits = function(self){
 }
 
 Unit_Stage.prototype.getEnemies = function(self){
-	return this.unit_container.children.filter(function(unit){return self.team !== unit.team && unit.status !== "death";});
+	return this.unit_container.children.filter(function(unit){return unit.constructor.name !== "NPC" && self.team !== unit.team && unit.status !== "death";});
 }
 
 Unit_Stage.prototype.setCanvasSize = function(width, height){

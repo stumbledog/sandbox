@@ -50,4 +50,5 @@ canvas#minimap{
 	width:160px;
 	height:160px;
 	cursor:url('../assets/Graphics/System/Icons/swordIcon.png'), auto;
+	border: 1px solid #000;
 }

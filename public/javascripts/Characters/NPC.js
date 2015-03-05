@@ -32,7 +32,7 @@ NPC.prototype.initEventListener = function(){
 	this.addEventListener("rollover", function(event){
 		this.mouseover = true;
 		this.outline.visible = true;
-		this.name_text.setColor("#45BF55");
+		this.name_text.setColor("#fff");
 		this.shadow = null;
 	}.bind(this));
 
@@ -49,7 +49,7 @@ NPC.prototype.initEventListener = function(){
 NPC.prototype.tick = function(){
 	if(this.mouseover){
 		this.outline.uncache();
-		this.outline.filters = [new createjs.ColorFilter(0,0,0,1,69,191,85,0)];
+		this.outline.filters = [new createjs.ColorFilter(0,0,0,1,255,255,255,0)];
 		this.outline.cache(-12,-16,24,32);
 	}
 }
