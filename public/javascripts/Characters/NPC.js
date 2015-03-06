@@ -16,11 +16,12 @@ NPC.prototype.npc_initialize = function(builder){
 	this.name_text = new OutlineText(this.name,"bold 6px Arial",this.name_text_color,"#000",2);
 	this.name_text.textAlign("center");
 	this.name_text.y = -20;
+
+	this.team = "NPC";
+
 	this.addChild(this.name_text);
 
-	//this.store = new Store(builder.type);
 	this.initEventListener();
-	this.initInteraction(builder.type);
 }
 
 NPC.prototype.initEventListener = function(){
@@ -33,14 +34,15 @@ NPC.prototype.initEventListener = function(){
 	}.bind(this));
 
 	this.addEventListener("rollover", function(event){
-		this.mouseover = true;
+		this.outline.uncache();
+		this.outline.filters = [new createjs.ColorFilter(0,0,0,1,255,255,255,0)];
+		this.outline.cache(-12,-16,24,32);
 		this.outline.visible = true;
 		this.name_text.setColor("#fff");
 		this.shadow = null;
 	}.bind(this));
 
 	this.addEventListener("rollout", function(event){
-		this.mouseover = false;
 		this.outline.visible = false;
 		this.outline.filters = null;
 		this.outline.uncache();
@@ -49,22 +51,5 @@ NPC.prototype.initEventListener = function(){
 	}.bind(this));
 }
 
-NPC.prototype.initInteraction = function(type){
-	if(type === "battlemaster"){
-		//this.interaction = new Store(type);
-	}else{
-		this.interaction = new Store(type);
-	}
-}
-
 NPC.prototype.tick = function(){
-	if(this.mouseover){
-		this.outline.uncache();
-		this.outline.filters = [new createjs.ColorFilter(0,0,0,1,255,255,255,0)];
-		this.outline.cache(-12,-16,24,32);
-	}
-}
-
-NPC.prototype.interact = function(target){
-	this.interaction.open();
 }

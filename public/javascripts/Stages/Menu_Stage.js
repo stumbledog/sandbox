@@ -19,3 +19,8 @@ Menu_Stage.prototype.addMenu = function(menu){
 	this.canvas.style.zIndex = 10;
 	this.update();
 }
+
+Menu_Stage.prototype.resize = function(){
+	this.children[0].resize();
+	this.update();
+}

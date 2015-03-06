@@ -260,13 +260,13 @@ Unit_Stage.prototype.getAllUnits = function(){
 
 Unit_Stage.prototype.getUnits = function(){
 	return this.unit_container.children.filter(function(unit){
-		return unit.constructor.name !== "NPC";
+		return unit.team !== "NPC";
 	});
 }
 
 Unit_Stage.prototype.getNPCUnits = function(){
 	return this.unit_container.children.filter(function(unit){
-		return unit.constructor.name === "NPC";
+		return unit.team === "NPC";
 	});
 }
 
@@ -279,7 +279,7 @@ Unit_Stage.prototype.getAlliedUnits = function(self){
 }
 
 Unit_Stage.prototype.getEnemies = function(self){
-	return this.unit_container.children.filter(function(unit){return unit.constructor.name !== "NPC" && self.team !== unit.team && unit.status !== "death";});
+	return this.unit_container.children.filter(function(unit){return unit.team !== "NPC" && self.team !== unit.team && unit.status !== "death";});
 }
 
 Unit_Stage.prototype.setCanvasSize = function(width, height){

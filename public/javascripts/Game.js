@@ -13,8 +13,8 @@ var Game = (function(){
 		window.onresize = function(){
 			menu_stage.canvas.width = map_stage.canvas.width = unit_stage.canvas.width = window.innerWidth;
 			menu_stage.canvas.height = map_stage.canvas.height = unit_stage.canvas.height = window.innerHeight;
+			menu_stage.resize();
 			map_stage.update();
-			menu_stage.update();
 			unit_stage.update();
 		};
 
@@ -476,7 +476,25 @@ var Game = (function(){
 		}
 
 		function createNPC(builder){
-			unit_stage.addUnit(new NPC(builder));
+			//console.log(builder);
+			switch(builder.type){
+				case "merchant":
+					unit_stage.addUnit(new Merchant(builder));	
+				break;
+				case "recruiter":
+					unit_stage.addUnit(new Recruiter(builder));	
+				break;
+				case "blacksmith":
+					unit_stage.addUnit(new Blacksmith(builder));	
+				break;
+				case "battlemaster":
+					unit_stage.addUnit(new Battlemaster(builder));	
+				break;
+				default:
+					//unit_stage.addUnit(new NPC(builder));	
+				break;
+			}
+			
 		}
 
 		return {
@@ -506,6 +524,7 @@ var Game = (function(){
 				scale = scale < 1 ? 1 :scale > 5 ? 5 : scale;
 				map_stage.scaleX = map_stage.scaleY = scale;
 				unit_stage.scaleX = unit_stage.scaleY = scale;
+				menu_stage.scaleX = menu_stage.scaleY = scale;
 				map_stage.update();
 			},
 			viewport:function(){
