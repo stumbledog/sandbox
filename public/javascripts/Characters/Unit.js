@@ -561,7 +561,6 @@ Unit.prototype.moveAttackTick = function(distance){
 Unit.prototype.interactNPC = function(){
 	if(this.getSquareDistance(this.order.npc) <= Math.pow(this.radius + this.order.npc.radius + 4, 2)){
 		this.velocity = new Vector(0,0);
-		console.log(this.order.npc.interact);
 		this.order.npc.interact(this);
 		this.order = {action:"stop", map:this.findPath({x:this.x,y:this.y})};
 	}else{

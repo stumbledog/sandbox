@@ -2,7 +2,7 @@ function Blacksmith(builder){
 	this.blacksmith_initialize(builder);
 }
 
-Blacksmith.prototype = new NPC();
+Blacksmith.prototype = Object.create(NPC.prototype);
 Blacksmith.prototype.constructor = Blacksmith;
 
 Blacksmith.prototype.blacksmith_initialize = function(builder){

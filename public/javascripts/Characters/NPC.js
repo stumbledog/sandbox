@@ -12,13 +12,11 @@ NPC.prototype.npc_initialize = function(builder){
 	this.sprite.gotoAndPlay("stop");
 	this.radius = 16;
 	this.health_color = this.name_text_color = "#FFB03B";
+	this.team = "NPC";
 
 	this.name_text = new OutlineText(this.name,"bold 6px Arial",this.name_text_color,"#000",2);
 	this.name_text.textAlign("center");
 	this.name_text.y = -20;
-
-	this.team = "NPC";
-
 	this.addChild(this.name_text);
 
 	this.initEventListener();

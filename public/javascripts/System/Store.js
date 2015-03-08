@@ -1,12 +1,12 @@
 function Store(type){
-	this.initialize(type);
+	this.store_initialize(type);
 }
 
 Store.prototype = new createjs.Container();
 Store.prototype.constructor = Store;
 Store.prototype.container_initialize = Store.prototype.initialize;
 
-Store.prototype.initialize = function(type){
+Store.prototype.store_initialize = function(type){
 	this.container_initialize();
 	this.game = Game.getInstance();
 	this.menu_stage = this.game.getMenuStage();
@@ -26,8 +26,6 @@ Store.prototype.render = function(){
 
 Store.prototype.open = function(){
 	console.log(this.type + " is opened");
-	this.resize();
-	this.menu_stage.addMenu(this);
 }
 
 Store.prototype.purchase = function(item){

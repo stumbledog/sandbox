@@ -27,7 +27,7 @@ var MapSchema = new Schema({
 	height:Number,
 	cols:Number,
 	rows:Number,
-	merchartable_items:Schema.Types.Mixed,
+	merchantable_items:Schema.Types.Mixed,
 	recruitable_units:Schema.Types.Mixed,
 	start_point:[Number]
 });

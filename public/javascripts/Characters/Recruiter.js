@@ -2,7 +2,7 @@ function Recruiter(builder){
 	this.recruiter_initialize(builder);
 }
 
-Recruiter.prototype = new NPC();
+Recruiter.prototype = Object.create(NPC.prototype);
 Recruiter.prototype.constructor = Recruiter;
 
 Recruiter.prototype.recruiter_initialize = function(builder){

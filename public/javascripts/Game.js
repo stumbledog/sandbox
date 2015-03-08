@@ -6,8 +6,6 @@ var Game = (function(){
 		var unit_stage, map_stage, ui_stage, loader, minimap_stage, tooltip_stage, menu_stage, hero, blocks;
 		var cols = map_builder.cols;
 		var rows = map_builder.rows;
-		var merchartable_items = map_builder.merchartable_items;
-		var recruitable_units = map_builder.recruitable_units;
 		var scale = 5;
 
 		window.onresize = function(){
@@ -518,6 +516,12 @@ var Game = (function(){
 			},
 			getMenuStage:function(){
 				return menu_stage;
+			},
+			getMerchantableItems:function(){
+				return map_builder.merchantable_items;
+			},
+			getRecruitableUnits:function(){
+				return map_builder.recruitable_units;
 			},
 			setScale:function(delta){
 				scale += delta;

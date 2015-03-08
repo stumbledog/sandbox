@@ -2,7 +2,7 @@ function Battlemaster(builder){
 	this.battlemaster_initialize(builder);
 }
 
-Battlemaster.prototype = new NPC();
+Battlemaster.prototype = Object.create(NPC.prototype);
 Battlemaster.prototype.constructor = Battlemaster;
 
 Battlemaster.prototype.battlemaster_initialize = function(builder){
