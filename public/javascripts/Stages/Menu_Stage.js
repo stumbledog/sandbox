@@ -12,6 +12,9 @@ Menu_Stage.prototype.initialize = function(width, height){
 	this.canvas.width = window.innerWidth;
 	this.canvas.height = window.innerHeight;
 	this.Stage_constructor(this.canvas);
+
+	this.enableMouseOver();
+
 }
 
 Menu_Stage.prototype.addMenu = function(menu){
@@ -21,6 +24,8 @@ Menu_Stage.prototype.addMenu = function(menu){
 }
 
 Menu_Stage.prototype.resize = function(){
-	this.children[0].resize();
+	this.children.forEach(function(store){
+		store.resize();
+	});
 	this.update();
 }

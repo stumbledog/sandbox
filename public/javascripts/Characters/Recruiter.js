@@ -7,7 +7,7 @@ Recruiter.prototype.constructor = Recruiter;
 
 Recruiter.prototype.recruiter_initialize = function(builder){
 	this.npc_initialize(builder);
-	this.store = new Store();
+	//this.store = new Store();
 }
 
 Recruiter.prototype.interact = function(){

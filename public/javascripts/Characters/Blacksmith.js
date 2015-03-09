@@ -7,7 +7,6 @@ Blacksmith.prototype.constructor = Blacksmith;
 
 Blacksmith.prototype.blacksmith_initialize = function(builder){
 	this.npc_initialize(builder);
-	this.store = new Store();
 }
 
 Blacksmith.prototype.interact = function(){

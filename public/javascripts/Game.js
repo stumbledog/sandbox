@@ -363,6 +363,10 @@ var Game = (function(){
 			manifest.push({src:npc.attribute.sprite, id:npc.attribute.sprite.split('/').pop()});
 		});
 
+		map_builder.merchantable_items.forEach(function(item){
+			manifest.push({src:item.icon.source, id:item.icon.source.split('/').pop()});
+		});
+
 		/*
 		hero_builder.skills.forEach(function(skill){
 			manifest.push({src:skill.src,id:skill.name});
@@ -474,7 +478,6 @@ var Game = (function(){
 		}
 
 		function createNPC(builder){
-			//console.log(builder);
 			switch(builder.type){
 				case "merchant":
 					unit_stage.addUnit(new Merchant(builder));	

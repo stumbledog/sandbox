@@ -7,7 +7,6 @@ Battlemaster.prototype.constructor = Battlemaster;
 
 Battlemaster.prototype.battlemaster_initialize = function(builder){
 	this.npc_initialize(builder);
-	this.store = new Store();
 }
 
 Battlemaster.prototype.interact = function(){
