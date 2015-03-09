@@ -1,6 +1,7 @@
 var WeaponSchema = new Schema({
 	hand:String,	// 1-hand, 2-hand
-	type:String,	// melee, range
+	type:String,	// weapon
+	attack_type:String,	// melee, range
 	rating:String,	// common, magic, rare, epic, legendary
 	name:String,
 	price:Number,

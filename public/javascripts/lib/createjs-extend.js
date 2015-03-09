@@ -55,7 +55,7 @@ Button.prototype.initialize = function(text, button){
 	this.text.x = 10;
 	this.text.y = 10;
 	this.button = new createjs.Shape();
-	this.button.graphics.s(button.border_color).ss(button.border_width).f(button.background).rr(0, 0, this.text.getMeasuredWidth() + button.padding * 2, this.text.getMeasuredHeight() + button.padding * 2, 5);
+	this.button.graphics.s(button.border_color).ss(button.border_width).f(button.background).dr(0, 0, this.text.getMeasuredWidth() + button.padding * 2, this.text.getMeasuredHeight() + button.padding * 2);
 	this.addChild(this.button);
 
 	if(text.outline){
@@ -65,4 +65,8 @@ Button.prototype.initialize = function(text, button){
 		this.addChild(this.outline);
 	}
 	this.addChild(this.text);
+}
+
+Button.prototype.getMeasuredWidth = function(){
+	return this.button.graphics.command.w;
 }

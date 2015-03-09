@@ -150,19 +150,19 @@ function saveMap(){
 function saveWeapon(){
 	var weapons = [];
 
-	weapons.push(new PrototypeWeaponModel({_id:1, level:1, hand:"1-hand", type:"melee", rating:"common", name:"dagger", merchantable:true,
+	weapons.push(new PrototypeWeaponModel({_id:1, level:1, hand:"1-hand", type:"weapon", attack_type:"melee", rating:"common", name:"dagger", merchantable:true,
 		sprite:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:292,cropY:100,width:16,height:16,regX:12,regY:12,scale:0.8},
 		icon:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:292,cropY:100,width:16,height:16,regX:12,regY:12,scale:0.8},
 		min_damage:1,max_damage:2,range:16,attack_speed:30,
 	}));
 
-	weapons.push(new PrototypeWeaponModel({_id:2, level:1, hand:"1-hand", type:"melee", rating:"common", name:"long sword", merchantable:true,
+	weapons.push(new PrototypeWeaponModel({_id:2, level:1, hand:"1-hand", type:"weapon", attack_type:"melee", rating:"common", name:"long sword", merchantable:true,
 		sprite:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:292,cropY:100,width:16,height:16,regX:12,regY:12,scale:0.8},
 		icon:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:292,cropY:100,width:16,height:16,regX:12,regY:12,scale:0.8},
 		min_damage:2,max_damage:4,range:16,attack_speed:60,
 	}));
 
-	weapons.push(new PrototypeWeaponModel({_id:3, level:1, hand:"2-hand", type:"melee", rating:"common", name:"great sword", merchantable:true,
+	weapons.push(new PrototypeWeaponModel({_id:3, level:1, hand:"2-hand", type:"weapon", attack_type:"melee", rating:"common", name:"great sword", merchantable:true,
 		sprite:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:292,cropY:100,width:16,height:16,regX:12,regY:12,scale:0.8},
 		icon:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:292,cropY:100,width:16,height:16,regX:12,regY:12,scale:0.8},
 		min_damage:3,max_damage:6,range:32,attack_speed:90,

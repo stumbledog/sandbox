@@ -340,6 +340,9 @@ var Game = (function(){
 		*/
 
 		var manifest = [];
+
+		manifest.push({src:"assets/Graphics/System/Icons/IconSet.png", id:"icon"});
+
 		unit_builder_array.forEach(function(unit_builder){
 			manifest.push({src:unit_builder.sprite, id:unit_builder.sprite.split('/').pop()});
 			if(unit_builder.portrait){
@@ -383,11 +386,6 @@ var Game = (function(){
 		loader.loadManifest(manifest);
 
 		function handleLoadComplete(){
-/*			initMapStage();
-			initMinimapStage();
-			initUnitStage();
-			initTooltipStage();
-			initUIStage();*/
 			initStages();
 
 			unit_builder_array.forEach(function(unit_builder){
@@ -429,32 +427,9 @@ var Game = (function(){
 			ui_stage = new UI_Stage();
 			map_stage.scaleX = map_stage.scaleY = scale;
 			unit_stage.scaleX = unit_stage.scaleY = scale;
+			//menu_stage.scaleX = unit_stage.scaleY = scale;
 			map_stage.update();
 			menu_stage = new Menu_Stage(cols * 32, rows * 32);
-		}
-
-		function initMapStage(){
-			map_stage = new Map_Stage(map_builder);
-			blocks = map_stage.getBlock();
-		}
-
-		function initUnitStage(){
-			unit_stage = new Unit_Stage(cols * 32, rows * 32);
-		}
-
-		function initUIStage(){
-			ui_stage = new UI_Stage();
-			map_stage.scaleX = map_stage.scaleY = scale;
-			unit_stage.scaleX = unit_stage.scaleY = scale;
-			map_stage.update();
-		}
-
-		function initMinimapStage(){
-			minimap_stage = new Minimap_Stage();
-		}
-
-		function initTooltipStage(){
-			tooltip_stage = new Tooltip_Stage();
 		}
 
 		function createHero(builder){
@@ -531,7 +506,7 @@ var Game = (function(){
 				scale = scale < 1 ? 1 :scale > 5 ? 5 : scale;
 				map_stage.scaleX = map_stage.scaleY = scale;
 				unit_stage.scaleX = unit_stage.scaleY = scale;
-				menu_stage.scaleX = menu_stage.scaleY = scale;
+				//menu_stage.scaleX = menu_stage.scaleY = scale;
 				map_stage.update();
 			},
 			viewport:function(){
