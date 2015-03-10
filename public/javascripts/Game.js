@@ -9,7 +9,8 @@ var Game = (function(){
 		var scale = 5;
 
 		window.onresize = function(){
-			menu_stage.canvas.width = map_stage.canvas.width = unit_stage.canvas.width = window.innerWidth;
+			menu_stage.canvas.width = window.innerWidth/2;
+			map_stage.canvas.width = unit_stage.canvas.width = window.innerWidth;
 			menu_stage.canvas.height = map_stage.canvas.height = unit_stage.canvas.height = window.innerHeight;
 			menu_stage.resize();
 			map_stage.update();
