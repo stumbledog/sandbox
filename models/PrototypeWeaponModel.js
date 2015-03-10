@@ -1,12 +1,9 @@
 var PrototypeWeaponSchema = new Schema({
 	_id:Number,
-	level:Number,
-	hand:String,	// 1-hand, 2-hand
+	hand:Number,
 	type:String,	// weapon
 	attack_type:String,	// melee, range
-	rating:String,	// common, magic, rare, epic, legendary
 	name:String,
-	merchantable:Boolean,
 	sprite:{
 		source:String,
 		cropX:Number,
@@ -30,15 +27,18 @@ var PrototypeWeaponSchema = new Schema({
 	min_damage:Number,
 	max_damage:Number,
 	attack_speed:Number,
-	movement_speed:Number,
+	range:Number,
+	/*
+	min_damage_bonus:Number,
+	max_damage_bonus:Number,
+	attack_speed_bonus:Number,
 	strength:Number,
 	agility:Number,
 	intelligence:Number,
-	stamina:Number,
 	critical_rate:Number,
 	critical_damage:Number,
 	life_steal:Number,
-	armor:Number,
+	*/
 });
 
 PrototypeWeaponModel = mongoose.model('PrototypeWeapon', PrototypeWeaponSchema);

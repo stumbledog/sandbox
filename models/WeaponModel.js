@@ -1,8 +1,8 @@
 var WeaponSchema = new Schema({
-	hand:String,	// 1-hand, 2-hand
+	hand:Number,
 	type:String,	// weapon
 	attack_type:String,	// melee, range
-	rating:String,	// common, magic, rare, epic, legendary
+	rating:Number,	// 1:common, 2:magic, 3:rare, 4:epic, 5:legendary
 	name:String,
 	price:Number,
 	sprite:{
@@ -27,17 +27,17 @@ var WeaponSchema = new Schema({
 	},
 	min_damage:Number,
 	max_damage:Number,
-	range:Number,
 	attack_speed:Number,
-	movement_speed:Number,
+	range:Number,
+	min_damage_bonus:Number,
+	max_damage_bonus:Number,
+	attack_speed_bonus:Number,
 	strength:Number,
 	agility:Number,
 	intelligence:Number,
-	stamina:Number,
 	critical_rate:Number,
 	critical_damage:Number,
 	life_steal:Number,
-	armor:Number,
 });
 
 WeaponSchema.pre('save', function(next){

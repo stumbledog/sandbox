@@ -41,7 +41,8 @@ Store.prototype.store_initialize = function(items){
 }
 
 Store.prototype.render = function(){
-	this.item_list_bg.graphics.c().s("#000").ss(1).f("#fff").dr(5, 50, this.width - 10, this.height - 55);
+	this.item_list_bg.graphics.c().s("#000").ss(1).f("#fff").dr(5, 50, this.width - 10, 360);
+	this.menu_stage.canvas.height = 410;
 	this.close_button.x = this.width - 35;
 }
 

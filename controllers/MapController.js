@@ -6,7 +6,7 @@ MapController = {
 	},
 	loadMerchantItem:function(map, callback){
 		if(map.merchant){
-			ItemController.loadMerchantItem(function(err, items){
+			ItemController.generateMerchantItem(1, function(err, items){
 				map.merchantable_items = items;
 				this.loadRecruiterUnit(map, callback);
 			}.bind(this));
