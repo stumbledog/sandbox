@@ -42,6 +42,7 @@ MerchantStore.prototype.selectCategory = function(key){
 	this.item_container.removeAllChildren();
 	var colors = ["#ccc","#5C832F","#FFD34E"];
 	this.categories[key].items.forEach(function(item, index){
+		/*
 		var border = new createjs.Shape();
 		border.graphics.s("#000").ss(1).f("#fff").dr(0,0,100,60).dr(0,0,30,60).dr(30,45,70,15).f(colors[item.rating-1]).dr(0,0,30,60);
 
@@ -75,14 +76,19 @@ MerchantStore.prototype.selectCategory = function(key){
 		item.y = container.y;
 		container.addEventListener("rollover", this.mouseOverItem.bind(this, item));
 		container.addEventListener("rollout", this.mouseOutItem.bind(this, item));
-
 		this.item_container.addChild(container);
+		*/
+		item.store_summary.x = index % 3 * 100;
+		item.store_summary.y = parseInt(index / 3) * 60;
+		item.store_summary.cursor = "pointer";
+		this.item_container.addChild(item.store_summary);
 	}, this);
 
 	this.menu_stage.update();
 }
 
 MerchantStore.prototype.mouseOverItem = function(item){
+	/*
 	var colors = ["#ccc","#5C832F","#FFD34E"];
 	var ratings = ["Common", "Magic", "Rare", "Epic", "Legendary"];
 	var rating_text = new createjs.Text(ratings[item.rating - 1] + " Weapon", "bold 10px Arial", colors[item.rating - 1]);
@@ -173,6 +179,7 @@ MerchantStore.prototype.mouseOverItem = function(item){
 
 	this.item_container.addChild(this.item_detail);
 	this.menu_stage.update();
+	*/
 }
 
 MerchantStore.prototype.mouseOutItem = function(item){
@@ -258,7 +265,8 @@ MerchantStore.prototype.setItems = function(){
 	this.items.forEach(function(item){
 		switch(item.type){
 			case "weapon":
-				this.categories.weapons.items.push(item);
+				this.categories.weapons.items.push(new Weapon(item, this.item_container));
+				//this.categories.weapons.items.push(item);
 			break;
 			case "armor":
 				this.categories.armors.items.push(item);
@@ -268,7 +276,7 @@ MerchantStore.prototype.setItems = function(){
 			break;
 		}
 	}, this);
-
+	/*
 	Object.keys(this.categories).forEach(function(key){
 		var category = this.categories[key];
 		category.items.forEach(function(item, index){
@@ -292,5 +300,5 @@ MerchantStore.prototype.setItems = function(){
 
 			category.item_container.addChild(item_shape);
 		}, this);
-	}, this)
+	}, this);*/
 }

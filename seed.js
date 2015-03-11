@@ -297,36 +297,21 @@ function saveItems(){
 		icon:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:198,cropY:148,width:13,height:16,regX:10,regY:10,scale:0.8},
 	}));
 
-/*
-	_id:Number,
-	primary_attribute:Number,	// 0:strength, 1:agility, 2:intelligence, 3:none
-	part:Number,	// 0:head, 1:chest, 2:gloves, 3:boots, 4:belt, 5:cape, 6:shield, 7:ring, 8:necklace
-	name:String,
-	sprite:{
-		source:String,
-		cropX:Number,
-		cropY:Number,
-		width:Number,
-		height:Number,
-		regX:Number,
-		regY:Number,
-		scale:Number,
-	},
-	icon:{
-		source:String,
-		cropX:Number,
-		cropY:Number,
-		width:Number,
-		height:Number,
-		regX:Number,
-		regY:Number,
-		scale:Number,
-	},
-*/
+	items.push(new PrototypeArmorModel({primary_attribute:3, part:7, type:"armor", name:"Ring",
+		icon:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:78,cropY:175,width:12,height:12,regX:10,regY:10,scale:0.8},
+	}));
+
+	items.push(new PrototypeArmorModel({primary_attribute:3, part:7, type:"armor", name:"Ring",
+		icon:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:103,cropY:174,width:11,height:10,regX:10,regY:10,scale:0.8},
+	}));
+
+	items.push(new PrototypeArmorModel({primary_attribute:3, part:8, type:"armor", name:"Necklace",
+		icon:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:148,cropY:172,width:16,height:15,regX:10,regY:10,scale:0.8},
+	}));
 
 	var count = 0;
-	items.forEach(function(weapon){
-		weapon.save(function(){
+	items.forEach(function(item){
+		item.save(function(){
 			count++;
 			if(count === items.length){
 				console.log(count + " items are created");
