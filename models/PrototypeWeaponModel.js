@@ -1,5 +1,6 @@
 var PrototypeWeaponSchema = new Schema({
 	_id:Number,
+	primary_attribute:Number,	// 0:strength, 1:agility, 2:intelligence, 3:none
 	hand:Number,
 	type:String,	// weapon
 	attack_type:String,	// melee, range
@@ -28,17 +29,6 @@ var PrototypeWeaponSchema = new Schema({
 	max_damage:Number,
 	attack_speed:Number,
 	range:Number,
-	/*
-	min_damage_bonus:Number,
-	max_damage_bonus:Number,
-	attack_speed_bonus:Number,
-	strength:Number,
-	agility:Number,
-	intelligence:Number,
-	critical_rate:Number,
-	critical_damage:Number,
-	life_steal:Number,
-	*/
 });
 
 PrototypeWeaponModel = mongoose.model('PrototypeWeapon', PrototypeWeaponSchema);

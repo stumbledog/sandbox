@@ -130,21 +130,21 @@ MerchantStore.prototype.mouseOverItem = function(item){
 	}else{
 		this.item_detail.x = 180;
 	}
-	if(item.y > 200){
-		this.item_detail.y = item.y + 60 - (90 + 14 * item.rating);
+	if(item.y > 120){
+		this.item_detail.y = item.y - (90 + 14 * item.rating);
 	}else{
-		this.item_detail.y = item.y;
+		this.item_detail.y = item.y + 60;
 	}	
 	this.item_detail.addChild(bg, rating_text, name_text, hand_text, damage_text, attack_speed_text, dps_text, level_text);
 
 	item.attributes.forEach(function(attribute, index){
-		var attr_text = new createjs.Text("","10px Arial","#DB9E36");
+		var attr_text = new createjs.Text("","10px Arial","#B64926");
 		switch(attribute){
 			case 0:
 				attr_text.text = "+" + item.min_damage_bonus + " ~ " + item.max_damage_bonus + " Damage";
 			break;
 			case 1:
-				attr_text.text = "+" + item.attack_speed_bonus + "% attack speed";
+				attr_text.text = "+" + item.attack_speed_bonus + "% Attack speed";
 			break;
 			case 2:
 				if(item.strength){

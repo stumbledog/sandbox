@@ -1,18 +1,8 @@
 var PrototypeArmorSchema = new Schema({
-	_id:Number,
-	part:String,	// head, chest, gloves, boots, belt, pants, shoulders, ring, necklace
-	rating:String,	// common, magic, rare, epic, legendary
+	primary_attribute:Number,	// 0:strength, 1:agility, 2:intelligence, 3:none
+	part:Number,				// 0:head, 1:chest, 2:gloves, 3:boots, 4:belt, 5:pants, 6:shoulders, 7:cape, 8:shield, 9:ring, 10:necklace
 	name:String,
-	sprite:{
-		source:String,
-		cropX:Number,
-		cropY:Number,
-		width:Number,
-		height:Number,
-		regX:Number,
-		regY:Number,
-		scale:Number,
-	},
+	type:String,
 	icon:{
 		source:String,
 		cropX:Number,
@@ -23,16 +13,6 @@ var PrototypeArmorSchema = new Schema({
 		regY:Number,
 		scale:Number,
 	},
-	attack_speed:Number,
-	movement_speed:Number,
-	strength:Number,
-	agility:Number,
-	intelligence:Number,
-	stamina:Number,
-	critical_rate:Number,
-	critical_damage:Number,
-	life_steal:Number,
-	armor:Number,
 });
 
 PrototypeArmorModel = mongoose.model('PrototypeArmor', PrototypeArmorSchema);

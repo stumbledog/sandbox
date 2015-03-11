@@ -43,7 +43,8 @@ ItemController = {
 						case 2:
 							var value = Math.ceil(level * (weapon.rating) * (Math.random() / 4 + 0.75));
 							weapon.price += value;
-							switch(Math.floor(Math.random()*3)){
+							weapon.primary_attribute = weapon.primary_attribute === 3 ? Math.floor(Math.random() * 3) : weapon.primary_attribute;
+							switch(weapon.primary_attribute){
 								case 0:
 									weapon.strength = value;
 								break;
