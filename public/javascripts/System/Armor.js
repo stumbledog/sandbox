@@ -6,22 +6,6 @@ Armor.prototype = new Item();
 Armor.prototype.constructor = Armor;
 
 Armor.prototype.armor_initialize = function(attributes, container, stage){
-/*
-	armor:Number,
-	armor_bonus:Number,
-	attack_speed:Number,
-	movement_speed:Number,
-	strength:Number,
-	agility:Number,
-	intelligence:Number,
-	stamina:Number,
-	critical_rate:Number,
-	critical_damage:Number,
-	life_steal:Number,
-	cooldown_reduce:Number,
-	health_regen:Number,
-	resource_regen:Number,
-*/
 	this.level = attributes.level;
 	this.armor = attributes.armor;
 	this.armor_bonus = attributes.armor_bonus;
@@ -45,14 +29,16 @@ Armor.prototype.armor_initialize = function(attributes, container, stage){
 Armor.prototype.initDetail = function(){
 	this.detail = new createjs.Container();
 	var ratings = ["Common", "Magic", "Rare", "Epic", "Legendary"];
-	var rating_text = new createjs.Text(ratings[this.rating - 1] + " Weapon", "bold 10px Arial", this.colors[this.rating - 1]);
+	var rating_text = new createjs.Text(ratings[this.rating - 1] + " Armor", "bold 10px Arial", this.colors[this.rating - 1]);
 	var name_text = new createjs.Text(this.name.replace("\n", " "), "10px Arial", "#000");	
-	var armor_text = new createjs.Text("", "bold 16px Arial", "#C00");
+	var armor_amount_text = new createjs.Text("", "bold 16px Arial", "#3E606F");
+	var armor_text = new createjs.Text("Armor", "10px Arial", "#3E606F");
 	var level_text = new createjs.Text("Item Level: " + this.level, "10px Arial", "#000");
 
-	level_text.x = armor_text.x = name_text.x = rating_text.x = rating_text.y = 2;
+	level_text.x = armor_amount_text.x = name_text.x = rating_text.x = rating_text.y = 2;
 	name_text.y = 14;
-	armor_text.y = 28;
+	armor_amount_text.y = 28;
+	armor_text.y = 32;
 	var offsetY = !this.armor ? 20 : 0;
 	level_text.y = 48 + 14 * this.rating - offsetY;
 	var armor = this.armor;
@@ -61,16 +47,17 @@ Armor.prototype.initDetail = function(){
 		armor += this.armor_bonus;
 	}
 
-	armor_text.text = armor;
+	armor_amount_text.text = armor;
+	armor_text.x = armor_amount_text.getMeasuredWidth() + 4;
 
+	this.summary_height = 62 + 14 * this.rating - offsetY;
 	var bg = new createjs.Shape();
-	bg.graphics.s("#000").ss(1).f("#fff").dr(0, 0, 120, 62 + 14 * this.rating - offsetY);
+	bg.graphics.s("#000").ss(1).f("#fff").dr(0, 0, 140, this.summary_height);
 	if(this.armor === 0){
 		this.detail.addChild(bg, rating_text, name_text, level_text);
 	}else{
-		this.detail.addChild(bg, rating_text, name_text, armor_text, level_text);
+		this.detail.addChild(bg, rating_text, name_text, level_text, armor_amount_text, armor_text);
 	}
-
 
 	this.attributes.forEach(function(attribute, index){
 		var attr_text = new createjs.Text("","10px Arial","#B64926");
@@ -109,10 +96,10 @@ Armor.prototype.initDetail = function(){
 				attr_text.text = "+" + this.cooldown_reduce + "% Cooldown reduce";
 			break;
 			case 9:
-				attr_text.text = "+" + this.health_regen + " per sec";
+				attr_text.text = "+" + this.health_regen + " Health regen per sec";
 			break;
 			case 10:
-				attr_text.text = "+" + this.resource_regen + " per sec";
+				attr_text.text = "+" + this.resource_regen + " Resource regen per sec";
 			break;
 		}
 		attr_text.x = 2;

@@ -30,10 +30,10 @@ Item.prototype.rolloverStore = function(){
 	if(this.store_summary.x !== 200){
 		this.detail.x = this.store_summary.x;
 	}else{
-		this.detail.x = 180;
+		this.detail.x = 160;
 	}
 	if(this.store_summary.y > 120){
-		this.detail.y = this.store_summary.y - (90 + 14 * this.rating);
+		this.detail.y = this.store_summary.y - (this.summary_height);
 	}else{
 		this.detail.y = this.store_summary.y + 60;
 	}

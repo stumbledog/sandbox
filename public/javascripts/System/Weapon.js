@@ -32,15 +32,17 @@ Weapon.prototype.initDetail = function(){
 	var rating_text = new createjs.Text(ratings[this.rating - 1] + " Weapon", "bold 10px Arial", this.colors[this.rating - 1]);
 	var name_text = new createjs.Text(this.name.replace("\n", " "), "10px Arial", "#000");
 	var hand_text = new createjs.Text(this.hand+"-hand", "10px Arial", "#000");	
-	var damage_text = new createjs.Text("", "bold 16px Arial", "#C00");
+	var damage_amount_text = new createjs.Text("", "bold 16px Arial", "#C00");
+	var damage_text = new createjs.Text("Damage", "10px Arial", "#C00");
 	var attack_speed_text = new createjs.Text("", "10px Arial", "#000");
 	var dps_text = new createjs.Text("", "10px Arial", "#000");
 	var level_text = new createjs.Text("Item Level: " + this.level, "10px Arial", "#000");
 
-	level_text.x = dps_text.x = attack_speed_text.x = damage_text.x = name_text.x = rating_text.x = rating_text.y = 2;
-	hand_text.x = 120 - hand_text.getMeasuredWidth() - 2;
+	level_text.x = dps_text.x = attack_speed_text.x = damage_amount_text.x = name_text.x = rating_text.x = rating_text.y = 2;
+	hand_text.x = 140 - hand_text.getMeasuredWidth() - 2;
 	name_text.y = hand_text.y = 14;
-	damage_text.y = 28;
+	damage_amount_text.y = 28;
+	damage_text.y = 32;
 	attack_speed_text.y = 48;
 	dps_text.y = 62;
 	level_text.y = 76 + 14 * this.rating
@@ -53,7 +55,8 @@ Weapon.prototype.initDetail = function(){
 		max_damage += this.max_damage_bonus;
 	}
 
-	damage_text.text = min_damage + " ~ " + max_damage;
+	damage_amount_text.text = min_damage + " ~ " + max_damage;
+	damage_text.x = damage_amount_text.getMeasuredWidth() + 4;
 
 	if(this.attack_speed_bonus){
 		var attack_speed = (60 / (this.attack_speed * (100 - this.attack_speed_bonus) / 100)).toFixed(1);
@@ -66,10 +69,10 @@ Weapon.prototype.initDetail = function(){
 	var dps = ((min_damage + max_damage) * attack_speed / 2).toFixed(1);
 	dps_text.text = dps + " DPS";
 
+	this.summary_height = 90 + 14 * this.rating;
 	var bg = new createjs.Shape();
-	bg.graphics.s("#000").ss(1).f("#fff").dr(0, 0, 120, 90 + 14 * this.rating);
-
-	this.detail.addChild(bg, rating_text, name_text, hand_text, damage_text, attack_speed_text, dps_text, level_text);
+	bg.graphics.s("#000").ss(1).f("#fff").dr(0, 0, 140, this.summary_height);
+	this.detail.addChild(bg, rating_text, name_text, hand_text, damage_amount_text, damage_text, attack_speed_text, dps_text, level_text);
 
 	this.attributes.forEach(function(attribute, index){
 		var attr_text = new createjs.Text("","10px Arial","#B64926");
