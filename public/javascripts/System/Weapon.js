@@ -1,11 +1,11 @@
-function Weapon(attributes){
-	this.weapon_initialize(attributes);
+function Weapon(attributes, container, stage){
+	this.weapon_initialize(attributes, container, stage);
 }
 
 Weapon.prototype = new Item();
 Weapon.prototype.constructor = Weapon;
 
-Weapon.prototype.weapon_initialize = function(attributes){
+Weapon.prototype.weapon_initialize = function(attributes, container, stage){
 	this.hand = attributes.hand;
 	this.level = attributes.level;
 	this.min_damage = attributes.min_damage;
@@ -23,25 +23,7 @@ Weapon.prototype.weapon_initialize = function(attributes){
 	this.life_steal = attributes.life_steal;
 	this.attributes = attributes.attributes;
 
-	this.initialize(attributes);
-}
-
-Weapon.prototype.rolloverStore = function(){
-	if(store_summary.x !== 200){
-		this.detail.x = store_summary.x;
-	}else{
-		this.detail.x = 180;
-	}
-	if(store_summary.y > 120){
-		this.detail.y = store_summary.y - (90 + 14 * this.rating);
-	}else{
-		this.detail.y = store_summary.y + 60;
-	}
-	this.container.addChild(this.detail);
-}
-
-Weapon.prototype.rolloutStore = function(){
-
+	this.initialize(attributes, container, stage);
 }
 
 Weapon.prototype.initDetail = function(){

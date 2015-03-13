@@ -265,11 +265,11 @@ MerchantStore.prototype.setItems = function(){
 	this.items.forEach(function(item){
 		switch(item.type){
 			case "weapon":
-				this.categories.weapons.items.push(new Weapon(item, this.item_container));
+				this.categories.weapons.items.push(new Weapon(item, this.item_container, this.menu_stage));
 				//this.categories.weapons.items.push(item);
 			break;
 			case "armor":
-				this.categories.armors.items.push(item);
+				this.categories.armors.items.push(new Armor(item, this.item_container, this.menu_stage));
 			break;
 			case "consumable":
 				this.categories.consumables.items.push(item);

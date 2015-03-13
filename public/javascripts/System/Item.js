@@ -26,6 +26,26 @@ Item.prototype.initIcon = function(attributes){
 	this.icon.regY = attributes.height / 2;
 }
 
+Item.prototype.rolloverStore = function(){
+	if(this.store_summary.x !== 200){
+		this.detail.x = this.store_summary.x;
+	}else{
+		this.detail.x = 180;
+	}
+	if(this.store_summary.y > 120){
+		this.detail.y = this.store_summary.y - (90 + 14 * this.rating);
+	}else{
+		this.detail.y = this.store_summary.y + 60;
+	}
+	this.container.addChild(this.detail);
+	this.stage.update();
+}
+
+Item.prototype.rolloutStore = function(){
+	this.container.removeChild(this.detail);
+}
+
+
 Item.prototype.initStoreSummary = function(){
 	var frame = new createjs.Shape();
 	frame.graphics.s("#000").ss(1).f("#fff").dr(0,0,100,60).dr(0,0,30,60).dr(30,45,70,15).f(this.colors[this.rating-1]).dr(0,0,30,60);

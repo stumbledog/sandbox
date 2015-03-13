@@ -120,8 +120,8 @@ ItemController = {
 								armor.price = armor.armor_bonus;
 							break;
 							case 1:
-								armor.attack_speed_bonus = (armor.rating - 1) * 2 + Math.ceil(Math.random() * 2);
-								armor.price += level * armor.attack_speed_bonus;
+								armor.attack_speed = (armor.rating - 1) * 2 + Math.ceil(Math.random() * 2);
+								armor.price += level * armor.attack_speed;
 							break;
 							case 2:
 								armor.movement_speed = (armor.rating - 1) * 2 + Math.ceil(Math.random() * 2);
@@ -168,8 +168,8 @@ ItemController = {
 								armor.price += armor.health_regen * 2;
 							break;
 							case 10:
-								armor.mana_regen = Math.ceil((armor.rating) * (Math.random() / 4 + 0.75) / 2);
-								armor.price += armor.mana_regen * 2 * level;
+								armor.resource_regen = Math.ceil((armor.rating) * (Math.random() / 4 + 0.75) / 2);
+								armor.price += armor.resource_regen * 2 * level;
 							break;
 						}
 					});
