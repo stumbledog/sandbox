@@ -1,4 +1,4 @@
-var PrototypeConsumableItemSchema = new Schema({
+var ConsumableItemSchema = new Schema({
 	name:String,
 	type:String,
 	icon:{
@@ -11,6 +11,9 @@ var PrototypeConsumableItemSchema = new Schema({
 		regY:Number,
 		scale:Number,
 	},
+	qty:Number,
+	health:Number,
+	resource:Number,
 });
 
-PrototypeConsumableItemModel = mongoose.model('PrototypeConsumableItem', PrototypeConsumableItemSchema);
+ConsumableItemModel = mongoose.model('ConsumableItem', ConsumableItemSchema);
