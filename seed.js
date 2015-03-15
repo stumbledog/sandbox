@@ -5,11 +5,11 @@ require('./models/PrototypeUnitModel');
 require('./models/PrototypeWeaponModel');
 require('./models/PrototypeArmorModel');
 require('./models/PrototypeConsumableItemModel');
+require('./models/PrototypeHeroModel');
 require('./models/MapModel');
 require('./models/NPCModel');
 
 mongoose.connect('mongodb://localhost/condottiere');
-
 
 var connection = mongoose.connection;
 connection.on("error", console.error.bind(console, 'connection error:'));
@@ -37,6 +37,7 @@ connection.once("open", function(){
 
 function savePrototypeUnit(){
 	var units = [];
+/*
 	units.push(initPrototypeUnit(  0, 'Hero', 10, 3, 2, 10, "assets/Graphics/Characters/01 - Hero.png", "assets/Graphics/Faces/ds_face01-02.png", 0, 1, 0, "fury", 0, 100, 100, 1, 30, 2, 1.5, 0.1, 2, 12, 80, 16, "hero", "player", "#0C0", "#C00", 0, 0, false));
 	units.push(initPrototypeUnit(  1, 'Hero', 10, 3, 2, 10, "assets/Graphics/Characters/01 - Hero.png", "assets/Graphics/Faces/ds_face01-02.png", 1, 1, 0, "fury", 0, 100, 100, 1, 30, 2, 1.5, 0.1, 2, 12, 80, 16, "hero", "player", "#0C0", "#C00", 0, 0, false));
 	units.push(initPrototypeUnit(  2, 'Hero', 10, 3, 2, 10, "assets/Graphics/Characters/01 - Hero.png", "assets/Graphics/Faces/ds_face01-02.png", 2, 1, 0, "fury", 0, 100, 100, 1, 30, 2, 1.5, 0.1, 2, 12, 80, 16, "hero", "player", "#0C0", "#C00", 0, 0, false));
@@ -45,6 +46,16 @@ function savePrototypeUnit(){
 	units.push(initPrototypeUnit(  5, 'Hero', 10, 3, 2, 10, "assets/Graphics/Characters/01 - Hero.png", "assets/Graphics/Faces/ds_face01-02.png", 5, 1, 0, "fury", 0, 100, 100, 1, 30, 2, 1.5, 0.1, 2, 12, 80, 16, "hero", "player", "#0C0", "#C00", 0, 0, false));
 	units.push(initPrototypeUnit(  6, 'Hero', 10, 3, 2, 10, "assets/Graphics/Characters/01 - Hero.png", "assets/Graphics/Faces/ds_face01-02.png", 6, 1, 0, "fury", 0, 100, 100, 1, 30, 2, 1.5, 0.1, 2, 12, 80, 16, "hero", "player", "#0C0", "#C00", 0, 0, false));
 	units.push(initPrototypeUnit(  7, 'Hero', 10, 3, 2, 10, "assets/Graphics/Characters/01 - Hero.png", "assets/Graphics/Faces/ds_face01-02.png", 7, 1, 0, "fury", 0, 100, 100, 1, 30, 2, 1.5, 0.1, 2, 12, 80, 16, "hero", "player", "#0C0", "#C00", 0, 0, false));
+
+	name:String,
+	primary_attribute:String,
+	sprite:String,
+	portrait:String,
+	index:Number,
+	resource_type:String,
+	_skills:[{type:Schema.Types.ObjectId, ref:'Skill'}]
+*/
+	units.push(new PrototypeHeroModel({name:"Albert", primary_attribute:"strength", sprite:"assets/Graphics/Characters/01 - Hero.png", portrait:"assets/Graphics/Faces/ds_face01-02.png", resource_type:"fury"}));
 
 	units.push(new NPCModel({_id:100, name:"Merchant",		sprite:"assets/Graphics/Characters/12 - Merchant.png",	index:0, type:"merchant"}));
 	units.push(new NPCModel({_id:101, name:"Recruiter",		sprite:"assets/Graphics/Characters/12 - Merchant.png",	index:1, type:"recruiter"}));
@@ -55,10 +66,10 @@ function savePrototypeUnit(){
 	units.push(initPrototypeUnit(101, 'Recruiter', 10, 3, 2, 10, "assets/Graphics/Characters/12 - Merchant.png", null, 1, 1, 10, "mana", 100, 100, 5, 1, 60, 0, 0.5, 0, 1, 12, 80, 16, "npc", "player", "#C00", "#CC0", 0, 0, false));
 	units.push(initPrototypeUnit(102, 'Blacksmith', 10, 3, 2, 10, "assets/Graphics/Characters/12 - Merchant.png", null, 2, 1, 10, "mana", 100, 100, 5, 1, 60, 0, 0.5, 0, 1, 12, 80, 16, "npc", "player", "#C00", "#CC0", 0, 0, false));
 	units.push(initPrototypeUnit(103, 'Battlemaster', 10, 3, 2, 10, "assets/Graphics/Characters/23 - Soldier.png", null, 0, 1, 10, "mana", 100, 100, 5, 1, 60, 0, 0.5, 0, 1, 12, 80, 16, "npc", "player", "#C00", "#CC0", 0, 0, false));
-	*/
 	units.push(initPrototypeUnit(200, 'slime', 10, 3, 2, 10, "assets/Graphics/Characters/29 - Monster.png", null, 0, 1, 10, "mana", 100, 100, 5, 1, 60, 0, 1, 0, 1, 4, 80, 16, "monster", "enemy", "#C00", "#CC0", 0, 8, true));
 
 	units.push(initPrototypeUnit(300, 'slime', 10, 3, 2, 10, "assets/Graphics/Characters/29 - Monster.png", null, 0, 1, 10, "mana", 100, 100, 5, 1, 60, 0, 1, 0, 1, 4, 80, 16, "monster", "enemy", "#C00", "#CC0", 0, 8, false));
+	*/
 
 	var count = 0;
 	units.forEach(function(unit){
@@ -322,8 +333,7 @@ function saveItems(){
 }
 
 function initPrototypeUnit(id, name, strength, dexterity, intelligence, vitality,
-	sprite, portrait,
-	index, level, exp, resource_type, resource,
+	sprite, portrait, index, level, exp, resource_type, resource,
 	max_resource, health, damage, attack_speed, armor,
 	movement_speed, critical_rate, critical_damage, radius, aggro_radius,
 	range, type, team, health_color, damage_color,
