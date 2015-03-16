@@ -33,6 +33,8 @@ Unit.prototype.initialize = function(builder){
 	this.target = null;
 	this.filter = null;
 
+	this.velocity = new Vector(0,0);
+
 	this.shadow = new createjs.Shadow("#333",3,3,10);
 	this.renderUnit(builder.sprite.split('/').pop(), builder.index, builder.regX, builder.regY);
 
@@ -42,9 +44,7 @@ Unit.prototype.initialize = function(builder){
 
 	if(builder.skills){
 		this.initSkills(builder.skills);
-	}
-
-	this.velocity = new Vector(0,0);
+	}	
 }
 
 Unit.prototype.getDamage = function(){
@@ -76,7 +76,6 @@ Unit.prototype.renderUnit = function(src_id, index, regX, regY){
 	regY = typeof regY !== 'undefined' ? regY : 0;
 
 	var frames = [];
-
 	for(var i=0 ;i < 12; i++){
 		frames.push([index % 4 *72 + (i % 3) * 24, parseInt(index / 4) * 128 + parseInt(i / 3) * 32 + 1, 24, 32, 0, 12, 16]);
 	}
@@ -212,6 +211,7 @@ Unit.prototype.procMove = function(map){
 		}
 	}
 
+
 	this.x += this.velocity.x;
 	this.y += this.velocity.y;
 	if(this.order_tick % 10 === 0){
@@ -306,16 +306,21 @@ Unit.prototype.flowField = function(map){
 
 Unit.prototype.rotate = function(dx, dy){
 	if(!dx && !dy) return;
+
 	if(Math.abs(dx) > Math.abs(dy)){
 		if(dx > 0){
+			if(this.direction === "right") return;
 			this.direction = "right";
 		}else{
+			if(this.direction === "left") return;
 			this.direction = "left";
 		}
 	}else{
 		if(dy < 0){
+			if(this.direction === "back") return;
 			this.direction = "back";
 		}else{
+			if(this.direction === "front") return;
 			this.direction = "front";
 		}
 	}
@@ -363,6 +368,7 @@ Unit.prototype.rotate = function(dx, dy){
 	}
 	this.sprite.gotoAndPlay(this.direction);
 	this.outline.gotoAndPlay(this.direction);
+
 	this.sprite._animation.speed = this.getMovementSpeed() / 5;
 }
 

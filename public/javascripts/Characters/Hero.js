@@ -14,22 +14,24 @@ Hero.prototype.hero_initialize = function(builder){
 
 	this.blocks = builder.blocks;
 	this.strength = builder.strength;
-	this.dexterity = builder.dexterity;
+	this.agility = builder.agility;
 	this.intelligence = builder.intelligence;
 	this.vitality = builder.vitality;
 
-	this.max_health = this.health = builder.health;
-	this.movement_speed = builder.movement_speed;
+	this.movement_speed = 1.5;
+
+	this.max_health = this.health = 100;
 	this.level = builder.level;
 	this.exp = builder.exp;
 	this.resource_type = builder.resource_type;
-	this.resource = builder.resource;
-	this.max_resource = builder.max_resource;
-	this.radius = builder.radius;
-	this.aggro_radius = builder.aggro_radius;
-	this.range = builder.range;
-	this.attack_speed = builder.attack_speed;
-	this.damage = builder.damage;
+	this.resource = 0;
+	
+	this.max_resource = 100;
+	this.radius = 12;//builder.radius;
+	this.aggro_radius = 80;//builder.aggro_radius;
+	this.range = 16;//builder.range;
+	this.attack_speed = 60;//builder.attack_speed;
+	this.damage = 1;//builder.damage;
 
 	this.renderPortrait(builder.portrait.split('/').pop(), builder.index);
 	this.renderRange();
@@ -45,7 +47,7 @@ Hero.prototype.hero_initialize = function(builder){
 
 Hero.prototype.renderRange = function(){
 	this.range_shape = new createjs.Shape();
-	this.range_shape.graphics.s("#F00").ss(2).dc(0,0,this.radius + this.range);
+	this.range_shape.graphics.s("#F00").ss(2).dc(0, 0, this.radius + this.range);
 	this.range_shape.alpha = 0.5;
 }
 

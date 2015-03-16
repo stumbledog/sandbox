@@ -8,7 +8,6 @@ var HeroSchema = new Schema({
 	sprite:String,
 	portrait:String,
 	index:Number,
-	rate:Number,
 	level:Number,
 	exp:Number,
 	resource_type:String,

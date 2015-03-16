@@ -2,8 +2,9 @@ function Item(){
 
 }
 
-Item.prototype.initialize = function(attributes, container, stage){
+Item.prototype.initialize = function(attributes, container, stage, store){
 	this.game = Game.getInstance();
+	this.user = this.game.getUser();
 	this.loader = this.game.getLoader();
 
 	this.stage = stage;
@@ -15,8 +16,11 @@ Item.prototype.initialize = function(attributes, container, stage){
 	this.colors = ["#ccc","#5C832F","#FFD34E"];
 
 	this.initIcon(attributes.icon);
-	this.initStoreSummary();
 	this.initDetail();
+	if(store){
+		this.store = store;
+		this.initStoreSummary();
+	}
 }
 
 Item.prototype.initIcon = function(attributes){
@@ -74,6 +78,20 @@ Item.prototype.initStoreSummary = function(){
 
 	this.store_summary.addEventListener("rollover", this.rolloverStore.bind(this));
 	this.store_summary.addEventListener("rollout", this.rolloutStore.bind(this));
+	this.store_summary.addEventListener("mousedown", function(event){
+		if(event.nativeEvent.button === 2){
+			if(this.user.gold >= this.price && this.user.inventory.haveAvailableSpace()){
+				this.store.removeItem(this);
+				this.purchase();
+			}else{
+
+			}
+		}
+	}.bind(this));
+}
+
+Item.prototype.purchase = function(){
+	this.user.purchase(this);
 }
 
 Item.prototype.generateItem = function(){

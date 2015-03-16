@@ -105,7 +105,7 @@ MerchantStore.prototype.setCategory = function(){
 		}.bind(this));
 		category.category_container.addEventListener("rollout", function(){
 			this.item_category_button_container.removeChild(text_container);
-			this.menu_stage.update();			
+			this.menu_stage.update();
 		}.bind(this));
 
 	}, this);
@@ -116,14 +116,36 @@ MerchantStore.prototype.setItems = function(){
 	this.items.forEach(function(item){
 		switch(item.type){
 			case "weapon":
-				this.categories.weapons.items.push(new Weapon(item, this.item_container, this.menu_stage));
+				this.categories.weapons.items.push(new Weapon(item, this.item_container, this.menu_stage, this));
 			break;
 			case "armor":
-				this.categories.armors.items.push(new Armor(item, this.item_container, this.menu_stage));
+				this.categories.armors.items.push(new Armor(item, this.item_container, this.menu_stage, this));
 			break;
 			case "consumable":
-				this.categories.consumables.items.push(new Consumable(item, this.item_container, this.menu_stage));
+				this.categories.consumables.items.push(new Consumable(item, this.item_container, this.menu_stage, this));
 			break;
 		}
 	}, this);
+}
+
+MerchantStore.prototype.removeItem = function(item){
+	switch(item.constructor.name){
+		case "Weapon":
+			var items = this.categories.weapons.items.filter(function(weapon){
+				return weapon != item;
+			});
+			this.categories.weapons.items = items;
+			this.selectCategory("weapons");
+		break;
+		case "Armor":
+			var items = this.categories.armors.items.filter(function(armor){
+				return armor != item;
+			});
+			this.categories.armors.items = items;
+			this.selectCategory("armors");
+		break;
+		case "Consumable":
+			// Do nothing for consumable items
+		break;
+	}
 }

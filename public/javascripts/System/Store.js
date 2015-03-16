@@ -9,6 +9,7 @@ Store.prototype.container_initialize = Store.prototype.initialize;
 Store.prototype.store_initialize = function(items){
 	this.container_initialize();
 	this.game = Game.getInstance();
+	this.user = this.game.getUser();
 	this.loader = this.game.getLoader();
 	this.menu_stage = this.game.getMenuStage();
 	this.width = this.menu_stage.canvas.width;

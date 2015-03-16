@@ -1,4 +1,4 @@
-var HeroSchema = new Schema({
+var PrototypeHeroSchema = new Schema({
 	name:String,
 	primary_attribute:String,
 	sprite:String,
@@ -8,23 +8,30 @@ var HeroSchema = new Schema({
 	_skills:[{type:Schema.Types.ObjectId, ref:'Skill'}]
 });
 
-HeroSchema.methods.initHero = function(){
+PrototypeHeroSchema.methods.initHero = function(callback){
 	var hero = this.toObject();
 	hero.level = 1;
 	hero.exp = 0;
+	hero.vitality = 2;
 
 	switch(this.primary_attribute){
 		case "strength":
-
+			hero.strength = 2;
+			hero.agility = 1;
+			hero.intelligence = 1;
 		break;
 		case "agility":
+			hero.strength = 1;
+			hero.agility = 2;
+			hero.intelligence = 1;
 		break;
-
 		case "intelligence":
-
+			hero.strength = 1;
+			hero.agility = 1;
+			hero.intelligence = 2;
 		break;
 	}
-	
+	callback(hero);
 }
 
-HeroModel = mongoose.model('Hero', HeroSchema);
+PrototypeHeroModel = mongoose.model('PrototypeHero', PrototypeHeroSchema);

@@ -6,6 +6,7 @@ require('./models/PrototypeWeaponModel');
 require('./models/PrototypeArmorModel');
 require('./models/PrototypeConsumableItemModel');
 require('./models/PrototypeHeroModel');
+require('./models/PrototypeFollowerModel');
 require('./models/MapModel');
 require('./models/NPCModel');
 
@@ -28,6 +29,9 @@ connection.once("open", function(){
 		return PrototypeConsumableItemModel.remove().exec();
 	}).then(function(count){
 		console.log(count + " consumable items are deleted");
+		return PrototypeHeroModel.remove().exec();
+	}).then(function(count){
+		console.log(count + " Heroes are deleted");
 		return NPCModel.remove().exec();
 	}).then(function(count){
 		console.log(count + " NPCs are deleted");
@@ -55,7 +59,10 @@ function savePrototypeUnit(){
 	resource_type:String,
 	_skills:[{type:Schema.Types.ObjectId, ref:'Skill'}]
 */
-	units.push(new PrototypeHeroModel({name:"Albert", primary_attribute:"strength", sprite:"assets/Graphics/Characters/01 - Hero.png", portrait:"assets/Graphics/Faces/ds_face01-02.png", resource_type:"fury"}));
+	units.push(new PrototypeHeroModel({name:"Albert", primary_attribute:"strength", sprite:"assets/Graphics/Characters/01 - Hero.png", portrait:"assets/Graphics/Faces/ds_face01-02.png", index:0, resource_type:"fury"}));
+
+	units.push(new PrototypeFollowerModel({name:"Albert", primary_attribute:"strength", sprite:"assets/Graphics/Characters/01 - Hero.png", portrait:"assets/Graphics/Faces/ds_face01-02.png", index:1, resource_type:"fury"}));
+	units.push(new PrototypeFollowerModel({name:"Albert", primary_attribute:"strength", sprite:"assets/Graphics/Characters/01 - Hero.png", portrait:"assets/Graphics/Faces/ds_face01-02.png", index:2, resource_type:"fury"}));
 
 	units.push(new NPCModel({_id:100, name:"Merchant",		sprite:"assets/Graphics/Characters/12 - Merchant.png",	index:0, type:"merchant"}));
 	units.push(new NPCModel({_id:101, name:"Recruiter",		sprite:"assets/Graphics/Characters/12 - Merchant.png",	index:1, type:"recruiter"}));
@@ -70,7 +77,6 @@ function savePrototypeUnit(){
 
 	units.push(initPrototypeUnit(300, 'slime', 10, 3, 2, 10, "assets/Graphics/Characters/29 - Monster.png", null, 0, 1, 10, "mana", 100, 100, 5, 1, 60, 0, 1, 0, 1, 4, 80, 16, "monster", "enemy", "#C00", "#CC0", 0, 8, false));
 	*/
-
 	var count = 0;
 	units.forEach(function(unit){
 		unit.save(function(){

@@ -1,22 +1,22 @@
 MapController = {
-	loadMap:function(act, chapter, callback){
+	loadMap:function(level, act, chapter, callback){
 		MapModel.findOne({act:act,chapter:chapter}).populate("npcs.attribute").exec(function(err, map){
-			this.loadMerchantItem(map, callback);
+			this.loadMerchantItem(level, map, callback);
 		}.bind(this));
 	},
-	loadMerchantItem:function(map, callback){
+	loadMerchantItem:function(level, map, callback){
 		if(map.merchant){
-			ItemController.generateMerchantItem(1, function(err, items){
+			ItemController.generateMerchantItem(level, function(err, items){
 				map.merchantable_items = items;
-				this.loadRecruiterUnit(map, callback);
+				this.loadRecruiterUnit(level, map, callback);
 			}.bind(this));
 		}else{
-			this.loadRecruiterUnit(map, callback);
+			this.loadRecruiterUnit(level, map, callback);
 		}
 	},
-	loadRecruiterUnit:function(map, callback){
+	loadRecruiterUnit:function(level, map, callback){
 		if(map.recruiter){
-			UnitController.loadRecruitableUnit(function(err, units){
+			UnitController.loadRecruitableUnit(level, function(err, units){
 				map.recruitable_units = units;
 				callback(map);
 			});

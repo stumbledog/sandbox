@@ -1,15 +1,15 @@
-function Consumable(attributes, container, stage){
-	this.consumable_initialize(attributes, container, stage);
+function Consumable(attributes, container, stage, store){
+	this.consumable_initialize(attributes, container, stage, store);
 }
 
 Consumable.prototype = new Item();
 Consumable.prototype.constructor = Consumable;
 
-Consumable.prototype.consumable_initialize = function(attributes, container, stage){
+Consumable.prototype.consumable_initialize = function(attributes, container, stage, store){
 	this.health = attributes.health;
 	this.attributes = attributes.attributes;
 
-	this.initialize(attributes, container, stage);
+	this.initialize(attributes, container, stage, store);
 }
 
 Consumable.prototype.initDetail = function(){

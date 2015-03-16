@@ -1,9 +1,5 @@
 var InventorySchema = new Schema({
-	number_of_slots:String,
-	_user:{
-		type:Schema.Types.ObjectId,
-		ref:'User'
-	},
+	capacity:Number,
 	slots:[{
 		type:Schema.Types.ObjectId,
 		ref:'Item'
