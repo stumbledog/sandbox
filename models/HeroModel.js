@@ -12,19 +12,11 @@ var HeroSchema = new Schema({
 	level:Number,
 	exp:Number,
 	resource_type:String,
-	movement_speed:Number,
-	critical_rate:Number,
-	critical_damage:Number,
-	radius:Number,
-	aggro_radius:Number,
-	range:Number,
-	type:String,
-	team:String,
-	health_color:String,
-	damage_color:String,
 	_user:{type:Schema.Types.ObjectId, ref:'User'},
 	_items:[{type:Schema.Types.ObjectId, ref:'Item'}],
 	_skills:[{type:Schema.Types.ObjectId, ref:'Skill'}]
 });
+
+
 
 HeroModel = mongoose.model('Hero', HeroSchema);
