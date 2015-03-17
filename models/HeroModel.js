@@ -4,7 +4,7 @@ var HeroSchema = new Schema({
 	strength:Number,
 	dexterity:Number,
 	intelligence:Number,
-	vitality:Number,
+	stamina:Number,
 	sprite:String,
 	portrait:String,
 	index:Number,

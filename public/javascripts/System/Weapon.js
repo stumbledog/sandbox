@@ -81,9 +81,6 @@ Weapon.prototype.initDetail = function(){
 				attr_text.text = "+" + this.min_damage_bonus + " ~ " + this.max_damage_bonus + " Damage";
 			break;
 			case 1:
-				attr_text.text = "+" + this.attack_speed_bonus + "% Attack speed";
-			break;
-			case 2:
 				if(this.strength){
 					attr_text.text = "+" + this.strength + " Strength";
 				}else if(this.agility){
@@ -91,6 +88,9 @@ Weapon.prototype.initDetail = function(){
 				}else{
 					attr_text.text = "+" + this.intelligence + " Intelligence";
 				}
+			break;
+			case 2:
+				attr_text.text = "+" + this.attack_speed_bonus + "% Attack speed";
 			break;
 			case 3:
 				attr_text.text = "+" + this.critical_rate + "% Critical rate";

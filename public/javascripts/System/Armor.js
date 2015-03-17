@@ -66,12 +66,6 @@ Armor.prototype.initDetail = function(){
 				attr_text.text = "+" + this.armor_bonus + " Armor";
 			break;
 			case 1:
-				attr_text.text = "+" + this.attack_speed + "% Attack speed";
-			break;
-			case 2:
-				attr_text.text = "+" + this.movement_speed + "% Movement speed";
-			break;
-			case 3:
 				if(this.strength){
 					attr_text.text = "+" + this.strength + " Strength";
 				}else if(this.agility){
@@ -80,8 +74,14 @@ Armor.prototype.initDetail = function(){
 					attr_text.text = "+" + this.intelligence + " Intelligence";
 				}
 			break;
-			case 4:
+			case 2:
 				attr_text.text = "+" + this.stamina + " Stamina";
+			break;
+			case 3:
+				attr_text.text = "+" + this.attack_speed + "% Attack speed";
+			break;
+			case 4:
+				attr_text.text = "+" + this.movement_speed + "% Movement speed";
 			break;
 			case 5:
 				attr_text.text = "+" + this.critical_rate + "% Critical rate";

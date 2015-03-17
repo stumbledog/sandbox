@@ -40,9 +40,4 @@ var WeaponSchema = new Schema({
 	life_steal:Number,
 });
 
-WeaponSchema.pre('save', function(next){
-	this.price = (min_damage + max_damage) / 2 / this.attack_speed * 100;
-	next();
-});
-
 WeaponModel = mongoose.model('Weapon', WeaponSchema);

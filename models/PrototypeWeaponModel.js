@@ -132,10 +132,6 @@ PrototypeWeaponSchema.methods.generateMerchantItem = function(level, qty, callba
 						weapon.price += (weapon.min_damage_bonus + weapon.max_damage_bonus) * 2;
 					break;
 					case 1:
-						weapon.attack_speed_bonus = (weapon.rating - 1) * 2 + Math.ceil(Math.random() * 2);
-						weapon.price += level * weapon.attack_speed_bonus;
-					break;
-					case 2:
 						var value = Math.ceil(level * (weapon.rating) * (Math.random() / 4 + 0.75));
 						weapon.price += value;
 						weapon.primary_attribute = weapon.primary_attribute === 3 ? Math.floor(Math.random() * 3) : weapon.primary_attribute;
@@ -150,6 +146,10 @@ PrototypeWeaponSchema.methods.generateMerchantItem = function(level, qty, callba
 								weapon.intelligence = value;
 							break;
 						}
+					break;
+					case 2:
+						weapon.attack_speed_bonus = (weapon.rating - 1) * 2 + Math.ceil(Math.random() * 2);
+						weapon.price += level * weapon.attack_speed_bonus;
 					break;
 					case 3:
 						weapon.critical_rate = (weapon.rating - 1) * 2 + Math.ceil(Math.random() * 2);

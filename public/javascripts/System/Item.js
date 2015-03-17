@@ -81,6 +81,9 @@ Item.prototype.initStoreSummary = function(){
 	this.store_summary.addEventListener("mousedown", function(event){
 		if(event.nativeEvent.button === 2){
 			if(this.user.gold >= this.price && this.user.inventory.haveAvailableSpace()){
+				$.post("purchaseitem",{item:this.toJSON()},function(res){
+
+				});
 				this.store.removeItem(this);
 				this.purchase();
 			}else{
@@ -88,6 +91,10 @@ Item.prototype.initStoreSummary = function(){
 			}
 		}
 	}.bind(this));
+}
+
+Item.prototype.toJSON = function(){
+
 }
 
 Item.prototype.purchase = function(){

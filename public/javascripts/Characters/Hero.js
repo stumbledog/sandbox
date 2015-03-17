@@ -16,7 +16,7 @@ Hero.prototype.hero_initialize = function(builder){
 	this.strength = builder.strength;
 	this.agility = builder.agility;
 	this.intelligence = builder.intelligence;
-	this.vitality = builder.vitality;
+	this.stamina = builder.stamina;
 
 	this.movement_speed = 1.5;
 

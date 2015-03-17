@@ -16,7 +16,7 @@ PrototypeFollowerSchema.methods.initFollower = function(level, callback){
 	follower.strength = level;
 	follower.agility = level;
 	follower.intelligence = level;
-	follower.vitality = 2 * level;
+	follower.stamina = 2 * level;
 
 	switch(this.primary_attribute){
 		case "strength":
@@ -40,7 +40,7 @@ PrototypeFollowerSchema.methods.setRecruitableFollower = function(level){
 	follower.strength = level;
 	follower.agility = level;
 	follower.intelligence = level;
-	follower.vitality = 2 * level;
+	follower.stamina = 2 * level;
 	follower.price = 100 * level;
 
 	switch(this.primary_attribute){

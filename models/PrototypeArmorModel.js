@@ -63,14 +63,6 @@ PrototypeArmorSchema.methods.setMerchantItem = function(level){
 				armor.price = armor.armor_bonus;
 			break;
 			case 1:
-				armor.attack_speed = (armor.rating - 1) * 2 + Math.ceil(Math.random() * 2);
-				armor.price += level * armor.attack_speed;
-			break;
-			case 2:
-				armor.movement_speed = (armor.rating - 1) * 2 + Math.ceil(Math.random() * 2);
-				armor.price += level * armor.movement_speed;
-			break;
-			case 3:
 				var value = Math.ceil(level * (armor.rating) * (Math.random() / 4 + 0.75));
 				armor.price += value;
 				armor.primary_attribute = armor.primary_attribute === 3 ? Math.floor(Math.random() * 3) : armor.primary_attribute;
@@ -86,9 +78,17 @@ PrototypeArmorSchema.methods.setMerchantItem = function(level){
 					break;
 				}
 			break;
-			case 4:
+			case 2:
 				armor.stamina = Math.ceil(level * (armor.rating) * (Math.random() / 4 + 0.75));
 				armor.price += armor.stamina;
+			break;
+			case 3:
+				armor.attack_speed = (armor.rating - 1) * 2 + Math.ceil(Math.random() * 2);
+				armor.price += level * armor.attack_speed;
+			break;
+			case 4:
+				armor.movement_speed = (armor.rating - 1) * 2 + Math.ceil(Math.random() * 2);
+				armor.price += level * armor.movement_speed;
 			break;
 			case 5:
 				armor.critical_rate = (armor.rating - 1) * 2 + Math.ceil(Math.random() * 2);
