@@ -8,8 +8,6 @@ var Game = (function(){
 		var rows = map_builder.rows;
 		var scale = 5;
 
-		user = new User(user_builder);
-
 		window.onresize = function(){
 			menu_stage.canvas.width = window.innerWidth/2;
 			map_stage.canvas.width = unit_stage.canvas.width = window.innerWidth;
@@ -272,6 +270,8 @@ var Game = (function(){
 
 		function handleLoadComplete(){
 			initStages();
+
+			user = new User(user_builder);
 
 			createHero(hero_builder);
 

@@ -7,6 +7,7 @@ Consumable.prototype.constructor = Consumable;
 
 Consumable.prototype.consumable_initialize = function(attributes, container, stage, store){
 	this.health = attributes.health;
+	this.qty = attributes.qty;
 	this.attributes = attributes.attributes;
 
 	this.initialize(attributes, container, stage, store);
@@ -23,7 +24,7 @@ Consumable.prototype.initDetail = function(){
 
 	name_text.x = description.x = name_text.y = 2;
 	description.y = 14;
-	
+
 	var bg = new createjs.Shape();
 	bg.graphics.s("#000").ss(1).f("#fff").dr(0, 0, 140, this.summary_height);
 

@@ -1,7 +1,22 @@
 function Inventory(builder){
-	console.log(builder);
+	this.container = new createjs.Container();
+	this.stage = new createjs.Stage();
 	this.capacity = builder.capacity;
-	this.slots = builder.slots;
+	this.slots = [];
+	builder.slots.forEach(function(item){
+		switch(item.type){
+			case "weapon":
+				this.slots.push(new Weapon(item, this.container, this.stage));
+			break;
+			case "armor":
+				this.slots.push(new Armor(item, this.container, this.stage));
+			break;
+			case "consumable":
+				this.slots.push(new Consumable(item, this.container, this.stage));
+			break;
+		}
+	}, this);
+	console.log(this.slots);
 }
 
 Inventory.prototype.haveAvailableSpace = function(){

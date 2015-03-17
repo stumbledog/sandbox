@@ -13,11 +13,12 @@ var PrototypeConsumableItemSchema = new Schema({
 	},
 	health:Number,
 	resource:Number,
-});
+}, { versionKey: false });
 
 PrototypeConsumableItemSchema.methods.setMerchantItem = function(level){
 	var item = this.toObject();
 	item.price = level * 5;
+	item.qty = 1;
 	return item;
 }
 

@@ -1,8 +1,10 @@
 var UserSchema = new Schema({
 	name:String,
-	gold:Number,
-	_inventory:{type:Schema.Types.ObjectId,ref:'Inventory'},
-	last_logged_in:{type: Date, default: Date.now},
+	gold:{type:Number, default:100},
+	inventory:{
+		capacity:{type:Number, default:100},
+		slots:[{type:Schema.Types.Mixed}]
+	},
 	created_at:{type: Date, default: Date.now},
 	updated_at:{type: Date, default: Date.now},
 });

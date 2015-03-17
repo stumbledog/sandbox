@@ -25,5 +25,32 @@ ItemController = {
 			});
 		});
 	},
+	purchase:function(item, user_id, callback){
+	UserModel.findById(user_id, function(err, user){
+			if(user.gold >= item.price){
+				if(item.type === "consumable"){
+					var find = false;
+					user.inventory.slots.forEach(function(slot_item){
+						if(slot_item.name === item.name){
+							slot_item.qty++;
+							find = true;
+							return false;
+						}
+					});
+					if(!find){
+						item.qty = 1;
+						user.inventory.slots.push(item);
+					}
+				}else{
+					user.inventory.slots.push(item);
+				}
+				UserModel.findOneAndUpdate({_id:user._id},{gold:user.gold - item.price, inventory:user.inventory}, function(){
+					callback(null);
+				});
+			}else{
+				callback("Not enough gold");
+			}
+		});
+	}
 
 }

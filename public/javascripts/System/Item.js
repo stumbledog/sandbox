@@ -21,6 +21,8 @@ Item.prototype.initialize = function(attributes, container, stage, store){
 		this.store = store;
 		this.initStoreSummary();
 	}
+
+	this.obj = attributes;
 }
 
 Item.prototype.initIcon = function(attributes){
@@ -49,6 +51,19 @@ Item.prototype.rolloutStore = function(){
 	this.container.removeChild(this.detail);
 }
 
+Item.prototype.mousedownStoreItem = function(event){
+	if(event.nativeEvent.button === 2){
+		if(this.user.gold >= this.price && this.user.inventory.haveAvailableSpace()){
+			$.post("purchaseitem",{item:this.obj},function(res){
+				console.log(res);
+			});
+			this.store.removeItem(this);
+			this.purchase();
+		}else{
+
+		}
+	}
+}
 
 Item.prototype.initStoreSummary = function(){
 	var frame = new createjs.Shape();
@@ -78,23 +93,7 @@ Item.prototype.initStoreSummary = function(){
 
 	this.store_summary.addEventListener("rollover", this.rolloverStore.bind(this));
 	this.store_summary.addEventListener("rollout", this.rolloutStore.bind(this));
-	this.store_summary.addEventListener("mousedown", function(event){
-		if(event.nativeEvent.button === 2){
-			if(this.user.gold >= this.price && this.user.inventory.haveAvailableSpace()){
-				$.post("purchaseitem",{item:this.toJSON()},function(res){
-
-				});
-				this.store.removeItem(this);
-				this.purchase();
-			}else{
-
-			}
-		}
-	}.bind(this));
-}
-
-Item.prototype.toJSON = function(){
-
+	this.store_summary.addEventListener("mousedown", this.mousedownStoreItem.bind(this));
 }
 
 Item.prototype.purchase = function(){

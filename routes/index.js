@@ -8,15 +8,17 @@ router.get('/', function(req, res) {
 	});
 });
 
-router.get('/inventory', function(req, res) {
-	var inventory = new InventoryModel();
-	inventory.number_of_slots = 100;
-	inventory.slots = [];
-	inventory.save(function(err, inv){
-		console.log(inv);
+router.post('/purchaseitem', function(req, res){
+	var item = req.body.item;
+	var user_id = req.session.user_id;
+	ItemController.purchase(item, user_id, function(err){
+		if(err){
+			res.send(err);
+		}else{
+			res.send("Purchased item successfully.");
+		}
 	});
 });
-
 
 router.get('/game', function(req, res) {
 	res.render('game', { title: 'Express' });

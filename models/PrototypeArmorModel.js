@@ -13,7 +13,7 @@ var PrototypeArmorSchema = new Schema({
 		regY:Number,
 		scale:Number,
 	},
-});
+}, { versionKey: false });
 
 PrototypeArmorSchema.methods.setMerchantItem = function(level){
 	var armor = this.toObject();
