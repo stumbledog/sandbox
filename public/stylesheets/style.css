@@ -8,7 +8,9 @@ canvas#bg,
 canvas#unit,
 canvas#tooltip,
 canvas#minimap,
-canvas#menu
+canvas#menu,
+canvas#left_menu,
+canvas#right_menu
 {
 	position:absolute;
 }
@@ -16,10 +18,12 @@ canvas#menu
 canvas#bg{
 	z-index:0;
 }
+
 canvas#unit{
 	z-index:1;
 	cursor:url('../assets/Graphics/System/Icons/swordIcon.png'), auto;
 }
+
 canvas#unit.attack{
 	cursor:url('../assets/Graphics/System/Icons/attackIcon.png'), auto;
 }
@@ -54,6 +58,14 @@ canvas#minimap{
 	border: 1px solid #000;
 }
 
-canvas#menu{
+canvas#menu,
+canvas#left_menu,
+canvas#right_menu
+{
 	z-index:-1;
+}
+
+canvas#right_menu
+{
+	right: 0px;
 }

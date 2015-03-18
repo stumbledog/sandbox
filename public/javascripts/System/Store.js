@@ -11,13 +11,12 @@ Store.prototype.store_initialize = function(items){
 	this.game = Game.getInstance();
 	this.user = this.game.getUser();
 	this.loader = this.game.getLoader();
-	this.menu_stage = this.game.getMenuStage();
-	this.width = this.menu_stage.canvas.width;
-	this.height = this.menu_stage.canvas.height;
+
+	this.width = 310;
+	this.height = 410;
+
 	this.items = items;
-
 	this.frame = new createjs.Shape();
-
 	this.item_list_bg = new createjs.Shape();
 	
 	this.item_container = new createjs.Container();
@@ -43,20 +42,22 @@ Store.prototype.store_initialize = function(items){
 
 Store.prototype.render = function(){
 	this.item_list_bg.graphics.c().s("#000").ss(1).f("#fff").dr(5, 50, this.width - 10, 360);
-	this.menu_stage.canvas.height = 410;
 	this.close_button.x = this.width - 35;
 }
 
 Store.prototype.open = function(){
-	this.menu_stage.addMenu(this);
+	this.game.getLeftMenuStage().addChild(this);
+	this.stage.canvas.width = 310;
+	this.stage.canvas.height = 410;
+	this.stage.open();
 }
 
 Store.prototype.close = function(){
-	this.menu_stage.removeMenu(this);
+	this.stage.close();
 }
 
 Store.prototype.purchase = function(item){
-	
+	this.user.purchase(this);
 }
 
 Store.prototype.refund = function(item){

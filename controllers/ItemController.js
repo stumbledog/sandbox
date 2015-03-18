@@ -26,7 +26,7 @@ ItemController = {
 		});
 	},
 	purchase:function(item, user_id, callback){
-	UserModel.findById(user_id, function(err, user){
+		UserModel.findById(user_id, function(err, user){
 			if(user.gold >= item.price){
 				if(item.type === "consumable"){
 					var find = false;
@@ -52,5 +52,4 @@ ItemController = {
 			}
 		});
 	}
-
 }

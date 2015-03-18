@@ -29,13 +29,81 @@ MerchantStore.prototype.selectCategory = function(key){
 	this.item_container.removeAllChildren();
 	var colors = ["#ccc","#5C832F","#FFD34E"];
 	this.categories[key].items.forEach(function(item, index){
+		this.itemSummary(item);
 		item.store_summary.x = index % 3 * 100;
 		item.store_summary.y = parseInt(index / 3) * 60;
 		item.store_summary.cursor = "pointer";
 		this.item_container.addChild(item.store_summary);
 	}, this);
 
-	this.menu_stage.update();
+	if(this.stage){
+		this.stage.update();
+	}
+}
+
+MerchantStore.prototype.itemSummary = function(item){
+	var frame = new createjs.Shape();
+	frame.graphics.s("#000").ss(1).f("#fff").dr(0,0,100,60).dr(0,0,30,60).dr(30,45,70,15).f(item.colors[item.rating-1]).dr(0,0,30,60);
+
+	var icon = item.icon.clone();
+	icon.x = 15;
+	icon.y = 30;
+
+	var name = new createjs.Text(item.name, "12px Arial","#000");
+	name.x = 32;
+	name.y = 2;
+
+	var price = new createjs.Text(item.price, "12px Arial","#000");
+	price.x = 32;
+	price.y = 46;
+
+	var coin = new createjs.Bitmap(item.loader.getResult("icon"));
+	coin.sourceRect = new createjs.Rectangle(246, 55, 12, 12);
+	coin.x = 33 + price.getMeasuredWidth();
+	coin.y = 48;
+	coin.scaleX = coin.scaleY = 0.8;
+
+	item.store_summary = new createjs.Container();
+	item.store_summary.addChild(frame, icon, name, price, coin);
+	item.store_summary.cursor = "pointer";
+
+	item.store_summary.addEventListener("rollover", this.rolloverStore.bind(this, item));
+	item.store_summary.addEventListener("rollout", this.rolloutStore.bind(this, item));
+	item.store_summary.addEventListener("mousedown", this.mousedownStoreItem.bind(this, item));
+}
+
+MerchantStore.prototype.rolloverStore = function(item){
+	if(item.store_summary.x !== 200){
+		item.detail.x = item.store_summary.x + 5;
+	}else{
+		item.detail.x = 165;
+	}
+	if(item.store_summary.y > 120){
+		item.detail.y = item.store_summary.y - (item.summary_height) + 50;
+	}else{
+		item.detail.y = item.store_summary.y + 110;
+	}
+	this.addChild(item.detail);
+	this.stage.update();
+}
+
+MerchantStore.prototype.rolloutStore = function(item){
+	this.removeChild(item.detail);
+	this.stage.update();
+}
+
+MerchantStore.prototype.mousedownStoreItem = function(item, event){
+	if(event.nativeEvent.button === 2){
+		if(this.user.gold >= item.price && this.user.inventory.haveAvailableSpace()){
+			$.post("purchaseitem",{item:item.obj},function(res){
+				console.log(res);
+			});
+			this.removeItem(this);
+			this.purchase();
+		}else{
+
+		}
+	}
 }
 
 MerchantStore.prototype.setCategory = function(){
@@ -101,11 +169,11 @@ MerchantStore.prototype.setCategory = function(){
 		category.category_container.addEventListener("rollover", function(){
 			text_container.x = category.category_container.x + 41;
 			this.item_category_button_container.addChild(text_container);
-			this.menu_stage.update();
+			this.stage.update();
 		}.bind(this));
 		category.category_container.addEventListener("rollout", function(){
 			this.item_category_button_container.removeChild(text_container);
-			this.menu_stage.update();
+			this.stage.update();
 		}.bind(this));
 
 	}, this);
@@ -116,13 +184,13 @@ MerchantStore.prototype.setItems = function(){
 	this.items.forEach(function(item){
 		switch(item.type){
 			case "weapon":
-				this.categories.weapons.items.push(new Weapon(item, this.item_container, this.menu_stage, this));
+				this.categories.weapons.items.push(new Weapon(item, this.item_container, this.stage, this));
 			break;
 			case "armor":
-				this.categories.armors.items.push(new Armor(item, this.item_container, this.menu_stage, this));
+				this.categories.armors.items.push(new Armor(item, this.item_container, this.stage, this));
 			break;
 			case "consumable":
-				this.categories.consumables.items.push(new Consumable(item, this.item_container, this.menu_stage, this));
+				this.categories.consumables.items.push(new Consumable(item, this.item_container, this.stage, this));
 			break;
 		}
 	}, this);

@@ -1,11 +1,11 @@
-function Armor(attributes, container, stage, store){
-	this.armor_initialize(attributes, container, stage, store);
+function Armor(attributes){
+	this.armor_initialize(attributes);
 }
 
 Armor.prototype = new Item();
 Armor.prototype.constructor = Armor;
 
-Armor.prototype.armor_initialize = function(attributes, container, stage, store){
+Armor.prototype.armor_initialize = function(attributes){
 	this.level = attributes.level;
 	this.armor = attributes.armor;
 	this.armor_bonus = attributes.armor_bonus;
@@ -23,7 +23,7 @@ Armor.prototype.armor_initialize = function(attributes, container, stage, store)
 	this.resource_regen = attributes.resource_regen;
 	this.attributes = attributes.attributes;
 
-	this.initialize(attributes, container, stage, store);
+	this.initialize(attributes);
 }
 
 Armor.prototype.initDetail = function(){

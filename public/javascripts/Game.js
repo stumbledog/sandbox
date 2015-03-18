@@ -3,58 +3,22 @@ var Game = (function(){
 	var instance;
 
 	function init(user_builder, hero_builder, follower_builder_array, map_builder){
-		var user, unit_stage, map_stage, ui_stage, loader, minimap_stage, tooltip_stage, menu_stage, hero, blocks;
+		var user, loader, hero, blocks;
+		var minimap_stage, tooltip_stage, unit_stage, map_stage, ui_stage, left_stage, right_stage;
 		var cols = map_builder.cols;
 		var rows = map_builder.rows;
 		var scale = 5;
 
 		window.onresize = function(){
-			menu_stage.canvas.width = window.innerWidth/2;
 			map_stage.canvas.width = unit_stage.canvas.width = window.innerWidth;
-			menu_stage.canvas.height = map_stage.canvas.height = unit_stage.canvas.height = window.innerHeight;
-			menu_stage.resize();
+			map_stage.canvas.height = unit_stage.canvas.height = window.innerHeight;
 			map_stage.update();
 			unit_stage.update();
+			left_stage.update();
+			right_stage.update();
 		};
 
 		/*
-		var hero_builder = {
-			src:"assets/Graphics/Characters/01 - Hero.png",
-			src_id:"01 - Hero",
-			portrait_src:"assets/Graphics/Faces/ds_face01-02.png",
-			portrait_id:"ds_face01-02",
-			index:0,
-			level:1,
-			exp:0,
-			resource_type:"fury",
-			resource:0,
-			max_resource:100,
-			health:100,
-			damage:1,
-			attack_speed:30,
-			armor:2,
-			movement_speed:1.5,
-			critical_rate:0.1,
-			critical_damage:2,
-			radius:12,
-			aggro_radius:80,
-			range:16,
-			type:"hero",
-			team:"player",
-			health_color:"#0C0",
-			damage_color:"#C00",
-			weapon:{
-				type:"melee",
-				src:"assets/Graphics/System/Icons/IconSet.png",
-				src_id:"IconSet",
-				cropX:292,
-				cropY:100,
-				width:16,
-				height:16,
-				regX:12,
-				regY:12,
-				scale:0.8,
-			},
 			skills:[
 				{
 					key:"q",
@@ -163,68 +127,6 @@ var Game = (function(){
 				}
 			]
 		};
-
-		var follow_builder = {
-			src:"assets/Graphics/Characters/23 - Soldier.png",
-			src_id:"23 - Soldier",
-			index:0,
-			level:1,
-			exp:0,
-			resource_type:"fury",
-			resource:0,
-			max_resource:100,
-			health:50,
-			damage:2,
-			attack_speed:60,
-			armor:2,
-			movement_speed:1.5,
-			critical_rate:0.1,
-			critical_damage:2,
-			radius:12,
-			aggro_radius:80,
-			range:16,
-			type:"follow",
-			team:"player",
-			health_color:"#046380",
-			damage_color:"#C00",
-			weapon:{
-				type:"melee",
-				src:"assets/Graphics/System/Icons/IconSet.png",
-				src_id:"IconSet",
-				cropX:292,
-				cropY:100,
-				width:16,
-				height:16,
-				regX:12,
-				regY:12,
-				scale:0.8,
-			}
-		};
-
-		var monster_builder = {
-			src:"assets/Graphics/Characters/29 - Monster.png",
-			src_id:"29 - Monster",
-			index:0,
-			level:1,
-			exp:200,
-			resource_type:"mana",
-			resource:20,
-			max_resource:20,
-			health:10,
-			damage:1,
-			attack_speed:60,
-			armor:0,
-			movement_speed:1,
-			critical_rate:0.0,
-			critical_damage:1,
-			radius:4,
-			aggro_radius:80,
-			range:16,
-			type:"monster",
-			team:"enemy",
-			health_color:"#C00",
-			damage_color:"#CC0",
-		};
 		*/
 
 		var manifest = [];
@@ -299,9 +201,10 @@ var Game = (function(){
 			ui_stage = new UI_Stage();
 			map_stage.scaleX = map_stage.scaleY = scale;
 			unit_stage.scaleX = unit_stage.scaleY = scale;
-			//menu_stage.scaleX = unit_stage.scaleY = scale;
 			map_stage.update();
-			menu_stage = new Menu_Stage(cols * 32, rows * 32);
+
+			left_stage = new MenuStage("left_menu", 310, window.innerHeight);
+			right_stage = new MenuStage("right_menu", 310, window.innerHeight);
 		}
 
 		function createHero(builder){
@@ -367,8 +270,11 @@ var Game = (function(){
 			getMinimapStage:function(){
 				return minimap_stage;
 			},
-			getMenuStage:function(){
-				return menu_stage;
+			getLeftMenuStage:function(){
+				return left_stage;
+			},
+			getRighttMenuStage:function(){
+				return right_stage;
 			},
 			getMerchantableItems:function(){
 				return map_builder.merchantable_items;
@@ -381,7 +287,6 @@ var Game = (function(){
 				scale = scale < 1 ? 1 :scale > 5 ? 5 : scale;
 				map_stage.scaleX = map_stage.scaleY = scale;
 				unit_stage.scaleX = unit_stage.scaleY = scale;
-				//menu_stage.scaleX = menu_stage.scaleY = scale;
 				map_stage.update();
 			},
 			viewport:function(){

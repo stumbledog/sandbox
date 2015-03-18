@@ -1,4 +1,20 @@
 function Inventory(builder){
+	this.initialize(builder);
+}
+
+Inventory.prototype = new createjs.Container();
+Inventory.prototype.constructor = Inventory;
+Inventory.prototype.container_initialize = Inventory.prototype.initialize;
+
+Inventory.prototype.initialize = function(builder){
+	this.container_initialize();
+	this.game = Game.getInstance();
+	this.user = this.game.getUser();
+	this.loader = this.game.getLoader();
+
+	this.width = 310;
+	this.height = 400;
+
 	this.container = new createjs.Container();
 	this.stage = new createjs.Stage();
 	this.capacity = builder.capacity;
@@ -41,4 +57,8 @@ Inventory.prototype.addItem = function(item){
 		this.slots.push(item);
 	}
 	console.log(this.slots);
+}
+
+Inventory.prototype.open = function(){
+
 }

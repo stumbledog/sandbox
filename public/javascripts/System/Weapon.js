@@ -1,11 +1,11 @@
-function Weapon(attributes, container, stage, store){
-	this.weapon_initialize(attributes, container, stage, store);
+function Weapon(attributes){
+	this.weapon_initialize(attributes);
 }
 
 Weapon.prototype = new Item();
 Weapon.prototype.constructor = Weapon;
 
-Weapon.prototype.weapon_initialize = function(attributes, container, stage, store){
+Weapon.prototype.weapon_initialize = function(attributes){
 	this.hand = attributes.hand;
 	this.level = attributes.level;
 	this.min_damage = attributes.min_damage;
@@ -23,7 +23,7 @@ Weapon.prototype.weapon_initialize = function(attributes, container, stage, stor
 	this.life_steal = attributes.life_steal;
 	this.attributes = attributes.attributes;
 
-	this.initialize(attributes, container, stage, store);
+	this.initialize(attributes);
 }
 
 Weapon.prototype.initDetail = function(){
