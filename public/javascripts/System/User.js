@@ -12,5 +12,5 @@ User.prototype.purchase = function(item){
 }
 
 User.prototype.save = function(){
-
+	
 }

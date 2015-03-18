@@ -36,7 +36,6 @@ Store.prototype.store_initialize = function(items){
 	this.close_icon.graphics.s("#FFF0A5").ss(3).mt(5,5).lt(25,25).mt(5,25).lt(25,5);
 
 	this.close_button.addChild(this.close_button_bg, this.close_icon);
-
 	this.addChild(this.frame, this.item_list_bg, this.item_container, this.close_button);
 }
 
@@ -57,7 +56,7 @@ Store.prototype.close = function(){
 }
 
 Store.prototype.purchase = function(item){
-	this.user.purchase(this);
+	this.user.purchase(item);
 }
 
 Store.prototype.refund = function(item){

@@ -12,24 +12,18 @@ MerchantStore.prototype.merchantstore_initialize = function(items){
 	this.setItems();
 
 	this.current_key = "weapons";
-	this.previous_key = null;
-	this.selectCategory.call(this, "weapons");
+	this.selectCategory("weapons");
 	this.render();
 }
 
 MerchantStore.prototype.selectCategory = function(key){
-	this.previous_key = this.current_key;
+	this.categories[this.current_key].category_container.children[0].graphics._fill.style = "#FFF";
 	this.current_key = key;
-
-	if(this.previous_key){
-		this.categories[this.previous_key].category_container.children[0].graphics._fill.style = "#FFF";
-	}
-	this.categories[key].category_container.children[0].graphics._fill.style = "#FF6138";
+	this.categories[this.current_key].category_container.children[0].graphics._fill.style = "#FF6138";
 
 	this.item_container.removeAllChildren();
 	var colors = ["#ccc","#5C832F","#FFD34E"];
 	this.categories[key].items.forEach(function(item, index){
-		this.itemSummary(item);
 		item.store_summary.x = index % 3 * 100;
 		item.store_summary.y = parseInt(index / 3) * 60;
 		item.store_summary.cursor = "pointer";
@@ -95,11 +89,11 @@ MerchantStore.prototype.rolloutStore = function(item){
 MerchantStore.prototype.mousedownStoreItem = function(item, event){
 	if(event.nativeEvent.button === 2){
 		if(this.user.gold >= item.price && this.user.inventory.haveAvailableSpace()){
-			$.post("purchaseitem",{item:item.obj},function(res){
+			$.post("purchaseitem", {item:item.obj}, function(res){
 				console.log(res);
 			});
-			this.removeItem(this);
-			this.purchase();
+			this.removeItem(item);
+			this.purchase(item);
 		}else{
 
 		}
@@ -184,13 +178,19 @@ MerchantStore.prototype.setItems = function(){
 	this.items.forEach(function(item){
 		switch(item.type){
 			case "weapon":
-				this.categories.weapons.items.push(new Weapon(item, this.item_container, this.stage, this));
+				var weapon = new Weapon(item);
+				this.categories.weapons.items.push(weapon);
+				this.itemSummary(weapon);
 			break;
 			case "armor":
-				this.categories.armors.items.push(new Armor(item, this.item_container, this.stage, this));
+				var armor = new Armor(item);
+				this.categories.armors.items.push(armor);
+				this.itemSummary(armor);
 			break;
 			case "consumable":
-				this.categories.consumables.items.push(new Consumable(item, this.item_container, this.stage, this));
+				var consumable = new Consumable(item);
+				this.categories.consumables.items.push(consumable);
+				this.itemSummary(consumable);
 			break;
 		}
 	}, this);

@@ -22,13 +22,13 @@ Inventory.prototype.initialize = function(builder){
 	builder.slots.forEach(function(item){
 		switch(item.type){
 			case "weapon":
-				this.slots.push(new Weapon(item, this.container, this.stage));
+				this.slots.push(new Weapon(item));
 			break;
 			case "armor":
-				this.slots.push(new Armor(item, this.container, this.stage));
+				this.slots.push(new Armor(item));
 			break;
 			case "consumable":
-				this.slots.push(new Consumable(item, this.container, this.stage));
+				this.slots.push(new Consumable(item));
 			break;
 		}
 	}, this);
