@@ -1,6 +1,7 @@
 var PrototypeConsumableItemSchema = new Schema({
 	name:String,
 	type:String,
+	rating:Number,	// 1:common, 2:magic, 3:rare, 4:epic, 5:legendary
 	icon:{
 		source:String,
 		cropX:Number,

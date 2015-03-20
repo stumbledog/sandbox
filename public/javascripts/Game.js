@@ -171,10 +171,8 @@ var Game = (function(){
 		loader.loadManifest(manifest);
 
 		function handleLoadComplete(){
-			initStages();
-
 			user = new User(user_builder);
-
+			initStages();
 			createHero(hero_builder);
 
 			follower_builder_array.forEach(function(unit_builder){

@@ -17,6 +17,7 @@ Unit_Stage.prototype.initialize = function(width, height){
 	
 	this.game = Game.getInstance();
 	this.loader = this.game.getLoader();
+	this.user = this.game.getUser();
 	this.map = this.game.getMapStage();
 	this.mapSize = this.map.getSize();
 	this.minimap = this.game.getMinimapStage();
@@ -143,6 +144,7 @@ Unit_Stage.prototype.initEvent = function(){
 	}, this);
 
 	document.onkeydown = function(event){
+		console.log(event.keyCode);
 		switch(event.keyCode){
 			case 27://esc
 				this.setCommand("move");
@@ -171,6 +173,9 @@ Unit_Stage.prototype.initEvent = function(){
 				break;
 			case 82://r
 				this.hero.useSkill('r', this.mouse_position);
+				break;
+			case 73:
+				this.user.toggleInventory();
 				break;
 		}
 		this.update();

@@ -217,3 +217,8 @@ MerchantStore.prototype.removeItem = function(item){
 		break;
 	}
 }
+
+MerchantStore.prototype.open = function(){
+	Store.prototype.open.call(this);
+	this.user.openInventory();
+}

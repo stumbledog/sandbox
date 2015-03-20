@@ -16,27 +16,13 @@ Item.prototype.initialize = function(attributes){
 
 	this.initIcon(attributes.icon);
 	this.initDetail();
-	/*
-	if(store){
-		this.store = store;
-		this.initStoreSummary();
-	}*/
 
 	this.obj = attributes;
 }
 
 Item.prototype.initIcon = function(attributes){
 	this.icon = new createjs.Bitmap(this.loader.getResult(attributes.source.split('/').pop()));
-	this.icon.sourceRect = new createjs.Rectangle(attributes.cropX, attributes.cropY, attributes.width, attributes.height);
+	this.icon.sourceRect = new createjs.Rectangle(parseInt(attributes.cropX), parseInt(attributes.cropY), parseInt(attributes.width), parseInt(attributes.height));
 	this.icon.regX = attributes.width / 2;
 	this.icon.regY = attributes.height / 2;
 }
-/*
-Item.prototype.purchase = function(){
-	this.user.purchase(this);
-}
-
-Item.prototype.generateItem = function(){
-
-}
-*/

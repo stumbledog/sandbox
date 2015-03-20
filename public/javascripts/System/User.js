@@ -14,3 +14,15 @@ User.prototype.purchase = function(item){
 User.prototype.save = function(){
 	
 }
+
+User.prototype.openInventory = function(){
+	this.inventory.open();
+}
+
+User.prototype.toggleInventory = function(){
+	if(this.inventory.isOpen){
+		this.inventory.close();
+	}else{
+		this.inventory.open();
+	}
+}

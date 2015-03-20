@@ -14,7 +14,7 @@ MenuStage.prototype.initialize = function(id, width, height){
 	this.enableMouseOver();
 }
 
-MenuStage.prototype.open = function(menu){
+MenuStage.prototype.open = function(){
 	this.canvas.style.zIndex = 10;
 	this.update();
 }

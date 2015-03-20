@@ -13,11 +13,40 @@ Inventory.prototype.initialize = function(builder){
 	this.loader = this.game.getLoader();
 
 	this.width = 310;
-	this.height = 400;
-
-	this.container = new createjs.Container();
-	this.stage = new createjs.Stage();
+	this.height = 640;
+	this.isOpen = false;
+	this.isShopping = false;
 	this.capacity = builder.capacity;
+
+	this.item_container = new createjs.Container();
+	this.item_container_frame = new createjs.Shape();
+	var item_container_frame_graphics = this.item_container_frame.graphics;
+	var rows = this.capacity / 15;
+	item_container_frame_graphics.s("#000").f("#fff").dr(0,0,300,rows*20);
+	for(var i = 0 ; i < rows ; i++){
+		item_container_frame_graphics.mt(0,(i+1)*20).lt(300,(i+1)*20)
+		//.mt(0,i*20).lt(0,(i+1)*20)
+		.mt(20,i*20).lt(20,(i+1)*20)
+		.mt(40,i*20).lt(40,(i+1)*20)
+		.mt(60,i*20).lt(60,(i+1)*20)
+		.mt(80,i*20).lt(80,(i+1)*20)
+		.mt(100,i*20).lt(100,(i+1)*20)
+		.mt(120,i*20).lt(120,(i+1)*20)
+		.mt(140,i*20).lt(140,(i+1)*20)
+		.mt(160,i*20).lt(160,(i+1)*20)
+		.mt(180,i*20).lt(180,(i+1)*20)
+		.mt(200,i*20).lt(200,(i+1)*20)
+		.mt(220,i*20).lt(220,(i+1)*20)
+		.mt(240,i*20).lt(240,(i+1)*20)
+		.mt(260,i*20).lt(260,(i+1)*20)
+		.mt(280,i*20).lt(280,(i+1)*20)
+		//.mt(300,i*20).lt(300,(i+1)*20);
+	}
+
+
+	this.item_container.x = this.item_container_frame.x = 5;
+	this.item_container.y = this.item_container_frame.y = 400;
+
 	this.slots = [];
 	builder.slots.forEach(function(item){
 		switch(item.type){
@@ -32,7 +61,8 @@ Inventory.prototype.initialize = function(builder){
 			break;
 		}
 	}, this);
-	console.log(this.slots);
+	this.addChild(this.item_container_frame, this.item_container);
+	//console.log(this.slots);
 }
 
 Inventory.prototype.haveAvailableSpace = function(){
@@ -42,23 +72,73 @@ Inventory.prototype.haveAvailableSpace = function(){
 Inventory.prototype.addItem = function(item){
 	if(item.constructor.name === "Consumable"){
 		var find = false;
-		this.slots.forEach(function(slot_item){
+		this.slots.forEach(function(slot_item, index){
 			if(slot_item.name === item.name){
 				slot_item.qty++;
 				find = true;
+				this.updateQuantity(item, index);
 				return false;
 			}
-		});
+		}, this);
 		if(!find){
 			item.qty = 1;
+			this.item_container.addChild(this.initItemIcon(item, this.slots.length));
 			this.slots.push(item);
 		}
 	}else{
+		this.item_container.addChild(this.initItemIcon(item, this.slots.length));
 		this.slots.push(item);
 	}
-	console.log(this.slots);
+
+	this.stage.update();
+}
+
+Inventory.prototype.updateQuantity = function(item, index){
+	this.item_container.children[index].children[2].setText(this.slots[index].qty);
+}
+
+Inventory.prototype.initItemIcon = function(item, index){
+	var container = new createjs.Container();
+	container.x = (index % 15) * 20;
+	container.y = Math.floor(index / 15) * 20;
+	container.cursor = "pointer";
+	container.addEventListener("rollover", function(event){
+		this.stage.addChild(item.detail);
+		this.stage.update();
+	}.bind(this));
+
+	container.addEventListener("rollout", function(event){
+		this.stage.removeChild(item.detail);
+		this.stage.update();
+	}.bind(this));
+
+	var border = new createjs.Shape();
+	border.graphics.s("#000").ss(1).f(item.colors[item.rating-1]).dr(0,0,20,20);
+
+	var icon = item.icon.clone();
+	icon.regX = icon.regY = -2;
+	container.addChild(border, icon);
+
+	if(item.qty){
+		var qty = new OutlineText(item.qty,"bold 8px Arial","#fff","#000",2);
+		qty.x = 18 - qty.getMeasuredWidth();
+		qty.y = 12;
+		container.addChild(qty);
+	}
+	this.item_container.addChild(container);
 }
 
 Inventory.prototype.open = function(){
+	this.isOpen = true;
+	this.item_container.removeAllChildren();
+	this.game.getRighttMenuStage().addChild(this);
+	this.slots.forEach(function(item, index){
+		this.item_container.addChild(this.initItemIcon(item, index));
+	}, this);
+	this.stage.open();
+}
 
+Inventory.prototype.close = function(){
+	this.isOpen = false;
+	this.stage.close();
 }
