@@ -14,6 +14,7 @@ var PrototypeConsumableItemSchema = new Schema({
 	},
 	health:Number,
 	resource:Number,
+	cooldown:Number,
 }, { versionKey: false });
 
 PrototypeConsumableItemSchema.methods.setMerchantItem = function(level){

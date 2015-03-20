@@ -1,6 +1,6 @@
 var UserSchema = new Schema({
 	name:String,
-	gold:{type:Number, default:100},
+	gold:{type:Number, default:1000},
 	inventory:{
 		capacity:{type:Number, default:90},
 		slots:[{type:Schema.Types.Mixed}]

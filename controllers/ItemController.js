@@ -26,6 +26,7 @@ ItemController = {
 		});
 	},
 	purchase:function(item, user_id, callback){
+		console.log(item);
 		UserModel.findById(user_id, function(err, user){
 			if(user.gold >= item.price){
 				if(item.type === "consumable"){

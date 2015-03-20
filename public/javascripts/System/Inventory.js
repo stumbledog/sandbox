@@ -25,7 +25,6 @@ Inventory.prototype.initialize = function(builder){
 	item_container_frame_graphics.s("#000").f("#fff").dr(0,0,300,rows*20);
 	for(var i = 0 ; i < rows ; i++){
 		item_container_frame_graphics.mt(0,(i+1)*20).lt(300,(i+1)*20)
-		//.mt(0,i*20).lt(0,(i+1)*20)
 		.mt(20,i*20).lt(20,(i+1)*20)
 		.mt(40,i*20).lt(40,(i+1)*20)
 		.mt(60,i*20).lt(60,(i+1)*20)
@@ -39,10 +38,8 @@ Inventory.prototype.initialize = function(builder){
 		.mt(220,i*20).lt(220,(i+1)*20)
 		.mt(240,i*20).lt(240,(i+1)*20)
 		.mt(260,i*20).lt(260,(i+1)*20)
-		.mt(280,i*20).lt(280,(i+1)*20)
-		//.mt(300,i*20).lt(300,(i+1)*20);
+		.mt(280,i*20).lt(280,(i+1)*20);
 	}
-
 
 	this.item_container.x = this.item_container_frame.x = 5;
 	this.item_container.y = this.item_container_frame.y = 400;
@@ -51,22 +48,38 @@ Inventory.prototype.initialize = function(builder){
 	builder.slots.forEach(function(item){
 		switch(item.type){
 			case "weapon":
-				this.slots.push(new Weapon(item));
+				var weapon = new Weapon(item);
+				weapon.bin = this;
+				this.slots.push(weapon);
 			break;
 			case "armor":
-				this.slots.push(new Armor(item));
+				var armor = new Armor(item);
+				armor.bin = this;
+				this.slots.push(armor);
 			break;
 			case "consumable":
-				this.slots.push(new Consumable(item));
+				var consumable = new Consumable(item)
+				consumable.bin = this;
+				this.slots.push(consumable);
 			break;
 		}
 	}, this);
 	this.addChild(this.item_container_frame, this.item_container);
-	//console.log(this.slots);
 }
 
-Inventory.prototype.haveAvailableSpace = function(){
-	return (this.capacity - this.slots.length) > 0;
+Inventory.prototype.haveAvailableSpace = function(item){
+	if(item.constructor.name === "Consumable"){
+		var find = false;
+		this.slots.forEach(function(slot_item){
+			if(slot_item.name === item.name){
+				find = true;
+				return false;
+			}
+		});
+		return find || (this.capacity - this.slots.length) > 0;
+	}else{
+		return (this.capacity - this.slots.length) > 0;
+	}
 }
 
 Inventory.prototype.addItem = function(item){
@@ -76,16 +89,18 @@ Inventory.prototype.addItem = function(item){
 			if(slot_item.name === item.name){
 				slot_item.qty++;
 				find = true;
-				this.updateQuantity(item, index);
+				this.updateQuantity(index);
 				return false;
 			}
 		}, this);
 		if(!find){
 			item.qty = 1;
+			item.bin = this;
 			this.item_container.addChild(this.initItemIcon(item, this.slots.length));
 			this.slots.push(item);
 		}
 	}else{
+		item.bin = this;
 		this.item_container.addChild(this.initItemIcon(item, this.slots.length));
 		this.slots.push(item);
 	}
@@ -93,8 +108,13 @@ Inventory.prototype.addItem = function(item){
 	this.stage.update();
 }
 
-Inventory.prototype.updateQuantity = function(item, index){
-	this.item_container.children[index].children[2].setText(this.slots[index].qty);
+Inventory.prototype.updateQuantity = function(index){
+	var item = this.slots[index];
+	var qty = this.item_container.children[index].children[2];
+	qty.setText(item.qty);
+	qty.x = 18 - qty.getMeasuredWidth();
+	item.sell_price_text.text = item.sell_price * item.qty;
+	item.sell_price_text.x = 126 - item.sell_price_text.getMeasuredWidth();
 }
 
 Inventory.prototype.initItemIcon = function(item, index){
@@ -103,7 +123,7 @@ Inventory.prototype.initItemIcon = function(item, index){
 	container.y = Math.floor(index / 15) * 20;
 	container.cursor = "pointer";
 	container.addEventListener("rollover", function(event){
-		this.stage.addChild(item.detail);
+		item.showDetail(container.x > 160 ? container.x - 115 : 5 + container.x, 400 + container.y - item.summary_height, this.stage);
 		this.stage.update();
 	}.bind(this));
 
@@ -116,7 +136,7 @@ Inventory.prototype.initItemIcon = function(item, index){
 	border.graphics.s("#000").ss(1).f(item.colors[item.rating-1]).dr(0,0,20,20);
 
 	var icon = item.icon.clone();
-	icon.regX = icon.regY = -2;
+	icon.x = icon.y = 10;
 	container.addChild(border, icon);
 
 	if(item.qty){

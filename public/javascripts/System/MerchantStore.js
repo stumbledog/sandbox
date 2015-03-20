@@ -66,18 +66,18 @@ MerchantStore.prototype.itemSummary = function(item){
 	item.store_summary.addEventListener("mousedown", this.mousedownStoreItem.bind(this, item));
 }
 
-MerchantStore.prototype.rolloverStore = function(item){
+MerchantStore.prototype.rolloverStore = function(item){	
 	if(item.store_summary.x !== 200){
-		item.detail.x = item.store_summary.x + 5;
+		var x = item.store_summary.x + 5;
 	}else{
-		item.detail.x = 165;
+		var x = 165;
 	}
 	if(item.store_summary.y > 120){
-		item.detail.y = item.store_summary.y - (item.summary_height) + 50;
+		var y = item.store_summary.y - (item.summary_height) + 50;
 	}else{
-		item.detail.y = item.store_summary.y + 110;
+		var y = item.store_summary.y + 110;
 	}
-	this.addChild(item.detail);
+	item.showDetail(x, y, this);
 	this.stage.update();
 }
 
@@ -88,7 +88,7 @@ MerchantStore.prototype.rolloutStore = function(item){
 
 MerchantStore.prototype.mousedownStoreItem = function(item, event){
 	if(event.nativeEvent.button === 2){
-		if(this.user.gold >= item.price && this.user.inventory.haveAvailableSpace()){
+		if(this.user.gold >= item.price && this.user.inventory.haveAvailableSpace(item)){
 			$.post("purchaseitem", {item:item.obj}, function(res){
 				console.log(res);
 			});
@@ -179,16 +179,19 @@ MerchantStore.prototype.setItems = function(){
 		switch(item.type){
 			case "weapon":
 				var weapon = new Weapon(item);
+				weapon.bin = this;
 				this.categories.weapons.items.push(weapon);
 				this.itemSummary(weapon);
 			break;
 			case "armor":
 				var armor = new Armor(item);
+				armor.bin = this;
 				this.categories.armors.items.push(armor);
 				this.itemSummary(armor);
 			break;
 			case "consumable":
 				var consumable = new Consumable(item);
+				consumable.bin = this;
 				this.categories.consumables.items.push(consumable);
 				this.itemSummary(consumable);
 			break;

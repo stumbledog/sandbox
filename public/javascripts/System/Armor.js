@@ -6,21 +6,21 @@ Armor.prototype = new Item();
 Armor.prototype.constructor = Armor;
 
 Armor.prototype.armor_initialize = function(attributes){
-	this.level = attributes.level;
-	this.armor = attributes.armor;
-	this.armor_bonus = attributes.armor_bonus;
-	this.attack_speed = attributes.attack_speed;
-	this.movement_speed = attributes.movement_speed;
-	this.strength = attributes.strength;
-	this.agility = attributes.agility;
-	this.intelligence = attributes.intelligence;
-	this.stamina = attributes.stamina;
-	this.critical_rate = attributes.critical_rate;
-	this.critical_damage = attributes.critical_damage;
-	this.life_steal = attributes.life_steal;
-	this.cooldown_reduce = attributes.cooldown_reduce;
-	this.health_regen = attributes.health_regen;
-	this.resource_regen = attributes.resource_regen;
+	this.level = parseInt(attributes.level);
+	this.armor = parseInt(attributes.armor);
+	this.armor_bonus = parseInt(attributes.armor_bonus);
+	this.attack_speed = parseInt(attributes.attack_speed);
+	this.movement_speed = parseInt(attributes.movement_speed);
+	this.strength = parseInt(attributes.strength);
+	this.agility = parseInt(attributes.agility);
+	this.intelligence = parseInt(attributes.intelligence);
+	this.stamina = parseInt(attributes.stamina);
+	this.critical_rate = parseInt(attributes.critical_rate);
+	this.critical_damage = parseInt(attributes.critical_damage);
+	this.life_steal = parseInt(attributes.life_steal);
+	this.cooldown_reduce = parseInt(attributes.cooldown_reduce);
+	this.health_regen = parseInt(attributes.health_regen);
+	this.resource_regen = parseInt(attributes.resource_regen);
 	this.attributes = attributes.attributes;
 
 	this.initialize(attributes);
@@ -28,19 +28,24 @@ Armor.prototype.armor_initialize = function(attributes){
 
 Armor.prototype.initDetail = function(){
 	this.detail = new createjs.Container();
-	var ratings = ["Common", "Magic", "Rare", "Epic", "Legendary"];
-	var rating_text = new createjs.Text(ratings[this.rating - 1] + " Armor", "bold 10px Arial", this.colors[this.rating - 1]);
-	var name_text = new createjs.Text(this.name.replace("\n", " "), "10px Arial", "#000");	
+	var ratings = ["Common", "Uncommon", "Rare", "Epic", "Legendary"];
+	var rating_text = new OutlineText(ratings[this.rating - 1] + " Armor", "10px Arial", this.colors[this.rating - 1], "#333", 3);
+	var name_text = new createjs.Text(this.name.replace("\n", " "), "10px Arial", "#000");
 	var armor_amount_text = new createjs.Text("", "bold 16px Arial", "#3E606F");
 	var armor_text = new createjs.Text("Armor", "10px Arial", "#3E606F");
 	var level_text = new createjs.Text("Item Level: " + this.level, "10px Arial", "#000");
+	this.sell_price_text = new createjs.Text(this.sell_price, "10px Arial", "#000");
+	this.sell_price_coin = this.coin.clone();
 
-	level_text.x = armor_amount_text.x = name_text.x = rating_text.x = rating_text.y = 2;
+	rating_text.x = 3;
+	level_text.x = armor_amount_text.x = name_text.x = rating_text.y = 2;
+	this.sell_price_text.x = 126 - this.sell_price_text.getMeasuredWidth();
+	this.sell_price_coin.x = 128;
 	name_text.y = 14;
 	armor_amount_text.y = 28;
 	armor_text.y = 32;
 	var offsetY = !this.armor ? 20 : 0;
-	level_text.y = 48 + 14 * this.rating - offsetY;
+	this.sell_price_coin.y = this.sell_price_text.y = level_text.y = 48 + 14 * this.rating - offsetY;
 	var armor = this.armor;
 
 	if(this.armor_bonus){
@@ -54,14 +59,14 @@ Armor.prototype.initDetail = function(){
 	var bg = new createjs.Shape();
 	bg.graphics.s("#000").ss(1).f("#fff").dr(0, 0, 140, this.summary_height);
 	if(this.armor === 0){
-		this.detail.addChild(bg, rating_text, name_text, level_text);
+		this.detail.addChild(bg, rating_text, name_text, level_text, this.sell_price_text, this.sell_price_coin);
 	}else{
-		this.detail.addChild(bg, rating_text, name_text, level_text, armor_amount_text, armor_text);
+		this.detail.addChild(bg, rating_text, name_text, level_text, armor_amount_text, armor_text, this.sell_price_text, this.sell_price_coin);
 	}
 
 	this.attributes.forEach(function(attribute, index){
 		var attr_text = new createjs.Text("","10px Arial","#B64926");
-		switch(attribute){
+		switch(parseInt(attribute)){
 			case 0:
 				attr_text.text = "+" + this.armor_bonus + " Armor";
 			break;
