@@ -1,21 +1,20 @@
-function Inventory(builder){
-	this.initialize(builder);
+function Inventory(builder, user){
+	this.initialize(builder, user);
 }
 
 Inventory.prototype = new createjs.Container();
 Inventory.prototype.constructor = Inventory;
 Inventory.prototype.container_initialize = Inventory.prototype.initialize;
 
-Inventory.prototype.initialize = function(builder){
+Inventory.prototype.initialize = function(builder, user){
 	this.container_initialize();
 	this.game = Game.getInstance();
-	this.user = this.game.getUser();
+	this.user = user;
 	this.loader = this.game.getLoader();
 
 	this.width = 310;
 	this.height = 640;
 	this.isOpen = false;
-	this.isShopping = false;
 	this.capacity = builder.capacity;
 
 	this.item_container = new createjs.Container();
@@ -130,6 +129,19 @@ Inventory.prototype.initItemIcon = function(item, index){
 	container.addEventListener("rollout", function(event){
 		this.stage.removeChild(item.detail);
 		this.stage.update();
+	}.bind(this));
+
+	container.addEventListener("mousedown", function(event){
+		console.log(item);
+		if(event.nativeEvent.button === 2){
+			if(this.user.isShopping){
+				this.user.store.sellItem(item);
+				// sell Item
+			}else{
+				//equip item
+			}
+		}
+		console.log(this.user.isShopping);
 	}.bind(this));
 
 	var border = new createjs.Shape();

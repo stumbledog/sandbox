@@ -22,7 +22,6 @@ MerchantStore.prototype.selectCategory = function(key){
 	this.categories[this.current_key].category_container.children[0].graphics._fill.style = "#FF6138";
 
 	this.item_container.removeAllChildren();
-	var colors = ["#ccc","#5C832F","#FFD34E"];
 	this.categories[key].items.forEach(function(item, index){
 		item.store_summary.x = index % 3 * 100;
 		item.store_summary.y = parseInt(index / 3) * 60;
@@ -33,6 +32,17 @@ MerchantStore.prototype.selectCategory = function(key){
 	if(this.stage){
 		this.stage.update();
 	}
+}
+
+MerchantStore.prototype.renderCategoryItems = function(key){
+	this.categories[key].items.forEach(function(item, index){
+		item.store_summary.x = index % 3 * 100;
+		item.store_summary.y = parseInt(index / 3) * 60;
+		item.store_summary.cursor = "pointer";
+		this.item_container.addChild(item.store_summary);
+	}, this);
+
+	this.stage.update();	
 }
 
 MerchantStore.prototype.itemSummary = function(item){
@@ -224,4 +234,12 @@ MerchantStore.prototype.removeItem = function(item){
 MerchantStore.prototype.open = function(){
 	Store.prototype.open.call(this);
 	this.user.openInventory();
+	this.user.isShopping = true;
+	this.user.store = this;
+}
+
+MerchantStore.prototype.sellItem = function(item){
+	this.itemSummary(item);
+	this.categories.repurchase.items.push(item);
+	this.renderCategoryItems("repurchase");
 }

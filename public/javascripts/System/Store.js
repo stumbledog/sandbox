@@ -52,6 +52,7 @@ Store.prototype.open = function(){
 }
 
 Store.prototype.close = function(){
+	this.user.isShopping = false;
 	this.stage.close();
 }
 
