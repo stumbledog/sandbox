@@ -5,6 +5,7 @@ function User(builder){
 	this.last_logged_in = builder.last_logged_in;
 	this.isShopping = false;
 	this.store = null;
+	this.action = null;
 	this.inventory = new Inventory(builder.inventory, this);
 }
 
@@ -27,4 +28,12 @@ User.prototype.toggleInventory = function(){
 	}else{
 		this.inventory.open();
 	}
+}
+
+User.prototype.addGold = function(gold){
+	this.gold += gold;
+}
+
+User.prototype.dragItem = function(){
+
 }

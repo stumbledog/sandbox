@@ -18,10 +18,6 @@ Store.prototype.store_initialize = function(items){
 	this.items = items;
 	this.frame = new createjs.Shape();
 	this.item_list_bg = new createjs.Shape();
-	
-	this.item_container = new createjs.Container();
-	this.item_container.x = 5;
-	this.item_container.y = 50;
 
 	this.close_button = new createjs.Container();
 	this.close_button.x = this.width - 35;
@@ -36,7 +32,7 @@ Store.prototype.store_initialize = function(items){
 	this.close_icon.graphics.s("#FFF0A5").ss(3).mt(5,5).lt(25,25).mt(5,25).lt(25,5);
 
 	this.close_button.addChild(this.close_button_bg, this.close_icon);
-	this.addChild(this.frame, this.item_list_bg, this.item_container, this.close_button);
+	this.addChild(this.frame, this.item_list_bg, this.close_button);
 }
 
 Store.prototype.render = function(){
@@ -58,18 +54,4 @@ Store.prototype.close = function(){
 
 Store.prototype.purchase = function(item){
 	this.user.purchase(item);
-}
-
-Store.prototype.refund = function(item){
-	
-}
-
-Store.prototype.recruitUnit = function(unit){
-
-}
-
-Store.prototype.resize = function(width, height){
-	this.width = width;
-	this.height = height;
-	this.render();
 }

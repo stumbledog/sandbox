@@ -11,41 +11,41 @@ MerchantStore.prototype.merchantstore_initialize = function(items){
 	this.setCategory();
 	this.setItems();
 
-	this.current_key = "weapons";
+	this.current_key = null;
 	this.selectCategory("weapons");
 	this.render();
 }
 
 MerchantStore.prototype.selectCategory = function(key){
-	this.categories[this.current_key].category_container.children[0].graphics._fill.style = "#FFF";
+	if(this.current_key){
+		this.stage.removeChild(this.categories[this.current_key].item_container);
+		this.categories[this.current_key].category_container.children[0].graphics._fill.style = "#FFF";
+	}
+	
 	this.current_key = key;
 	this.categories[this.current_key].category_container.children[0].graphics._fill.style = "#FF6138";
 
-	this.item_container.removeAllChildren();
+	this.renderCategoryItems(this.current_key);
+}
+
+MerchantStore.prototype.renderCategoryItems = function(key){
+
+	this.categories[key].item_container.removeAllChildren();
 	this.categories[key].items.forEach(function(item, index){
 		item.store_summary.x = index % 3 * 100;
 		item.store_summary.y = parseInt(index / 3) * 60;
 		item.store_summary.cursor = "pointer";
-		this.item_container.addChild(item.store_summary);
+		this.categories[key].item_container.addChild(item.store_summary);
 	}, this);
 
 	if(this.stage){
+		this.stage.addChild(this.categories[this.current_key].item_container);
 		this.stage.update();
 	}
 }
 
-MerchantStore.prototype.renderCategoryItems = function(key){
-	this.categories[key].items.forEach(function(item, index){
-		item.store_summary.x = index % 3 * 100;
-		item.store_summary.y = parseInt(index / 3) * 60;
-		item.store_summary.cursor = "pointer";
-		this.item_container.addChild(item.store_summary);
-	}, this);
+MerchantStore.prototype.itemSummary = function(item, repurchase){
 
-	this.stage.update();	
-}
-
-MerchantStore.prototype.itemSummary = function(item){
 	var frame = new createjs.Shape();
 	frame.graphics.s("#000").ss(1).f("#fff").dr(0,0,100,60).dr(0,0,30,60).dr(30,45,70,15).f(item.colors[item.rating-1]).dr(0,0,30,60);
 
@@ -57,7 +57,12 @@ MerchantStore.prototype.itemSummary = function(item){
 	name.x = 32;
 	name.y = 2;
 
-	var price = new createjs.Text(item.price, "12px Arial","#000");
+	if(repurchase){
+		var price = new createjs.Text(item.sell_price, "12px Arial","#000");
+	}else{
+		var price = new createjs.Text(item.price, "12px Arial","#000");
+	}
+
 	price.x = 32;
 	price.y = 46;
 
@@ -87,12 +92,13 @@ MerchantStore.prototype.rolloverStore = function(item){
 	}else{
 		var y = item.store_summary.y + 110;
 	}
-	item.showDetail(x, y, this);
+
+	item.showDetail(x, y, this.stage);
 	this.stage.update();
 }
 
 MerchantStore.prototype.rolloutStore = function(item){
-	this.removeChild(item.detail);
+	this.stage.removeChild(item.detail);
 	this.stage.update();
 }
 
@@ -151,6 +157,9 @@ MerchantStore.prototype.setCategory = function(){
 		category.category_container.x = index * 44;
 		this.item_category_button_container.addChild(category.category_container);
 
+		category.item_container.x = 5;
+		category.item_container.y = 50;
+
 		var icon = new createjs.Bitmap(this.loader.getResult("icon"));
 		icon.sourceRect = new createjs.Rectangle(icons[key][0],icons[key][1],icons[key][2],icons[key][3]);
 		icon.regX = icons[key][2]/2;
@@ -203,42 +212,50 @@ MerchantStore.prototype.setItems = function(){
 				var consumable = new Consumable(item);
 				consumable.bin = this;
 				this.categories.consumables.items.push(consumable);
-				this.itemSummary(consumable);
+				this.itemSummary(consumable, true);
 			break;
 		}
 	}, this);
 }
 
 MerchantStore.prototype.removeItem = function(item){
-	switch(item.constructor.name){
-		case "Weapon":
+	console.log(this.current_key);
+	switch(this.current_key){
+		case "weapons":
 			var items = this.categories.weapons.items.filter(function(weapon){
 				return weapon != item;
 			});
 			this.categories.weapons.items = items;
-			this.selectCategory("weapons");
 		break;
-		case "Armor":
+		case "armors":
 			var items = this.categories.armors.items.filter(function(armor){
 				return armor != item;
 			});
 			this.categories.armors.items = items;
-			this.selectCategory("armors");
 		break;
-		case "Consumable":
+		case "consumables":
 			// Do nothing for consumable items
 		break;
+		case "repurchase":
+			var items = this.categories.repurchase.items.filter(function(repurchase){
+				return repurchase != item;
+			});
+			this.categories.repurchase.items = items;
+		break;
 	}
+	this.renderCategoryItems(this.current_key);
 }
 
-MerchantStore.prototype.open = function(){
+MerchantStore.prototype.open = function(){	
 	Store.prototype.open.call(this);
+	this.renderCategoryItems(this.current_key);
 	this.user.openInventory();
 	this.user.isShopping = true;
 	this.user.store = this;
 }
 
 MerchantStore.prototype.sellItem = function(item){
+	item.bin = this;
 	this.itemSummary(item);
 	this.categories.repurchase.items.push(item);
 	this.renderCategoryItems("repurchase");

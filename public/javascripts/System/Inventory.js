@@ -135,7 +135,7 @@ Inventory.prototype.initItemIcon = function(item, index){
 		console.log(item);
 		if(event.nativeEvent.button === 2){
 			if(this.user.isShopping){
-				this.user.store.sellItem(item);
+				this.sellItem(item);
 				// sell Item
 			}else{
 				//equip item
@@ -177,4 +177,15 @@ Inventory.prototype.open = function(){
 Inventory.prototype.close = function(){
 	this.isOpen = false;
 	this.stage.close();
+}
+
+Inventory.prototype.sellItem = function(item){
+	this.user.store.sellItem(item);
+	var index = this.slots.indexOf(item);
+	if (index > -1) {
+		this.slots.splice(index, 1);
+	}	
+	this.item_container.removeChildAt(index);
+	this.user.addGold(item.sell_price);
+	this.stage.update();
 }
