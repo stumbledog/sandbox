@@ -160,6 +160,10 @@ Inventory.prototype.initItemIcon = function(item, index){
 	this.item_container.addChild(container);
 }
 
+Inventory.prototype.displayGold = function(){
+	
+}
+
 Inventory.prototype.open = function(){
 	this.isOpen = true;
 	this.item_container.removeAllChildren();
