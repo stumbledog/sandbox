@@ -179,6 +179,11 @@ Inventory.prototype.close = function(){
 	this.stage.close();
 }
 
+Inventory.prototype.equipItem = function(item){
+	this.selectedCharacter.equipItem(Item);
+	this.removeItem(item);
+}
+
 Inventory.prototype.sellItem = function(item){
 	this.user.store.sellItem(item);
 	var index = this.slots.indexOf(item);
