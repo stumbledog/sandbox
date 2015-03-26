@@ -182,6 +182,7 @@ Inventory.prototype.close = function(){
 Inventory.prototype.equipItem = function(item){
 	this.selectedCharacter.equipItem(Item);
 	this.removeItem(item);
+	
 }
 
 Inventory.prototype.sellItem = function(item){
