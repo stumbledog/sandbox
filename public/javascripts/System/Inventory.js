@@ -10,13 +10,12 @@ Inventory.prototype.initialize = function(builder, user){
 	this.container_initialize();
 	this.game = Game.getInstance();
 	this.user = user;
-	this.loader = this.game.getLoader();
+	//this.loader = this.game.getLoader();
 
 	this.width = 310;
 	this.height = 640;
 	this.isOpen = false;
 	this.capacity = builder.capacity;
-
 	this.drag_item = null;
 	this.containers = [];
 
@@ -32,27 +31,60 @@ Inventory.prototype.initialize = function(builder, user){
 		this.containers.push(container);
 
 		container.addEventListener("mousedown", function(event){
-			if(event.nativeEvent.button === 0 && event.currentTarget.children.length && this.drag_item){
-				event.currentTarget.addChild(this.drag_item);
-				this.drag_item = null;
+			if(event.nativeEvent.button === 0){
+				if(this.drag_item){
+					if(event.currentTarget.children.length > 1){
+						event.currentTarget.children[1].item.obj.index = this.drag_item.parent.index;
+						var swap_item = event.currentTarget.children[1];
+						swap_item.item.obj.index = this.drag_item.parent.index;
+						this.drag_item.parent.addChild(swap_item);
+						this.drag_item.item.obj.index = event.currentTarget.index;
+						event.currentTarget.addChild(this.drag_item);
+
+						//this.saveInventory("swap_item", [swap_item.item.obj, this.drag_item.item.obj]);
+						this.drag_item = null;
+					}else{
+						this.drag_item.item.obj.index = event.currentTarget.index;
+						event.currentTarget.addChild(this.drag_item);
+
+						//this.saveInventory("move_item", this.drag_item.item.obj);
+						this.drag_item = null;
+					}
+					this.saveInventory();
+				}else{
+					if(event.currentTarget.children.length > 1){
+						this.drag_item = event.currentTarget.children[1];
+					}
+				}
+			}else if(event.nativeEvent.button === 2){
+				if(event.currentTarget.children.length > 1){
+					if(this.user.isShopping){
+						// sell Item
+						this.sellItem(event.currentTarget.children[1].item);
+						event.currentTarget.removeChildAt(1);
+					}else{
+						//equip item
+					}
+				}
 			}
+			this.stage.update();
 		}.bind(this));
 	}
 
 	builder.slots.forEach(function(item){
-		var index = this.getEmptySlot();
+		console.log(item);
 		switch(item.type){
 			case "weapon":
 				var weapon = new Weapon(item);
-				this.containers[index].addChild(this.initItemIcon(weapon, index));
+				this.containers[item.index].addChild(this.initItemIcon(weapon, item.index));
 			break;
 			case "armor":
 				var armor = new Armor(item);
-				this.containers[index].addChild(this.initItemIcon(armor, index));
+				this.containers[item.index].addChild(this.initItemIcon(armor, item.index));
 			break;
 			case "consumable":
 				var consumable = new Consumable(item);
-				this.containers[index].addChild(this.initItemIcon(consumable, index));
+				this.containers[item.index].addChild(this.initItemIcon(consumable, item.index));
 			break;
 		}
 	}, this);
@@ -63,11 +95,11 @@ Inventory.prototype.addItem = function(item){
 		var find = false;
 		var index = this.findItem(item);
 		if(index > -1){
-			this.containers[index].children[0].item.qty++;
+			this.containers[index].children[1].item.qty++;
 			this.updateQuantity(index);
 		}else{
 			item.qty = 1;
-			var empty_index = this.getEmptySlot();
+			var empty_index = this.getEmptySlot();			
 			this.containers[empty_index].addChild(this.initItemIcon(item, empty_index));
 		}
 	}else{
@@ -78,8 +110,8 @@ Inventory.prototype.addItem = function(item){
 }
 
 Inventory.prototype.updateQuantity = function(index){
-	var item = this.containers[index].children[0].item;
-	var qty = this.containers[index].children[0].children[2];
+	var item = this.containers[index].children[1].item;
+	var qty = this.containers[index].children[1].children[2];
 	qty.setText(item.qty);
 	qty.x = 18 - qty.getMeasuredWidth();
 	item.sell_price_text.text = item.sell_price * item.qty;
@@ -88,13 +120,14 @@ Inventory.prototype.updateQuantity = function(index){
 
 Inventory.prototype.initItemIcon = function(item, index){
 	item.bin = this;
-	var x = (index % 15) * 20;
-	var y = Math.floor(index / 15) * 20;
+	item.obj.index = index;
 	var container = new createjs.Container();
 	container.item = item;
-	container.index = index;
 	container.cursor = "pointer";
 	container.addEventListener("rollover", function(event){
+		var index = container.parent.index;
+		var x = (index % 15) * 20;
+		var y = Math.floor(index / 15) * 20;
 		item.showDetail(x > 160 ? x - 115 : 5 + x, 400 + y - item.summary_height, this.stage);
 		this.stage.update();
 	}.bind(this));
@@ -102,27 +135,6 @@ Inventory.prototype.initItemIcon = function(item, index){
 	container.addEventListener("rollout", function(event){
 		this.stage.removeChild(item.detail);
 		this.stage.update();
-	}.bind(this));
-
-	container.addEventListener("mousedown", function(event){
-		console.log("item");
-		if(event.nativeEvent.button === 0){
-			if(!this.drag_item){
-				this.drag_item = container;
-				console.log(this.drag_item);
-			}else{
-				this.drag_item = null;
-				console.log("swap item");
-			}
-		}else if(event.nativeEvent.button === 2){
-			if(this.user.isShopping){
-				container.parent.removeChild(container);
-				this.sellItem(item);
-				// sell Item
-			}else{
-				//equip item
-			}
-		}
 	}.bind(this));
 
 	var border = new createjs.Shape();
@@ -140,14 +152,6 @@ Inventory.prototype.initItemIcon = function(item, index){
 	}
 
 	return container;
-}
-
-Inventory.prototype.moveItem = function(){
-
-}
-
-Inventory.prototype.swapItem = function(){
-
 }
 
 Inventory.prototype.displayGold = function(){
@@ -172,8 +176,6 @@ Inventory.prototype.equipItem = function(item){
 
 Inventory.prototype.sellItem = function(item){
 	this.user.store.sellItem(item);
-	//var index = this.findItem(item);
-	//this.containers[index].removeChildAt(1);
 	this.user.addGold(item.sell_price);
 	this.stage.update();
 }
@@ -209,4 +211,16 @@ Inventory.prototype.findItem = function(item){
 		}
 	}
 	return index;
+}
+
+Inventory.prototype.saveInventory = function(){
+	var items = [];
+	this.containers.forEach(function(container){
+		if(container.children.length > 1){
+			items.push(container.children[1].item.obj);
+		}
+	});
+	$.post("saveinventory", {items:items}, function(res){
+		console.log(res);
+	});
 }

@@ -105,11 +105,12 @@ MerchantStore.prototype.rolloutStore = function(item){
 MerchantStore.prototype.mousedownStoreItem = function(item, event){
 	if(event.nativeEvent.button === 2){
 		if(this.user.gold >= item.price && this.user.inventory.haveAvailableSpace(item)){
+			this.removeItem(item);
+			this.purchase(item);
+			console.log(item);
 			$.post("purchaseitem", {item:item.obj}, function(res){
 				console.log(res);
 			});
-			this.removeItem(item);
-			this.purchase(item);
 		}else{
 
 		}
