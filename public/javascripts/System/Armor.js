@@ -6,6 +6,7 @@ Armor.prototype = new Item();
 Armor.prototype.constructor = Armor;
 
 Armor.prototype.armor_initialize = function(attributes){
+	this._id = attributes._id;
 	this.level = parseInt(attributes.level);
 	this.armor = parseInt(attributes.armor);
 	this.armor_bonus = parseInt(attributes.armor_bonus);

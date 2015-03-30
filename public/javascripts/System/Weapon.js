@@ -6,6 +6,7 @@ Weapon.prototype = new Item();
 Weapon.prototype.constructor = Weapon;
 
 Weapon.prototype.weapon_initialize = function(attributes){
+	this._id = attributes._id;
 	this.hand = parseInt(attributes.hand);
 	this.level = parseInt(attributes.level);
 	this.min_damage = parseFloat(attributes.min_damage);

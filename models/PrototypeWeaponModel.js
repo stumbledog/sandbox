@@ -31,6 +31,7 @@ var PrototypeWeaponSchema = new Schema({
 }, { versionKey: false });
 PrototypeWeaponSchema.methods.setMerchantItem = function(level){
 	var weapon = this.toObject();
+	weapon._id = mongoose.Types.ObjectId();
 	weapon.level = level;
 	weapon.price = 0;
 	weapon.min_damage *= level;

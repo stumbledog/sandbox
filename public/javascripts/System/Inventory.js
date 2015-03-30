@@ -156,7 +156,6 @@ Inventory.prototype.initItemIcon = function(item, index){
 
 Inventory.prototype.displayGold = function(){
 	
-	
 }
 
 Inventory.prototype.open = function(){
