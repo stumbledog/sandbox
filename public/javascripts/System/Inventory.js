@@ -34,17 +34,17 @@ Inventory.prototype.initialize = function(builder, user){
 			if(event.nativeEvent.button === 0){
 				if(this.drag_item){
 					if(event.currentTarget.children.length > 1){
-						event.currentTarget.children[1].item.obj.index = this.drag_item.parent.index;
+						event.currentTarget.children[1].item.index = this.drag_item.parent.index;
 						var swap_item = event.currentTarget.children[1];
-						swap_item.item.obj.index = this.drag_item.parent.index;
+						swap_item.item.index = this.drag_item.parent.index;
 						this.drag_item.parent.addChild(swap_item);
-						this.drag_item.item.obj.index = event.currentTarget.index;
+						this.drag_item.item.index = event.currentTarget.index;
 						event.currentTarget.addChild(this.drag_item);
 
 						//this.saveInventory("swap_item", [swap_item.item.obj, this.drag_item.item.obj]);
 						this.drag_item = null;
 					}else{
-						this.drag_item.item.obj.index = event.currentTarget.index;
+						this.drag_item.item.index = event.currentTarget.index;
 						event.currentTarget.addChild(this.drag_item);
 
 						//this.saveInventory("move_item", this.drag_item.item.obj);
@@ -72,6 +72,7 @@ Inventory.prototype.initialize = function(builder, user){
 	}
 
 	builder.slots.forEach(function(item){
+		item.index = parseInt(item.index);
 		console.log(item);
 		switch(item.type){
 			case "weapon":
@@ -120,7 +121,7 @@ Inventory.prototype.updateQuantity = function(index){
 
 Inventory.prototype.initItemIcon = function(item, index){
 	item.bin = this;
-	item.obj.index = index;
+	item.index = parseInt(index);
 	var container = new createjs.Container();
 	container.item = item;
 	container.cursor = "pointer";
@@ -140,7 +141,7 @@ Inventory.prototype.initItemIcon = function(item, index){
 	var border = new createjs.Shape();
 	border.graphics.s("#000").ss(1).f(item.colors[item.rating-1]).dr(0,0,20,20);
 
-	var icon = item.icon.clone();
+	var icon = item.icon_img.clone();
 	icon.x = icon.y = 10;
 	container.addChild(border, icon);
 
@@ -215,11 +216,13 @@ Inventory.prototype.findItem = function(item){
 
 Inventory.prototype.saveInventory = function(){
 	var items = [];
+
 	this.containers.forEach(function(container){
 		if(container.children.length > 1){
-			items.push(container.children[1].item.obj);
+			items.push(container.children[1].item.toObject());
 		}
 	});
+
 	$.post("saveinventory", {items:items}, function(res){
 		console.log(res);
 	});

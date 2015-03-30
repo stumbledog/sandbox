@@ -49,7 +49,7 @@ MerchantStore.prototype.itemSummary = function(item, repurchase){
 	var frame = new createjs.Shape();
 	frame.graphics.s("#000").ss(1).f("#fff").dr(0,0,100,60).dr(0,0,30,60).dr(30,45,70,15).f(item.colors[item.rating-1]).dr(0,0,30,60);
 
-	var icon = item.icon.clone();
+	var icon = item.icon_img.clone();
 	icon.x = 15;
 	icon.y = 30;
 
@@ -108,7 +108,8 @@ MerchantStore.prototype.mousedownStoreItem = function(item, event){
 			this.removeItem(item);
 			this.purchase(item);
 			console.log(item);
-			$.post("purchaseitem", {item:item.obj}, function(res){
+			console.log(item.toObject());
+			$.post("purchaseitem", {item:item.toObject()}, function(res){
 				console.log(res);
 			});
 		}else{

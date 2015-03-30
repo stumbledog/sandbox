@@ -45,8 +45,7 @@ ItemController = {
 				}else{
 					user.inventory.slots.push(item);
 				}
-				UserModel.findOneAndUpdate({_id:user._id}, {gold:user.gold - item.price, inventory:user.inventory}, function(user){
-					console.log(user.inventory.slots);
+				UserModel.findOneAndUpdate({_id:user._id}, {gold:user.gold - item.price, inventory:user.inventory}, function(err, user){
 					callback(null);
 				});
 			}else{
@@ -60,8 +59,10 @@ ItemController = {
 		});
 	},
 	sellItem:function(items, user_id, callback){
+		
+		/*
 		UserModel.findOneAndUpdate({_id:user_id}, {"inventory.slots":items}, function(){
 			callback(null);
-		});
+		});*/
 	}
 }
