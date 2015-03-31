@@ -58,11 +58,14 @@ ItemController = {
 			callback(null);
 		});
 	},
-	sellItem:function(items, user_id, callback){
-		
-		/*
-		UserModel.findOneAndUpdate({_id:user_id}, {"inventory.slots":items}, function(){
-			callback(null);
-		});*/
+	sellItem:function(item_id, user_id, callback){
+		UserModel.findById(user_id, function(err, user){
+			user.inventory.slots.id(item_id).remove();
+			user.markModified('inventory.slots');
+			user.save(function(err, user){
+				console.log(err, user);
+				callback(item_id);
+			});
+		});
 	}
 }

@@ -1,13 +1,72 @@
+var ItemSchema = new Schema({
+	index:Number,
+	primary_attribute:Number,
+	part:Number,
+	hand:Number,
+	type:String,
+	attack_type:String,
+	name:String,
+	sprite:{
+		source:String,
+		cropX:Number,
+		cropY:Number,
+		width:Number,
+		height:Number,
+		regX:Number,
+		regY:Number,
+		scale:Number,
+	},
+	icon:{
+		source:String,
+		cropX:Number,
+		cropY:Number,
+		width:Number,
+		height:Number,
+		regX:Number,
+		regY:Number,
+		scale:Number,
+	},
+	min_damage:Number,
+	max_damage:Number,
+	attack_speed:Number,
+	range:Number,
+	level:Number,
+	price:Number,
+	rating:Number,
+	min_damage_bonus:Number,
+	max_damage_bonus:Number,
+	strength:Number,
+	agility:Number,
+	intelligence:Number,
+	stamina:Number,
+	attack_speed_bonus:Number,
+	movement_speed:Number,
+	critical_rate:Number,
+	critical_damage:Number,
+	life_steal:Number,
+	armor:Number,
+	armor_bonus:Number,
+	cooldown_reduce:Number,
+	health_regen:Number,
+	resource_regen:Number,
+	attributes:Schema.Types.Mixed,
+	qty:Number,
+	health:Number,
+	resource:Number,
+});
+
 var UserSchema = new Schema({
 	name:String,
 	gold:{type:Number, default:1000},
 	inventory:{
 		capacity:{type:Number, default:90},
-		slots:[{type:Schema.Types.Mixed}]
+		slots:[ItemSchema]
 	},
 	created_at:{type: Date, default: Date.now},
 	updated_at:{type: Date, default: Date.now},
 });
+
+
 
 UserSchema.pre('save', function(next){
 	now = new Date();

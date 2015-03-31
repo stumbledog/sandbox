@@ -32,6 +32,14 @@ router.post('/saveinventory', function(req, res){
 	});
 });
 
+router.post('/sellitem', function(req, res){
+	var item_id = req.body.item_id;
+	var user_id = req.session.user_id;
+	ItemController.sellItem(item_id, user_id, function(ret){
+		res.send(ret);
+	})
+});
+
 router.post('/moveitem', function(req, res){
 	var item = req.body.item;
 	var user_id = req.session.user_id;

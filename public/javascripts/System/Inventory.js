@@ -176,6 +176,9 @@ Inventory.prototype.equipItem = function(item){
 }
 
 Inventory.prototype.sellItem = function(item){
+	$.post("sellitem", {item_id:item._id}, function(res){
+		console.log(res);
+	});
 	this.user.store.sellItem(item);
 	this.user.addGold(item.sell_price);
 	this.stage.update();
