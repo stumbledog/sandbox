@@ -23,12 +23,8 @@ router.post('/purchaseitem', function(req, res){
 router.post('/saveinventory', function(req, res){
 	var items = req.body.items;
 	var user_id = req.session.user_id;
-	ItemController.saveInventory(items, user_id, function(err){
-		if(err){
-			res.send(err);
-		}else{
-			res.send("Item is successfully saved.");
-		}
+	ItemController.saveInventory(items, user_id, function(ret){
+		res.send(ret);
 	});
 });
 
@@ -38,30 +34,6 @@ router.post('/sellitem', function(req, res){
 	ItemController.sellItem(item_id, user_id, function(ret){
 		res.send(ret);
 	})
-});
-
-router.post('/moveitem', function(req, res){
-	var item = req.body.item;
-	var user_id = req.session.user_id;
-	ItemController.moveItem(item, user_id, function(err){
-		if(err){
-			res.send(err);
-		}else{
-			res.send("Item is successfully updated.");
-		}
-	});
-});
-
-router.post('/swapitem', function(req, res){
-	var items = req.body.items;
-	var user_id = req.session.user_id;
-	ItemController.swapItem(items, user_id, function(err){
-		if(err){
-			res.send(err);
-		}else{
-			res.send("Item is successfully updated.");
-		}
-	});
 });
 
 router.get('/game', function(req, res) {

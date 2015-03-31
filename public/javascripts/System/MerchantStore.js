@@ -7,7 +7,6 @@ MerchantStore.prototype.constructor = MerchantStore;
 
 MerchantStore.prototype.merchantstore_initialize = function(items){
 	this.store_initialize(items);
-
 	this.setCategory();
 	this.setItems();
 
@@ -21,15 +20,12 @@ MerchantStore.prototype.selectCategory = function(key){
 		this.stage.removeChild(this.categories[this.current_key].item_container);
 		this.categories[this.current_key].category_container.children[0].graphics._fill.style = "#FFF";
 	}
-	
 	this.current_key = key;
 	this.categories[this.current_key].category_container.children[0].graphics._fill.style = "#FF6138";
-
 	this.renderCategoryItems(this.current_key);
 }
 
 MerchantStore.prototype.renderCategoryItems = function(key){
-
 	this.categories[key].item_container.removeAllChildren();
 	this.categories[key].items.forEach(function(item, index){
 		item.store_summary.x = index % 3 * 100;
@@ -44,8 +40,7 @@ MerchantStore.prototype.renderCategoryItems = function(key){
 	}
 }
 
-MerchantStore.prototype.itemSummary = function(item, repurchase){
-
+MerchantStore.prototype.itemSummary = function(item){
 	var frame = new createjs.Shape();
 	frame.graphics.s("#000").ss(1).f("#fff").dr(0,0,100,60).dr(0,0,30,60).dr(30,45,70,15).f(item.colors[item.rating-1]).dr(0,0,30,60);
 
@@ -57,11 +52,17 @@ MerchantStore.prototype.itemSummary = function(item, repurchase){
 	name.x = 32;
 	name.y = 2;
 
-	if(repurchase){
-		var price = new createjs.Text(item.sell_price, "12px Arial","#000");
+	if(item.repurchase){
+		var price_text = item.sell_price;
 	}else{
-		var price = new createjs.Text(item.price, "12px Arial","#000");
+		var price_text = item.price;
 	}
+
+	if(item.type === "consumable"){
+		price_text *= item.qty;
+	}
+
+	var price = new createjs.Text(price_text, "12px Arial","#000");
 
 	price.x = 32;
 	price.y = 46;
@@ -76,6 +77,13 @@ MerchantStore.prototype.itemSummary = function(item, repurchase){
 	item.store_summary.addChild(frame, icon, name, price, coin);
 	item.store_summary.cursor = "pointer";
 
+	if(item.type === "consumable"){
+		var qty = new OutlineText(item.qty,"bold 8px Arial","#fff","#000",2);
+		qty.x = 22 - qty.getMeasuredWidth();
+		qty.y = 32;
+		item.store_summary.addChild(qty);
+	}
+
 	item.store_summary.addEventListener("rollover", this.rolloverStore.bind(this, item));
 	item.store_summary.addEventListener("rollout", this.rolloutStore.bind(this, item));
 	item.store_summary.addEventListener("mousedown", this.mousedownStoreItem.bind(this, item));
@@ -87,6 +95,7 @@ MerchantStore.prototype.rolloverStore = function(item){
 	}else{
 		var x = 165;
 	}
+
 	if(item.store_summary.y > 120){
 		var y = item.store_summary.y - (item.summary_height) + 50;
 	}else{
@@ -104,16 +113,18 @@ MerchantStore.prototype.rolloutStore = function(item){
 
 MerchantStore.prototype.mousedownStoreItem = function(item, event){
 	if(event.nativeEvent.button === 2){
-		if(this.user.gold >= item.price && this.user.inventory.haveAvailableSpace(item)){
+		var total_price = item.repurchase ? item.sell_price * item.qty : item.price * item.qty;
+
+		if(this.user.gold < total_price){
+			alert("Not enough money!");
+		}else if(!this.user.inventory.haveAvailableSpace(item)){
+			alert("Not enough space!");
+		}else{
 			this.removeItem(item);
-			this.purchase(item);
-			console.log(item);
-			console.log(item.toObject());
-			$.post("purchaseitem", {item:item.toObject()}, function(res){
+			var purchased_item = this.user.purchase(item);
+			$.post("purchaseitem", {item:purchased_item.toObject()}, function(res){
 				console.log(res);
 			});
-		}else{
-
 		}
 	}
 }
@@ -214,7 +225,7 @@ MerchantStore.prototype.setItems = function(){
 				var consumable = new Consumable(item);
 				consumable.bin = this;
 				this.categories.consumables.items.push(consumable);
-				this.itemSummary(consumable, true);
+				this.itemSummary(consumable);
 			break;
 		}
 	}, this);
@@ -258,6 +269,7 @@ MerchantStore.prototype.open = function(){
 
 MerchantStore.prototype.sellItem = function(item){
 	item.bin = this;
+	item.repurchase = true;
 	this.itemSummary(item);
 	this.categories.repurchase.items.push(item);
 	this.renderCategoryItems("repurchase");

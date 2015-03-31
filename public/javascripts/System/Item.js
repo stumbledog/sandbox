@@ -13,6 +13,7 @@ Item.prototype.initialize = function(attributes){
 	this.type = attributes.type;
 	this.index = -1;
 	this.name = attributes.name;
+
 	this.icon = attributes.icon;
 	this.sprite = attributes.sprite;
 
@@ -20,11 +21,10 @@ Item.prototype.initialize = function(attributes){
 	this.price = parseInt(attributes.price);
 	this.sell_price = Math.ceil(attributes.price / 2);
 	this.colors = ["#CCC","#79BD8F","#FFD34E","#644D52","#F77A52"];
+	this.repurchase = false;
 
 	this.initIcon();
 	this.initDetail();
-
-	this.obj = attributes;
 }
 
 Item.prototype.initIcon = function(){
@@ -51,14 +51,10 @@ Item.prototype.showDetail = function(x, y, container){
 	container.addChild(this.detail);
 }
 
-Item.prototype.sellItem = function(){
-	
-}
-
 Item.prototype.toObject = function(){
 	var obj = {};
 	for(key in this){
-		if((typeof this[key] === "string" || (typeof this[key] === "number"  && !isNaN(this[key])) || key === "attributes" || key === "icon" && this[key] || key === "sprite" && this[key]) && key !== "summary_height"){
+		if((typeof this[key] === "boolean" || typeof this[key] === "string" || typeof this[key] === "number"  && !isNaN(this[key]) || key === "attributes" || key === "icon" && this[key] || key === "sprite" && this[key]) && key !== "summary_height"){
 			obj[key] = this[key];
 		}
 	}

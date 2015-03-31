@@ -27,29 +27,30 @@ ItemController = {
 	},
 	purchase:function(item, user_id, callback){
 		console.log(item);
+		var price = item.repurchase === "true" ? parseInt(item.sell_price) : parseInt(item.price);
+		var total_price = price * parseInt(item.qty);
 		UserModel.findById(user_id, function(err, user){
-			if(user.gold >= item.price){
+			if(user.gold >= total_price){
 				if(item.type === "consumable"){
 					var find = false;
 					user.inventory.slots.forEach(function(slot_item){
 						if(slot_item.name === item.name){
-							slot_item.qty++;
+							slot_item.qty += parseInt(item.qty);
 							find = true;
 							return false;
 						}
 					});
 					if(!find){
-						item.qty = 1;
 						user.inventory.slots.push(item);
 					}
 				}else{
 					user.inventory.slots.push(item);
 				}
-				UserModel.findOneAndUpdate({_id:user._id}, {gold:user.gold - item.price, inventory:user.inventory}, function(err, user){
-					callback(null);
+				UserModel.findOneAndUpdate({_id:user._id}, {gold:user.gold - total_price, inventory:user.inventory}, function(err, user){
+					callback({gold:user.gold});
 				});
 			}else{
-				callback("Not enough gold");
+				callback({err:true, err_msg:"Not enough gold"});
 			}
 		});
 	},
@@ -60,11 +61,13 @@ ItemController = {
 	},
 	sellItem:function(item_id, user_id, callback){
 		UserModel.findById(user_id, function(err, user){
-			user.inventory.slots.id(item_id).remove();
+			var item = user.inventory.slots.id(item_id);
+			console.log(item.sell_price, item.qty);
+			user.gold += item.sell_price * item.qty;
+			item.remove();
 			user.markModified('inventory.slots');
 			user.save(function(err, user){
-				console.log(err, user);
-				callback(item_id);
+				callback({gold:user.gold});
 			});
 		});
 	}

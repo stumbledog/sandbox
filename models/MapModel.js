@@ -1,3 +1,14 @@
+var NPCSchema = new Schema({
+	name:String,
+	sprite:String,
+	index:Number,
+	type:String,
+});
+
+var MonsterSchema = new Schema({
+
+});
+
 var MapSchema = new Schema({
 	maps:[{
 		tiles:[Schema.Types.Mixed],
@@ -5,6 +16,9 @@ var MapSchema = new Schema({
 		src:String, 
 		block:Boolean,
 	}],
+	monsters:[MonsterSchema],
+	npcs:[NPCSchema],
+	/*
 	monsters:[{
 		attribute:{type:Number, ref:"Monster"},
 		position:{
@@ -18,7 +32,7 @@ var MapSchema = new Schema({
 			x:Number,
 			y:Number,
 		}
-	}],
+	}],*/
 	act:Number,
 	chapter:Number,
 	merchant:Boolean,

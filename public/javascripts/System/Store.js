@@ -49,9 +49,6 @@ Store.prototype.open = function(){
 
 Store.prototype.close = function(){
 	this.user.isShopping = false;
+	this.user.store = null;
 	this.stage.close();
-}
-
-Store.prototype.purchase = function(item){
-	this.user.purchase(item);
 }

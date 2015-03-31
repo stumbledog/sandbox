@@ -21,26 +21,15 @@ UnitController = {
 			callback(err, units);
 		});
 	},
-	createHero:function(user_id, callback){
+	createHero:function(user, callback){
 		console.log("Create Hero");
 		PrototypeHeroModel.findOne({name:"Albert"}, function(err, prototype_hero){
 			prototype_hero.initHero(function(hero){
-				hero._user = user_id;
-				this.saveHero(hero, callback);
+				user.hero = hero;
+				user.save(function(){
+					callback(hero);
+				});
 			}.bind(this));
 		}.bind(this));
 	},
-	saveHero:function(new_hero, callback){
-		console.log("Save Hero");
-		var hero = new HeroModel(new_hero);
-		hero.save(function(err, hero){
-			callback(hero);
-		});
-	},
-	selectHero:function(user_id, callback){
-		console.log("Select Hero");
-		HeroModel.findOne({_user:user_id}, function(err, hero){
-			callback(hero);
-		});
-	}
 }

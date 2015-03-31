@@ -15,7 +15,7 @@ UserController = {
 		console.log("Create new user");
 		var user = new UserModel();
 		user.save(function(err, user){
-			UnitController.createHero(user._id, function(hero){
+			UnitController.createHero(user, function(hero){
 				this.loginById(user._id, req, res, callback);
 			}.bind(this));
 		}.bind(this));
@@ -28,11 +28,9 @@ UserController = {
 				user.save(function(err, user){
 					req.session.user_id = user._id;
 					res.cookie('user_id', user._id, {maxAge: 10 * 365 * 24 * 60 * 60 * 1000, httpOnly: true });
-					HeroModel.findOne({_user:user._id}, function(err, hero){
-						MapController.loadMap(hero.level, 1,1, function(map){
-							console.log(user);
-							callback(user, hero, [], map);
-						});
+					MapController.loadMap(user.hero.level, 1,1, function(map){
+						console.log(user);
+						callback(user, user.hero, [], map);
 					});
 				});
 			}else{

@@ -32,6 +32,7 @@ var ItemSchema = new Schema({
 	range:Number,
 	level:Number,
 	price:Number,
+	sell_price:Number,
 	rating:Number,
 	min_damage_bonus:Number,
 	max_damage_bonus:Number,
@@ -53,11 +54,63 @@ var ItemSchema = new Schema({
 	qty:Number,
 	health:Number,
 	resource:Number,
+	cooldown:Number,
+});
+
+var HeroSchema = new Schema({
+	name:String,
+	primary_attribute:String,
+	strength:Number,
+	dexterity:Number,
+	intelligence:Number,
+	stamina:Number,
+	sprite:String,
+	portrait:String,
+	index:Number,
+	level:Number,
+	exp:Number,
+	resource_type:String,
+	_items:[{type:Schema.Types.ObjectId, ref:'Item'}],
+	_skills:[{type:Schema.Types.ObjectId, ref:'Skill'}]
+});
+
+var FollowerSchema = new Schema({
+	name:String,
+	primary_attribute:String,
+	strength:Number,
+	dexterity:Number,
+	intelligence:Number,
+	stamina:Number,
+	sprite:String,
+	portrait:String,
+	index:Number,
+	level:Number,
+	exp:Number,
+	resource_type:String,
+	_items:[{type:Schema.Types.ObjectId, ref:'Item'}],
+	_skills:[{type:Schema.Types.ObjectId, ref:'Skill'}]
 });
 
 var UserSchema = new Schema({
 	name:String,
 	gold:{type:Number, default:1000},
+	hero:{
+		name:String,
+		primary_attribute:String,
+		strength:Number,
+		dexterity:Number,
+		intelligence:Number,
+		stamina:Number,
+		sprite:String,
+		portrait:String,
+		index:Number,
+		level:Number,
+		exp:Number,
+		resource_type:String,
+		items:[ItemSchema],
+		_skills:[{type:Schema.Types.ObjectId, ref:'Skill'}]
+	},
+	followers:[FollowerSchema],
 	inventory:{
 		capacity:{type:Number, default:90},
 		slots:[ItemSchema]

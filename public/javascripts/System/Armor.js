@@ -8,6 +8,7 @@ Armor.prototype.constructor = Armor;
 Armor.prototype.armor_initialize = function(attributes){
 	this._id = attributes._id;
 	this.level = parseInt(attributes.level);
+	this.qty = 1;
 	this.armor = parseInt(attributes.armor);
 	this.armor_bonus = parseInt(attributes.armor_bonus);
 	this.attack_speed = parseInt(attributes.attack_speed);

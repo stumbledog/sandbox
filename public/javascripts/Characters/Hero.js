@@ -51,6 +51,15 @@ Hero.prototype.renderRange = function(){
 	this.range_shape.alpha = 0.5;
 }
 
+Hero.prototype.move = function(x, y){
+	Unit.prototype.move.call(this, x, y);
+	var user = this.game.getUser();
+	if(user.store){
+		user.store.close();
+		user.inventory.close();
+	}
+}
+
 Hero.prototype.attackTarget = function(target, damage){
 	Unit.prototype.attackTarget.call(this, target, damage);
 	this.game.getUIStage().refreshHealthBar();

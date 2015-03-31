@@ -10,8 +10,16 @@ function User(builder){
 }
 
 User.prototype.purchase = function(item){
-	this.gold -= item.price;
-	this.inventory.addItem(item);
+	if(item.repurchase){
+		this.gold -= item.sell_price * item.qty;
+	}else{
+		this.gold -= item.price * item.qty;	
+	}
+	var purchased_item = jQuery.extend({}, item);
+	this.inventory.addItem(purchased_item);
+	this.inventory.updateGold(this.gold);
+
+	return purchased_item;
 }
 
 User.prototype.save = function(){
@@ -32,6 +40,7 @@ User.prototype.toggleInventory = function(){
 
 User.prototype.addGold = function(gold){
 	this.gold += gold;
+	this.inventory.updateGold(this.gold);
 }
 
 User.prototype.dragItem = function(){
