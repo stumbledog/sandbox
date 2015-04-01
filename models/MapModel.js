@@ -3,6 +3,12 @@ var NPCSchema = new Schema({
 	sprite:String,
 	index:Number,
 	type:String,
+	x:Number,
+	y:Number,
+});
+
+var RecrutableUnitSchema = new Schema({
+
 });
 
 var MonsterSchema = new Schema({

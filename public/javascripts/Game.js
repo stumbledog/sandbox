@@ -148,7 +148,7 @@ var Game = (function(){
 		});
 
 		map_builder.npcs.forEach(function(npc){
-			manifest.push({src:npc.attribute.sprite, id:npc.attribute.sprite.split('/').pop()});
+			manifest.push({src:npc.sprite, id:npc.sprite.split('/').pop()});
 		});
 
 		map_builder.merchantable_items.forEach(function(item){
@@ -180,9 +180,7 @@ var Game = (function(){
 			});
 
 			map_builder.npcs.forEach(function(unit_builder){
-				unit_builder.attribute.x =  unit_builder.position.x;
-				unit_builder.attribute.y =  unit_builder.position.y;
-				createNPC(unit_builder.attribute);
+				createNPC(unit_builder);
 			});
 
 			ui_stage.initHeroUI(hero);
