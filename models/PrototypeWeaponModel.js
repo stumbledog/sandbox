@@ -29,6 +29,7 @@ var PrototypeWeaponSchema = new Schema({
 	attack_speed:Number,
 	range:Number,
 }, { versionKey: false });
+
 PrototypeWeaponSchema.methods.setMerchantItem = function(level){
 	var weapon = this.toObject();
 	weapon._id = mongoose.Types.ObjectId();

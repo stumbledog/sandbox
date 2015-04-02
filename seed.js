@@ -1,7 +1,6 @@
 mongoose = require('mongoose');
 Schema = mongoose.Schema;
 fs = require('fs');
-require('./models/PrototypeUnitModel');
 require('./models/PrototypeWeaponModel');
 require('./models/PrototypeArmorModel');
 require('./models/PrototypeConsumableItemModel');
@@ -16,10 +15,7 @@ mongoose.connect('mongodb://localhost/condottiere');
 var connection = mongoose.connection;
 connection.on("error", console.error.bind(console, 'connection error:'));
 connection.once("open", function(){
-	PrototypeUnitModel.remove().exec().then(function(count){
-		console.log(count + " prototype units are deleted");
-		return MapModel.remove().exec();
-	}).then(function(count){
+	MapModel.remove().exec().then(function(count){
 		console.log(count + " maps are deleted");
 		return UserModel.remove().exec();
 	}).then(function(count){
@@ -36,9 +32,6 @@ connection.once("open", function(){
 		return PrototypeHeroModel.remove().exec();
 	}).then(function(count){
 		console.log(count + " Heroes are deleted");
-		return NPCModel.remove().exec();
-	}).then(function(count){
-		console.log(count + " NPCs are deleted");
 		savePrototypeUnit();
 	});
 });
@@ -58,12 +51,11 @@ function savePrototypeUnit(){
 
 	units.push(new PrototypeHeroModel({name:"Albert", primary_attribute:"strength", sprite:"assets/Graphics/Characters/01 - Hero.png", portrait:"assets/Graphics/Faces/ds_face01-02.png", index:0, resource_type:"fury"}));
 
+/*
 	units.push(new PrototypeFollowerModel({name:"Albert", primary_attribute:"strength", sprite:"assets/Graphics/Characters/01 - Hero.png", portrait:"assets/Graphics/Faces/ds_face01-02.png", index:1, resource_type:"fury"}));
 	units.push(new PrototypeFollowerModel({name:"Albert", primary_attribute:"strength", sprite:"assets/Graphics/Characters/01 - Hero.png", portrait:"assets/Graphics/Faces/ds_face01-02.png", index:2, resource_type:"fury"}));
-
-	/*
 	units.push(initPrototypeUnit(300, 'slime', 10, 3, 2, 10, "assets/Graphics/Characters/29 - Monster.png", null, 0, 1, 10, "mana", 100, 100, 5, 1, 60, 0, 1, 0, 1, 4, 80, 16, "monster", "enemy", "#C00", "#CC0", 0, 8, false));
-	*/
+*/
 
 	var count = 0;
 	units.forEach(function(unit){
@@ -131,15 +123,48 @@ function saveMap(){
 			}
 		],
 		[
-			{name:"Merchant",		sprite:"assets/Graphics/Characters/12 - Merchant.png", index:0, type:"merchant", x:32*4, y:32*4},
-			{name:"Recruiter",		sprite:"assets/Graphics/Characters/12 - Merchant.png", index:1, type:"recruiter", x:32*6, y:32*4},
-			{name:"Blacksmith",		sprite:"assets/Graphics/Characters/12 - Merchant.png", index:2, type:"blacksmith", x:32*3, y:32*7},
+			{name:"Merchant",		sprite:"assets/Graphics/Characters/12 - Merchant.png",	index:0, type:"merchant", x:32*4, y:32*4},
+			{name:"Recruiter",		sprite:"assets/Graphics/Characters/12 - Merchant.png",	index:1, type:"recruiter", x:32*6, y:32*4, 
+			recruitable_units:[
+			{
+				name:"Hugo",
+				character_class:"Fighter",
+				primary_attribute:0,
+				strength:3,
+				agility:1,
+				intelligence:1,
+				stamina:3,
+				sprite:"assets/Graphics/Characters/01 - Hero.png",
+				portrait:"assets/Graphics/Faces/ds_face01-02.png",
+				index:1,
+				level_up_bonus:{
+					strength:3,
+					agility:1,
+					intelligence:1,
+					stamina:3,
+				}
+			},
+			{
+				name:"Kelvin",
+				character_class:"Fighter",
+				primary_attribute:0,
+				strength:3,
+				agility:1,
+				intelligence:1,
+				stamina:3,
+				sprite:"assets/Graphics/Characters/01 - Hero.png",
+				portrait:"assets/Graphics/Faces/ds_face01-02.png",
+				index:2,
+				level_up_bonus:{
+					strength:3,
+					agility:1,
+					intelligence:1,
+					stamina:3,
+				}
+			},
+			]},
+			{name:"Blacksmith",		sprite:"assets/Graphics/Characters/12 - Merchant.png",	index:2, type:"blacksmith", x:32*3, y:32*7},
 			{name:"Battlemaster",	sprite:"assets/Graphics/Characters/23 - Soldier.png",	index:0, type:"battlemaster", x:32*7, y:32*7},
-/*			{attribute:100, position:{x:32*4, y:32*4}},
-			{attribute:101, position:{x:32*6, y:32*4}},
-			{attribute:102, position:{x:32*3, y:32*7}},
-			{attribute:103, position:{x:32*7, y:32*7}}
-*/
 		],
 		[],1,1,true,true,320,320,10,10,[160,160]
 	));
