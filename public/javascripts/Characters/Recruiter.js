@@ -11,5 +11,5 @@ Recruiter.prototype.recruiter_initialize = function(builder){
 }
 
 Recruiter.prototype.interact = function(){
-	console.log(this.store);
+	this.store.open();
 }

@@ -7,8 +7,7 @@ Merchant.prototype.constructor = Merchant;
 
 Merchant.prototype.merchant_initialize = function(builder){
 	this.npc_initialize(builder);
-	this.items = this.game.getMerchantableItems();
-	this.store = new MerchantStore(this.items);
+	this.store = new MerchantStore(this.game.getMerchantableItems());
 }
 
 Merchant.prototype.interact = function(hero){
