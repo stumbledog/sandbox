@@ -12,6 +12,7 @@ Unit.prototype.initialize = function(builder){
 	this.unit_stage = this.game.getUnitStage();
 	this.ui_stage = this.game.getUIStage();
 
+	this.blocks = this.game.getMapStage().getBlock();
 	this.ticks = 60;
 	this.order_tick = 29;
 

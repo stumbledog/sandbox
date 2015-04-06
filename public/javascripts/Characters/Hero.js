@@ -12,7 +12,6 @@ Hero.prototype.hero_initialize = function(builder){
 	this.health_color = "#0C0";
 	this.damage_color = "#C00";
 
-	this.blocks = builder.blocks;
 	this.strength = builder.strength;
 	this.agility = builder.agility;
 	this.intelligence = builder.intelligence;

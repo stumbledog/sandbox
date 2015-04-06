@@ -7,6 +7,7 @@ function User(builder){
 	this.store = null;
 	this.action = null;
 	this.inventory = new Inventory(builder.inventory, this);
+	this.followers = [];
 }
 
 User.prototype.purchase = function(item){
@@ -20,10 +21,6 @@ User.prototype.purchase = function(item){
 	this.inventory.updateGold(this.gold);
 
 	return purchased_item;
-}
-
-User.prototype.save = function(){
-	
 }
 
 User.prototype.openInventory = function(){
@@ -43,6 +40,6 @@ User.prototype.addGold = function(gold){
 	this.inventory.updateGold(this.gold);
 }
 
-User.prototype.dragItem = function(){
-
+User.prototype.purchaseFollower = function(follower){
+	this.followers.push(follower);
 }

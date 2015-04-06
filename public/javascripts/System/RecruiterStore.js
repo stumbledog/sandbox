@@ -29,7 +29,6 @@ RecruiterStore.prototype.unitSummary = function(unit, x, y){
 	var frame = new createjs.Shape();
 	frame.graphics.s("#000").ss(1).f("#fff").dr(0,0,100,60).dr(0,0,30,60).dr(30,45,70,15).f("#fff").dr(0,0,30,60);
 
-
 	var frames = [];
 	for(var i=0 ;i < 3; i++){
 		frames.push([unit.index % 4 * 72 + (i % 3) * 24, parseInt(unit.index / 4) * 128 + parseInt(i / 3) * 32 + 1, 24, 32, 0, 12, 16]);
@@ -49,7 +48,6 @@ RecruiterStore.prototype.unitSummary = function(unit, x, y){
 	var sprite = new createjs.Sprite(spriteSheet, "front");
 	sprite.x = 15;
 	sprite.y = 30;
-	//sprite.gotoAndPlay("front");
 
 	var level = new createjs.Text("Level " + unit.level, "12px Arial","#000");
 	level.x = 32;
@@ -83,24 +81,34 @@ RecruiterStore.prototype.unitSummary = function(unit, x, y){
 }
 
 RecruiterStore.prototype.unitDetail = function(unit){
+	var primary_attribute_text = ["Strength", "Agility", "Intelligence"];
+	var primary_attribute_color = ["#F77A52", "#D8CAA8", "#91AA9D"];
+
 	var frame = new createjs.Shape();
 	frame.graphics.s("#000").ss(1).f("#fff").dr(0,0,140,120);
 
-	var level = new createjs.Text("Level " + unit.level, "12px Arial","#000");
-	level.x = 2;
+	var level = new OutlineText("Level " + unit.level + " " + unit.character_class, "10px Arial", primary_attribute_color[unit.primary_attribute], "#333", 3);
+	level.x = 3;
 	level.y = 2;
 
-	var character_class = new createjs.Text(unit.character_class, "12px Arial","#000");
-	character_class.x = 2;
-	character_class.y = 16;
-
-	var primary_attribute_text = ["Strength", "Agility", "Intelligence"];
-	var primary_attribute = new createjs.Text("Primary Attribute: "+primary_attribute_text[unit.primary_attribute], "10px Arial","#000");
+	var primary_attribute = new createjs.Text("Primary Attribute: " + primary_attribute_text[unit.primary_attribute], "10px Arial","#000");
 	primary_attribute.x = 2;
-	primary_attribute.y = 30;
+	primary_attribute.y = 16;
+
+	var strength = new createjs.Text("Strength: " + unit.strength, "10px Arial","#000");
+	var agility = new createjs.Text("Agility: " + unit.agility, "10px Arial","#000");
+	var Intelligence = new createjs.Text("Intelligence: " + unit.intelligence, "10px Arial","#000");
+	strength.x = agility.x = Intelligence.x = 2;
+	strength.y = 28;
+	agility.y = 40;
+	Intelligence.y = 52;
+
+	var skill = new createjs.Text("Skills: ", "10px Arial","#000");
+	skill.x = 2;
+	skill.y = 64;
 
 	unit.detail = new createjs.Container();
-	unit.detail.addChild(frame, level, character_class, primary_attribute);
+	unit.detail.addChild(frame, level, primary_attribute, strength, agility, Intelligence, skill);
 }
 
 RecruiterStore.prototype.renderUnits = function(){
@@ -134,16 +142,14 @@ RecruiterStore.prototype.rolloutStore = function(item){
 
 RecruiterStore.prototype.mousedownStoreItem = function(item, event){
 	if(event.nativeEvent.button === 2){
-		var total_price = item.repurchase ? item.sell_price * item.qty : item.price * item.qty;
-
-		if(this.user.gold < total_price){
+		if(this.user.gold < item.price){
 			alert("Not enough money!");
-		}else if(!this.user.inventory.haveAvailableSpace(item)){
-			alert("Not enough space!");
 		}else{
-			this.removeItem(item);
-			var purchased_item = this.user.purchase(item);
-			$.post("purchaseitem", {item:purchased_item.toObject()}, function(res){
+			item.x = 160; 
+			item.y = 160; 
+			var follower = new Follower(item);
+			this.user.purchaseFollower(follower);
+			$.post("purchasefollower", {follower:item}, function(res){
 				console.log(res);
 			});
 		}

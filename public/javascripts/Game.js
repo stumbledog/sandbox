@@ -196,7 +196,6 @@ var Game = (function(){
 
 		function initStages(){
 			map_stage = new Map_Stage(map_builder);
-			blocks = map_stage.getBlock();
 			minimap_stage = new Minimap_Stage();
 			unit_stage = new Unit_Stage(cols * 32, rows * 32);
 			tooltip_stage = new Tooltip_Stage();
@@ -212,7 +211,6 @@ var Game = (function(){
 		function createHero(builder){
 			builder.x = map_stage.getStartPosition().x;
 			builder.y = map_stage.getStartPosition().y;
-			builder.blocks = blocks;
 			hero = new Hero(builder);
 			unit_stage.addHero(hero);
 		}
@@ -220,12 +218,10 @@ var Game = (function(){
 		function createFollower(builder){
 			builder.x = map_stage.getStartPosition().x + Math.random();
 			builder.y = map_stage.getStartPosition().y + Math.random();
-			builder.blocks = blocks;
 			unit_stage.addFollower(new Follower(builder));
 		}
 
 		function createEnemy(builder){
-			builder.blocks = blocks;
 			unit_stage.addUnit(new Monster(builder));
 		}
 
@@ -256,6 +252,9 @@ var Game = (function(){
 			},
 			getLoader:function(){
 				return loader;
+			},
+			getBlock:function(){
+				return map_stage.getBlock();
 			},
 			getMapStage:function(){
 				return map_stage;
