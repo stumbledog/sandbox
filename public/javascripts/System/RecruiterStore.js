@@ -7,7 +7,6 @@ RecruiterStore.prototype.constructor = RecruiterStore;
 
 RecruiterStore.prototype.recruiterstore_initialize = function(units){
 	this.store_initialize(units);
-	console.log(units);
 	console.log(this.items);
 	this.setCategory();
 	//this.setItems();
@@ -16,39 +15,43 @@ RecruiterStore.prototype.recruiterstore_initialize = function(units){
 	this.render();
 }
 
+RecruiterStore.prototype.selectCategory = function(key){
+	if(this.current_key){
+		this.stage.removeChild(this.categories[this.current_key].item_container);
+		this.categories[this.current_key].category_container.children[0].graphics._fill.style = "#FFF";
+	}
+	this.current_key = key;
+	this.categories[this.current_key].category_container.children[0].graphics._fill.style = "#FF6138";
+	this.renderCategoryItems(this.current_key);
+}
+
 RecruiterStore.prototype.setCategory = function(){
 	this.categories = {
-		weapons:{
+		strength:{
 			category_container:new createjs.Container(),
 			item_container:new createjs.Container(),
 			items:[],
 		},
-		armors:{
+		agility:{
 			category_container:new createjs.Container(),
 			item_container:new createjs.Container(),
 			items:[],
 		},
-		consumables:{
+		intelligence:{
 			category_container:new createjs.Container(),
 			item_container:new createjs.Container(),
 			items:[],
-		},
-		repurchase:{
-			category_container:new createjs.Container(),
-			item_container:new createjs.Container(),
-			items:[],
-		},
+		}
 	};
 
-	this.current_category = this.categories.weapon;
+	this.current_category = this.categories.strength;
 	this.item_category_button_container = new createjs.Container();
 	this.item_category_button_container.x = this.item_category_button_container.y = 10;
 
 	var icons = {
-		weapons:[292,100,16,16],
-		armors:[244,149,16,16],
-		consumables:[103,76,12,16],
-		repurchase:[340,4,16,16],
+		strength:[292,100,16,16],
+		agility:[244,149,16,16],
+		intelligence:[103,76,12,16],
 	};
 
 	Object.keys(this.categories).forEach(function(key, index){
