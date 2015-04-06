@@ -8,99 +8,151 @@ RecruiterStore.prototype.constructor = RecruiterStore;
 RecruiterStore.prototype.recruiterstore_initialize = function(units){
 	this.store_initialize(units);
 	console.log(this.items);
-	this.setCategory();
-	//this.setItems();
 
-	//this.current_key = null;
+	this.unit_container = new createjs.Container();
+	this.unit_container.x = 5;
+	this.unit_container.y = 50;
+
+	this.initUnits();
 	this.render();
 }
 
-RecruiterStore.prototype.selectCategory = function(key){
-	if(this.current_key){
-		this.stage.removeChild(this.categories[this.current_key].item_container);
-		this.categories[this.current_key].category_container.children[0].graphics._fill.style = "#FFF";
-	}
-	this.current_key = key;
-	this.categories[this.current_key].category_container.children[0].graphics._fill.style = "#FF6138";
-	this.renderCategoryItems(this.current_key);
+RecruiterStore.prototype.initUnits = function(){
+	this.items.forEach(function(unit, index){
+		this.unitSummary(unit, index % 3 * 100, parseInt(index / 3) * 60);
+		this.unitDetail(unit);
+		this.unit_container.addChild(unit.store_summary);
+	}, this);
 }
 
-RecruiterStore.prototype.setCategory = function(){
-	this.categories = {
-		strength:{
-			category_container:new createjs.Container(),
-			item_container:new createjs.Container(),
-			items:[],
-		},
-		agility:{
-			category_container:new createjs.Container(),
-			item_container:new createjs.Container(),
-			items:[],
-		},
-		intelligence:{
-			category_container:new createjs.Container(),
-			item_container:new createjs.Container(),
-			items:[],
+RecruiterStore.prototype.unitSummary = function(unit, x, y){
+	var frame = new createjs.Shape();
+	frame.graphics.s("#000").ss(1).f("#fff").dr(0,0,100,60).dr(0,0,30,60).dr(30,45,70,15).f("#fff").dr(0,0,30,60);
+
+
+	var frames = [];
+	for(var i=0 ;i < 3; i++){
+		frames.push([unit.index % 4 * 72 + (i % 3) * 24, parseInt(unit.index / 4) * 128 + parseInt(i / 3) * 32 + 1, 24, 32, 0, 12, 16]);
+	}
+
+	var spriteSheet = new createjs.SpriteSheet({
+		images:[this.loader.getResult(unit.sprite.split('/').pop())],
+		frames:frames,
+		animations:{
+			front:{
+				frames:[0,1,2,1],
+				speed:0.2,
+			}
 		}
-	};
+	});
 
-	this.current_category = this.categories.strength;
-	this.item_category_button_container = new createjs.Container();
-	this.item_category_button_container.x = this.item_category_button_container.y = 10;
+	var sprite = new createjs.Sprite(spriteSheet, "front");
+	sprite.x = 15;
+	sprite.y = 30;
+	//sprite.gotoAndPlay("front");
 
-	var icons = {
-		strength:[292,100,16,16],
-		agility:[244,149,16,16],
-		intelligence:[103,76,12,16],
-	};
+	var level = new createjs.Text("Level " + unit.level, "12px Arial","#000");
+	level.x = 32;
+	level.y = 2;
 
-	Object.keys(this.categories).forEach(function(key, index){
-		var category = this.categories[key];
-		category.category_container.cursor = "pointer";
-		category.category_container.x = index * 44;
-		this.item_category_button_container.addChild(category.category_container);
+	var character_class = new createjs.Text(unit.character_class, "12px Arial","#000");
+	character_class.x = 32;
+	character_class.y = 16;
 
-		category.item_container.x = 5;
-		category.item_container.y = 50;
+	var price_text = unit.price;
+	var price = new createjs.Text(price_text, "12px Arial","#000");
+	price.x = 32;
+	price.y = 46;
 
-		var icon = new createjs.Bitmap(this.loader.getResult("icon"));
-		icon.sourceRect = new createjs.Rectangle(icons[key][0],icons[key][1],icons[key][2],icons[key][3]);
-		icon.regX = icons[key][2]/2;
-		icon.regY = icons[key][3]/2;
-		icon.x = icon.y = 20;
-		icon.scaleX = icon.scaleY = 2;
+	var coin = new createjs.Bitmap(this.loader.getResult("icon"));
+	coin.sourceRect = new createjs.Rectangle(246, 55, 12, 12);
+	coin.x = 33 + price.getMeasuredWidth();
+	coin.y = 48;
+	coin.scaleX = coin.scaleY = 0.8;
 
-		var icon_box = new createjs.Shape();
-		icon_box.graphics.s("#000").ss(1).f("#fff").dr(0,0,40,40);
-		category.category_container.addChild(icon_box, icon);
+	unit.store_summary = new createjs.Container();
+	unit.store_summary.x = x;
+	unit.store_summary.y = y;
 
-		var text_container = new createjs.Container();
-		var text_box = new createjs.Shape();
-		var text = new createjs.Text(key, "16px Arial", "#000");
-		text.x = text.y = 3;
-		text_box.graphics.s("#000").ss(1).f("#fff").dr(0,0,text.getMeasuredWidth() + 6,text.getMeasuredHeight() + 6);
-		text_container.addChild(text_box, text);
+	unit.store_summary.addChild(frame, sprite, level, character_class, price, coin);
+	unit.store_summary.cursor = "pointer";
 
-		category.category_container.addEventListener("mousedown", this.selectCategory.bind(this, key));
-		category.category_container.addEventListener("rollover", function(){
-			text_container.x = category.category_container.x + 41;
-			this.item_category_button_container.addChild(text_container);
-			this.stage.update();
-		}.bind(this));
-		category.category_container.addEventListener("rollout", function(){
-			this.item_category_button_container.removeChild(text_container);
-			this.stage.update();
-		}.bind(this));
+	unit.store_summary.addEventListener("rollover", this.rolloverStore.bind(this, unit));
+	unit.store_summary.addEventListener("rollout", this.rolloutStore.bind(this, unit));
+	unit.store_summary.addEventListener("mousedown", this.mousedownStoreItem.bind(this, unit));
+}
 
-	}, this);
-	this.addChild(this.item_category_button_container);
+RecruiterStore.prototype.unitDetail = function(unit){
+	var frame = new createjs.Shape();
+	frame.graphics.s("#000").ss(1).f("#fff").dr(0,0,140,120);
+
+	var level = new createjs.Text("Level " + unit.level, "12px Arial","#000");
+	level.x = 2;
+	level.y = 2;
+
+	var character_class = new createjs.Text(unit.character_class, "12px Arial","#000");
+	character_class.x = 2;
+	character_class.y = 16;
+
+	var primary_attribute_text = ["Strength", "Agility", "Intelligence"];
+	var primary_attribute = new createjs.Text("Primary Attribute: "+primary_attribute_text[unit.primary_attribute], "10px Arial","#000");
+	primary_attribute.x = 2;
+	primary_attribute.y = 30;
+
+	unit.detail = new createjs.Container();
+	unit.detail.addChild(frame, level, character_class, primary_attribute);
+}
+
+RecruiterStore.prototype.renderUnits = function(){
+	this.stage.addChild(this.unit_container);
+	this.stage.update();
+}
+
+RecruiterStore.prototype.rolloverStore = function(item){	
+	if(item.store_summary.x !== 200){
+		var x = item.store_summary.x + 5;
+	}else{
+		var x = 165;
+	}
+
+	if(item.store_summary.y > 120){
+		var y = item.store_summary.y - (item.summary_height) + 50;
+	}else{
+		var y = item.store_summary.y + 110;
+	}
+
+	item.detail.x = x;
+	item.detail.y = y;
+	this.stage.addChild(item.detail);
+	this.stage.update();
+}
+
+RecruiterStore.prototype.rolloutStore = function(item){
+	this.stage.removeChild(item.detail);
+	this.stage.update();
+}
+
+RecruiterStore.prototype.mousedownStoreItem = function(item, event){
+	if(event.nativeEvent.button === 2){
+		var total_price = item.repurchase ? item.sell_price * item.qty : item.price * item.qty;
+
+		if(this.user.gold < total_price){
+			alert("Not enough money!");
+		}else if(!this.user.inventory.haveAvailableSpace(item)){
+			alert("Not enough space!");
+		}else{
+			this.removeItem(item);
+			var purchased_item = this.user.purchase(item);
+			$.post("purchaseitem", {item:purchased_item.toObject()}, function(res){
+				console.log(res);
+			});
+		}
+	}
 }
 
 RecruiterStore.prototype.open = function(){	
 	Store.prototype.open.call(this);
-	/*
-	this.renderCategoryItems(this.current_key);
-	*/
+	this.renderUnits();
 	this.user.openInventory();
 	this.user.isShopping = true;
 	this.user.store = this;

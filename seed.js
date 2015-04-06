@@ -125,44 +125,66 @@ function saveMap(){
 		[
 			{name:"Merchant",		sprite:"assets/Graphics/Characters/12 - Merchant.png",	index:0, type:"merchant", x:32*4, y:32*4},
 			{name:"Recruiter",		sprite:"assets/Graphics/Characters/12 - Merchant.png",	index:1, type:"recruiter", x:32*6, y:32*4, 
-			recruitable_units:[
-			{
-				name:"Hugo",
-				character_class:"Fighter",
-				primary_attribute:0,
-				strength:3,
-				agility:1,
-				intelligence:1,
-				stamina:3,
-				sprite:"assets/Graphics/Characters/01 - Hero.png",
-				portrait:"assets/Graphics/Faces/ds_face01-02.png",
-				index:1,
-				level_up_bonus:{
-					strength:3,
-					agility:1,
-					intelligence:1,
-					stamina:3,
-				}
+				recruitable_units:[
+					{
+						character_class:"Fighter",
+						primary_attribute:0,
+						level:1,
+						strength:3,
+						agility:2,
+						intelligence:1,
+						stamina:3,
+						price:100,
+						sprite:"assets/Graphics/Characters/05 - Fighter.png",
+						portrait:"assets/Graphics/Faces/ds_face09-10.png",
+						index:1,
+						level_up_bonus:{
+							strength:3,
+							agility:1,
+							intelligence:1,
+							stamina:3,
+						}
+					},
+					{
+						character_class:"Thief",
+						primary_attribute:1,
+						level:1,
+						strength:2,
+						agility:3,
+						intelligence:1,
+						stamina:2,
+						price:100,
+						sprite:"assets/Graphics/Characters/06 - Thief.png",
+						portrait:"assets/Graphics/Faces/ds_face11-12.png",
+						index:1,
+						level_up_bonus:{
+							strength:2,
+							agility:3,
+							intelligence:1,
+							stamina:2,
+						}
+					},
+					{
+						character_class:"Mage",
+						primary_attribute:2,
+						level:1,
+						strength:1,
+						agility:1,
+						intelligence:3,
+						stamina:2,
+						price:100,
+						sprite:"assets/Graphics/Characters/04 - Mage.png",
+						portrait:"assets/Graphics/Faces/ds_face07-08.png",
+						index:1,
+						level_up_bonus:{
+							strength:1,
+							agility:1,
+							intelligence:3,
+							stamina:2,
+						}
+					},
+				]
 			},
-			{
-				name:"Kelvin",
-				character_class:"Fighter",
-				primary_attribute:0,
-				strength:3,
-				agility:1,
-				intelligence:1,
-				stamina:3,
-				sprite:"assets/Graphics/Characters/01 - Hero.png",
-				portrait:"assets/Graphics/Faces/ds_face01-02.png",
-				index:2,
-				level_up_bonus:{
-					strength:3,
-					agility:1,
-					intelligence:1,
-					stamina:3,
-				}
-			},
-			]},
 			{name:"Blacksmith",		sprite:"assets/Graphics/Characters/12 - Merchant.png",	index:2, type:"blacksmith", x:32*3, y:32*7},
 			{name:"Battlemaster",	sprite:"assets/Graphics/Characters/23 - Soldier.png",	index:0, type:"battlemaster", x:32*7, y:32*7},
 		],

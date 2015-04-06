@@ -77,7 +77,7 @@ Unit.prototype.renderUnit = function(src_id, index, regX, regY){
 
 	var frames = [];
 	for(var i=0 ;i < 12; i++){
-		frames.push([index % 4 *72 + (i % 3) * 24, parseInt(index / 4) * 128 + parseInt(i / 3) * 32 + 1, 24, 32, 0, 12, 16]);
+		frames.push([index % 4 * 72 + (i % 3) * 24, parseInt(index / 4) * 128 + parseInt(i / 3) * 32 + 1, 24, 32, 0, 12, 16]);
 	}
 
 	var spriteSheet = new createjs.SpriteSheet({
@@ -85,16 +85,16 @@ Unit.prototype.renderUnit = function(src_id, index, regX, regY){
 		frames:frames,
 		animations:{
 			front:{
-				frames:[0,1,2],
+				frames:[0,1,2,1],
 			},
 			left:{
-				frames:[3,4,5],
+				frames:[3,4,5,4],
 			},
 			right:{
-				frames:[6,7,8],
+				frames:[6,7,8,7],
 			},
 			back:{
-				frames:[9,10,11],
+				frames:[9,10,11.10],
 			},
 			stop:{
 				frames:[1]
@@ -211,10 +211,9 @@ Unit.prototype.procMove = function(map){
 		}
 	}
 
-
 	this.x += this.velocity.x;
 	this.y += this.velocity.y;
-	if(this.order_tick % 10 === 0){
+	if(this.order_tick % 8 === 0){
 		this.rotate(this.velocity.x, this.velocity.y);
 	}
 }

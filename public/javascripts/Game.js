@@ -155,6 +155,12 @@ var Game = (function(){
 			manifest.push({src:item.icon.source, id:item.icon.source.split('/').pop()});
 		});
 
+		map_builder.npcs.forEach(function(npc){
+			npc.recruitable_units.forEach(function(recruitable_unit){
+				manifest.push({src:recruitable_unit.sprite, id:recruitable_unit.sprite.split('/').pop()});
+			});
+		});
+
 		/*
 		hero_builder.skills.forEach(function(skill){
 			manifest.push({src:skill.src,id:skill.name});

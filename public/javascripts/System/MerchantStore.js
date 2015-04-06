@@ -30,7 +30,6 @@ MerchantStore.prototype.renderCategoryItems = function(key){
 	this.categories[key].items.forEach(function(item, index){
 		item.store_summary.x = index % 3 * 100;
 		item.store_summary.y = parseInt(index / 3) * 60;
-		item.store_summary.cursor = "pointer";
 		this.categories[key].item_container.addChild(item.store_summary);
 	}, this);
 

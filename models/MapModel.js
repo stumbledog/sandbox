@@ -1,12 +1,13 @@
 var RecrutableUnitSchema = new Schema({
-	name:String,
 	character_class:String,
 	primary_attribute:Number,
+	level:Number,
 	strength:Number,
 	agility:Number,
 	intelligence:Number,
 	stamina:Number,
 	sprite:String,
+	price:Number,
 	portrait:String,
 	index:Number,
 	resource_type:String,
@@ -66,7 +67,6 @@ var MapSchema = new Schema({
 	cols:Number,
 	rows:Number,
 	merchantable_items:Schema.Types.Mixed,
-	//recruitable_units:[RecrutableUnitSchema],
 	start_point:[Number]
 });
 

@@ -32,6 +32,7 @@ Unit_Stage.prototype.initialize = function(width, height){
 		this.unit_container.sortChildren(function(obj1, obj2){
 			return obj1.y>obj2.y?1:-1;
 		});
+
 		this.unit_container.children.forEach(function(unit){
 			if(unit.status !== "death"){
 				unit.tick();
@@ -57,6 +58,11 @@ Unit_Stage.prototype.initialize = function(width, height){
 			this.map.regY += this.scroll_speed;
 			this.map.update();
 		}*/
+
+		if(this.user.store){
+			this.user.store.stage.update();
+		}
+
 		if(this.ticks % 10 === 0){
 			this.minimap.renderUnits(this.getUnits());
 		}
