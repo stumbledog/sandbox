@@ -141,6 +141,8 @@ RecruiterStore.prototype.rolloutStore = function(item){
 }
 
 RecruiterStore.prototype.mousedownStoreItem = function(item, event){
+	console.log(item);
+	console.log(event);
 	if(event.nativeEvent.button === 2){
 		if(this.user.gold < item.price){
 			alert("Not enough money!");
