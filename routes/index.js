@@ -3,8 +3,8 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res) {
-	UserController.authenticate(req, res, function(user, hero, units, map){
-		res.render('game', { title: 'Express', user:user, hero:hero, units:units, map:map});
+	UserController.authenticate(req, res, function(user, hero, map){
+		res.render('game', { title: 'Express', user:user, hero:hero, map:map});
 	});
 });
 

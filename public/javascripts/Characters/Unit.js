@@ -26,8 +26,6 @@ Unit.prototype.initialize = function(builder){
 		movement_speed:1,
 	};
 
-	//this.type = builder.type;
-	//this.team = builder.team;
 	this.max_force = 0.3;
 	this.status = "alive";
 	this.target = null;
@@ -46,6 +44,23 @@ Unit.prototype.initialize = function(builder){
 		this.initSkills(builder.skills);
 	}	
 }
+
+Unit.prototype.updateStats = function(){
+	switch(this.primary_attribute){
+		case 0:
+			this.damage = this.strength;
+		break;
+		case 1:
+			this.damage = this.agility;
+		break;
+		case 2:
+			this.damage = this.intelligence;
+		break;
+	}
+
+	this.max_health = this.health = this.stamina * 10;
+}
+
 
 Unit.prototype.getDamage = function(){
 	return this.damage * this.buff.damage;
@@ -117,7 +132,7 @@ Unit.prototype.renderPortrait = function(portrait_id, index){
 }
 
 Unit.prototype.getPortrait = function(){
-	return this.portrait;
+	return this.portrait.clone();
 }
 
 Unit.prototype.renderWeapon = function(weapon){
@@ -568,7 +583,9 @@ Unit.prototype.interactNPC = function(){
 	if(this.getSquareDistance(this.order.npc) <= Math.pow(this.radius + this.order.npc.radius + 4, 2)){
 		this.velocity = new Vector(0,0);
 		this.order.npc.interact(this);
-		this.order = {action:"stop", map:this.findPath({x:this.x,y:this.y})};
+		//this.order = {action:"stop", map:this.findPath({x:this.x,y:this.y})};
+		this.order.action = "stop";
+		this.order.map = this.findPath({x:this.x,y:this.y});
 	}else{
 		this.procMove(this.order.map);
 	}

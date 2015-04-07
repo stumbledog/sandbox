@@ -2,7 +2,7 @@ var Game = (function(){
 
 	var instance;
 
-	function init(user_builder, hero_builder, follower_builder_array, map_builder){
+	function init(user_builder, hero_builder, map_builder){
 		var user, loader, hero, blocks;
 		var minimap_stage, tooltip_stage, unit_stage, map_stage, ui_stage, left_stage, right_stage;
 		var cols = map_builder.cols;
@@ -129,6 +129,8 @@ var Game = (function(){
 		};
 		*/
 
+
+
 		var manifest = [];
 
 		manifest.push({src:"assets/Graphics/System/Icons/IconSet.png", id:"icon"});
@@ -136,7 +138,7 @@ var Game = (function(){
 		manifest.push({src:hero_builder.sprite, id:hero_builder.sprite.split('/').pop()});
 		manifest.push({src:hero_builder.portrait, id:hero_builder.portrait.split('/').pop()});
 
-		follower_builder_array.forEach(function(unit_builder){
+		user_builder.followers.forEach(function(unit_builder){
 			manifest.push({src:unit_builder.sprite, id:unit_builder.sprite.split('/').pop()});
 			if(unit_builder.portrait){
 				manifest.push({src:unit_builder.portrait, id:unit_builder.portrait.split('/').pop()});
@@ -157,7 +159,9 @@ var Game = (function(){
 
 		map_builder.npcs.forEach(function(npc){
 			npc.recruitable_units.forEach(function(recruitable_unit){
+				console.log(recruitable_unit);
 				manifest.push({src:recruitable_unit.sprite, id:recruitable_unit.sprite.split('/').pop()});
+				manifest.push({src:recruitable_unit.portrait, id:recruitable_unit.portrait.split('/').pop()});
 			});
 		});
 
@@ -212,14 +216,18 @@ var Game = (function(){
 			builder.x = map_stage.getStartPosition().x;
 			builder.y = map_stage.getStartPosition().y;
 			hero = new Hero(builder);
+			user.setHero(hero);
 			unit_stage.addHero(hero);
 		}
 
 		function createFollower(builder){
 			builder.x = map_stage.getStartPosition().x + Math.random();
 			builder.y = map_stage.getStartPosition().y + Math.random();
-			console.log(builder);
-			unit_stage.addFollower(new Follower(builder));
+			var follower = new Follower(builder);
+			user.addFollower(follower);
+			if(!map_builder.neutral_territory){
+				unit_stage.addFollower(follower);
+			}
 		}
 
 		function createEnemy(builder){
@@ -278,6 +286,9 @@ var Game = (function(){
 			getRighttMenuStage:function(){
 				return right_stage;
 			},
+			getStartPosition:function(){
+				return map_stage.getStartPosition();
+			},
 			getMerchantableItems:function(){
 				return map_builder.merchantable_items;
 			},
@@ -309,9 +320,9 @@ var Game = (function(){
 	}
 
 	return {
-		getInstance:function(user_builder, hero_builder, follower_builder_array, map_builder){
+		getInstance:function(user_builder, hero_builder, map_builder){
 			if(!instance){
-				instance = init(user_builder, hero_builder, follower_builder_array, map_builder);
+				instance = init(user_builder, hero_builder, map_builder);
 			}
 			return instance;
 		}

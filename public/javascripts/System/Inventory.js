@@ -19,7 +19,6 @@ Inventory.prototype.initialize = function(builder, user){
 	this.drag_item = null;
 	this.containers = [];
 
-
 	this.initFrame();
 	this.initItemContainers();
 	this.initInventoryItem(builder.slots);
@@ -28,15 +27,21 @@ Inventory.prototype.initialize = function(builder, user){
 Inventory.prototype.initFrame = function(){
 	var frame = new createjs.Shape();
 	frame.graphics.s("#000").f("#E6E2AF").dr(5,10,300,530);
+
 	this.gold = new OutlineText(this.user.gold, "Arial 16px", "#FFD34E", "#000", 3);
 	this.gold.x = 310 - this.gold.getMeasuredWidth() - 22;
 	this.gold.y = 525;
+
 	this.coin = new createjs.Bitmap(this.loader.getResult("icon"));
 	this.coin.sourceRect = new createjs.Rectangle(246, 55, 12, 12);
 	this.coin.x = 290;
 	this.coin.y = 524;
 
-	this.addChild(frame, this.gold, this.coin);
+	this.units_container = new createjs.Container();
+	this.units_container.x = 6;
+	this.units_container.y = 11;
+
+	this.addChild(frame, this.gold, this.coin, this.units_container);
 }
 
 Inventory.prototype.initItemContainers = function(){
@@ -91,7 +96,6 @@ Inventory.prototype.initItemContainers = function(){
 Inventory.prototype.initInventoryItem = function(items){
 	items.forEach(function(item){
 		item.index = parseInt(item.index);
-		console.log(item);
 		switch(item.type){
 			case "weapon":
 				var weapon = new Weapon(item);
@@ -115,7 +119,6 @@ Inventory.prototype.addItem = function(item){
 		var index = this.findItem(item);
 		if(index > -1){
 			this.containers[index].children[1].item.qty += item.qty;
-			console.log(this.containers[index].children[1].item.qty);
 			this.updateQuantity(index);
 		}else{
 			var empty_index = this.getEmptySlot();			
@@ -173,19 +176,44 @@ Inventory.prototype.initItemIcon = function(item, index){
 	return container;
 }
 
-Inventory.prototype.displayGold = function(){
-	
+Inventory.prototype.renderFollowers = function(){
+	this.units_container.removeAllChildren();
+	var container = new createjs.Container();
+	var portrait = this.user.hero.getPortrait();
+	var border = new createjs.Shape();
+	border.graphics.s("#000").dr(0,0,50,50);
+	portrait.scaleX = portrait.scaleY = 0.5;
+	portrait.x = portrait.y = 1;
+	container.addChild(border, portrait);
+	this.units_container.addChild(container);
+
+	this.user.followers.forEach(function(follower, index){
+		var container = new createjs.Container();
+		var portrait = follower.getPortrait();
+		var border = new createjs.Shape();
+		border.graphics.s("#000").dr(0,0,50,50);
+		portrait.scaleX = portrait.scaleY = 0.5;
+		portrait.x = portrait.y = 1;
+		container.x = 50 * parseInt((index + 1) % 6);
+		container.y = 50 * parseInt((index + 1) / 6);
+		container.addChild(border, portrait);
+		this.units_container.addChild(container);
+	}, this);
+	this.stage.update();
 }
 
 Inventory.prototype.open = function(){
 	this.isOpen = true;
 	this.game.getRighttMenuStage().addChild(this);
+	this.renderFollowers();
 	this.stage.open();
 }
 
 Inventory.prototype.close = function(){
-	this.isOpen = false;
-	this.stage.close();
+	if(this.isOpen){
+		this.isOpen = false;
+		this.stage.close();
+	}
 }
 
 Inventory.prototype.equipItem = function(item){

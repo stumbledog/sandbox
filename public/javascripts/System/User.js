@@ -10,6 +10,17 @@ function User(builder){
 	this.followers = [];
 }
 
+User.prototype.setHero = function(hero){
+	this.hero = hero;
+	//console.log(this.followers);
+}
+
+
+User.prototype.addFollower = function(follower){
+	this.followers.push(follower);
+	//console.log(this.followers);
+}
+
 User.prototype.purchase = function(item){
 	if(item.repurchase){
 		this.gold -= item.sell_price * item.qty;
@@ -35,11 +46,16 @@ User.prototype.toggleInventory = function(){
 	}
 }
 
+
+
 User.prototype.addGold = function(gold){
 	this.gold += gold;
 	this.inventory.updateGold(this.gold);
 }
 
-User.prototype.purchaseFollower = function(follower){
-	//this.followers.push(follower);
+User.prototype.purchaseFollower = function(follower, gold){
+	this.gold -= gold;
+	this.addFollower(follower);
+	this.inventory.updateGold(this.gold);
+	this.inventory.renderFollowers();
 }

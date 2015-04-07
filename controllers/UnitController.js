@@ -30,9 +30,9 @@ UnitController = {
 	purchaseFollower:function(unit, user_id, callback){
 		console.log(unit);
 		unit.exp = 0;
-		console.log(user_id);
 		UserModel.findById(user_id, function(err, user){
 			user.followers.push(unit);
+			user.gold -= unit.price;
 			user.markModified('followers');
 			user.save(callback);
 		});

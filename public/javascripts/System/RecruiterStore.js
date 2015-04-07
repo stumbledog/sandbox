@@ -147,7 +147,7 @@ RecruiterStore.prototype.mousedownStoreItem = function(unit, event){
 			unit.x = 160; 
 			unit.y = 160; 
 			var follower = new Follower(unit);
-			this.user.purchaseFollower(follower);
+			this.user.purchaseFollower(follower, unit.price);
 			$.post("purchasefollower", {unit:this.unitToObject(unit)}, function(res){
 				console.log(res);
 			});
@@ -170,24 +170,6 @@ RecruiterStore.prototype.unitToObject = function(unit){
 		index:unit.index,
 		level_up_bonus:unit.level_up_bonus
 	};
-	/*
-	character_class:"Fighter",
-	primary_attribute:0,
-	level:1,
-	strength:3,
-	agility:2,
-	intelligence:1,
-	stamina:3,
-	price:100,
-	sprite:"assets/Graphics/Characters/05 - Fighter.png",
-	portrait:"assets/Graphics/Faces/ds_face09-10.png",
-	index:1,
-	level_up_bonus:{
-		strength:3,
-		agility:1,
-		intelligence:1,
-		stamina:3,
-	}*/
 	return obj;
 }
 

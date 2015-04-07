@@ -122,6 +122,7 @@ function saveMap(){
 				block:true
 			}
 		],
+		true,
 		[
 			{name:"Merchant",		sprite:"assets/Graphics/Characters/12 - Merchant.png",	index:0, type:"merchant", x:32*4, y:32*4},
 			{name:"Recruiter",		sprite:"assets/Graphics/Characters/12 - Merchant.png",	index:1, type:"recruiter", x:32*6, y:32*4, 
@@ -130,27 +131,27 @@ function saveMap(){
 						character_class:"Fighter",
 						primary_attribute:0,
 						level:1,
-						strength:3,
-						agility:2,
+						strength:2,
+						agility:1,
 						intelligence:1,
-						stamina:3,
+						stamina:2,
 						price:100,
 						sprite:"assets/Graphics/Characters/05 - Fighter.png",
 						portrait:"assets/Graphics/Faces/ds_face09-10.png",
 						index:1,
 						level_up_bonus:{
-							strength:3,
+							strength:2,
 							agility:1,
 							intelligence:1,
-							stamina:3,
+							stamina:2,
 						}
 					},
 					{
 						character_class:"Thief",
 						primary_attribute:1,
 						level:1,
-						strength:2,
-						agility:3,
+						strength:1,
+						agility:2,
 						intelligence:1,
 						stamina:2,
 						price:100,
@@ -158,8 +159,8 @@ function saveMap(){
 						portrait:"assets/Graphics/Faces/ds_face11-12.png",
 						index:1,
 						level_up_bonus:{
-							strength:2,
-							agility:3,
+							strength:1,
+							agility:2,
 							intelligence:1,
 							stamina:2,
 						}
@@ -170,7 +171,7 @@ function saveMap(){
 						level:1,
 						strength:1,
 						agility:1,
-						intelligence:3,
+						intelligence:2,
 						stamina:2,
 						price:100,
 						sprite:"assets/Graphics/Characters/04 - Mage.png",
@@ -179,7 +180,7 @@ function saveMap(){
 						level_up_bonus:{
 							strength:1,
 							agility:1,
-							intelligence:3,
+							intelligence:2,
 							stamina:2,
 						}
 					},
@@ -417,9 +418,10 @@ function initPrototypeUnit(id, name, strength, dexterity, intelligence, vitality
 	});
 }
 
-function initMap(maps, npcs, monsters, act, chapter, merchant, recruiter, width, height, cols, rows, start_point){
+function initMap(maps, neutral_territory, npcs, monsters, act, chapter, merchant, recruiter, width, height, cols, rows, start_point){
 	return new MapModel({
 		maps:maps,
+		neutral_territory:neutral_territory,
 		npcs:npcs,
 		monsters:monsters,
 		act:act,

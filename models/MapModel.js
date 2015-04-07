@@ -41,6 +41,7 @@ var MapSchema = new Schema({
 		src:String,
 		block:Boolean,
 	}],
+	neutral_territory:Boolean,
 	monsters:[MonsterSchema],
 	npcs:[NPCSchema],
 	/*

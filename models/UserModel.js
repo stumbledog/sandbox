@@ -71,7 +71,13 @@ var HeroSchema = new Schema({
 	exp:Number,
 	resource_type:String,
 	items:[ItemSchema],
-	_skills:[{type:Schema.Types.ObjectId, ref:'Skill'}]
+	_skills:[{type:Schema.Types.ObjectId, ref:'Skill'}],
+	level_up_bonus:{
+		strength:Number,
+		agility:Number,
+		intelligence:Number,
+		stamina:Number,
+	}
 });
 
 var FollowerSchema = new Schema({
@@ -87,7 +93,13 @@ var FollowerSchema = new Schema({
 	level:Number,
 	exp:Number,
 	items:[ItemSchema],
-	_skills:[{type:Schema.Types.ObjectId, ref:'Skill'}]
+	_skills:[{type:Schema.Types.ObjectId, ref:'Skill'}],
+	level_up_bonus:{
+		strength:Number,
+		agility:Number,
+		intelligence:Number,
+		stamina:Number,
+	}
 });
 
 var UserSchema = new Schema({

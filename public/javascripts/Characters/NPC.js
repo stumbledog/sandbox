@@ -12,6 +12,7 @@ NPC.prototype.npc_initialize = function(builder){
 	this.sprite.gotoAndPlay("stop");
 	this.radius = 16;
 	this.health_color = this.name_text_color = "#FFB03B";
+	this.name = builder.name;
 	this.team = "NPC";
 
 	this.name_text = new OutlineText(this.name,"bold 6px Arial",this.name_text_color,"#000",2);
@@ -25,7 +26,10 @@ NPC.prototype.npc_initialize = function(builder){
 NPC.prototype.initEventListener = function(){
 	this.addEventListener("mousedown", function(event){
 		if(event.nativeEvent.button == 2){
-			this.stage.hero.order = {action:"interact_npc", npc:this, map:this.stage.hero.findPath(this)};
+			//this.stage.hero.order = {action:"interact_npc", npc:this, map:this.stage.hero.findPath(this)};
+			this.stage.hero.order.action = "interact_npc";
+			this.stage.hero.order.npc = this;
+			this.stage.hero.order.map = this.stage.hero.findPath(this);
 		}else{
 			
 		}

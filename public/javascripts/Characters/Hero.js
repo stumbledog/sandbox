@@ -9,30 +9,34 @@ Hero.prototype.unit_initialize = Hero.prototype.initialize;
 
 Hero.prototype.hero_initialize = function(builder){
 	this.unit_initialize(builder);
-	this.health_color = "#0C0";
-	this.damage_color = "#C00";
 
-	this.strength = builder.strength;
-	this.agility = builder.agility;
-	this.intelligence = builder.intelligence;
-	this.stamina = builder.stamina;
-
+	this.primary_attribute = parseInt(builder.primary_attribute);
+	this.strength = parseInt(builder.strength);
+	this.agility = parseInt(builder.agility);
+	this.intelligence = parseInt(builder.intelligence);
+	this.stamina = parseInt(builder.stamina);
 	this.movement_speed = 1.5;
-
-	this.max_health = this.health = 100;
 	this.level = builder.level;
 	this.exp = builder.exp;
 	this.resource_type = builder.resource_type;
-	this.resource = 0;
+
+	if(this.resource_type === "fury"){
+		this.resource = 0;
+	}else{
+		this.resource = 100;
+	}
 	
 	this.max_resource = 100;
-	this.radius = 12;//builder.radius;
-	this.aggro_radius = 80;//builder.aggro_radius;
-	this.range = 16;//builder.range;
-	this.attack_speed = 60;//builder.attack_speed;
-	this.damage = 1;//builder.damage;
+	this.radius = 12;
+	this.aggro_radius = 80;
+	this.range = 16;
+	this.attack_speed = 60;
+
+	this.updateStats();
 
 	this.team = "Player";
+	this.health_color = "#0C0";
+	this.damage_color = "#C00";
 
 	this.renderPortrait(builder.portrait.split('/').pop(), builder.index);
 	this.renderRange();

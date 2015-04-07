@@ -30,7 +30,7 @@ UserController = {
 					res.cookie('user_id', user._id, {maxAge: 10 * 365 * 24 * 60 * 60 * 1000, httpOnly: true });
 					MapController.loadMap(user.hero.level, 1,1, function(map){
 						console.log(user);
-						callback(user, user.hero, [], map);
+						callback(user, user.hero, map);
 					});
 				});
 			}else{

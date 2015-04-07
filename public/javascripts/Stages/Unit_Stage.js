@@ -207,20 +207,28 @@ Unit_Stage.prototype.toggleFollowerShipType = function(){
 	switch(this.followership_type){
 		case "annihilate":
 			this.followership_type = "follow";
+			this.getFollowerUnits().forEach(function(unit){
+				unit.order = this.hero.order;
+			},this);
+			/*
 			this.unit_container.children.forEach(function(unit){
 				if(unit.type === "follow"){
 					unit.order = this.hero.order;
 				}
-			},this);
+			},this);*/
 			break;
 		case "follow":
 			this.followership_type = "annihilate";
+			this.getFollowerUnits().forEach(function(unit){
+				unit.order = {action:"annihilate", map:unit.findPath({x:unit.x,y:unit.y})};
+			},this);
+			/*
 			this.unit_container.children.forEach(function(unit){
 				if(unit.type === "follow"){
 					unit.order = {action:"annihilate", map:unit.findPath({x:unit.x,y:unit.y})};
 				}
 			},this);
-			break;
+			break;*/
 	}
 }
 
@@ -272,6 +280,12 @@ Unit_Stage.prototype.getAllUnits = function(){
 Unit_Stage.prototype.getUnits = function(){
 	return this.unit_container.children.filter(function(unit){
 		return unit.team !== "NPC";
+	});
+}
+
+Unit_Stage.prototype.getFollowerUnits = function(){
+	return this.unit_container.children.filter(function(unit){
+		return unit.constructor.name === "Follower";
 	});
 }
 
