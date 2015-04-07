@@ -41,5 +41,5 @@ User.prototype.addGold = function(gold){
 }
 
 User.prototype.purchaseFollower = function(follower){
-	this.followers.push(follower);
+	//this.followers.push(follower);
 }

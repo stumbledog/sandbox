@@ -7,7 +7,6 @@ RecruiterStore.prototype.constructor = RecruiterStore;
 
 RecruiterStore.prototype.recruiterstore_initialize = function(units){
 	this.store_initialize(units);
-	console.log(this.items);
 
 	this.unit_container = new createjs.Container();
 	this.unit_container.x = 5;
@@ -140,22 +139,56 @@ RecruiterStore.prototype.rolloutStore = function(item){
 	this.stage.update();
 }
 
-RecruiterStore.prototype.mousedownStoreItem = function(item, event){
-	console.log(item);
-	console.log(event);
+RecruiterStore.prototype.mousedownStoreItem = function(unit, event){
 	if(event.nativeEvent.button === 2){
-		if(this.user.gold < item.price){
+		if(this.user.gold < unit.price){
 			alert("Not enough money!");
 		}else{
-			item.x = 160; 
-			item.y = 160; 
-			var follower = new Follower(item);
+			unit.x = 160; 
+			unit.y = 160; 
+			var follower = new Follower(unit);
 			this.user.purchaseFollower(follower);
-			$.post("purchasefollower", {follower:item}, function(res){
+			$.post("purchasefollower", {unit:this.unitToObject(unit)}, function(res){
 				console.log(res);
 			});
 		}
 	}
+}
+
+RecruiterStore.prototype.unitToObject = function(unit){
+	var obj = {
+		chracter_class:unit.chracter_class,
+		primary_attribute:unit.primary_attribute,
+		level:unit.level,
+		strength:unit.strength,
+		agility:unit.agility,
+		intelligence:unit.intelligence,
+		stamina:unit.stamina,
+		price:unit.price,
+		sprite:unit.sprite,
+		portrait:unit.portrait,
+		index:unit.index,
+		level_up_bonus:unit.level_up_bonus
+	};
+	/*
+	character_class:"Fighter",
+	primary_attribute:0,
+	level:1,
+	strength:3,
+	agility:2,
+	intelligence:1,
+	stamina:3,
+	price:100,
+	sprite:"assets/Graphics/Characters/05 - Fighter.png",
+	portrait:"assets/Graphics/Faces/ds_face09-10.png",
+	index:1,
+	level_up_bonus:{
+		strength:3,
+		agility:1,
+		intelligence:1,
+		stamina:3,
+	}*/
+	return obj;
 }
 
 RecruiterStore.prototype.open = function(){	

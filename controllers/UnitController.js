@@ -16,6 +16,7 @@ UnitController = {
 		console.log("Create Hero");
 		PrototypeHeroModel.findOne({name:"Albert"}, function(err, prototype_hero){
 			prototype_hero.initHero(function(hero){
+				console.log(hero);
 				user.hero = hero;
 				user.save(function(){
 					callback(hero);
@@ -25,5 +26,15 @@ UnitController = {
 	},
 	getRecruitableUnit:function(){
 
+	},
+	purchaseFollower:function(unit, user_id, callback){
+		console.log(unit);
+		unit.exp = 0;
+		console.log(user_id);
+		UserModel.findById(user_id, function(err, user){
+			user.followers.push(unit);
+			user.markModified('followers');
+			user.save(callback);
+		});
 	}
 }

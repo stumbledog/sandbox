@@ -61,7 +61,7 @@ var HeroSchema = new Schema({
 	name:String,
 	primary_attribute:String,
 	strength:Number,
-	dexterity:Number,
+	agility:Number,
 	intelligence:Number,
 	stamina:Number,
 	sprite:String,
@@ -70,7 +70,7 @@ var HeroSchema = new Schema({
 	level:Number,
 	exp:Number,
 	resource_type:String,
-	_items:[{type:Schema.Types.ObjectId, ref:'Item'}],
+	items:[ItemSchema],
 	_skills:[{type:Schema.Types.ObjectId, ref:'Skill'}]
 });
 
@@ -78,7 +78,7 @@ var FollowerSchema = new Schema({
 	name:String,
 	primary_attribute:String,
 	strength:Number,
-	dexterity:Number,
+	agility:Number,
 	intelligence:Number,
 	stamina:Number,
 	sprite:String,
@@ -86,8 +86,7 @@ var FollowerSchema = new Schema({
 	index:Number,
 	level:Number,
 	exp:Number,
-	resource_type:String,
-	_items:[{type:Schema.Types.ObjectId, ref:'Item'}],
+	items:[ItemSchema],
 	_skills:[{type:Schema.Types.ObjectId, ref:'Skill'}]
 });
 
@@ -98,7 +97,7 @@ var UserSchema = new Schema({
 		name:String,
 		primary_attribute:String,
 		strength:Number,
-		dexterity:Number,
+		agility:Number,
 		intelligence:Number,
 		stamina:Number,
 		sprite:String,
@@ -118,8 +117,6 @@ var UserSchema = new Schema({
 	created_at:{type: Date, default: Date.now},
 	updated_at:{type: Date, default: Date.now},
 });
-
-
 
 UserSchema.pre('save', function(next){
 	now = new Date();

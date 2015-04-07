@@ -181,7 +181,7 @@ var Game = (function(){
 			initStages();
 			createHero(hero_builder);
 
-			follower_builder_array.forEach(function(unit_builder){
+			user_builder.followers.forEach(function(unit_builder){
 				createFollower(unit_builder);
 			});
 
@@ -218,6 +218,7 @@ var Game = (function(){
 		function createFollower(builder){
 			builder.x = map_stage.getStartPosition().x + Math.random();
 			builder.y = map_stage.getStartPosition().y + Math.random();
+			console.log(builder);
 			unit_stage.addFollower(new Follower(builder));
 		}
 

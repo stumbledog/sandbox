@@ -36,6 +36,19 @@ router.post('/sellitem', function(req, res){
 	})
 });
 
+router.post('/purchasefollower', function(req, res){
+	var unit = req.body.unit;
+	var user_id = req.session.user_id;
+	UnitController.purchaseFollower(unit, user_id, function(err, user){
+		if(err){
+
+		}else{
+			res.send("Purchased unit successfully.");
+		}
+	})
+});
+
+
 router.get('/game', function(req, res) {
 	res.render('game', { title: 'Express' });
 });

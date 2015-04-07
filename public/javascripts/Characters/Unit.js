@@ -20,15 +20,14 @@ Unit.prototype.initialize = function(builder){
 	this.y = builder.y;
 
 	this.name = builder.name;
-
 	this.buff = {
 		damage:1,
 		attack_speed:1,
 		movement_speed:1,
 	};
 
-	this.type = builder.type;
-	this.team = builder.team;
+	//this.type = builder.type;
+	//this.team = builder.team;
 	this.max_force = 0.3;
 	this.status = "alive";
 	this.target = null;
@@ -214,6 +213,7 @@ Unit.prototype.procMove = function(map){
 
 	this.x += this.velocity.x;
 	this.y += this.velocity.y;
+
 	if(this.order_tick % 8 === 0){
 		this.rotate(this.velocity.x, this.velocity.y);
 	}

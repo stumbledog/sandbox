@@ -1,7 +1,6 @@
 function PathFinder(){}
 
 PathFinder.flowField = function(block_map, destination){
-	console.log(block_map);
 	if(block_map[Math.floor(destination.y/16)][Math.floor(destination.x/16)] === 65535){
 		destination = this.findClosestPoint2(block_map, destination);
 	}

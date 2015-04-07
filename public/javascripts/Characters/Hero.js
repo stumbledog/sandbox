@@ -32,6 +32,8 @@ Hero.prototype.hero_initialize = function(builder){
 	this.attack_speed = 60;//builder.attack_speed;
 	this.damage = 1;//builder.damage;
 
+	this.team = "Player";
+
 	this.renderPortrait(builder.portrait.split('/').pop(), builder.index);
 	this.renderRange();
 	this.order = {action:"stop", map:this.findPath({x:this.x,y:this.y})};

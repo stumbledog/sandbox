@@ -13,7 +13,7 @@ PrototypeHeroSchema.methods.initHero = function(callback){
 	hero.level = 1;
 	hero.exp = 0;
 	hero.stamina = 2;
-
+	hero.items = [];
 	switch(this.primary_attribute){
 		case "strength":
 			hero.strength = 2;
