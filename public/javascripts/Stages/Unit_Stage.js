@@ -63,6 +63,10 @@ Unit_Stage.prototype.initialize = function(width, height){
 			this.user.store.stage.update();
 		}
 
+		if(this.user.inventory.stage){
+			this.user.inventory.stage.update();
+		}
+
 		if(this.ticks % 10 === 0){
 			this.minimap.renderUnits(this.getUnits());
 		}

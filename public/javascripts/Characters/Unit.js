@@ -92,7 +92,7 @@ Unit.prototype.renderUnit = function(src_id, index, regX, regY){
 
 	var frames = [];
 	for(var i=0 ;i < 12; i++){
-		frames.push([index % 4 * 72 + (i % 3) * 24, parseInt(index / 4) * 128 + parseInt(i / 3) * 32 + 1, 24, 32, 0, 12, 16]);
+		frames.push([index % 4 * 72 + (i % 3) * 24, parseInt(index / 4) * 128 + parseInt(i / 3) * 32 + 1, 23, 31, 0, 12, 16]);
 	}
 
 	var spriteSheet = new createjs.SpriteSheet({
@@ -133,6 +133,10 @@ Unit.prototype.renderPortrait = function(portrait_id, index){
 
 Unit.prototype.getPortrait = function(){
 	return this.portrait.clone();
+}
+
+Unit.prototype.getSprite = function(){
+	return this.sprite.clone();
 }
 
 Unit.prototype.renderWeapon = function(weapon){

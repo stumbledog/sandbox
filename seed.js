@@ -138,7 +138,7 @@ function saveMap(){
 						price:100,
 						sprite:"assets/Graphics/Characters/05 - Fighter.png",
 						portrait:"assets/Graphics/Faces/ds_face09-10.png",
-						index:1,
+						index:0,
 						level_up_bonus:{
 							strength:2,
 							agility:1,
@@ -157,7 +157,7 @@ function saveMap(){
 						price:100,
 						sprite:"assets/Graphics/Characters/06 - Thief.png",
 						portrait:"assets/Graphics/Faces/ds_face11-12.png",
-						index:1,
+						index:0,
 						level_up_bonus:{
 							strength:1,
 							agility:2,
@@ -176,7 +176,7 @@ function saveMap(){
 						price:100,
 						sprite:"assets/Graphics/Characters/04 - Mage.png",
 						portrait:"assets/Graphics/Faces/ds_face07-08.png",
-						index:1,
+						index:0,
 						level_up_bonus:{
 							strength:1,
 							agility:1,

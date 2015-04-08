@@ -20,6 +20,8 @@ Inventory.prototype.initialize = function(builder, user){
 	this.containers = [];
 
 	this.initFrame();
+	this.initEquipItemContainers();
+	this.initStatsContainer();
 	this.initItemContainers();
 	this.initInventoryItem(builder.slots);
 }
@@ -41,7 +43,93 @@ Inventory.prototype.initFrame = function(){
 	this.units_container.x = 6;
 	this.units_container.y = 11;
 
-	this.addChild(frame, this.gold, this.coin, this.units_container);
+	this.unit_detail_container = new createjs.Container();
+	this.unit_detail_container.y = 250;
+	this.unit_detail_container.visible = false;;
+
+	this.unit_sprite_container = new createjs.Container();
+	this.unit_sprite_container.x = 240;
+	this.unit_sprite_container.y = 64;
+
+	this.close_button = new createjs.Container();
+	this.close_button.x = 270;
+	this.close_button.cursor = "pointer";
+	this.close_button.addEventListener("mousedown", function(){
+		this.unit_detail_container.visible = false;
+	}.bind(this));
+
+	this.close_button_bg = new createjs.Shape();
+	this.close_button_bg.graphics.s("#000").f("#8E2800").dr(0,0,20,20);
+
+	this.close_icon = new createjs.Shape();
+	this.close_icon.graphics.s("#FFF0A5").ss(3).mt(5,5).lt(15,15).mt(5,15).lt(15,5);
+	this.close_button.addChild(this.close_button_bg, this.close_icon);
+
+	this.unit_detail_container.addChild(this.unit_sprite_container, this.close_button);
+	this.addChild(frame, this.gold, this.coin, this.units_container, this.unit_detail_container);
+}
+
+Inventory.prototype.initStatsContainer = function(){
+	//strength, agility, intelligence, stamina, damage, attack_speed, movement_speed, armor, avoidance, crit_rate, crit_damage
+	//life_steal, cooldown reduction, health regen, resource regen, 
+	//dps	
+	this.stats_container = new createjs.Container();
+	this.initStats("Strength", 10, 10);
+	this.initStats("Agility", 10, 20);
+	this.initStats("Intelligence", 10, 30);
+	this.initStats("Stamina", 10, 40);
+	this.initStats("Damage", 10, 50);
+	this.initStats("Att. Speed", 10, 60);
+	this.initStats("Armor", 10, 70);
+	this.initStats("Avoidance", 10, 80);
+	this.initStats("Move. Speed", 10, 90);
+	this.initStats("Move. Speed", 10, 100);
+	this.initStats("Move. Speed", 10, 110);
+	this.initStats("Move. Speed", 10, 120);
+	this.unit_detail_container.addChild(this.stats_container);
+}
+
+Inventory.prototype.initStats = function(text, x, y){
+	var text = new createjs.Text(text, "bold Arial 9px", "#000");
+	text.x = x;
+	text.y = y;
+	this.stats_container.addChild(text);
+}
+
+Inventory.prototype.initEquipItemContainers = function(){
+	this.equip_item_container = new createjs.Container();
+	this.initEquipItemContainer("head", 230, 40, 244, 149, 16, 15);
+	this.initEquipItemContainer("necklace", 210, 50, 148, 173, 16, 15);
+	this.initEquipItemContainer("chest", 230, 60, 316, 125, 16, 15);
+	this.initEquipItemContainer("grove", 190, 70, 99, 126, 15, 15);
+	this.initEquipItemContainer("belt", 230, 80, 340, 150, 16, 15);
+	this.initEquipItemContainer("boots", 230, 100, 173, 173, 15, 16);
+	this.initEquipItemContainer("cape", 250, 50, 4, 173, 16, 16);
+	this.initEquipItemContainer("left_ring", 250, 80, 78, 176, 12, 12);
+	this.initEquipItemContainer("right_ring", 210, 80, 78, 176, 12, 12);
+	this.initEquipItemContainer("left_hand_weapon", 270, 90, 198, 149, 13, 16);
+	this.initEquipItemContainer("right_hand_weapon", 190, 90, 245, 103, 13, 14);
+	this.unit_detail_container.addChild(this.equip_item_container);
+}
+
+Inventory.prototype.initEquipItemContainer = function(part, x, y, cropX, cropY, width, height){
+	var container = new createjs.Container();
+	container.x = x;
+	container.y = y;
+	container.alpha = 0.7;
+
+	var border = new createjs.Shape();
+	border.graphics.s("#000").f("#ccc").rr(0,0,20,20,3);
+
+	var icon = new createjs.Bitmap(this.loader.getResult("icon"));
+	icon.sourceRect = new createjs.Rectangle(cropX, cropY, width, height);
+	icon.filters = [new createjs.ColorFilter(0.5, 0.5, 0.5, 1, 150, 150, 150)];
+	icon.cache(0,0,width,height);
+	icon.x = (20 - width) / 2;
+	icon.y = (20 - height) / 2;
+	container.addChild(border, icon);
+
+	this.equip_item_container.addChild(container);
 }
 
 Inventory.prototype.initItemContainers = function(){
@@ -178,7 +266,6 @@ Inventory.prototype.initItemIcon = function(item, index){
 
 Inventory.prototype.renderPortrait = function(){
 	this.units_container.removeAllChildren();
-
 	var units = [];
 	units.push(this.user.hero);
 	units = units.concat(this.user.followers);
@@ -186,7 +273,6 @@ Inventory.prototype.renderPortrait = function(){
 		var container = new createjs.Container();
 		var portrait = unit.getPortrait();
 		var border = new createjs.Shape();
-		console.log(unit);
 		border.graphics.s("#000").f(unit.getClassColor()).dr(0,0,50,50);
 		portrait.scaleX = portrait.scaleY = 0.5;
 		portrait.x = portrait.y = 1;
@@ -195,13 +281,28 @@ Inventory.prototype.renderPortrait = function(){
 		container.cursor = "pointer";
 		container.addEventListener("mousedown", this.mouseDownOnPortrait.bind(this, unit));
 		container.addChild(border, portrait);
-		this.units_container.addChild(container);		
+		this.units_container.addChild(container);
 	}, this);
 	this.stage.update();
 }
 
 Inventory.prototype.mouseDownOnPortrait = function(unit){
-	console.log(unit);
+	this.selectCharacter(unit);
+	this.unit_detail_container.visible = true;
+}
+
+Inventory.prototype.selectCharacter = function(unit){
+	this.renderUnitDetail(unit);
+}
+
+Inventory.prototype.renderUnitDetail = function(unit){
+	this.unit_sprite_container.removeAllChildren();
+	var sprite = unit.getSprite();
+	sprite.gotoAndPlay("stop");
+	sprite._animation.speed = 0.3;
+	sprite.scaleX = sprite.scaleY = 4;
+	this.unit_sprite_container.addChild(sprite);
+	this.stage.update();
 }
 
 Inventory.prototype.open = function(){

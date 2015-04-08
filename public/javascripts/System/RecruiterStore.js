@@ -8,15 +8,21 @@ RecruiterStore.prototype.constructor = RecruiterStore;
 RecruiterStore.prototype.recruiterstore_initialize = function(units){
 	this.store_initialize(units);
 
-	this.unit_container = new createjs.Container();
-	this.unit_container.x = 5;
-	this.unit_container.y = 50;
+	this.color = {
+		Fighter:"#F77A52",
+		Thief:"#7E8AA2",
+		Mage:"#91AA9D",
+	}
 
 	this.initUnits();
 	this.render();
 }
 
 RecruiterStore.prototype.initUnits = function(){
+	this.unit_container = new createjs.Container();
+	this.unit_container.x = 5;
+	this.unit_container.y = 50;
+
 	this.items.forEach(function(unit, index){
 		this.unitSummary(unit, index % 3 * 100, parseInt(index / 3) * 60);
 		this.unitDetail(unit);
@@ -26,7 +32,7 @@ RecruiterStore.prototype.initUnits = function(){
 
 RecruiterStore.prototype.unitSummary = function(unit, x, y){
 	var frame = new createjs.Shape();
-	frame.graphics.s("#000").ss(1).f("#fff").dr(0,0,100,60).dr(0,0,30,60).dr(30,45,70,15).f("#fff").dr(0,0,30,60);
+	frame.graphics.s("#000").ss(1).f("#fff").dr(0,0,100,60).dr(0,0,30,60).dr(30,45,70,15).f(this.color[unit.character_class]).dr(0,0,30,60);
 
 	var frames = [];
 	for(var i=0 ;i < 3; i++){
@@ -81,12 +87,11 @@ RecruiterStore.prototype.unitSummary = function(unit, x, y){
 
 RecruiterStore.prototype.unitDetail = function(unit){
 	var primary_attribute_text = ["Strength", "Agility", "Intelligence"];
-	var primary_attribute_color = ["#F77A52", "#D8CAA8", "#91AA9D"];
 
 	var frame = new createjs.Shape();
 	frame.graphics.s("#000").ss(1).f("#fff").dr(0,0,140,120);
 
-	var level = new OutlineText("Level " + unit.level + " " + unit.character_class, "10px Arial", primary_attribute_color[unit.primary_attribute], "#333", 3);
+	var level = new OutlineText("Level " + unit.level + " " + unit.character_class, "10px Arial", this.color[unit.character_class], "#333", 3);
 	level.x = 3;
 	level.y = 2;
 

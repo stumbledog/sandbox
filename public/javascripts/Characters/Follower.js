@@ -48,10 +48,8 @@ Follower.prototype.follower_initialize = function(builder){
 Follower.prototype.getClassColor = function(){
 	var color = {
 		Fighter:"#F77A52",
-		Thief:"#D8CAA8",
+		Thief:"#7E8AA2",
 		Mage:"#91AA9D",
 	};
-	console.log(this.character_class);
-	console.log(color[this.character_class]);
 	return color[this.character_class];
 }
