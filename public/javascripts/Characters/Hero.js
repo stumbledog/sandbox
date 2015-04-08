@@ -50,6 +50,10 @@ Hero.prototype.hero_initialize = function(builder){
 	this.initHealthBar();
 }
 
+Hero.prototype.getClassColor = function(){
+	return "#fff";
+}
+
 Hero.prototype.renderRange = function(){
 	this.range_shape = new createjs.Shape();
 	this.range_shape.graphics.s("#F00").ss(2).dc(0, 0, this.radius + this.range);

@@ -44,3 +44,14 @@ Follower.prototype.follower_initialize = function(builder){
 	this.renderPortrait(builder.portrait.split('/').pop(), builder.index);
 	this.order = {action:"stop", map:this.findPath({x:this.x,y:this.y})};
 }
+
+Follower.prototype.getClassColor = function(){
+	var color = {
+		Fighter:"#F77A52",
+		Thief:"#D8CAA8",
+		Mage:"#91AA9D",
+	};
+	console.log(this.character_class);
+	console.log(color[this.character_class]);
+	return color[this.character_class];
+}

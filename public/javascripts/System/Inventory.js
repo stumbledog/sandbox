@@ -176,36 +176,38 @@ Inventory.prototype.initItemIcon = function(item, index){
 	return container;
 }
 
-Inventory.prototype.renderFollowers = function(){
+Inventory.prototype.renderPortrait = function(){
 	this.units_container.removeAllChildren();
-	var container = new createjs.Container();
-	var portrait = this.user.hero.getPortrait();
-	var border = new createjs.Shape();
-	border.graphics.s("#000").dr(0,0,50,50);
-	portrait.scaleX = portrait.scaleY = 0.5;
-	portrait.x = portrait.y = 1;
-	container.addChild(border, portrait);
-	this.units_container.addChild(container);
 
-	this.user.followers.forEach(function(follower, index){
+	var units = [];
+	units.push(this.user.hero);
+	units = units.concat(this.user.followers);
+	units.forEach(function(unit, index){
 		var container = new createjs.Container();
-		var portrait = follower.getPortrait();
+		var portrait = unit.getPortrait();
 		var border = new createjs.Shape();
-		border.graphics.s("#000").dr(0,0,50,50);
+		console.log(unit);
+		border.graphics.s("#000").f(unit.getClassColor()).dr(0,0,50,50);
 		portrait.scaleX = portrait.scaleY = 0.5;
 		portrait.x = portrait.y = 1;
-		container.x = 50 * parseInt((index + 1) % 6);
-		container.y = 50 * parseInt((index + 1) / 6);
+		container.x = 50 * parseInt(index % 6);
+		container.y = 50 * parseInt(index / 6);
+		container.cursor = "pointer";
+		container.addEventListener("mousedown", this.mouseDownOnPortrait.bind(this, unit));
 		container.addChild(border, portrait);
-		this.units_container.addChild(container);
+		this.units_container.addChild(container);		
 	}, this);
 	this.stage.update();
+}
+
+Inventory.prototype.mouseDownOnPortrait = function(unit){
+	console.log(unit);
 }
 
 Inventory.prototype.open = function(){
 	this.isOpen = true;
 	this.game.getRighttMenuStage().addChild(this);
-	this.renderFollowers();
+	this.renderPortrait();
 	this.stage.open();
 }
 

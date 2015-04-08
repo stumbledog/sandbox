@@ -46,8 +46,6 @@ User.prototype.toggleInventory = function(){
 	}
 }
 
-
-
 User.prototype.addGold = function(gold){
 	this.gold += gold;
 	this.inventory.updateGold(this.gold);
@@ -57,5 +55,5 @@ User.prototype.purchaseFollower = function(follower, gold){
 	this.gold -= gold;
 	this.addFollower(follower);
 	this.inventory.updateGold(this.gold);
-	this.inventory.renderFollowers();
+	this.inventory.renderPortrait();
 }

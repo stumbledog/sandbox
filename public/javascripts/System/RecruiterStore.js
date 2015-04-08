@@ -157,7 +157,7 @@ RecruiterStore.prototype.mousedownStoreItem = function(unit, event){
 
 RecruiterStore.prototype.unitToObject = function(unit){
 	var obj = {
-		chracter_class:unit.chracter_class,
+		character_class:unit.character_class,
 		primary_attribute:unit.primary_attribute,
 		level:unit.level,
 		strength:unit.strength,

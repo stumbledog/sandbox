@@ -81,7 +81,7 @@ var HeroSchema = new Schema({
 });
 
 var FollowerSchema = new Schema({
-	name:String,
+	character_class:String,
 	primary_attribute:String,
 	strength:Number,
 	agility:Number,
