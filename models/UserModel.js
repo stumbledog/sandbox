@@ -57,29 +57,6 @@ var ItemSchema = new Schema({
 	cooldown:Number,
 });
 
-var HeroSchema = new Schema({
-	name:String,
-	primary_attribute:String,
-	strength:Number,
-	agility:Number,
-	intelligence:Number,
-	stamina:Number,
-	sprite:String,
-	portrait:String,
-	index:Number,
-	level:Number,
-	exp:Number,
-	resource_type:String,
-	items:[ItemSchema],
-	_skills:[{type:Schema.Types.ObjectId, ref:'Skill'}],
-	level_up_bonus:{
-		strength:Number,
-		agility:Number,
-		intelligence:Number,
-		stamina:Number,
-	}
-});
-
 var FollowerSchema = new Schema({
 	character_class:String,
 	primary_attribute:String,
@@ -104,7 +81,7 @@ var FollowerSchema = new Schema({
 
 var UserSchema = new Schema({
 	name:String,
-	gold:{type:Number, default:1000},
+	gold:{type:Number, default:10000},
 	hero:{
 		name:String,
 		primary_attribute:String,
@@ -119,7 +96,13 @@ var UserSchema = new Schema({
 		exp:Number,
 		resource_type:String,
 		items:[ItemSchema],
-		_skills:[{type:Schema.Types.ObjectId, ref:'Skill'}]
+		_skills:[{type:Schema.Types.ObjectId, ref:'Skill'}],
+		level_up_bonus:{
+			strength:Number,
+			agility:Number,
+			intelligence:Number,
+			stamina:Number,
+		}
 	},
 	followers:[FollowerSchema],
 	inventory:{

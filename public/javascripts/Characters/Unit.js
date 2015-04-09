@@ -8,6 +8,7 @@ Unit.prototype.initialize = function(builder){
 	this.container_initialize();
 	this.game = Game.getInstance();
 	this.loader = this.game.getLoader();
+	this.user = this.game.getUser();
 	this.map_stage = this.game.getMapStage();
 	this.unit_stage = this.game.getUnitStage();
 	this.ui_stage = this.game.getUIStage();
@@ -26,6 +27,25 @@ Unit.prototype.initialize = function(builder){
 		movement_speed:1,
 	};
 
+	this.health_regen = 0;
+	this.resource_regen = 0;
+	this.armor = 0;
+	this.avoidance = 0;
+	this.life_steal = 0;
+
+	this.dps = 0;
+	this.min_damage = 0;
+	this.max_damage = 0;
+	this.attack_speed = 0;
+	this.crit_rate = 0;
+	this.crit_damage = 0;
+
+	this.cooldown_reduction = 0;
+	this.movement_speed = 0;
+
+	this.stats = {};
+	this.items = builder.items;
+
 	this.max_force = 0.3;
 	this.status = "alive";
 	this.target = null;
@@ -42,7 +62,69 @@ Unit.prototype.initialize = function(builder){
 
 	if(builder.skills){
 		this.initSkills(builder.skills);
-	}	
+	}
+
+	this.updateStats();
+}
+
+Unit.prototype.equipItem = function(item){
+	// 0:head, 1:chest, 2:gloves, 3:boots, 4:belt, 5:cape, 6:necklace, 7:right ring, 8:left ring, 9:right weapon, 10:left weapon
+	switch(item.constructor.name){
+		case "Weapon":
+			switch(item.hand){
+				case 1:
+					if(this.items[9] && this.items[9].hand === 2){
+						this.user.inventory.addItem(this.items[9]);
+						this.items[9] = item;
+					}else if(!this.items[9]){
+						this.items[9] = item;
+					}else if(!this.items[10]){
+						this.items[10] = item;
+					}else{
+						this.user.inventory.addItem(this.items[9]);
+						this.items[9] = item;
+					}
+				break;
+				case 2:
+					if(this.items[9]){
+						this.user.inventory.addItem(this.items[9]);
+					}
+					if(this.items[10]){
+						this.user.inventory.addItem(this.items[10]);
+					}
+					this.items[9] = item;
+					this.items.splice(10, 1);//[10] = undefined;
+				break;
+			}
+		break;
+		case "Armor":
+			switch(item.part){
+				case 0:
+				case 1:
+				case 2:
+				case 3:
+				case 4:
+				case 5:
+				case 6:
+					if(this.items[item.part]){
+						this.user.inventory.addItem(this.items[item.part]);
+					}
+					this.items[item.part] = item;
+				break;
+				case 7:
+					if(!this.items[item.part]){
+						this.items[item.part] = item;
+					}else if(!this.items[item.part + 1]){
+						this.items[item.part + 1] = item;
+					}else{
+						this.user.inventory.addItem(this.items[item.part]);
+						this.items[item.part] = item;
+					}
+				break;
+			}
+		break;
+	}
+	this.user.inventory.displayEquipItems(this);
 }
 
 Unit.prototype.updateStats = function(){

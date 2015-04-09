@@ -51,6 +51,10 @@ Item.prototype.showDetail = function(x, y, container){
 	container.addChild(this.detail);
 }
 
+Item.prototype.getIcon = function(){
+	
+}
+
 Item.prototype.toObject = function(){
 	var obj = {};
 	for(key in this){

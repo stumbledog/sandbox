@@ -149,8 +149,9 @@ RecruiterStore.prototype.mousedownStoreItem = function(unit, event){
 		if(this.user.gold < unit.price){
 			alert("Not enough money!");
 		}else{
-			unit.x = 160; 
-			unit.y = 160; 
+			unit.x = 160;
+			unit.y = 160;
+			unit.items = [];
 			var follower = new Follower(unit);
 			this.user.purchaseFollower(follower, unit.price);
 			$.post("purchasefollower", {unit:this.unitToObject(unit)}, function(res){
@@ -173,6 +174,7 @@ RecruiterStore.prototype.unitToObject = function(unit){
 		sprite:unit.sprite,
 		portrait:unit.portrait,
 		index:unit.index,
+		items:unit.items,
 		level_up_bonus:unit.level_up_bonus
 	};
 	return obj;
