@@ -18,6 +18,7 @@ Inventory.prototype.initialize = function(builder, user){
 	this.capacity = builder.capacity;
 	this.drag_item = null;
 	this.containers = [];
+	this.selectedCharacter = null;
 
 	this.initFrame();
 	this.initEquipItemContainers();
@@ -87,6 +88,10 @@ Inventory.prototype.initStatsContainer = function(){
 	this.initStats("Move. Speed", 10, 110);
 	this.initStats("Move. Speed", 10, 120);
 	this.unit_detail_container.addChild(this.stats_container);
+}
+
+Inventory.prototype.calculateStats = function(){
+
 }
 
 Inventory.prototype.initStats = function(text, x, y){
