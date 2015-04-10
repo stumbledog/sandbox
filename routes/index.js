@@ -21,7 +21,7 @@ router.post('/purchaseitem', function(req, res){
 });
 
 router.post('/saveinventory', function(req, res){
-	var items = req.body.items;
+	var items = typeof req.body.items !== 'undefined' ? req.body.items : [];
 	var user_id = req.session.user_id;
 	ItemController.saveInventory(items, user_id, function(ret){
 		res.send(ret);
@@ -47,6 +47,20 @@ router.post('/purchasefollower', function(req, res){
 		}
 	})
 });
+
+router.post('/saveequipitem', function(req, res){
+	var hero_items = typeof req.body.hero_items !== 'undefined' ? req.body.hero_items : [];
+	var follower_items = typeof req.body.follower_items !== 'undefined' ? req.body.follower_items : [];
+	var user_id = req.session.user_id;
+
+	console.log(hero_items);
+	console.log(follower_items);
+
+	UserController.saveItems(hero_items, follower_items, user_id, function(err, user){
+		console.log(hero_items);
+		res.send("ok");
+	});
+})
 
 
 router.get('/game', function(req, res) {

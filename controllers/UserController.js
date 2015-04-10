@@ -38,5 +38,17 @@ UserController = {
 				this.createUser(req, res, callback);
 			}
 		}.bind(this));
+	},
+	saveItems:function(hero_items, follower_items, user_id, callback){
+		UserModel.findById(user_id, function(err, user){
+			user.hero.items = hero_items;
+			//console.log(follower_items);
+			follower_items.forEach(function(items, follower_index){
+				user.followers[follower_index].items = items;
+			});
+			user.markModified('hero.items');
+			user.markModified('followers');
+			user.save(callback);
+		});
 	}
 };

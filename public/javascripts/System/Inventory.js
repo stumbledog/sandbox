@@ -24,7 +24,10 @@ Inventory.prototype.initialize = function(builder, user){
 	this.initEquipItemContainers();
 	this.initStatsTypeContainer();
 	this.initItemContainers();
-	this.initInventoryItem(builder.slots);
+	if(builder.slots){
+		this.initInventoryItem(builder.slots);
+	}
+
 }
 
 Inventory.prototype.initFrame = function(){
@@ -155,28 +158,34 @@ Inventory.prototype.displayEquipItems = function(unit){
 	});
 
 	unit.items.forEach(function(item, index){
-		var container = new createjs.Container();
-		var border = new createjs.Shape();
-		border.graphics.s("#000").ss(1).f(item.colors[item.rating-1]).dr(0,0,20,20);
-		var icon = item.icon_img.clone();
-		icon.x = icon.y = 10;
-		container.addChild(border, icon)
-		container.addEventListener("rollover", function(event){
-			var x = this.equip_item_container.children[index].x - 140;
-			var y = this.equip_item_container.children[index].y + 200;
-			item.showDetail(x, y, this.stage);
-			this.stage.update();
-		}.bind(this));
-		container.addEventListener("rollout", function(event){
-			this.stage.removeChild(item.detail);
-			this.stage.update();
-		}.bind(this));
-		container.addEventListener("mousedown", function(event){
+		if(item){
+			var container = new createjs.Container();
+			var border = new createjs.Shape();
+			border.graphics.s("#000").ss(1).f(item.colors[item.rating-1]).dr(0,0,20,20);
+			var icon = item.icon_img.clone();
+			icon.x = icon.y = 10;
+			container.addChild(border, icon)
+			container.addEventListener("rollover", function(event){
+				var x = this.equip_item_container.children[index].x - 140;
+				var y = this.equip_item_container.children[index].y + 200;
+				item.showDetail(x, y, this.stage);
+				this.stage.update();
+			}.bind(this));
+			container.addEventListener("rollout", function(event){
+				this.stage.removeChild(item.detail);
+				this.stage.update();
+			}.bind(this));
+			container.addEventListener("mousedown", function(event){
+				if(event.nativeEvent.button === 2){
+					this.addItem(unit.items[index]);
+					delete unit.items[index];
+					container.removeAllChildren();
+					this.user.saveEquipItems();
+				}
+			}.bind(this));
 
-			console.log(container.children);
-		}.bind(this));
-
-		this.equip_item_container.children[index].addChild(container);
+			this.equip_item_container.children[index].addChild(container);
+		}
 	}, this);
 }
 

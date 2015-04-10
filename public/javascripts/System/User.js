@@ -12,13 +12,11 @@ function User(builder){
 
 User.prototype.setHero = function(hero){
 	this.hero = hero;
-	//console.log(this.followers);
 }
 
 
 User.prototype.addFollower = function(follower){
 	this.followers.push(follower);
-	//console.log(this.followers);
 }
 
 User.prototype.purchase = function(item){
@@ -56,4 +54,25 @@ User.prototype.purchaseFollower = function(follower, gold){
 	this.addFollower(follower);
 	this.inventory.updateGold(this.gold);
 	this.inventory.renderPortrait();
+}
+
+User.prototype.saveEquipItems = function(target){
+	var hero_items = [];
+	var follower_items = [];
+	this.hero.items.forEach(function(item, index){
+		hero_items[index] = item.toObject();
+	}, this);
+
+	this.followers.forEach(function(follower, follower_index){
+		follower_items[follower_index] = [];
+		follower.items.forEach(function(item, item_index){
+			follower_items[follower_index][item_index] = item.toObject();
+		});
+	});
+
+	$.post("saveequipitem",{hero_items:hero_items, follower_items:follower_items}, function(res){
+		console.log(res);
+	});
+
+	this.inventory.saveInventory();
 }

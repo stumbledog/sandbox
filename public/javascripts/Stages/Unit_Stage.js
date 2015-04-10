@@ -22,7 +22,6 @@ Unit_Stage.prototype.initialize = function(width, height){
 	this.mapSize = this.map.getSize();
 	this.minimap = this.game.getMinimapStage();
 
-	//this.scroll_speed = 8;
 	this.followership_type = "follow"
 
 	this.offsetX = this.offsetY = 0;
@@ -38,26 +37,6 @@ Unit_Stage.prototype.initialize = function(width, height){
 				unit.tick();
 			}
 		});
-		/*
-		if(this.move_left && this.regX - this.scroll_speed >= 0){
-			this.regX -= this.scroll_speed;
-			this.map.regX -= this.scroll_speed;
-			this.map.update();
-		}else if(this.move_right &&  this.canvas.width/this.scaleX + this.regX + this.scroll_speed <= this.mapSize.width){
-			this.regX += this.scroll_speed;
-			this.map.regX += this.scroll_speed;
-			this.map.update();
-		}
-
-		if(this.move_up && this.regY - this.scroll_speed >= 0){
-			this.regY -= this.scroll_speed;
-			this.map.regY -= this.scroll_speed;
-			this.map.update();
-		}else if(this.move_down &&  this.canvas.height/this.scaleY + this.regY + this.scroll_speed <= this.mapSize.height){
-			this.regY += this.scroll_speed;
-			this.map.regY += this.scroll_speed;
-			this.map.update();
-		}*/
 
 		if(this.user.store){
 			this.user.store.stage.update();
@@ -95,30 +74,6 @@ Unit_Stage.prototype.initEvent = function(){
 	this.on("stagemousemove", function(event){
 		this.mouse_position.x = event.stageX/this.scaleX + this.regX;
 		this.mouse_position.y = event.stageY/this.scaleY + this.regY;
-		/*
-		if(event.stageX > window.innerWidth - 20){
-			this.move_right = true;
-		}else{
-			this.move_right = false;
-		}
-
-		if(event.stageX < 20){
-			this.move_left = true;
-		}else{
-			this.move_left = false;
-		}
-
-		if(event.stageY > window.innerHeight - 20){
-			this.move_down = true;
-		}else{
-			this.move_down = false;
-		}
-
-		if(event.stageY < 20){
-			this.move_up = true;
-		}else{
-			this.move_up = false;
-		}*/
 	}, this);
 
 	this.on("stagemousedown", function(event){
@@ -214,25 +169,12 @@ Unit_Stage.prototype.toggleFollowerShipType = function(){
 			this.getFollowerUnits().forEach(function(unit){
 				unit.order = this.hero.order;
 			},this);
-			/*
-			this.unit_container.children.forEach(function(unit){
-				if(unit.type === "follow"){
-					unit.order = this.hero.order;
-				}
-			},this);*/
 			break;
 		case "follow":
 			this.followership_type = "annihilate";
 			this.getFollowerUnits().forEach(function(unit){
 				unit.order = {action:"annihilate", map:unit.findPath({x:unit.x,y:unit.y})};
 			},this);
-			/*
-			this.unit_container.children.forEach(function(unit){
-				if(unit.type === "follow"){
-					unit.order = {action:"annihilate", map:unit.findPath({x:unit.x,y:unit.y})};
-				}
-			},this);
-			break;*/
 	}
 }
 

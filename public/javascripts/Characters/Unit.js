@@ -44,7 +44,7 @@ Unit.prototype.initialize = function(builder){
 	this.movement_speed = 0;
 
 	this.stats = {};
-	this.items = builder.items;
+	this.items = [];
 
 	this.max_force = 0.3;
 	this.status = "alive";
@@ -64,7 +64,30 @@ Unit.prototype.initialize = function(builder){
 		this.initSkills(builder.skills);
 	}
 
+	if(builder.items){
+		this.initItems(builder.items);
+	}
+
 	this.updateStats();
+}
+
+Unit.prototype.initItems = function(builder_items){
+	builder_items.forEach(function(item, index){
+		if(item){
+			switch(item.type){
+				case "weapon":
+					var weapon = new Weapon(item)
+					weapon.bin = this;
+					this.items[index] = weapon;
+				break;
+				case "armor":
+					var armor = new Armor(item)
+					armor.bin = this;
+					this.items[index] = armor;
+				break;
+			}
+		}
+	}, this);
 }
 
 Unit.prototype.equipItem = function(item){
@@ -93,7 +116,7 @@ Unit.prototype.equipItem = function(item){
 						this.user.inventory.addItem(this.items[10]);
 					}
 					this.items[9] = item;
-					this.items.splice(10, 1);//[10] = undefined;
+					delete this.items[10];
 				break;
 			}
 		break;
@@ -125,6 +148,8 @@ Unit.prototype.equipItem = function(item){
 		break;
 	}
 	this.user.inventory.displayEquipItems(this);
+	this.user.saveEquipItems();
+	//$.post("saveunit",{},)
 }
 
 Unit.prototype.updateStats = function(){
@@ -540,7 +565,6 @@ Unit.prototype.heal = function(heal){
 	var health_text = new OutlineText(Math.floor(heal), "bold 12px Arial", this.health_color, "#000", 2);
 	health_text.x = this.x;
 	health_text.y = this.y;
-	//health_text.alpha = 0.8;
 	this.getStage().addChild(health_text);
 	var dx = Math.random() * 32-16;
 	var stage = this.getStage();
@@ -554,7 +578,6 @@ Unit.prototype.gainExp = function(exp){
 	this.exp += exp;
 	var exp_text = new OutlineText("+" + Math.round(exp)+" exp","bold 8px Arial","#fff","#000",2);
 	exp_text.x = -exp_text.getMeasuredWidth()/2;
-	//exp_text.alpha = 0.8;
 	this.addChild(exp_text);
 	
 	createjs.Tween.get(exp_text).to({y:-28},1000, createjs.Ease.cubicOut).wait(500).call(function(item){
@@ -572,7 +595,6 @@ Unit.prototype.levelUp = function(){
 	this.heal(this.max_health/10);
 	var levelup_text = new OutlineText("Level Up","bold 10px Arial","#E9A119","#000",2);
 	levelup_text.x = -levelup_text.getMeasuredWidth()/2;
-	//levelup_text.alpha = 0.8;
 	this.addChild(levelup_text);
 	createjs.Tween.get(levelup_text).to({y:-42},1000, createjs.Ease.cubicOut).wait(500).call(function(item){
 		this.removeChild(levelup_text);
@@ -669,7 +691,6 @@ Unit.prototype.interactNPC = function(){
 	if(this.getSquareDistance(this.order.npc) <= Math.pow(this.radius + this.order.npc.radius + 4, 2)){
 		this.velocity = new Vector(0,0);
 		this.order.npc.interact(this);
-		//this.order = {action:"stop", map:this.findPath({x:this.x,y:this.y})};
 		this.order.action = "stop";
 		this.order.map = this.findPath({x:this.x,y:this.y});
 	}else{
