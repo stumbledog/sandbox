@@ -1,3 +1,4 @@
+/*
 var ItemSchema = new Schema({
 	index:Number,
 	primary_attribute:Number,
@@ -56,7 +57,7 @@ var ItemSchema = new Schema({
 	resource:Number,
 	cooldown:Number,
 });
-
+*/
 var FollowerSchema = new Schema({
 	character_class:String,
 	primary_attribute:String,
@@ -76,6 +77,19 @@ var FollowerSchema = new Schema({
 		agility:Number,
 		intelligence:Number,
 		stamina:Number,
+	},
+	equipments:{
+		head:Schema.Types.Mixed,
+		chest:Schema.Types.Mixed,
+		gloves:Schema.Types.Mixed,
+		boots:Schema.Types.Mixed,
+		belt:Schema.Types.Mixed,
+		cape:Schema.Types.Mixed,
+		necklace:Schema.Types.Mixed,
+		right_ring:Schema.Types.Mixed,
+		left_ring:Schema.Types.Mixed,
+		main_hand:Schema.Types.Mixed,
+		off_hand:Schema.Types.Mixed,
 	}
 });
 
@@ -102,12 +116,25 @@ var UserSchema = new Schema({
 			agility:Number,
 			intelligence:Number,
 			stamina:Number,
+		},
+		equipments:{
+			head:Schema.Types.Mixed,
+			chest:Schema.Types.Mixed,
+			gloves:Schema.Types.Mixed,
+			boots:Schema.Types.Mixed,
+			belt:Schema.Types.Mixed,
+			cape:Schema.Types.Mixed,
+			necklace:Schema.Types.Mixed,
+			right_ring:Schema.Types.Mixed,
+			left_ring:Schema.Types.Mixed,
+			main_hand:Schema.Types.Mixed,
+			off_hand:Schema.Types.Mixed,
 		}
 	},
 	followers:[FollowerSchema],
 	inventory:{
 		capacity:{type:Number, default:90},
-		slots:[ItemSchema]
+		slots:[Schema.Types.Mixed]
 	},
 	created_at:{type: Date, default: Date.now},
 	updated_at:{type: Date, default: Date.now},

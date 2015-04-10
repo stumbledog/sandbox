@@ -64,6 +64,7 @@ Inventory.prototype.initFrame = function(){
 	this.close_button.cursor = "pointer";
 	this.close_button.addEventListener("mousedown", function(){
 		this.selectedCharacter = null;
+		this.selectCharacterBorder.visible = false;
 		this.unit_detail_container.visible = false;
 	}.bind(this));
 
@@ -74,8 +75,15 @@ Inventory.prototype.initFrame = function(){
 	this.close_icon.graphics.s("#FFF0A5").ss(3).mt(5,5).lt(15,15).mt(5,15).lt(15,5);
 	this.close_button.addChild(this.close_button_bg, this.close_icon);
 
+	this.selectCharacterBorder = new createjs.Shape();
+	this.selectCharacterBorder.graphics.s("#E74C3C").ss(4).dr(2,2,46,46);
+	this.selectCharacterBorder.alpha = 0.8;
+	this.selectCharacterBorder.visible = false;
+	this.selectCharacterBorder.x = 6;
+	this.selectCharacterBorder.y = 11;
+
 	this.unit_detail_container.addChild(bg, this.unit_sprite_container, this.close_button);
-	this.addChild(frame, this.gold, this.coin, this.units_container, this.unit_detail_container);
+	this.addChild(frame, this.gold, this.coin, this.units_container, this.unit_detail_container, this.selectCharacterBorder);
 }
 
 Inventory.prototype.initStatsTypeContainer = function(){
@@ -93,17 +101,19 @@ Inventory.prototype.initStatsTypeContainer = function(){
 	this.initStatsType("Health Regen", 10, 80);
 	this.initStatsType("Resource Regen", 10, 90);
 	this.initStatsType("Armor", 10, 100);
-	this.initStatsType("Avoidance", 10, 110);
-	this.initStatsType("Life Steal", 10, 120);
+	this.initStatsType("Life Steal", 10, 110);
 
-	this.initStatsType("DPS", 10, 140);
-	this.initStatsType("Damage", 10, 150);
-	this.initStatsType("Att. Speed", 10, 160);
+	this.initStatsType("Right Damage", 10, 130);
+	this.initStatsType("Left Damage", 10, 140);
+	this.initStatsType("Right Att. Speed", 10, 150);
+	this.initStatsType("Left Att. Speed", 10, 160);
 	this.initStatsType("Crit. Rate", 10, 170);
 	this.initStatsType("Crit. Damage", 10, 180);
 
-	this.initStatsType("Cooldown Reduction", 160, 150);
-	this.initStatsType("Movement Speed", 160, 160);
+	this.initStatsType("DPS", 160, 150);
+
+	this.initStatsType("Cooldown Reduction", 160, 170);
+	this.initStatsType("Movement Speed", 160, 180);
 
 	this.unit_detail_container.addChild(this.stats_container);
 }
@@ -128,23 +138,26 @@ Inventory.prototype.displayStats = function(unit){
 
 	this.statsText["Health"].text = unit.max_health;
 	this.statsText["Resource"].text = unit.max_resource;
-	this.statsText["Health Regen"].text = unit.health_regen + " per sec";
-	this.statsText["Resource Regen"].text = unit.resource_regen + " per sec";
+	this.statsText["Health Regen"].text = unit.health_regen;
+	this.statsText["Resource Regen"].text = unit.resource_regen;
 	this.statsText["Armor"].text = unit.armor;
-	this.statsText["Avoidance"].text = unit.avoidance + "%";
-	this.statsText["Life Steal"].text = unit.life_steal + "% of damage";
+	this.statsText["Life Steal"].text = unit.life_steal + "%";
 
-	this.statsText["DPS"].text = unit.dps;
-	this.statsText["Damage"].text = unit.min_damage + " - " + unit.max_damage;
-	this.statsText["Att. Speed"].text = unit.attack_speed / 30 + " attacks per sec";
-	this.statsText["Crit. Rate"].text = unit.crit_rate + "%";
-	this.statsText["Crit. Damage"].text = unit.crit_damage + "%";
+	this.statsText["Right Damage"].text = unit.right_min_damage + " - " + unit.right_max_damage;
+	this.statsText["Left Damage"].text = unit.left_min_damage + " - " + unit.left_max_damage;
+	this.statsText["Right Att. Speed"].text = Math.round(30 / unit.right_attack_speed * 100)/100;
+	this.statsText["Left Att. Speed"].text = unit.left_attack_speed ? (30 / unit.left_attack_speed).toFixed(2) : 0;
 
-	this.statsText["Cooldown Reduction"].text = unit.cooldown_reduction;
+	this.statsText["Crit. Rate"].text = unit.critical_rate + "%";
+	this.statsText["Crit. Damage"].text = unit.critical_damage + "%";
+
+	this.statsText["DPS"].text = unit.dps.toFixed(2);
+
+	this.statsText["Cooldown Reduction"].text = unit.cooldown_reduction + "%";
 	this.statsText["Movement Speed"].text = unit.movement_speed;
 
 	for(key in this.statsText){
-		if(key === "Cooldown Reduction" || key === "Movement Speed"){
+		if(key === "DPS" || key === "Cooldown Reduction" || key === "Movement Speed"){
 			this.statsText[key].x = 300 - this.statsText[key].getMeasuredWidth();
 		}else{
 			this.statsText[key].x = 150 - this.statsText[key].getMeasuredWidth();
@@ -181,6 +194,8 @@ Inventory.prototype.displayEquipItems = function(unit){
 					delete unit.items[index];
 					container.removeAllChildren();
 					this.user.saveEquipItems();
+					unit.updateStats();
+					this.displayStats(unit);
 				}
 			}.bind(this));
 
@@ -264,11 +279,13 @@ Inventory.prototype.initItemContainers = function(){
 					if(this.user.store && this.user.store.constructor.name === "MerchantStore"){
 						this.sellItem(event.currentTarget.children[1].item);
 						event.currentTarget.removeChildAt(1);
+						this.saveInventory();
 					}else{
 						if(this.selectedCharacter){
 							var item = event.currentTarget.children[1].item;
 							event.currentTarget.removeChildAt(1);
 							this.selectedCharacter.equipItem(item);
+							this.displayStats(this.selectedCharacter);
 						}
 					}
 				}
@@ -376,14 +393,17 @@ Inventory.prototype.renderPortrait = function(){
 		container.x = 50 * parseInt(index % 6);
 		container.y = 50 * parseInt(index / 6);
 		container.cursor = "pointer";
-		container.addEventListener("mousedown", this.mouseDownOnPortrait.bind(this, unit));
+		container.addEventListener("mousedown", this.mouseDownOnPortrait.bind(this, unit, container));
 		container.addChild(border, portrait);
 		this.units_container.addChild(container);
 	}, this);
 	this.stage.update();
 }
 
-Inventory.prototype.mouseDownOnPortrait = function(unit){
+Inventory.prototype.mouseDownOnPortrait = function(unit, container){
+	this.selectCharacterBorder.x = container.x + 6;
+	this.selectCharacterBorder.y = container.y + 11;
+	this.selectCharacterBorder.visible = true;
 	this.selectCharacter(unit);
 	this.unit_detail_container.visible = true;
 }
@@ -408,7 +428,7 @@ Inventory.prototype.renderUnitDetail = function(unit){
 Inventory.prototype.sellItem = function(item){
 	this.user.store.sellItem(item);
 	this.user.addGold(item.sell_price * item.qty);
-	$.post("sellitem", {item_id:item._id}, function(res){
+	$.post("sellitem", {sell_price:item.sell_price * item.qty}, function(res){
 		console.log(res);
 	});
 	this.stage.update();

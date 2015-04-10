@@ -12,7 +12,7 @@ Armor.prototype.armor_initialize = function(attributes){
 	this.qty = 1;
 	this.armor = parseInt(attributes.armor);
 	this.armor_bonus = parseInt(attributes.armor_bonus);
-	this.attack_speed = parseInt(attributes.attack_speed);
+	this.attack_speed_bonus = parseInt(attributes.attack_speed_bonus);
 	this.movement_speed = parseInt(attributes.movement_speed);
 	this.strength = parseInt(attributes.strength);
 	this.agility = parseInt(attributes.agility);
@@ -86,7 +86,7 @@ Armor.prototype.initDetail = function(){
 				attr_text.text = "+" + this.stamina + " Stamina";
 			break;
 			case 3:
-				attr_text.text = "+" + this.attack_speed + "% Attack speed";
+				attr_text.text = "+" + this.attack_speed_bonus + "% Attack speed";
 			break;
 			case 4:
 				attr_text.text = "+" + this.movement_speed + "% Movement speed";

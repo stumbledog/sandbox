@@ -26,7 +26,6 @@ NPC.prototype.npc_initialize = function(builder){
 NPC.prototype.initEventListener = function(){
 	this.addEventListener("mousedown", function(event){
 		if(event.nativeEvent.button == 2){
-			//this.stage.hero.order = {action:"interact_npc", npc:this, map:this.stage.hero.findPath(this)};
 			this.stage.hero.order.action = "interact_npc";
 			this.stage.hero.order.npc = this;
 			this.stage.hero.order.map = this.stage.hero.findPath(this);

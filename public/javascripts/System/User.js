@@ -56,7 +56,7 @@ User.prototype.purchaseFollower = function(follower, gold){
 	this.inventory.renderPortrait();
 }
 
-User.prototype.saveEquipItems = function(target){
+User.prototype.saveEquipItems = function(){
 	var hero_items = [];
 	var follower_items = [];
 	this.hero.items.forEach(function(item, index){
@@ -69,6 +69,8 @@ User.prototype.saveEquipItems = function(target){
 			follower_items[follower_index][item_index] = item.toObject();
 		});
 	});
+
+	console.log(follower_items);
 
 	$.post("saveequipitem",{hero_items:hero_items, follower_items:follower_items}, function(res){
 		console.log(res);

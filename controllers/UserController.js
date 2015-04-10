@@ -42,10 +42,17 @@ UserController = {
 	saveItems:function(hero_items, follower_items, user_id, callback){
 		UserModel.findById(user_id, function(err, user){
 			user.hero.items = hero_items;
-			//console.log(follower_items);
-			follower_items.forEach(function(items, follower_index){
-				user.followers[follower_index].items = items;
-			});
+
+			if(follower_items.length === 0){
+				user.followers.forEach(function(follower){
+					follower.items = [];
+				});
+			}else{
+				follower_items.forEach(function(items, follower_index){
+					user.followers[follower_index].items = items;
+				});
+			}
+
 			user.markModified('hero.items');
 			user.markModified('followers');
 			user.save(callback);

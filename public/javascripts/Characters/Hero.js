@@ -2,52 +2,27 @@ function Hero(builder){
 	this.hero_initialize(builder);
 }
 
-Hero.prototype = new Unit();
+Hero.prototype = Object.create(EquippedUnit.prototype);
 
 Hero.prototype.constructor = Hero;
 Hero.prototype.unit_initialize = Hero.prototype.initialize;
 
 Hero.prototype.hero_initialize = function(builder){
-	this.unit_initialize(builder);
-
-	this.primary_attribute = parseInt(builder.primary_attribute);
-	this.strength = parseInt(builder.strength);
-	this.agility = parseInt(builder.agility);
-	this.intelligence = parseInt(builder.intelligence);
-	this.stamina = parseInt(builder.stamina);
-	this.movement_speed = 1.5;
-	this.level = builder.level;
-	this.exp = builder.exp;
-	this.resource_type = builder.resource_type;
-
-	if(this.resource_type === "fury"){
-		this.resource = 0;
-	}else{
-		this.resource = 100;
-	}
-	
-	this.max_resource = 100;
-	this.radius = 12;
-	this.aggro_radius = 80;
-	this.range = 16;
-	this.attack_speed = 60;
-
-	this.updateStats();
+	this.equipped_unit_initialize(builder);
 
 	this.team = "Player";
 	this.health_color = "#0C0";
 	this.damage_color = "#C00";
 
+	this.initHealthBar();
 	this.renderPortrait(builder.portrait.split('/').pop(), builder.index);
-	this.renderRange();
 	this.order = {action:"stop", map:this.findPath({x:this.x,y:this.y})};
+	this.renderRange();
 	this.rotate(0,1);
 
 	for(key in this.skills){
 		this.skills[key].remain_cooldown = 0;
 	}
-
-	this.initHealthBar();
 }
 
 Hero.prototype.getClassColor = function(){

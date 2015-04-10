@@ -83,8 +83,8 @@ PrototypeArmorSchema.methods.setMerchantItem = function(level){
 				armor.price += armor.stamina;
 			break;
 			case 3:
-				armor.attack_speed = (armor.rating - 1) * 2 + Math.ceil(Math.random() * 2);
-				armor.price += level * armor.attack_speed;
+				armor.attack_speed_bonus = (armor.rating - 1) * 2 + Math.ceil(Math.random() * 2);
+				armor.price += level * armor.attack_speed_bonus;
 			break;
 			case 4:
 				armor.movement_speed = (armor.rating - 1) * 2 + Math.ceil(Math.random() * 2);

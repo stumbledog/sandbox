@@ -30,7 +30,6 @@ Unit.prototype.initialize = function(builder){
 	this.health_regen = 0;
 	this.resource_regen = 0;
 	this.armor = 0;
-	this.avoidance = 0;
 	this.life_steal = 0;
 
 	this.dps = 0;
@@ -63,111 +62,7 @@ Unit.prototype.initialize = function(builder){
 	if(builder.skills){
 		this.initSkills(builder.skills);
 	}
-
-	if(builder.items){
-		this.initItems(builder.items);
-	}
-
-	this.updateStats();
 }
-
-Unit.prototype.initItems = function(builder_items){
-	builder_items.forEach(function(item, index){
-		if(item){
-			switch(item.type){
-				case "weapon":
-					var weapon = new Weapon(item)
-					weapon.bin = this;
-					this.items[index] = weapon;
-				break;
-				case "armor":
-					var armor = new Armor(item)
-					armor.bin = this;
-					this.items[index] = armor;
-				break;
-			}
-		}
-	}, this);
-}
-
-Unit.prototype.equipItem = function(item){
-	// 0:head, 1:chest, 2:gloves, 3:boots, 4:belt, 5:cape, 6:necklace, 7:right ring, 8:left ring, 9:right weapon, 10:left weapon
-	switch(item.constructor.name){
-		case "Weapon":
-			switch(item.hand){
-				case 1:
-					if(this.items[9] && this.items[9].hand === 2){
-						this.user.inventory.addItem(this.items[9]);
-						this.items[9] = item;
-					}else if(!this.items[9]){
-						this.items[9] = item;
-					}else if(!this.items[10]){
-						this.items[10] = item;
-					}else{
-						this.user.inventory.addItem(this.items[9]);
-						this.items[9] = item;
-					}
-				break;
-				case 2:
-					if(this.items[9]){
-						this.user.inventory.addItem(this.items[9]);
-					}
-					if(this.items[10]){
-						this.user.inventory.addItem(this.items[10]);
-					}
-					this.items[9] = item;
-					delete this.items[10];
-				break;
-			}
-		break;
-		case "Armor":
-			switch(item.part){
-				case 0:
-				case 1:
-				case 2:
-				case 3:
-				case 4:
-				case 5:
-				case 6:
-					if(this.items[item.part]){
-						this.user.inventory.addItem(this.items[item.part]);
-					}
-					this.items[item.part] = item;
-				break;
-				case 7:
-					if(!this.items[item.part]){
-						this.items[item.part] = item;
-					}else if(!this.items[item.part + 1]){
-						this.items[item.part + 1] = item;
-					}else{
-						this.user.inventory.addItem(this.items[item.part]);
-						this.items[item.part] = item;
-					}
-				break;
-			}
-		break;
-	}
-	this.user.inventory.displayEquipItems(this);
-	this.user.saveEquipItems();
-	//$.post("saveunit",{},)
-}
-
-Unit.prototype.updateStats = function(){
-	switch(this.primary_attribute){
-		case 0:
-			this.damage = this.strength;
-		break;
-		case 1:
-			this.damage = this.agility;
-		break;
-		case 2:
-			this.damage = this.intelligence;
-		break;
-	}
-
-	this.max_health = this.health = this.stamina * 10;
-}
-
 
 Unit.prototype.getDamage = function(){
 	return this.damage * this.buff.damage;

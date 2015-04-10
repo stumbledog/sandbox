@@ -59,6 +59,14 @@ ItemController = {
 			callback(null);
 		});
 	},
+	addGold:function(gold, user_id, callback){
+		console.log(gold);
+		UserModel.findOneAndUpdate({_id:user_id}, {$inc:{"gold":gold}}, function(err, user){
+			console.log(err);
+			console.log(user);
+			callback(null);
+		});
+	},
 	sellItem:function(item_id, user_id, callback){
 		UserModel.findById(user_id, function(err, user){
 			var item = user.inventory.slots.id(item_id);
