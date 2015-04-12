@@ -266,99 +266,99 @@ function saveItems(){
 		min_damage:3,max_damage:6,range:160,attack_speed:40,
 	}));
 
-	items.push(new PrototypeArmorModel({primary_attribute:1, part:0, type:"armor", name:"Leather\nHelm",
+	items.push(new PrototypeArmorModel({primary_attribute:1, part:"head", type:"armor", name:"Leather\nHelm",
 		icon:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:220,cropY:150,width:16,height:13,regX:10,regY:10,scale:0.8},
 	}));
 
-	items.push(new PrototypeArmorModel({primary_attribute:0, part:0, type:"armor", name:"Iron Helm",
+	items.push(new PrototypeArmorModel({primary_attribute:0, part:"head", type:"armor", name:"Iron Helm",
 		icon:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:244,cropY:149,width:16,height:15,regX:10,regY:10,scale:0.8},
 	}));
 
-	items.push(new PrototypeArmorModel({primary_attribute:0, part:0, type:"armor", name:"Plate Helm",
+	items.push(new PrototypeArmorModel({primary_attribute:0, part:"head", type:"armor", name:"Plate Helm",
 		icon:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:269,cropY:148,width:16,height:16,regX:10,regY:10,scale:0.8},
 	}));
 
-	items.push(new PrototypeArmorModel({primary_attribute:2, part:0, type:"armor", name:"Hood",
+	items.push(new PrototypeArmorModel({primary_attribute:2, part:"head", type:"armor", name:"Hood",
 		icon:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:292,cropY:149,width:16,height:15,regX:10,regY:10,scale:0.8},
 	}));
 
-	items.push(new PrototypeArmorModel({primary_attribute:1, part:1, type:"armor", name:"Tunic",
+	items.push(new PrototypeArmorModel({primary_attribute:1, part:"chest", type:"armor", name:"Tunic",
 		icon:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:292,cropY:125,width:16,height:16,regX:10,regY:10,scale:0.8},
 	}));
 
-	items.push(new PrototypeArmorModel({primary_attribute:1, part:1, type:"armor", name:"Chestguard",
+	items.push(new PrototypeArmorModel({primary_attribute:1, part:"chest", type:"armor", name:"Chestguard",
 		icon:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:316,cropY:124,width:16,height:15,regX:10,regY:10,scale:0.8},
 	}));
 
-	items.push(new PrototypeArmorModel({primary_attribute:0, part:1, type:"armor", name:"Breastplate",
+	items.push(new PrototypeArmorModel({primary_attribute:0, part:"chest", type:"armor", name:"Breastplate",
 		icon:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:341,cropY:125,width:16,height:16,regX:10,regY:10,scale:0.8},
 	}));
 
-	items.push(new PrototypeArmorModel({primary_attribute:0, part:1, type:"armor", name:"Chestplate",
+	items.push(new PrototypeArmorModel({primary_attribute:0, part:"chest", type:"armor", name:"Chestplate",
 		icon:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:365,cropY:126,width:16,height:16,regX:10,regY:10,scale:0.8},
 	}));
 
-	items.push(new PrototypeArmorModel({primary_attribute:2, part:1, type:"armor", name:"Robe",
+	items.push(new PrototypeArmorModel({primary_attribute:2, part:"chest", type:"armor", name:"Robe",
 		icon:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:77,cropY:150,width:16,height:16,regX:10,regY:10,scale:0.8},
 	}));
 
-	items.push(new PrototypeArmorModel({primary_attribute:2, part:1, type:"armor", name:"Raiment",
+	items.push(new PrototypeArmorModel({primary_attribute:2, part:"chest", type:"armor", name:"Raiment",
 		icon:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:123,cropY:149,width:16,height:16,regX:10,regY:10,scale:0.8},
 	}));
 
-	items.push(new PrototypeArmorModel({primary_attribute:3, part:2, type:"armor", name:"Groves",
+	items.push(new PrototypeArmorModel({primary_attribute:3, part:"gloves", type:"armor", name:"Groves",
 		icon:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:125,cropY:126,width:14,height:16,regX:10,regY:10,scale:0.8},
 	}));
 
-	items.push(new PrototypeArmorModel({primary_attribute:3, part:2, type:"armor", name:"Gauntlets",
+	items.push(new PrototypeArmorModel({primary_attribute:3, part:"gloves", type:"armor", name:"Gauntlets",
 		icon:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:148,cropY:126,width:15,height:16,regX:10,regY:10,scale:0.8},
 	}));
 
-	items.push(new PrototypeArmorModel({primary_attribute:3, part:3, type:"armor", name:"Boots",
+	items.push(new PrototypeArmorModel({primary_attribute:3, part:"boots", type:"armor", name:"Boots",
 		icon:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:173,cropY:172,width:15,height:16,regX:10,regY:10,scale:0.8},
 	}));
 
-	items.push(new PrototypeArmorModel({primary_attribute:3, part:3, type:"armor", name:"Boots",
+	items.push(new PrototypeArmorModel({primary_attribute:3, part:"boots", type:"armor", name:"Boots",
 		icon:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:197,cropY:173,width:16,height:16,regX:10,regY:10,scale:0.8},
 	}));
 
-	items.push(new PrototypeArmorModel({primary_attribute:3, part:4, type:"armor", name:"Belt",
+	items.push(new PrototypeArmorModel({primary_attribute:3, part:"belt", type:"armor", name:"Belt",
 		icon:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:340,cropY:149,width:16,height:15,regX:10,regY:10,scale:0.8},
 	}));
 
-	items.push(new PrototypeArmorModel({primary_attribute:3, part:5, type:"armor", name:"Cape",
+	items.push(new PrototypeArmorModel({primary_attribute:3, part:"cape", type:"armor", name:"Cape",
 		icon:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:4,cropY:173,width:16,height:16,regX:10,regY:10,scale:0.8},
 	}));
 
-	items.push(new PrototypeArmorModel({primary_attribute:3, part:5, type:"armor", name:"Cape",
+	items.push(new PrototypeArmorModel({primary_attribute:3, part:"cape", type:"armor", name:"Cape",
 		icon:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:28,cropY:173,width:16,height:16,regX:10,regY:10,scale:0.8},
 	}));
 
-	items.push(new PrototypeArmorModel({primary_attribute:3, part:5, type:"armor", name:"Cape",
+	items.push(new PrototypeArmorModel({primary_attribute:3, part:"cape", type:"armor", name:"Cape",
 		icon:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:52,cropY:173,width:16,height:16,regX:10,regY:10,scale:0.8},
 	}));
-/*
-	items.push(new PrototypeArmorModel({primary_attribute:0, part:6, type:"armor", name:"Shield",
+
+	items.push(new PrototypeArmorModel({primary_attribute:0, part:"shield", type:"armor", name:"Shield",
 		icon:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:149,cropY:148,width:14,height:16,regX:10,regY:10,scale:0.8},
 	}));
 
-	items.push(new PrototypeArmorModel({primary_attribute:2, part:6, type:"armor", name:"Shield",
+	items.push(new PrototypeArmorModel({primary_attribute:2, part:"shield", type:"armor", name:"Shield",
 		icon:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:173,cropY:148,width:14,height:16,regX:10,regY:10,scale:0.8},
 	}));
 
-	items.push(new PrototypeArmorModel({primary_attribute:0, part:6, type:"armor", name:"Shield",
+	items.push(new PrototypeArmorModel({primary_attribute:0, part:"shield", type:"armor", name:"Shield",
 		icon:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:198,cropY:148,width:13,height:16,regX:10,regY:10,scale:0.8},
 	}));
-*/
-	items.push(new PrototypeArmorModel({primary_attribute:3, part:6, type:"armor", name:"Necklace",
+
+	items.push(new PrototypeArmorModel({primary_attribute:3, part:"necklace", type:"armor", name:"Necklace",
 		icon:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:148,cropY:172,width:16,height:15,regX:10,regY:10,scale:0.8},
 	}));
 
-	items.push(new PrototypeArmorModel({primary_attribute:3, part:7, type:"armor", name:"Ring",
+	items.push(new PrototypeArmorModel({primary_attribute:3, part:"ring", type:"armor", name:"Ring",
 		icon:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:78,cropY:175,width:12,height:12,regX:10,regY:10,scale:0.8},
 	}));
 
-	items.push(new PrototypeArmorModel({primary_attribute:3, part:7, type:"armor", name:"Ring",
+	items.push(new PrototypeArmorModel({primary_attribute:3, part:"ring", type:"armor", name:"Ring",
 		icon:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:103,cropY:174,width:11,height:10,regX:10,regY:10,scale:0.8},
 	}));
 

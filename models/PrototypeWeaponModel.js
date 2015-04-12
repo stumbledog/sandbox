@@ -1,5 +1,6 @@
 var PrototypeWeaponSchema = new Schema({
 	primary_attribute:Number,	// 0:strength, 1:agility, 2:intelligence, 3:none
+	part:{type:String, default:"weapon"},
 	hand:Number,
 	type:String,	// weapon
 	attack_type:String,	// melee, range

@@ -22,18 +22,20 @@ EquippedUnit.prototype.equipped_unit_initialize = function(builder){
 	this.resource_type = builder.resource_type;
 	this.level_up_bonus = builder.level_up_bonus;
 
+	this.max_health = this.health = 100;
+
 	if(this.resource_type === "fury"){
 		this.resource = 0;
 	}else{
 		this.resource = 100;
 	}
-	
+
 	this.char_max_resource = 100;
 	this.char_radius = 12;
 	this.aggro_radius = 80;
 	this.char_range = 16;
 	this.char_right_attack_speed = 30;
-	
+
 	if(builder.items){
 		this.initItems(builder.items);
 	}
@@ -145,7 +147,9 @@ EquippedUnit.prototype.updateStats = function(){
 	this.intelligence = this.char_intelligence + intelligence;
 	this.stamina = this.char_stamina + stamina;
 
-	this.max_health = this.health = this.stamina * 10 + this.strength * 5;
+	var health_rate = this.health/this.max_health; 
+	this.max_health = this.stamina * 10 + this.strength * 5;
+	this.health = health_rate * this.max_health;
 	this.max_resource = this.resource = 100;
 
 	this.attack_speed_bonus = attack_speed_bonus;
@@ -195,6 +199,12 @@ EquippedUnit.prototype.updateStats = function(){
 
 EquippedUnit.prototype.equipItem = function(item){
 	// 0:head, 1:chest, 2:gloves, 3:boots, 4:belt, 5:cape, 6:necklace, 7:right ring, 8:left ring, 9:right weapon, 10:left weapon
+	switch(item.part){
+		case "weapon":
+
+		break;
+	}
+	/*
 	switch(item.constructor.name){
 		case "Weapon":
 			switch(item.hand){
@@ -250,6 +260,7 @@ EquippedUnit.prototype.equipItem = function(item){
 			}
 		break;
 	}
+	*/
 	this.user.inventory.displayEquipItems(this);
 	this.user.saveEquipItems();
 	this.updateStats();

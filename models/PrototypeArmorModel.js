@@ -1,6 +1,6 @@
 var PrototypeArmorSchema = new Schema({
 	primary_attribute:Number,	// 0:strength, 1:agility, 2:intelligence, 3:none
-	part:Number,				// 0:head, 1:chest, 2:gloves, 3:boots, 4:belt, 5:cape, 6:ring, 7:necklace
+	part:String,				// 0:head, 1:chest, 2:gloves, 3:boots, 4:belt, 5:cape, 6:ring, 7:necklace
 	name:String,
 	type:String,
 	icon:{
@@ -23,15 +23,19 @@ PrototypeArmorSchema.methods.setMerchantItem = function(level){
 	armor.rating = Math.ceil(Math.random() * 3);
 
 	switch(armor.part){
-		case 0:
-		case 1:
+		case "shield":
+			armor.armor = Math.ceil(3 * level * (0.5 + armor.rating / 2) * (Math.random() / 4 + 0.75));
+			armor.armor = armor.primary_attribute === 0 ? armor.armor * 2 : armor.armor;
+		break;
+		case "head":
+		case "chest":
 			armor.armor = Math.ceil(2 * level * (0.5 + armor.rating / 2) * (Math.random() / 4 + 0.75));
 			armor.armor = armor.primary_attribute === 0 ? armor.armor * 2 : armor.armor;
 		break;
-		case 2:
-		case 3:
-		case 4:
-		case 5:
+		case "gloves":
+		case "boots":
+		case "belt":
+		case "cape":
 			armor.armor = Math.ceil(level * (0.5 + armor.rating / 2) * (Math.random() / 4 + 0.75));
 			armor.armor = armor.primary_attribute === 0 ? armor.armor * 2 : armor.armor;
 		break;
