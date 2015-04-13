@@ -72,13 +72,25 @@ User.prototype.saveEquipItems = function(){
 		hero_items[index] = item.toObject();
 	}, this);
 */
+
+	this.followers.forEach(function(follower, follower_index){
+		follower_items[follower_index] = {};
+		for(key in follower.equipments){
+			if(follower.equipments[key]){
+				follower_items[follower_index][key] = follower.equipments[key].toObject();
+			}else{
+				follower_items[follower_index][key] = null;
+			}
+		}
+	});
+/*
 	this.followers.forEach(function(follower, follower_index){
 		follower_items[follower_index] = [];
 		follower.items.forEach(function(item, item_index){
 			follower_items[follower_index][item_index] = item.toObject();
 		});
 	});
-
+*/
 	console.log(follower_items);
 
 	$.post("saveequipitem",{hero_items:hero_items, follower_items:follower_items}, function(res){

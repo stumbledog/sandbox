@@ -36,20 +36,6 @@ EquippedUnit.prototype.equipped_unit_initialize = function(builder){
 	this.char_range = 16;
 	this.char_right_attack_speed = 30;
 
-/*
-equipments:{
-	head:Schema.Types.Mixed,
-	chest:Schema.Types.Mixed,
-	gloves:Schema.Types.Mixed,
-	boots:Schema.Types.Mixed,
-	belt:Schema.Types.Mixed,
-	cape:Schema.Types.Mixed,
-	necklace:Schema.Types.Mixed,
-	right_ring:Schema.Types.Mixed,
-	left_ring:Schema.Types.Mixed,
-	main_hand:Schema.Types.Mixed,
-	off_hand:Schema.Types.Mixed,
-}*/
 	this.equipments = {
 		head:null,
 		chest:null,
@@ -72,7 +58,6 @@ equipments:{
 }
 
 EquippedUnit.prototype.initItems = function(builder_items){
-	console.log(builder_items);
 	for(key in builder_items){
 		var item = builder_items[key];
 		if(item){
@@ -80,12 +65,12 @@ EquippedUnit.prototype.initItems = function(builder_items){
 				case "weapon":
 					var weapon = new Weapon(item);
 					weapon.bin = this;
-					this.equipments[item.part] = weapon;
+					this.equipments[key] = weapon;
 				break;
 				case "armor":
 					var armor = new Armor(item);
 					armor.bin = this;
-					this.equipments[item.part] = armor;
+					this.equipments[key] = armor;
 				break;
 			}
 		}
@@ -126,6 +111,32 @@ EquippedUnit.prototype.updateStats = function(){
 
 	this.cooldown_reduction = 0;
 
+	if(this.equipments.main_hand){
+		this.right_weapon_tick = 0;
+		this.right_attack_speed = this.equipments.main_hand.attack_speed;
+		this.right_min_damage = this.equipments.main_hand.min_damage_bonus ? this.equipments.main_hand.min_damage + this.equipments.main_hand.min_damage_bonus : this.equipments.main_hand.min_damage;
+		this.right_max_damage = this.equipments.main_hand.max_damage_bonus ? this.equipments.main_hand.max_damage + this.equipments.main_hand.max_damage_bonus : this.equipments.main_hand.max_damage;
+		this.range = this.equipments.main_hand.range;		
+	}else{
+		this.right_weapon_tick = 0;
+		this.right_attack_speed = 30;
+		this.right_min_damage = 1;
+		this.right_max_damage = 2;
+		this.range = 16;		
+	}
+
+	if(this.equipments.off_hand && this.equipments.off_hand.type === "weapon"){
+		this.left_weapon_tick = 0;
+		this.left_attack_speed = this.equipments.off_hand.attack_speed;
+		this.left_min_damage = this.equipments.off_hand.min_damage_bonus ? this.equipments.off_hand.min_damage + this.equipments.off_hand.min_damage_bonus : this.equipments.off_hand.min_damage;
+		this.left_max_damage = this.equipments.off_hand.max_damage_bonus ? this.equipments.off_hand.max_damage + this.equipments.off_hand.max_damage_bonus : this.equipments.off_hand.max_damage;
+	}else{
+		delete this.left_weapon_tick;
+		this.left_attack_speed = 0;
+		this.left_min_damage = 0;
+		this.left_max_damage = 0;
+	}
+/*
 	if(this.items[9]){
 		this.right_weapon_tick = 0;
 		this.right_attack_speed = this.items[9].attack_speed;
@@ -151,7 +162,7 @@ EquippedUnit.prototype.updateStats = function(){
 		this.left_min_damage = 0;
 		this.left_max_damage = 0;
 	}
-
+*/
 	var strength = 0;
 	var agility = 0;
 	var intelligence = 0;
@@ -169,6 +180,29 @@ EquippedUnit.prototype.updateStats = function(){
 	var cooldown_reduction = 0;
 	var movement_speed_bonus = 0;
 
+	for(key in this.equipments){
+		var item = this.equipments[key];
+		if(item){
+			strength += item.strength ? item.strength : 0;
+			agility += item.agility ? item.agility : 0;
+			intelligence += item.intelligence ? item.intelligence : 0;
+			stamina += item.stamina ? item.stamina : 0;
+
+			attack_speed_bonus += item.attack_speed_bonus ? item.attack_speed_bonus : 0;
+			critical_rate += item.critical_rate ? item.critical_rate : 0;
+			critical_damage += item.critical_damage ? item.critical_damage : 0;
+
+			health_regen += item.health_regen ? item.health_regen : 0;
+			resource_regen += item.resource_regen ? item.resource_regen : 0;
+			armor += item.armor ? item.armor : 0;
+			armor += item.armor_bonus ? item.armor_bonus : 0;
+			life_steal += item.life_steal ? item.life_steal : 0;
+
+			cooldown_reduction += item.cooldown_reduce ? item.cooldown_reduce : 0;
+			movement_speed_bonus += item.movement_speed ? item.movement_speed : 0;
+		}
+	}
+/*
 	this.items.forEach(function(item, index){
 		strength += item.strength ? item.strength : 0;
 		agility += item.agility ? item.agility : 0;
@@ -188,7 +222,7 @@ EquippedUnit.prototype.updateStats = function(){
 		cooldown_reduction += item.cooldown_reduce ? item.cooldown_reduce : 0;
 		movement_speed_bonus += item.movement_speed ? item.movement_speed : 0;
 	});
-
+*/
 	this.strength = this.char_strength + strength;
 	this.agility = this.char_agility + agility;
 	this.intelligence = this.char_intelligence + intelligence;
@@ -239,7 +273,7 @@ EquippedUnit.prototype.updateStats = function(){
 
 	this.radius = this.char_radius = 12;
 	this.dps = (this.right_min_damage + this.right_max_damage) / 2 * 30 / this.right_attack_speed * (1 - this.critical_rate / 100 + ((2+critical_damage/100) * this.critical_rate/100));
-	if(this.items[10]){
+	if(this.equipments.off_hand && this.equipments.off_hand.type === "weapon"){
 		this.dps += (this.left_min_damage + this.left_max_damage) / 2 * 30 / this.left_attack_speed * (1 - this.critical_rate / 100 + ((2+critical_damage/100) * this.critical_rate/100));
 	}
 }
@@ -250,7 +284,10 @@ EquippedUnit.prototype.equipItem = function(item){
 		case "weapon":
 			switch(item.hand){
 				case 1:
-					if(!this.equipments.main_hand){
+					if(this.equipments.main_hand && this.equipments.main_hand.hand === 2){
+						this.user.inventory.addItem(this.equipments.main_hand);
+						this.equipments.main_hand = item;
+					}else if(!this.equipments.main_hand){
 						this.equipments.main_hand = item;
 					}else if(!this.equipments.off_hand){
 						this.equipments.off_hand = item;
@@ -260,7 +297,7 @@ EquippedUnit.prototype.equipItem = function(item){
 					}
 				break;
 				case 2:
-				var count = 0;
+					var count = 0;
 					if(this.equipments.main_hand){	count++;	}
 					if(this.equipments.off_hand){	count++;	}
 
@@ -268,6 +305,7 @@ EquippedUnit.prototype.equipItem = function(item){
 						if(this.equipments.main_hand){	this.user.inventory.addItem(this.equipments.main_hand);	}
 						if(this.equipments.off_hand){	this.user.inventory.addItem(this.equipments.off_hand);	}
 						this.equipments.main_hand = item;
+						this.equipments.off_hand = null;
 					}else{
 						alert("Not enough space.");
 					}
@@ -277,6 +315,7 @@ EquippedUnit.prototype.equipItem = function(item){
 		case "shield":
 			if(this.equipments.main_hand && this.equipments.main_hand.hand === 2){
 				this.user.inventory.addItem(this.equipments.main_hand);
+				this.equipments.main_hand = null;
 				this.equipments.off_hand = item;
 			}else if(this.equipments.off_hand){
 				this.user.inventory.addItem(this.equipments.off_hand);
@@ -285,6 +324,16 @@ EquippedUnit.prototype.equipItem = function(item){
 				this.equipments.off_hand = item;
 			}
 		break;
+		case "ring":
+			if(!this.equipments.right_ring){
+				this.equipments.right_ring = item;
+			}else if(!this.equipments.left_ring){
+				this.equipments.left_ring = item;
+			}else{
+				this.user.inventory.addItem(this.equipments.right_ring);
+				this.equipments.right_ring = item;
+			}
+		break
 		default:
 			if(this.equipments[item.part]){
 				this.user.inventory.addItem(this.equipments[item.part]);

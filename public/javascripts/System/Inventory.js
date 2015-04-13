@@ -180,36 +180,30 @@ Inventory.prototype.displayEquipItems = function(unit){
 			var icon = item.icon_img.clone();
 			icon.x = icon.y = 10;
 			container.addChild(border, icon);
-			container.addEventListener("rollover", function(event){
+			container.addEventListener("rollover", function(item, event){
 				var x = equip_container.x - 140;
 				var y = equip_container.y + 200;
-				console.log(key);
-				console.log(item);
-				console.log(unit.equipments[key]);
 				item.showDetail(x, y, this.stage);
 				this.stage.update();
-			}.bind(this));
-			container.addEventListener("rollout", function(event){
+			}.bind(this, item));
+			container.addEventListener("rollout", function(item, event){
 				this.stage.removeChild(item.detail);
 				this.stage.update();
-			}.bind(this));
-			container.addEventListener("mousedown", function(event){
+			}.bind(this, item));
+			container.addEventListener("mousedown", function(item, key, container, event){
 				if(event.nativeEvent.button === 2){
 					this.addItem(item);
 					unit.equipments[key] = null;
-					//this.addItem(unit.items[index]);
-					//delete unit.items[index];
 					container.removeAllChildren();
 					this.user.saveEquipItems();
 					unit.updateStats();
 					this.displayStats(unit);
 				}
-			}.bind(this));
-
+			}.bind(this, item, key, container));
 			equip_container.addChild(container);
-
 		}
 	}
+
 /*
 	unit.items.forEach(function(item, index){
 		if(item){
@@ -249,7 +243,7 @@ Inventory.prototype.initEquipItemContainers = function(){
 	this.equip_item_container = new createjs.Container();
 	this.initEquipItemContainer("head", 200, 40, 244, 149, 16, 15);
 	this.initEquipItemContainer("chest", 200, 60, 316, 125, 16, 15);
-	this.initEquipItemContainer("grove", 160, 70, 99, 126, 15, 15);
+	this.initEquipItemContainer("gloves", 160, 70, 99, 126, 15, 15);
 	this.initEquipItemContainer("boots", 200, 100, 173, 173, 15, 16);
 	this.initEquipItemContainer("belt", 200, 80, 340, 150, 16, 15);
 	this.initEquipItemContainer("cape", 220, 50, 4, 173, 16, 16);
