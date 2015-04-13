@@ -246,6 +246,7 @@ var Game = (function(){
 					unit_stage.addUnit(new Blacksmith(builder));
 				break;
 				case "battlemaster":
+					builder.world_map = map_builder.world_map;
 					unit_stage.addUnit(new Battlemaster(builder));
 				break;
 				default:

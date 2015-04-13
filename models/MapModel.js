@@ -36,8 +36,8 @@ var MonsterSchema = new Schema({
 
 var MapSchema = new Schema({
 	maps:[{
-		tiles:[Schema.Types.Mixed],
-		tile_map:[Schema.Types.Mixed],
+		tiles:Schema.Types.Mixed,
+		tile_map:Schema.Types.Mixed,
 		src:String,
 		block:Boolean,
 	}],
@@ -61,6 +61,7 @@ var MapSchema = new Schema({
 	}],*/
 	act:Number,
 	chapter:Number,
+	name:String,
 	merchant:Boolean,
 	recruiter:Boolean,
 	width:Number,
@@ -68,7 +69,8 @@ var MapSchema = new Schema({
 	cols:Number,
 	rows:Number,
 	merchantable_items:Schema.Types.Mixed,
-	start_point:[Number]
+	start_point:[Number],
+	world_map:Schema.Types.Mixed
 });
 
 MapModel = mongoose.model('Map', MapSchema);

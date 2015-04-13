@@ -7,9 +7,10 @@ Battlemaster.prototype.constructor = Battlemaster;
 
 Battlemaster.prototype.battlemaster_initialize = function(builder){
 	this.npc_initialize(builder);
+
+	this.world_map = new WorldMap(builder.world_map);
 }
 
 Battlemaster.prototype.interact = function(){
-	console.log(hero);
-
+	this.world_map.open();
 }

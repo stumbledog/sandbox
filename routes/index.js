@@ -8,6 +8,20 @@ router.get('/', function(req, res) {
 	});
 });
 
+router.post('/', function(req, res) {
+	if(!req.session.user_id){
+		//redirect to home
+	}else{
+
+	}
+	var act = req.body.act;
+	var chapter = req.body.chapter;
+	UserController.authenticate(req, res, function(user, hero, map){
+		res.render('game', { title: 'Express', user:user, hero:hero, map:map});
+	});
+});
+
+
 router.post('/purchaseitem', function(req, res){
 	var item = req.body.item;
 	var user_id = req.session.user_id;

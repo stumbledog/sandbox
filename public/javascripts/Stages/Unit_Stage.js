@@ -113,6 +113,7 @@ Unit_Stage.prototype.initEvent = function(){
 		switch(event.keyCode){
 			case 27://esc
 				this.setCommand("move");
+				this.user.close();
 				break;
 			case 68://d
 				this.setCommand("assemble");

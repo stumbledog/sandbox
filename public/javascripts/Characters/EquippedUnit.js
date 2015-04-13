@@ -15,7 +15,7 @@ EquippedUnit.prototype.equipped_unit_initialize = function(builder){
 	this.char_agility = parseInt(builder.agility);
 	this.char_intelligence = parseInt(builder.intelligence);
 	this.char_stamina = parseInt(builder.stamina);
-	this.movement_speed = 1.5;
+	this.char_movement_speed = 1.5;
 
 	this.level = builder.level;
 	this.exp = builder.exp;
@@ -163,22 +163,10 @@ EquippedUnit.prototype.updateStats = function(){
 		this.left_max_damage = 0;
 	}
 */
-	var strength = 0;
-	var agility = 0;
-	var intelligence = 0;
-	var stamina = 0;
-
-	var attack_speed_bonus = 0;
-	var critical_rate = 0;
-	var critical_damage = 0;
-
-	var health_regen = 0;
-	var resource_regen = 0;
-	var armor = 0;
-	var life_steal = 0;
-
-	var cooldown_reduction = 0;
-	var movement_speed_bonus = 0;
+	var strength, agility, intelligence, stamina, attack_speed_bonus, critical_rate, critical_damage;
+	var health_regen, resource_regen, armor, life_steal, cooldown_reduction, movement_speed_bonus;
+	strength = agility = intelligence = stamina = attack_speed_bonus = critical_rate = critical_damage = 0;
+	health_regen = resource_regen = armor = life_steal = cooldown_reduction = movement_speed_bonus = 0;
 
 	for(key in this.equipments){
 		var item = this.equipments[key];
@@ -248,7 +236,7 @@ EquippedUnit.prototype.updateStats = function(){
 	this.life_steal = life_steal;
 
 	this.cooldown_reduction = cooldown_reduction;
-	this.movement_speed = (Math.round(this.movement_speed * (1 + movement_speed_bonus/100) * 10))/10;
+	this.movement_speed = (Math.round(this.char_movement_speed * (1 + movement_speed_bonus/100) * 10))/10;
 
 	switch(this.primary_attribute){
 		case 0:
@@ -279,7 +267,6 @@ EquippedUnit.prototype.updateStats = function(){
 }
 
 EquippedUnit.prototype.equipItem = function(item){
-	// 0:head, 1:chest, 2:gloves, 3:boots, 4:belt, 5:cape, 6:necklace, 7:right ring, 8:left ring, 9:right weapon, 10:left weapon
 	switch(item.part){
 		case "weapon":
 			switch(item.hand){

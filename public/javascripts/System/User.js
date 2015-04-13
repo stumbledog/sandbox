@@ -36,6 +36,22 @@ User.prototype.openInventory = function(){
 	this.inventory.open();
 }
 
+User.prototype.close = function(){
+	if(this.inventory.isOpen){
+		this.inventory.close();
+	}
+
+	if(this.store){
+		this.store.close();
+		this.store = null;
+	}
+
+	if(this.action){
+		this.action.close();
+		this.action = null;
+	}
+}
+
 User.prototype.toggleInventory = function(){
 	if(this.inventory.isOpen){
 		this.inventory.close();

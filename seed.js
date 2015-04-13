@@ -189,8 +189,16 @@ function saveMap(){
 			{name:"Blacksmith",		sprite:"assets/Graphics/Characters/12 - Merchant.png",	index:2, type:"blacksmith", x:32*3, y:32*7},
 			{name:"Battlemaster",	sprite:"assets/Graphics/Characters/23 - Soldier.png",	index:0, type:"battlemaster", x:32*7, y:32*7},
 		],
-		[],1,1,true,true,320,320,10,10,[160,160]
+		[],1,1,"Basecamp",true,true,320,320,10,10,[160,160]
 	));
+
+	maps.push(initMap(
+		[],
+		true,
+		[],
+		[],1,2,"Forest",true,true,320,320,10,10,[160,160]
+	));
+
 	var count = 0;
 	maps.forEach(function(map){
 		map.save(function(){
@@ -418,7 +426,7 @@ function initPrototypeUnit(id, name, strength, dexterity, intelligence, vitality
 	});
 }
 
-function initMap(maps, neutral_territory, npcs, monsters, act, chapter, merchant, recruiter, width, height, cols, rows, start_point){
+function initMap(maps, neutral_territory, npcs, monsters, act, chapter, name, merchant, recruiter, width, height, cols, rows, start_point){
 	return new MapModel({
 		maps:maps,
 		neutral_territory:neutral_territory,
@@ -426,6 +434,7 @@ function initMap(maps, neutral_territory, npcs, monsters, act, chapter, merchant
 		monsters:monsters,
 		act:act,
 		chapter:chapter,
+		name:name,
 		merchant:merchant,
 		recruiter:recruiter,
 		width:width,

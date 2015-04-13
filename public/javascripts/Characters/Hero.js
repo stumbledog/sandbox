@@ -42,6 +42,10 @@ Hero.prototype.move = function(x, y){
 		user.store.close();
 		user.inventory.close();
 	}
+
+	if(user.action){
+		user.action.close();
+	}
 }
 
 Hero.prototype.attackTarget = function(target, damage){

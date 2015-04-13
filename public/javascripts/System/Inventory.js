@@ -83,7 +83,7 @@ Inventory.prototype.initFrame = function(){
 	this.selectCharacterBorder.y = 11;
 
 	this.unit_detail_container.addChild(bg, this.unit_sprite_container, this.close_button);
-	this.addChild(frame, this.gold, this.coin, this.units_container, this.unit_detail_container, this.selectCharacterBorder);
+	this.addChild(frame, this.gold, this.coin, this.units_container, this.selectCharacterBorder, this.unit_detail_container);
 }
 
 Inventory.prototype.initStatsTypeContainer = function(){
@@ -180,12 +180,12 @@ Inventory.prototype.displayEquipItems = function(unit){
 			var icon = item.icon_img.clone();
 			icon.x = icon.y = 10;
 			container.addChild(border, icon);
-			container.addEventListener("rollover", function(item, event){
+			container.addEventListener("rollover", function(equip_container, item, event){
 				var x = equip_container.x - 140;
 				var y = equip_container.y + 200;
 				item.showDetail(x, y, this.stage);
 				this.stage.update();
-			}.bind(this, item));
+			}.bind(this, equip_container, item));
 			container.addEventListener("rollout", function(item, event){
 				this.stage.removeChild(item.detail);
 				this.stage.update();
