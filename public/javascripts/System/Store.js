@@ -42,8 +42,8 @@ Store.prototype.render = function(){
 
 Store.prototype.open = function(){
 	this.game.getLeftMenuStage().addChild(this);
-	this.stage.canvas.width = 310;
-	this.stage.canvas.height = 410;
+	this.stage.canvas.width = this.width;
+	this.stage.canvas.height = this.height;
 	this.stage.open();
 }
 

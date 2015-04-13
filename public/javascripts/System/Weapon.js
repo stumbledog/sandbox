@@ -9,6 +9,7 @@ Weapon.prototype.weapon_initialize = function(attributes){
 	this._id = attributes._id;
 	this.hand = parseInt(attributes.hand);
 	this.level = parseInt(attributes.level);
+	this.part = attributes.part;
 	this.qty = 1;
 	this.min_damage = parseFloat(attributes.min_damage);
 	this.max_damage = parseFloat(attributes.max_damage);

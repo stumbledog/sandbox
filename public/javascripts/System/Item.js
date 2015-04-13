@@ -62,6 +62,5 @@ Item.prototype.toObject = function(){
 			obj[key] = this[key];
 		}
 	}
-	console.log(obj);
 	return obj;
 }

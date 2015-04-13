@@ -57,12 +57,21 @@ User.prototype.purchaseFollower = function(follower, gold){
 }
 
 User.prototype.saveEquipItems = function(){
-	var hero_items = [];
+	var hero_items = {};
 	var follower_items = [];
+
+	for(key in this.hero.equipments){
+		if(this.hero.equipments[key]){
+			hero_items[key] = this.hero.equipments[key].toObject();
+		}else{
+			hero_items[key] = null;
+		}
+	}
+/*
 	this.hero.items.forEach(function(item, index){
 		hero_items[index] = item.toObject();
 	}, this);
-
+*/
 	this.followers.forEach(function(follower, follower_index){
 		follower_items[follower_index] = [];
 		follower.items.forEach(function(item, item_index){

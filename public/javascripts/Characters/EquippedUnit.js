@@ -36,6 +36,34 @@ EquippedUnit.prototype.equipped_unit_initialize = function(builder){
 	this.char_range = 16;
 	this.char_right_attack_speed = 30;
 
+/*
+equipments:{
+	head:Schema.Types.Mixed,
+	chest:Schema.Types.Mixed,
+	gloves:Schema.Types.Mixed,
+	boots:Schema.Types.Mixed,
+	belt:Schema.Types.Mixed,
+	cape:Schema.Types.Mixed,
+	necklace:Schema.Types.Mixed,
+	right_ring:Schema.Types.Mixed,
+	left_ring:Schema.Types.Mixed,
+	main_hand:Schema.Types.Mixed,
+	off_hand:Schema.Types.Mixed,
+}*/
+	this.equipments = {
+		head:null,
+		chest:null,
+		gloves:null,
+		boots:null,
+		belt:null,
+		cape:null,
+		necklace:null,
+		right_ring:null,
+		left_ring:null,
+		main_hand:null,
+		off_hand:null,
+	}
+
 	if(builder.items){
 		this.initItems(builder.items);
 	}
@@ -44,6 +72,25 @@ EquippedUnit.prototype.equipped_unit_initialize = function(builder){
 }
 
 EquippedUnit.prototype.initItems = function(builder_items){
+	console.log(builder_items);
+	for(key in builder_items){
+		var item = builder_items[key];
+		if(item){
+			switch(item.type){
+				case "weapon":
+					var weapon = new Weapon(item);
+					weapon.bin = this;
+					this.equipments[item.part] = weapon;
+				break;
+				case "armor":
+					var armor = new Armor(item);
+					armor.bin = this;
+					this.equipments[item.part] = armor;
+				break;
+			}
+		}
+	}
+	/*
 	builder_items.forEach(function(item, index){
 		if(item){
 			switch(item.type){
@@ -59,7 +106,7 @@ EquippedUnit.prototype.initItems = function(builder_items){
 				break;
 			}
 		}
-	}, this);
+	}, this);*/
 }
 
 EquippedUnit.prototype.updateStats = function(){
@@ -201,7 +248,50 @@ EquippedUnit.prototype.equipItem = function(item){
 	// 0:head, 1:chest, 2:gloves, 3:boots, 4:belt, 5:cape, 6:necklace, 7:right ring, 8:left ring, 9:right weapon, 10:left weapon
 	switch(item.part){
 		case "weapon":
+			switch(item.hand){
+				case 1:
+					if(!this.equipments.main_hand){
+						this.equipments.main_hand = item;
+					}else if(!this.equipments.off_hand){
+						this.equipments.off_hand = item;
+					}else if(this.equipments.main_hand){
+						this.user.inventory.addItem(this.equipments.main_hand);
+						this.equipments.main_hand = item;
+					}
+				break;
+				case 2:
+				var count = 0;
+					if(this.equipments.main_hand){	count++;	}
+					if(this.equipments.off_hand){	count++;	}
 
+					if(this.user.inventory.countEmptySpace() >= count){
+						if(this.equipments.main_hand){	this.user.inventory.addItem(this.equipments.main_hand);	}
+						if(this.equipments.off_hand){	this.user.inventory.addItem(this.equipments.off_hand);	}
+						this.equipments.main_hand = item;
+					}else{
+						alert("Not enough space.");
+					}
+				break;
+			}
+		break;
+		case "shield":
+			if(this.equipments.main_hand && this.equipments.main_hand.hand === 2){
+				this.user.inventory.addItem(this.equipments.main_hand);
+				this.equipments.off_hand = item;
+			}else if(this.equipments.off_hand){
+				this.user.inventory.addItem(this.equipments.off_hand);
+				this.equipments.off_hand = item;
+			}else{
+				this.equipments.off_hand = item;
+			}
+		break;
+		default:
+			if(this.equipments[item.part]){
+				this.user.inventory.addItem(this.equipments[item.part]);
+				this.equipments[item.part] = item;
+			}else{
+				this.equipments[item.part] = item;
+			}
 		break;
 	}
 	/*

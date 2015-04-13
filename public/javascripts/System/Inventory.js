@@ -170,6 +170,47 @@ Inventory.prototype.displayEquipItems = function(unit){
 		container.removeChildAt(2);
 	});
 
+	for(key in unit.equipments){
+		var item = unit.equipments[key];
+		if(item){
+			var equip_container = this.equip_item_container.getChildByName(key);
+			var container = new createjs.Container();
+			var border = new createjs.Shape();
+			border.graphics.s("#000").ss(1).f(item.colors[item.rating-1]).dr(0,0,20,20);
+			var icon = item.icon_img.clone();
+			icon.x = icon.y = 10;
+			container.addChild(border, icon);
+			container.addEventListener("rollover", function(event){
+				var x = equip_container.x - 140;
+				var y = equip_container.y + 200;
+				console.log(key);
+				console.log(item);
+				console.log(unit.equipments[key]);
+				item.showDetail(x, y, this.stage);
+				this.stage.update();
+			}.bind(this));
+			container.addEventListener("rollout", function(event){
+				this.stage.removeChild(item.detail);
+				this.stage.update();
+			}.bind(this));
+			container.addEventListener("mousedown", function(event){
+				if(event.nativeEvent.button === 2){
+					this.addItem(item);
+					unit.equipments[key] = null;
+					//this.addItem(unit.items[index]);
+					//delete unit.items[index];
+					container.removeAllChildren();
+					this.user.saveEquipItems();
+					unit.updateStats();
+					this.displayStats(unit);
+				}
+			}.bind(this));
+
+			equip_container.addChild(container);
+
+		}
+	}
+/*
 	unit.items.forEach(function(item, index){
 		if(item){
 			var container = new createjs.Container();
@@ -201,7 +242,7 @@ Inventory.prototype.displayEquipItems = function(unit){
 
 			this.equip_item_container.children[index].addChild(container);
 		}
-	}, this);
+	}, this);*/
 }
 
 Inventory.prototype.initEquipItemContainers = function(){
@@ -215,13 +256,14 @@ Inventory.prototype.initEquipItemContainers = function(){
 	this.initEquipItemContainer("necklace", 180, 50, 148, 173, 16, 15);
 	this.initEquipItemContainer("right_ring", 180, 80, 78, 176, 12, 12);
 	this.initEquipItemContainer("left_ring", 220, 80, 78, 176, 12, 12);
-	this.initEquipItemContainer("right_hand_weapon", 160, 90, 245, 103, 13, 14);
-	this.initEquipItemContainer("left_hand_weapon", 240, 90, 198, 149, 13, 16);
+	this.initEquipItemContainer("main_hand", 160, 90, 245, 103, 13, 14);
+	this.initEquipItemContainer("off_hand", 240, 90, 198, 149, 13, 16);
 	this.unit_detail_container.addChild(this.equip_item_container);
 }
 
 Inventory.prototype.initEquipItemContainer = function(part, x, y, cropX, cropY, width, height){
 	var container = new createjs.Container();
+	container.name = part;
 	container.x = x;
 	container.y = y;
 
@@ -233,7 +275,6 @@ Inventory.prototype.initEquipItemContainer = function(part, x, y, cropX, cropY, 
 	icon.filters = [new createjs.ColorFilter(0.5, 0.5, 0.5, 1, 150, 150, 150)];
 	icon.cache(0,0,width,height);
 	icon.x = (20 - width) / 2;
-
 	icon.y = (20 - height) / 2;
 	container.addChild(border, icon);
 
@@ -323,12 +364,20 @@ Inventory.prototype.addItem = function(item){
 			this.containers[index].children[1].item.qty += item.qty;
 			this.updateQuantity(index);
 		}else{
-			var empty_index = this.getEmptySlot();			
-			this.containers[empty_index].addChild(this.initItemIcon(item, empty_index));
+			var empty_index = this.getEmptySlot();
+			if(empty_index >= 0){
+				this.containers[empty_index].addChild(this.initItemIcon(item, empty_index));
+			}else{
+				throw "Not enough space";
+			}
 		}
 	}else{
 		var empty_index = this.getEmptySlot();
-		this.containers[empty_index].addChild(this.initItemIcon(item, empty_index));
+		if(empty_index >= 0){
+			this.containers[empty_index].addChild(this.initItemIcon(item, empty_index));
+		}else{
+			throw "Not enough space";
+		}
 	}
 	this.stage.update();
 }
@@ -445,6 +494,16 @@ Inventory.prototype.getEmptySlot = function(){
 	return index;
 }
 
+Inventory.prototype.countEmptySpace = function(){
+	var count = 0;
+	for(var i = 0 ; i < this.capacity ; i++){
+		if(this.containers[i].children.length === 1){
+			count++;
+		}
+	}
+	return count;
+}
+
 Inventory.prototype.haveAvailableSpace = function(item){
 	var empty = false;
 	for(var i = 0 ; i < this.capacity ; i++){
@@ -491,6 +550,8 @@ Inventory.prototype.open = function(){
 	this.isOpen = true;
 	this.game.getRighttMenuStage().addChild(this);
 	this.renderPortrait();
+	this.stage.canvas.width = this.width;
+	this.stage.canvas.height = this.height;
 	this.stage.open();
 }
 
