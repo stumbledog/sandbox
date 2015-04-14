@@ -138,7 +138,6 @@ WorldMap.prototype.initAct = function(builder){
 			}.bind(this));
 
 			level_container.addEventListener("mousedown", function(event){
-				//alert(map.act +", "+ map.chapter +", "+ index);
 				var form = $('<form>', {
 			        action: '/',
 			        method:"POST"

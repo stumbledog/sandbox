@@ -64,18 +64,6 @@ Unit.prototype.initialize = function(builder){
 	}
 }
 
-Unit.prototype.getDamage = function(){
-	return this.damage * this.buff.damage;
-}
-
-Unit.prototype.getAttackSpeed = function(){
-	return this.attack_speed / this.buff.attack_speed;
-}
-
-Unit.prototype.getMovementSpeed = function(){
-	return this.movement_speed * this.buff.movement_speed;
-}
-
 Unit.prototype.initSkills = function(skills){
 	this.skills = [];
 	skills.forEach(function(skill){
@@ -123,7 +111,7 @@ Unit.prototype.renderUnit = function(src_id, index, regX, regY){
 	this.sprite.regY = regY;
 	this.sprite.z = 0;
 	this.outline = this.sprite.clone();
-	this.outline.scaleX = this.outline.scaleY = 1.1;
+	this.outline.scaleX = this.outline.scaleY = 1.2;
 	this.outline.visible = false;
 	this.addChild(this.outline, this.sprite);
 }
@@ -215,7 +203,7 @@ Unit.prototype.procMove = function(map){
 	this.velocity.add(ali);
 	this.velocity.add(coh);
 	this.velocity.add(flo);
-	this.velocity.limit(this.getMovementSpeed());
+	this.velocity.limit(this.movement_speed);
 
 	var indexX = Math.floor(this.x / 16);
 	var indexY = Math.floor(this.y / 16);
@@ -257,7 +245,7 @@ Unit.prototype.separate = function(units){
 	if(count > 0){
 		steer.div(count);
 		steer.normalize();
-		steer.mult(this.getMovementSpeed());
+		steer.mult(this.movement_speed);
 		steer.sub(this.velocity);
 		steer.limit(this.max_force);
 	}
@@ -279,7 +267,7 @@ Unit.prototype.align = function(units){
 	if(count > 0){
 		sum.duv(count);
 		sum.normalize();
-		sum.mult(this.getMovementSpeed());
+		sum.mult(this.movement_speed);
 		var steer = Vector.sub(sum, this.velocity);
 		steer.limit(this.max_force);
 		return steer;
@@ -303,7 +291,7 @@ Unit.prototype.cohesion = function(units){
 		sum.div(count);
 		var desired = Vector.sub(target, this);
 		desired.normalize();
-		desired.mult(this.getMovementSpeed());
+		desired.mult(this.movement_speed);
 		var steer = Vector.sub(desired, this.velocity);
 		steer.limit(this.max_force);
 		return steer;
@@ -315,7 +303,7 @@ Unit.prototype.cohesion = function(units){
 Unit.prototype.flowField = function(map){
 	var desired = map[Math.floor(this.y / 16)][Math.floor(this.x / 16)].v;
 	desired.normalize();
-	desired.mult(this.getMovementSpeed());
+	desired.mult(this.movement_speed);
 	if(desired.mag() === 0){
 		this.velocity.mult(0);
 		return new Vector(0,0);
@@ -390,7 +378,7 @@ Unit.prototype.rotate = function(dx, dy){
 	this.sprite.gotoAndPlay(this.direction);
 	this.outline.gotoAndPlay(this.direction);
 
-	this.sprite._animation.speed = this.getMovementSpeed() / 5;
+	this.sprite._animation.speed = this.movement_speed / 5;
 }
 
 Unit.prototype.attackTarget = function(target, damage){
@@ -403,21 +391,21 @@ Unit.prototype.attackTarget = function(target, damage){
 
 	if(this.weapon){
 		createjs.Tween.get(this.weapon)
-			.to({rotation:this.weapon.rotation + this.weapon.swing},this.getAttackSpeed() * 5, createjs.Ease.backOut)
+			.to({rotation:this.weapon.rotation + this.weapon.swing},this.attack_speed * 5, createjs.Ease.backOut)
 			.call(function(){
-				target.hit(this, this.getDamage());
+				target.hit(this, this.damage);
 			}.bind(this))
-			.to({rotation:this.weapon.rotation},this.getAttackSpeed() * 5, createjs.Ease.backOut);
+			.to({rotation:this.weapon.rotation},this.attack_speed * 5, createjs.Ease.backOut);
 	}else{
 		createjs.Tween.get(this.sprite)
-			.to({y:-8},this.getAttackSpeed() * 5, createjs.Ease.backOut)
+			.to({y:-8},this.attack_speed * 5, createjs.Ease.backOut)
 			.call(function(){
-				target.hit(this, this.getDamage());
+				target.hit(this, this.damage);
 			}.bind(this))
-			.to({y:0},this.getAttackSpeed() * 5, createjs.Ease.backOut);
+			.to({y:0},this.attack_speed * 5, createjs.Ease.backOut);
 		createjs.Tween.get(this.outline)
-			.to({y:-8},this.getAttackSpeed() * 5, createjs.Ease.backOut)
-			.to({y:0},this.getAttackSpeed() * 5, createjs.Ease.backOut);
+			.to({y:-8},this.attack_speed * 5, createjs.Ease.backOut)
+			.to({y:0},this.attack_speed * 5, createjs.Ease.backOut);
 	}
 }
 
@@ -550,7 +538,7 @@ Unit.prototype.attackTick = function(){
 	if(this.order.target && this.order.target.status !== "death"){
 		if(this.getSquareDistance(this.order.target) <= Math.pow(this.range + this.radius + this.order.target.radius,2)){
 			this.velocity = new Vector(0,0);
-			if(this.ticks > this.getAttackSpeed()){
+			if(this.ticks > this.attack_speed){
 				this.ticks = 0;
 				this.attackTarget(this.order.target);
 			}
@@ -562,9 +550,10 @@ Unit.prototype.attackTick = function(){
 
 Unit.prototype.moveAttackTick = function(distance){
 	if(this.target && this.target.status !== "death"){
+		console.log(this.range,this.radius,this.target.radius);
 		if(this.getSquareDistance(this.target) <= Math.pow(this.range + this.radius + this.target.radius,2)){
 			this.velocity = new Vector(0,0);
-			if(this.ticks > this.getAttackSpeed()){
+			if(this.ticks > this.attack_speed){
 				this.ticks = 0;
 				this.attackTarget(this.target);
 			}

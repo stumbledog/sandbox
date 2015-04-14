@@ -83,11 +83,6 @@ User.prototype.saveEquipItems = function(){
 			hero_items[key] = null;
 		}
 	}
-/*
-	this.hero.items.forEach(function(item, index){
-		hero_items[index] = item.toObject();
-	}, this);
-*/
 
 	this.followers.forEach(function(follower, follower_index){
 		follower_items[follower_index] = {};
@@ -99,15 +94,6 @@ User.prototype.saveEquipItems = function(){
 			}
 		}
 	});
-/*
-	this.followers.forEach(function(follower, follower_index){
-		follower_items[follower_index] = [];
-		follower.items.forEach(function(item, item_index){
-			follower_items[follower_index][item_index] = item.toObject();
-		});
-	});
-*/
-	console.log(follower_items);
 
 	$.post("saveequipitem",{hero_items:hero_items, follower_items:follower_items}, function(res){
 		console.log(res);

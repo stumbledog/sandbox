@@ -28,9 +28,8 @@ UserController = {
 				user.save(function(err, user){
 					req.session.user_id = user._id;
 					res.cookie('user_id', user._id, {maxAge: 10 * 365 * 24 * 60 * 60 * 1000, httpOnly: true });
-					MapController.loadMap(user.hero.level, 0, 0, function(map){
-						console.log(user);
-						callback(user, user.hero, map);
+					MapController.loadBasecamp(user.hero.level, function(map){
+						callback(user, map);
 					});
 				});
 			}else{
@@ -38,6 +37,17 @@ UserController = {
 				this.createUser(req, res, callback);
 			}
 		}.bind(this));
+	},
+	loadStage:function(user_id, act, chapter, difficulty_level, res, callback){
+		UserModel.findById(user_id, function(err, user){
+			if(err || !user){
+				res.redirect('/');
+			}else{
+				MapController.loadMap(user.hero.level, act, chapter, difficulty_level, function(err, map){
+					callback(user, map);
+				});				
+			}
+		});
 	},
 	saveItems:function(hero_items, follower_items, user_id, callback){
 		UserModel.findById(user_id, function(err, user){

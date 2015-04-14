@@ -31,7 +31,21 @@ var NPCSchema = new Schema({
 });
 
 var MonsterSchema = new Schema({
-
+	name:String,
+	sprite:String,
+	index:Number,
+	x:Number,
+	y:Number,
+	radius:Number,
+	type:String,
+	health:Number,
+	damage:Number,
+	range:Number,
+	attack_speed:Number,
+	movement_speed:Number,
+	skills:Schema.Types.Mixed,
+	gold:Number,
+	xp:Number,
 });
 
 var MapSchema = new Schema({
@@ -42,7 +56,7 @@ var MapSchema = new Schema({
 		block:Boolean,
 	}],
 	neutral_territory:Boolean,
-	monsters:[MonsterSchema],
+	monsters:Schema.Types.Mixed,//[MonsterSchema],
 	npcs:[NPCSchema],
 	/*
 	monsters:[{

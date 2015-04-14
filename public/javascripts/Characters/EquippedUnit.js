@@ -15,7 +15,7 @@ EquippedUnit.prototype.equipped_unit_initialize = function(builder){
 	this.char_agility = parseInt(builder.agility);
 	this.char_intelligence = parseInt(builder.intelligence);
 	this.char_stamina = parseInt(builder.stamina);
-	this.char_movement_speed = 1.5;
+	this.char_movement_speed = 1;
 
 	this.level = builder.level;
 	this.exp = builder.exp;

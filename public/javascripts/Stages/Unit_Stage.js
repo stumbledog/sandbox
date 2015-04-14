@@ -29,7 +29,7 @@ Unit_Stage.prototype.initialize = function(width, height){
 
 	createjs.Ticker.addEventListener("tick", function(){
 		this.unit_container.sortChildren(function(obj1, obj2){
-			return obj1.y>obj2.y?1:-1;
+			return obj1.y - obj1.sprite.regY > obj2.y - obj2.sprite.regY ? 1 : -1;
 		});
 
 		this.unit_container.children.forEach(function(unit){
@@ -53,7 +53,7 @@ Unit_Stage.prototype.initialize = function(width, height){
 		this.ticks++;
 	}.bind(this));
 	createjs.Ticker.timingMode = createjs.Ticker.RAF_SYNCHED;
-	createjs.Ticker.setFPS(30);
+	createjs.Ticker.setFPS(60);
 
 	this.mouse_position = new Vector(0,0);
 

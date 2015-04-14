@@ -8,6 +8,16 @@ Monster.prototype.unit_initialize = Monster.prototype.initialize;
 
 Monster.prototype.initialize = function(builder){
 	this.unit_initialize(builder);
+
+	this.health = builder.health;
+	this.damage = builder.damage;
+	this.attack_speed = builder.attack_speed;
+	this.movement_speed = builder.movement_speed;
+	this.range = builder.range;
+	this.radius = builder.radius;
+	console.log(builder);
+
+	this.team = "Monster";
 	this.health_color = "#C00";
 	this.damage_color = "#CC0";
 	this.initHealthBar();
@@ -29,7 +39,6 @@ Monster.prototype.initEventListener = function(){
 		if(this.status !== "death"){
 			this.mouseover = true;
 			this.outline.visible = true;
-			//this.getStage().setTarget(this);
 		}
 	}.bind(this));
 
@@ -39,7 +48,6 @@ Monster.prototype.initEventListener = function(){
 			this.outline.visible = false;
 			this.outline.filters = null;
 			this.outline.uncache();
-			//this.getStage().unsetTarget(this);
 		}
 	}.bind(this));
 }
@@ -64,7 +72,7 @@ Monster.prototype.tick = function(){
 	Unit.prototype.tick.call(this);
 	if(this.mouseover){
 		this.outline.uncache();
-		this.outline.filters = [new createjs.ColorFilter(0,0,0,1,255,0,0,0)];
+		this.outline.filters = [new createjs.ColorFilter(0,0,0,1,185,18,27,0)];
 		this.outline.cache(-12,-16,24,32);
 	}
 }

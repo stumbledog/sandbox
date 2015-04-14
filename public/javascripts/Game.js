@@ -2,11 +2,9 @@ var Game = (function(){
 
 	var instance;
 
-	function init(user_builder, hero_builder, map_builder){
+	function init(user_builder, map_builder){
 		var user, loader, hero, blocks;
 		var minimap_stage, tooltip_stage, unit_stage, map_stage, ui_stage, left_stage, right_stage;
-		var cols = map_builder.cols;
-		var rows = map_builder.rows;
 		var scale = 5;
 
 		window.onresize = function(){
@@ -129,14 +127,12 @@ var Game = (function(){
 		};
 		*/
 
-
-
 		var manifest = [];
 
 		manifest.push({src:"assets/Graphics/System/Icons/IconSet.png", id:"icon"});
 
-		manifest.push({src:hero_builder.sprite, id:hero_builder.sprite.split('/').pop()});
-		manifest.push({src:hero_builder.portrait, id:hero_builder.portrait.split('/').pop()});
+		manifest.push({src:user_builder.hero.sprite, id:user_builder.hero.sprite.split('/').pop()});
+		manifest.push({src:user_builder.hero.portrait, id:user_builder.hero.portrait.split('/').pop()});
 
 		user_builder.followers.forEach(function(unit_builder){
 			manifest.push({src:unit_builder.sprite, id:unit_builder.sprite.split('/').pop()});
@@ -153,18 +149,26 @@ var Game = (function(){
 			manifest.push({src:npc.sprite, id:npc.sprite.split('/').pop()});
 		});
 
-		map_builder.merchantable_items.forEach(function(item){
-			manifest.push({src:item.icon.source, id:item.icon.source.split('/').pop()});
-		});
-
-		map_builder.npcs.forEach(function(npc){
-			npc.recruitable_units.forEach(function(recruitable_unit){
-				//console.log(recruitable_unit);
-				manifest.push({src:recruitable_unit.sprite, id:recruitable_unit.sprite.split('/').pop()});
-				manifest.push({src:recruitable_unit.portrait, id:recruitable_unit.portrait.split('/').pop()});
+		if(map_builder.merchantable_items){
+			map_builder.merchantable_items.forEach(function(item){
+				manifest.push({src:item.icon.source, id:item.icon.source.split('/').pop()});
 			});
-		});
+		}
 
+		if(map_builder.npcs){
+			map_builder.npcs.forEach(function(npc){
+				npc.recruitable_units.forEach(function(recruitable_unit){
+					manifest.push({src:recruitable_unit.sprite, id:recruitable_unit.sprite.split('/').pop()});
+					manifest.push({src:recruitable_unit.portrait, id:recruitable_unit.portrait.split('/').pop()});
+				});
+			});
+		}
+
+		if(map_builder.monsters){
+			map_builder.monsters.forEach(function(monster){
+				manifest.push({src:monster.sprite, id:monster.sprite.split('/').pop()});
+			});
+		}
 		/*
 		hero_builder.skills.forEach(function(skill){
 			manifest.push({src:skill.src,id:skill.name});
@@ -183,7 +187,7 @@ var Game = (function(){
 		function handleLoadComplete(){
 			user = new User(user_builder);
 			initStages();
-			createHero(hero_builder);
+			createHero(user_builder.hero);
 
 			user_builder.followers.forEach(function(unit_builder){
 				createFollower(unit_builder);
@@ -193,6 +197,11 @@ var Game = (function(){
 				createNPC(unit_builder);
 			});
 
+			map_builder.monsters.forEach(function(unit_builder){
+				createEnemy(unit_builder);
+			});
+
+
 			ui_stage.initHeroUI(hero);
 			minimap_stage.initUnits(unit_stage.getNPCUnits());
 			minimap_stage.initUnits(unit_stage.getUnits());
@@ -201,7 +210,7 @@ var Game = (function(){
 		function initStages(){
 			map_stage = new Map_Stage(map_builder);
 			minimap_stage = new Minimap_Stage();
-			unit_stage = new Unit_Stage(cols * 32, rows * 32);
+			unit_stage = new Unit_Stage(map_builder.width,map_builder.height);
 			tooltip_stage = new Tooltip_Stage();
 			ui_stage = new UI_Stage();
 			map_stage.scaleX = map_stage.scaleY = scale;
@@ -307,8 +316,8 @@ var Game = (function(){
 				var regX = hero.x - window.innerWidth / scale / 2;
 				var regY = hero.y - window.innerHeight / scale / 2;
 
-				var maxX = (cols * 32) - window.innerWidth / scale;
-				var maxY = (rows * 32) - window.innerHeight / scale;
+				var maxX = (map_builder.width) - window.innerWidth / scale;
+				var maxY = (map_builder.height) - window.innerHeight / scale;
 
 				regX = regX < 0 ? 0 : regX > maxX ? maxX : regX;
 				regY = regY < 0 ? 0 : regY > maxY ? maxY : regY;
@@ -321,9 +330,9 @@ var Game = (function(){
 	}
 
 	return {
-		getInstance:function(user_builder, hero_builder, map_builder){
+		getInstance:function(user_builder, map_builder){
 			if(!instance){
-				instance = init(user_builder, hero_builder, map_builder);
+				instance = init(user_builder, map_builder);
 			}
 			return instance;
 		}
