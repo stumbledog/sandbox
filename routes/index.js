@@ -16,9 +16,12 @@ router.post('/', function(req, res) {
 	}
 	var act = req.body.act;
 	var chapter = req.body.chapter;
+	var difficulty_level = req.body.difficulty_level;
+	console.log(act, chapter, difficulty_level);
+	/*
 	UserController.authenticate(req, res, function(user, hero, map){
 		res.render('game', { title: 'Express', user:user, hero:hero, map:map});
-	});
+	});*/
 });
 
 

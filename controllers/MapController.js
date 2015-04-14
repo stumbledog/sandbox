@@ -35,13 +35,10 @@ MapController = {
 		}.bind(this));
 	},
 	loadWorldMap:function(map, callback){
-		MapModel.find({}).select('act chapter name').sort('act chapter').exec(function(err, maps){
+		MapModel.find({act:{$gt:0}}).select('act chapter name').sort('act chapter').exec(function(err, maps){
 			console.log(maps);
 			map.world_map = maps;
 			callback(map);
 		});
-	},
-	getMapList:function(callback){
-		MapModel.find({}).select('act chapter name').exec(callback);
 	}
 }

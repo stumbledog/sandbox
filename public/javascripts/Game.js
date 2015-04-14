@@ -159,7 +159,7 @@ var Game = (function(){
 
 		map_builder.npcs.forEach(function(npc){
 			npc.recruitable_units.forEach(function(recruitable_unit){
-				console.log(recruitable_unit);
+				//console.log(recruitable_unit);
 				manifest.push({src:recruitable_unit.sprite, id:recruitable_unit.sprite.split('/').pop()});
 				manifest.push({src:recruitable_unit.portrait, id:recruitable_unit.portrait.split('/').pop()});
 			});

@@ -28,7 +28,7 @@ UserController = {
 				user.save(function(err, user){
 					req.session.user_id = user._id;
 					res.cookie('user_id', user._id, {maxAge: 10 * 365 * 24 * 60 * 60 * 1000, httpOnly: true });
-					MapController.loadMap(user.hero.level, 1,1, function(map){
+					MapController.loadMap(user.hero.level, 0, 0, function(map){
 						console.log(user);
 						callback(user, user.hero, map);
 					});

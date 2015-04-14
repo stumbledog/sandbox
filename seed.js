@@ -186,18 +186,44 @@ function saveMap(){
 					},
 				]
 			},
-			{name:"Blacksmith",		sprite:"assets/Graphics/Characters/12 - Merchant.png",	index:2, type:"blacksmith", x:32*3, y:32*7},
-			{name:"Battlemaster",	sprite:"assets/Graphics/Characters/23 - Soldier.png",	index:0, type:"battlemaster", x:32*7, y:32*7},
+			//{name:"Blacksmith",		sprite:"assets/Graphics/Characters/12 - Merchant.png",	index:2, type:"blacksmith", x:32*7, y:32*7},
+			{name:"Battlemaster",	sprite:"assets/Graphics/Characters/23 - Soldier.png",	index:0, type:"battlemaster", x:32*3, y:32*7},
 		],
-		[],1,1,"Basecamp",true,true,320,320,10,10,[160,160]
+		[],0,0,"Basecamp",true,true,320,320,10,10,[160,160]
 	));
 
-	maps.push(initMap(
-		[],
-		true,
-		[],
-		[],1,2,"Forest",true,true,320,320,10,10,[160,160]
-	));
+	maps.push(initMap([],false,[],[],1, 1,"Ridgefield Park",false,false,320,320,10,10,[160,160]));
+	maps.push(initMap([],false,[],[],1, 2,"Palisade Park",false,false,320,320,10,10,[160,160]));
+	maps.push(initMap([],false,[],[],1, 3,"Leonia",false,false,320,320,10,10,[160,160]));
+	maps.push(initMap([],false,[],[],1, 4,"Fort Lee",false,false,320,320,10,10,[160,160]));
+	maps.push(initMap([],false,[],[],1, 5,"Edgewater",false,false,320,320,10,10,[160,160]));
+	maps.push(initMap([],false,[],[],1, 6,"Cliffside Park",false,false,320,320,10,10,[160,160]));
+	maps.push(initMap([],false,[],[],1, 7,"Englewood",false,false,320,320,10,10,[160,160]));
+	maps.push(initMap([],false,[],[],1, 8,"Tenafly",false,false,320,320,10,10,[160,160]));
+	maps.push(initMap([],false,[],[],1, 9,"Bergenfield",false,false,320,320,10,10,[160,160]));
+	maps.push(initMap([],false,[],[],1,10,"Teaneck",false,false,320,320,10,10,[160,160]));
+
+	maps.push(initMap([],false,[],[],2, 1,"Forest",false,false,320,320,10,10,[160,160]));
+	maps.push(initMap([],false,[],[],2, 2,"Forest",false,false,320,320,10,10,[160,160]));
+	maps.push(initMap([],false,[],[],2, 3,"Forest",false,false,320,320,10,10,[160,160]));
+	maps.push(initMap([],false,[],[],2, 4,"Forest",false,false,320,320,10,10,[160,160]));
+	maps.push(initMap([],false,[],[],2, 5,"Forest",false,false,320,320,10,10,[160,160]));
+	maps.push(initMap([],false,[],[],2, 6,"Forest",false,false,320,320,10,10,[160,160]));
+	maps.push(initMap([],false,[],[],2, 7,"Forest",false,false,320,320,10,10,[160,160]));
+	maps.push(initMap([],false,[],[],2, 8,"Forest",false,false,320,320,10,10,[160,160]));
+	maps.push(initMap([],false,[],[],2, 9,"Forest",false,false,320,320,10,10,[160,160]));
+	maps.push(initMap([],false,[],[],2,10,"Forest",false,false,320,320,10,10,[160,160]));
+
+	maps.push(initMap([],false,[],[],3, 1,"Park",false,false,320,320,10,10,[160,160]));
+	maps.push(initMap([],false,[],[],3, 2,"Park",false,false,320,320,10,10,[160,160]));
+	maps.push(initMap([],false,[],[],3, 3,"Park",false,false,320,320,10,10,[160,160]));
+	maps.push(initMap([],false,[],[],3, 4,"Park",false,false,320,320,10,10,[160,160]));
+	maps.push(initMap([],false,[],[],3, 5,"Park",false,false,320,320,10,10,[160,160]));
+	maps.push(initMap([],false,[],[],3, 6,"Park",false,false,320,320,10,10,[160,160]));
+	maps.push(initMap([],false,[],[],3, 7,"Park",false,false,320,320,10,10,[160,160]));
+	maps.push(initMap([],false,[],[],3, 8,"Park",false,false,320,320,10,10,[160,160]));
+	maps.push(initMap([],false,[],[],3, 9,"Park",false,false,320,320,10,10,[160,160]));
+	maps.push(initMap([],false,[],[],3,10,"Park",false,false,320,320,10,10,[160,160]));
 
 	var count = 0;
 	maps.forEach(function(map){
