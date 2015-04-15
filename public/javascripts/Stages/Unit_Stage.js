@@ -79,9 +79,11 @@ Unit_Stage.prototype.initEvent = function(){
 	this.on("stagemousedown", function(event){
 		var x = event.stageX/this.scaleX + this.regX;
 		var y = event.stageY/this.scaleY + this.regY;
+
 		if(this.target && this.target.status === "death"){
 			this.target = null;
 		}
+
 		this.hero.hideRange();
 		if(event.nativeEvent.button == 2){
 			if(this.target){

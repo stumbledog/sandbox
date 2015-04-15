@@ -235,14 +235,32 @@ function saveMap(){
 				regY:9,
 				radius:10,
 				type:"melee",
-				health:10,
+				health:100,
 				damage:1,
 				range:16,
-				attack_speed:45,
+				attack_speed:90,
 				movement_speed:1,
 				skills:null,
 				gold:3,
-				xp:2,
+				xp:5,
+			},
+			{
+				name:"slime",
+				sprite:"assets/Graphics/Characters/29 - Monster.png",
+				index:0,
+				x:300,
+				y:100,
+				regY:9,
+				radius:10,
+				type:"melee",
+				health:100,
+				damage:1,
+				range:16,
+				attack_speed:90,
+				movement_speed:1,
+				skills:null,
+				gold:3,
+				xp:5,
 			},
 		],1, 1,"Ridgefield Park",false,false,640,640,20,20,[160,160]));
 	maps.push(initMap([],false,[],[],1, 2,"Palisade Park",false,false,320,320,10,10,[160,160]));
@@ -295,61 +313,61 @@ function saveItems(){
 	items.push(new PrototypeWeaponModel({primary_attribute:1, hand:1, type:"weapon", attack_type:"melee", name:"Dagger",
 		sprite:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:245,cropY:102,width:13,height:14,regX:9,regY:9,scale:0.8},
 		icon:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:245,cropY:102,width:13,height:14,regX:9,regY:9,scale:0.8},
-		min_damage:1.5,max_damage:3,range:16,attack_speed:30,
+		min_damage:1.5,max_damage:3,range:16,attack_speed:60,
 	}));
 
 	items.push(new PrototypeWeaponModel({primary_attribute:0, hand:1, type:"weapon", attack_type:"melee", name:"Long\nSword",
 		sprite:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:267,cropY:100,width:16,height:16,regX:12,regY:12,scale:0.8},
 		icon:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:267,cropY:100,width:16,height:16,regX:12,regY:12,scale:0.8},
-		min_damage:2,max_damage:4,range:16,attack_speed:40,
+		min_damage:2,max_damage:4,range:16,attack_speed:75,
 	}));
 
 	items.push(new PrototypeWeaponModel({primary_attribute:0, hand:2, type:"weapon", attack_type:"melee", name:"Great\nSword",
 		sprite:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:292,cropY:100,width:16,height:16,regX:12,regY:12,scale:0.8},
 		icon:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:292,cropY:100,width:16,height:16,regX:12,regY:12,scale:0.8},
-		min_damage:3,max_damage:6,range:32,attack_speed:50,
+		min_damage:3,max_damage:6,range:32,attack_speed:90,
 	}));
 
 	items.push(new PrototypeWeaponModel({primary_attribute:0, hand:1, type:"weapon", attack_type:"melee", name:"Masamune",
 		sprite:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:364,cropY:100,width:16,height:16,regX:12,regY:12,scale:0.8},
 		icon:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:364,cropY:100,width:16,height:16,regX:12,regY:12,scale:0.8},
-		min_damage:2,max_damage:4,range:16,attack_speed:40,
+		min_damage:2,max_damage:4,range:16,attack_speed:75,
 	}));
 
 	items.push(new PrototypeWeaponModel({primary_attribute:0, hand:2, type:"weapon", attack_type:"melee", name:"Spear",
 		sprite:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:6,cropY:124,width:16,height:16,regX:12,regY:12,scale:0.8},
 		icon:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:6,cropY:124,width:16,height:16,regX:12,regY:12,scale:0.8},
-		min_damage:3,max_damage:6,range:32,attack_speed:40,
+		min_damage:3,max_damage:6,range:32,attack_speed:90,
 	}));
 
 	items.push(new PrototypeWeaponModel({primary_attribute:0, hand:1, type:"weapon", attack_type:"melee", name:"Battle Axe",
 		sprite:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:29,cropY:125,width:16,height:14,regX:12,regY:9,scale:0.8},
 		icon:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:29,cropY:125,width:16,height:14,regX:12,regY:9,scale:0.8},
-		min_damage:3,max_damage:6,range:16,attack_speed:40,
+		min_damage:3,max_damage:6,range:16,attack_speed:90,
 	}));
 
 	items.push(new PrototypeWeaponModel({primary_attribute:0, hand:1, type:"weapon", attack_type:"melee", name:"Hammer",
 		sprite:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:51,cropY:124,width:16,height:16,regX:10,regY:10,scale:0.8},
 		icon:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:51,cropY:124,width:16,height:16,regX:10,regY:10,scale:0.8},
-		min_damage:3,max_damage:6,range:16,attack_speed:40,
+		min_damage:3,max_damage:6,range:16,attack_speed:90,
 	}));
 
 	items.push(new PrototypeWeaponModel({primary_attribute:1, hand:1, type:"weapon", attack_type:"melee", name:"Claw",
 		sprite:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:77,cropY:124,width:15,height:15,regX:10,regY:10,scale:0.8},
 		icon:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:77,cropY:124,width:15,height:15,regX:10,regY:10,scale:0.8},
-		min_damage:1.5,max_damage:3,range:16,attack_speed:20,
+		min_damage:1.5,max_damage:3,range:16,attack_speed:60,
 	}));
 
 	items.push(new PrototypeWeaponModel({primary_attribute:2, hand:2, type:"weapon", attack_type:"range", name:"Wand",
 		sprite:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:196,cropY:125,width:16,height:16,regX:4,regY:12,scale:0.8},
 		icon:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:196,cropY:125,width:16,height:16,regX:4,regY:12,scale:0.8},
-		min_damage:2,max_damage:4,range:160,attack_speed:30,
+		min_damage:2,max_damage:4,range:160,attack_speed:75,
 	}));
 
 	items.push(new PrototypeWeaponModel({primary_attribute:2, hand:2, type:"weapon", attack_type:"range", name:"Staff",
 		sprite:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:244,cropY:125,width:16,height:16,regX:4,regY:12,scale:0.8},
 		icon:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:244,cropY:125,width:16,height:16,regX:4,regY:12,scale:0.8},
-		min_damage:3,max_damage:6,range:160,attack_speed:40,
+		min_damage:3,max_damage:6,range:160,attack_speed:90,
 	}));
 
 	items.push(new PrototypeArmorModel({primary_attribute:1, part:"head", type:"armor", name:"Leather\nHelm",

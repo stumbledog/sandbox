@@ -104,7 +104,7 @@ Armor.prototype.initDetail = function(){
 				attr_text.text = "+" + this.cooldown_reduce + "% Cooldown reduce";
 			break;
 			case 9:
-				attr_text.text = "+" + this.health_regen + " Health regen per sec";
+				attr_text.text = "+" + this.health_regen + " Health regen per 5sec";
 			break;
 			case 10:
 				attr_text.text = "+" + this.resource_regen + " Resource regen per sec";

@@ -9,17 +9,24 @@ Monster.prototype.unit_initialize = Monster.prototype.initialize;
 Monster.prototype.initialize = function(builder){
 	this.unit_initialize(builder);
 
-	this.health = builder.health;
-	this.damage = builder.damage;
-	this.attack_speed = builder.attack_speed;
+	this.max_health = this.health = builder.health;
+	this.right_min_damage = builder.damage;
+	this.right_max_damage = builder.damage * 2;
+	this.right_attack_speed = builder.attack_speed;
 	this.movement_speed = builder.movement_speed;
 	this.range = builder.range;
 	this.radius = builder.radius;
+	this.damage_reduction = 0;
+	this.gold = builder.gold;
+	this.xp = builder.xp;
+
+	this.right_weapon_tick = 0;
+
 	console.log(builder);
 
 	this.team = "Monster";
 	this.health_color = "#C00";
-	this.damage_color = "#CC0";
+	this.damage_color = "#FFE11A";
 	this.initHealthBar();
 	this.initEventListener();
 	this.rotate(0,1);
@@ -29,7 +36,8 @@ Monster.prototype.initialize = function(builder){
 Monster.prototype.initEventListener = function(){
 	this.addEventListener("mousedown", function(event){
 		if(event.nativeEvent.button == 2){
-			this.getStage().setTarget(this);
+			//this.getStage().setTarget(this);
+			this.stage.hero.attack(this);
 		}else{
 
 		}
@@ -62,7 +70,7 @@ Monster.prototype.hit = function(attacker, damage){
 Monster.prototype.die = function(attacker){
 	var allied_units = this.game.getUnitStage().getAlliedUnits(attacker);
 	allied_units.forEach(function(unit){
-		unit.gainExp(this.exp/allied_units.length);
+		unit.gainXP(this.xp/allied_units.length * (1 + (allied_units.length - 1) / 10));
 	},this);
 
 	Unit.prototype.die.call(this, attacker);

@@ -12,7 +12,7 @@ Hero.prototype.hero_initialize = function(builder){
 
 	this.team = "Player";
 	this.health_color = "#0C0";
-	this.damage_color = "#C00";
+	this.damage_color = "#D40D12";
 
 	this.initHealthBar();
 	this.renderPortrait(builder.portrait.split('/').pop(), builder.index);
@@ -48,6 +48,16 @@ Hero.prototype.move = function(x, y){
 	}
 }
 
+Hero.prototype.renderHealthBar = function(){
+	Unit.prototype.renderHealthBar.call(this);
+	this.game.getUIStage().refreshHealthBar();
+}
+
+Hero.prototype.regenerate_resource = function(regen){
+	Unit.prototype.regenerate_resource.call(this, regen);
+	this.game.getUIStage().refreshResourceBar();
+}
+
 Hero.prototype.attackTarget = function(target, damage){
 	Unit.prototype.attackTarget.call(this, target, damage);
 	this.game.getUIStage().refreshHealthBar();
@@ -60,8 +70,8 @@ Hero.prototype.hit = function(attacker, damage){
 	this.game.getUIStage().refreshResourceBar();
 }
 
-Hero.prototype.gainExp = function(exp){
-	Unit.prototype.gainExp.call(this, exp);
+Hero.prototype.gainXP = function(exp){
+	Unit.prototype.gainXP.call(this, exp);
 	this.game.getUIStage().refreshExpBar();
 }
 

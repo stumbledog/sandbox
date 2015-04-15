@@ -14,18 +14,11 @@ Unit.prototype.initialize = function(builder){
 	this.ui_stage = this.game.getUIStage();
 
 	this.blocks = this.game.getMapStage().getBlock();
-	this.ticks = 60;
-	this.order_tick = 29;
+	this.ticks = 0;
 
 	this.x = builder.x;
 	this.y = builder.y;
-
 	this.name = builder.name;
-	this.buff = {
-		damage:1,
-		attack_speed:1,
-		movement_speed:1,
-	};
 
 	this.health_regen = 0;
 	this.resource_regen = 0;
@@ -36,11 +29,13 @@ Unit.prototype.initialize = function(builder){
 	this.min_damage = 0;
 	this.max_damage = 0;
 	this.attack_speed = 0;
-	this.crit_rate = 0;
-	this.crit_damage = 0;
+	this.critical_rate = 0;
+	this.critical_damage = 0;
 
 	this.cooldown_reduction = 0;
 	this.movement_speed = 0;
+
+	this.aggro_radius = 80;
 
 	this.stats = {};
 	this.items = [];
@@ -61,6 +56,22 @@ Unit.prototype.initialize = function(builder){
 
 	if(builder.skills){
 		this.initSkills(builder.skills);
+	}
+}
+
+Unit.prototype.getDamage = function(hand){
+	switch(hand){
+		case "right":
+			var damage = Math.random() * (this.right_max_damage - this.right_min_damage) + this.right_min_damage;
+			break;
+		case "left":
+			var damage = Math.random() * (this.left_max_damage - this.left_min_damage) + this.left_min_damage;
+			break;
+	}
+	if(this.critical_rate/100 >= Math.random()){
+		return {damage:(2 + this.critical_damage / 100) * damage, critical:true};
+	}else{
+		return {damage:damage, critical:false};
 	}
 }
 
@@ -111,7 +122,7 @@ Unit.prototype.renderUnit = function(src_id, index, regX, regY){
 	this.sprite.regY = regY;
 	this.sprite.z = 0;
 	this.outline = this.sprite.clone();
-	this.outline.scaleX = this.outline.scaleY = 1.2;
+	this.outline.scaleX = this.outline.scaleY = 1.1;
 	this.outline.visible = false;
 	this.addChild(this.outline, this.sprite);
 }
@@ -223,7 +234,7 @@ Unit.prototype.procMove = function(map){
 	this.x += this.velocity.x;
 	this.y += this.velocity.y;
 
-	if(this.order_tick % 8 === 0){
+	if(this.ticks % 8 === 0){
 		this.rotate(this.velocity.x, this.velocity.y);
 	}
 }
@@ -381,7 +392,7 @@ Unit.prototype.rotate = function(dx, dy){
 	this.sprite._animation.speed = this.movement_speed / 5;
 }
 
-Unit.prototype.attackTarget = function(target, damage){
+Unit.prototype.attackTarget = function(target, hand){
 	if(this.resource_type === "fury"){
 		this.resource += 5;
 		this.resource = this.resource > this.max_resource ? this.max_resource : this.resource;
@@ -393,14 +404,14 @@ Unit.prototype.attackTarget = function(target, damage){
 		createjs.Tween.get(this.weapon)
 			.to({rotation:this.weapon.rotation + this.weapon.swing},this.attack_speed * 5, createjs.Ease.backOut)
 			.call(function(){
-				target.hit(this, this.damage);
+				target.hit(this, this.getDamage());
 			}.bind(this))
 			.to({rotation:this.weapon.rotation},this.attack_speed * 5, createjs.Ease.backOut);
 	}else{
 		createjs.Tween.get(this.sprite)
 			.to({y:-8},this.attack_speed * 5, createjs.Ease.backOut)
 			.call(function(){
-				target.hit(this, this.damage);
+				target.hit(this, this.getDamage(hand));
 			}.bind(this))
 			.to({y:0},this.attack_speed * 5, createjs.Ease.backOut);
 		createjs.Tween.get(this.outline)
@@ -409,22 +420,25 @@ Unit.prototype.attackTarget = function(target, damage){
 	}
 }
 
-Unit.prototype.hit = function(attacker, damage){
+Unit.prototype.hit = function(attacker, damage_object){
 	if(this.resource_type === "fury"){
 		this.resource += 1;
 		this.resource = this.resource > this.max_resource ? this.max_resource : this.resource;
 	}
 
 	if(this.status !== "death"){
+		var damage = (1 - this.damage_reduction) * damage_object.damage;
 		this.health -= damage;
-		var damage_text = new OutlineText(damage,"bold 12px Arial",this.damage_color,"#000",2);
+		var font_size = damage_object.critical ? "16" : "12";
+		var outline = damage_object.critical ? "4" : "2";
+		var damage_text = new OutlineText(Math.round(damage),"bold "+font_size+"px Arial",attacker.damage_color,"#000",outline);
 		damage_text.x = this.x;
 		damage_text.y = this.y;
-		//damage_text.alpha = 0.8;
 		this.getStage().addChild(damage_text);
 		var dx = Math.random() * 32-16;
+		var dy = Math.random() * 16;
 		var stage = this.getStage();
-		createjs.Tween.get(damage_text).to({x:this.x + dx,y:this.y - 32},500, createjs.Ease.cubicOut).wait(500).call(function(item){
+		createjs.Tween.get(damage_text).to({x:this.x + dx,y:this.y - 32 - dy},500, createjs.Ease.cubicOut).wait(500).call(function(item){
 			stage.removeChild(damage_text);
 		});
 		if(this.health <= 0){
@@ -445,7 +459,7 @@ Unit.prototype.hit = function(attacker, damage){
 
 Unit.prototype.heal = function(heal){
 	this.health = this.health + heal > this.max_health ? this.max_health : this.health + heal;
-	var health_text = new OutlineText(Math.floor(heal), "bold 12px Arial", this.health_color, "#000", 2);
+	var health_text = new OutlineText(Math.floor(heal), "bold 10px Arial", this.health_color, "#000", 2);
 	health_text.x = this.x;
 	health_text.y = this.y;
 	this.getStage().addChild(health_text);
@@ -457,7 +471,13 @@ Unit.prototype.heal = function(heal){
 	this.renderHealthBar();
 }
 
-Unit.prototype.gainExp = function(exp){
+Unit.prototype.regenerate_resource = function(regen){
+	regen = this.resource_type === "fury" ? regen - 3 : regen;
+	this.resource = this.resource + regen > this.max_resource ? this.max_resource : this.resource + regen < 0 ? 0 : this.resource + regen;
+
+}
+
+Unit.prototype.gainXP = function(exp){
 	this.exp += exp;
 	var exp_text = new OutlineText("+" + Math.round(exp)+" exp","bold 8px Arial","#fff","#000",2);
 	exp_text.x = -exp_text.getMeasuredWidth()/2;
@@ -538,9 +558,15 @@ Unit.prototype.attackTick = function(){
 	if(this.order.target && this.order.target.status !== "death"){
 		if(this.getSquareDistance(this.order.target) <= Math.pow(this.range + this.radius + this.order.target.radius,2)){
 			this.velocity = new Vector(0,0);
-			if(this.ticks > this.attack_speed){
-				this.ticks = 0;
-				this.attackTarget(this.order.target);
+
+			if(this.right_weapon_tick > this.right_attack_speed){
+				this.right_weapon_tick = 0 ;
+				this.attackTarget(this.order.target, "right");
+			}
+
+			if(this.left_weapon_tick && this.left_weapon_tick > this.left_attack_speed){
+				this.left_weapon_tick = 0 ;
+				this.attackTarget(this.order.target, "left");
 			}
 		}else{
 			this.procMove(this.order.map);
@@ -550,15 +576,21 @@ Unit.prototype.attackTick = function(){
 
 Unit.prototype.moveAttackTick = function(distance){
 	if(this.target && this.target.status !== "death"){
-		console.log(this.range,this.radius,this.target.radius);
 		if(this.getSquareDistance(this.target) <= Math.pow(this.range + this.radius + this.target.radius,2)){
 			this.velocity = new Vector(0,0);
-			if(this.ticks > this.attack_speed){
-				this.ticks = 0;
-				this.attackTarget(this.target);
+
+			if(this.right_weapon_tick > this.right_attack_speed){
+				this.right_weapon_tick = 0 ;
+				this.attackTarget(this.target, "right");
 			}
+
+			if(this.left_weapon_tick && this.left_weapon_tick > this.left_attack_speed){
+				this.left_weapon_tick = 0 ;
+				this.attackTarget(this.target, "left");
+			}
+
 		}else{
-			if(this.order_tick % 30 === 0 || !this.target_map){
+			if(this.ticks % 30 === 0 || !this.target_map){
 				this.target = this.findClosestEnemy(this.aggro_radius) || this.target;
 				this.target_map = this.findPath({x:this.target.x,y:this.target.y});
 			}
@@ -612,6 +644,17 @@ Unit.prototype.tick = function(){
 		this.sprite.cache(-12,-16,24,32);
 	}
 
+	if(this.health_regen && this.ticks % 300 === 0){
+		this.heal(this.health_regen);
+	}
+
+	if(this.resource_type && this.ticks % 60 === 0){
+		this.regenerate_resource(this.resource_regen);
+	}
+
 	this.ticks++;
-	this.order_tick++;
+	this.right_weapon_tick++;
+	if(this.left_weapon_tick >= 0){
+		this.left_weapon_tick++;
+	}
 }

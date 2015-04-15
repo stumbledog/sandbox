@@ -134,7 +134,34 @@ var Game = (function(){
 		manifest.push({src:user_builder.hero.sprite, id:user_builder.hero.sprite.split('/').pop()});
 		manifest.push({src:user_builder.hero.portrait, id:user_builder.hero.portrait.split('/').pop()});
 
+		console.log(user_builder.inventory.slots);
+
+		if(user_builder.inventory.slots){
+			user_builder.inventory.slots.forEach(function(item){
+				manifest.push({src:item.icon.source, id:item.icon.source.split('/').pop()});
+			});
+		}
+
+		if(user_builder.hero.items){
+			for(key in user_builder.hero.items){
+				if(user_builder.hero.items[key]){
+					if(user_builder.hero.items[key].icon){
+						manifest.push({src:user_builder.hero.items[key].icon.source, id:user_builder.hero.items[key].icon.source.split('/').pop()});
+					}
+				}
+			}
+		}
+
 		user_builder.followers.forEach(function(unit_builder){
+			if(unit_builder.items){
+				for(key in unit_builder.items){
+					if(unit_builder.items[key]){
+						if(unit_builder.items[key].icon){
+							manifest.push({src:unit_builder.items[key].icon.source, id:unit_builder.items[key].icon.source.split('/').pop()});
+						}
+					}
+				}
+			}
 			manifest.push({src:unit_builder.sprite, id:unit_builder.sprite.split('/').pop()});
 			if(unit_builder.portrait){
 				manifest.push({src:unit_builder.portrait, id:unit_builder.portrait.split('/').pop()});

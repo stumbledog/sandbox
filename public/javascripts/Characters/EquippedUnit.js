@@ -34,7 +34,7 @@ EquippedUnit.prototype.equipped_unit_initialize = function(builder){
 	this.char_radius = 12;
 	this.aggro_radius = 80;
 	this.char_range = 16;
-	this.char_right_attack_speed = 30;
+	this.char_right_attack_speed = 60;
 
 	this.equipments = {
 		head:null,
@@ -75,23 +75,6 @@ EquippedUnit.prototype.initItems = function(builder_items){
 			}
 		}
 	}
-	/*
-	builder_items.forEach(function(item, index){
-		if(item){
-			switch(item.type){
-				case "weapon":
-					var weapon = new Weapon(item)
-					weapon.bin = this;
-					this.items[index] = weapon;
-				break;
-				case "armor":
-					var armor = new Armor(item)
-					armor.bin = this;
-					this.items[index] = armor;
-				break;
-			}
-		}
-	}, this);*/
 }
 
 EquippedUnit.prototype.updateStats = function(){
@@ -119,10 +102,10 @@ EquippedUnit.prototype.updateStats = function(){
 		this.range = this.equipments.main_hand.range;		
 	}else{
 		this.right_weapon_tick = 0;
-		this.right_attack_speed = 30;
+		this.right_attack_speed = 60;
 		this.right_min_damage = 1;
 		this.right_max_damage = 2;
-		this.range = 16;		
+		this.range = 16;
 	}
 
 	if(this.equipments.off_hand && this.equipments.off_hand.type === "weapon"){
@@ -136,33 +119,7 @@ EquippedUnit.prototype.updateStats = function(){
 		this.left_min_damage = 0;
 		this.left_max_damage = 0;
 	}
-/*
-	if(this.items[9]){
-		this.right_weapon_tick = 0;
-		this.right_attack_speed = this.items[9].attack_speed;
-		this.right_min_damage = this.items[9].min_damage_bonus ? this.items[9].min_damage + this.items[9].min_damage_bonus : this.items[9].min_damage;
-		this.right_max_damage = this.items[9].max_damage_bonus ? this.items[9].max_damage + this.items[9].max_damage_bonus : this.items[9].max_damage;
-		this.range = this.items[9].range;
-	}else{
-		this.right_weapon_tick = 0;
-		this.right_attack_speed = 30;
-		this.right_min_damage = 1;
-		this.right_max_damage = 2;
-		this.range = 16;
-	}
 
-	if(this.items[10]){
-		this.left_weapon_tick = 0;
-		this.left_attack_speed = this.items[10].attack_speed;
-		this.left_min_damage = this.items[10].min_damage_bonus ? this.items[10].min_damage + this.items[10].min_damage_bonus : this.items[10].min_damage;
-		this.left_max_damage = this.items[10].max_damage_bonus ? this.items[10].max_damage + this.items[10].max_damage_bonus : this.items[10].max_damage;
-	}else{
-		delete this.left_weapon_tick;
-		this.left_attack_speed = 0;
-		this.left_min_damage = 0;
-		this.left_max_damage = 0;
-	}
-*/
 	var strength, agility, intelligence, stamina, attack_speed_bonus, critical_rate, critical_damage;
 	var health_regen, resource_regen, armor, life_steal, cooldown_reduction, movement_speed_bonus;
 	strength = agility = intelligence = stamina = attack_speed_bonus = critical_rate = critical_damage = 0;
@@ -190,27 +147,8 @@ EquippedUnit.prototype.updateStats = function(){
 			movement_speed_bonus += item.movement_speed ? item.movement_speed : 0;
 		}
 	}
-/*
-	this.items.forEach(function(item, index){
-		strength += item.strength ? item.strength : 0;
-		agility += item.agility ? item.agility : 0;
-		intelligence += item.intelligence ? item.intelligence : 0;
-		stamina += item.stamina ? item.stamina : 0;
 
-		attack_speed_bonus += item.attack_speed_bonus ? item.attack_speed_bonus : 0;
-		critical_rate += item.critical_rate ? item.critical_rate : 0;
-		critical_damage += item.critical_damage ? item.critical_damage : 0;
 
-		health_regen += item.health_regen ? item.health_regen : 0;
-		resource_regen += item.resource_regen ? item.resource_regen : 0;
-		armor += item.armor ? item.armor : 0;
-		armor += item.armor_bonus ? item.armor_bonus : 0;
-		life_steal += item.life_steal ? item.life_steal : 0;
-
-		cooldown_reduction += item.cooldown_reduce ? item.cooldown_reduce : 0;
-		movement_speed_bonus += item.movement_speed ? item.movement_speed : 0;
-	});
-*/
 	this.strength = this.char_strength + strength;
 	this.agility = this.char_agility + agility;
 	this.intelligence = this.char_intelligence + intelligence;
@@ -219,7 +157,8 @@ EquippedUnit.prototype.updateStats = function(){
 	var health_rate = this.health/this.max_health; 
 	this.max_health = this.stamina * 10 + this.strength * 5;
 	this.health = health_rate * this.max_health;
-	this.max_resource = this.resource = 100;
+	this.max_resource = 100;
+	this.resource = this.resource_type === "fury" ? 0 : 100;
 
 	this.attack_speed_bonus = attack_speed_bonus;
 	this.right_attack_speed *= (100 - this.attack_speed_bonus)/100;
@@ -228,11 +167,12 @@ EquippedUnit.prototype.updateStats = function(){
 	}
 
 	this.critical_rate = critical_rate;
-	this.critical_damage = 100 + critical_damage;
+	this.critical_damage = critical_damage;
 
-	this.health_regen = health_regen;
+	this.health_regen = health_regen + this.stamina;
 	this.resource_regen = resource_regen;
 	this.armor = armor;
+	this.damage_reduction = armor / (armor + 100);
 	this.life_steal = life_steal;
 
 	this.cooldown_reduction = cooldown_reduction;
@@ -260,9 +200,9 @@ EquippedUnit.prototype.updateStats = function(){
 	}
 
 	this.radius = this.char_radius = 12;
-	this.dps = (this.right_min_damage + this.right_max_damage) / 2 * 30 / this.right_attack_speed * (1 - this.critical_rate / 100 + ((2+critical_damage/100) * this.critical_rate/100));
+	this.dps = (this.right_min_damage + this.right_max_damage) / 2 * 60 / this.right_attack_speed * (1 - this.critical_rate / 100 + ((2+critical_damage/100) * this.critical_rate/100));
 	if(this.equipments.off_hand && this.equipments.off_hand.type === "weapon"){
-		this.dps += (this.left_min_damage + this.left_max_damage) / 2 * 30 / this.left_attack_speed * (1 - this.critical_rate / 100 + ((2+critical_damage/100) * this.critical_rate/100));
+		this.dps += (this.left_min_damage + this.left_max_damage) / 2 * 60 / this.left_attack_speed * (1 - this.critical_rate / 100 + ((2+critical_damage/100) * this.critical_rate/100));
 	}
 }
 
@@ -330,63 +270,7 @@ EquippedUnit.prototype.equipItem = function(item){
 			}
 		break;
 	}
-	/*
-	switch(item.constructor.name){
-		case "Weapon":
-			switch(item.hand){
-				case 1:
-					if(this.items[9] && this.items[9].hand === 2){
-						this.user.inventory.addItem(this.items[9]);
-						this.items[9] = item;
-					}else if(!this.items[9]){
-						this.items[9] = item;
-					}else if(!this.items[10]){
-						this.items[10] = item;
-					}else{
-						this.user.inventory.addItem(this.items[9]);
-						this.items[9] = item;
-					}
-				break;
-				case 2:
-					if(this.items[9]){
-						this.user.inventory.addItem(this.items[9]);
-					}
-					if(this.items[10]){
-						this.user.inventory.addItem(this.items[10]);
-					}
-					this.items[9] = item;
-					delete this.items[10];
-				break;
-			}
-		break;
-		case "Armor":
-			switch(item.part){
-				case 0:
-				case 1:
-				case 2:
-				case 3:
-				case 4:
-				case 5:
-				case 6:
-					if(this.items[item.part]){
-						this.user.inventory.addItem(this.items[item.part]);
-					}
-					this.items[item.part] = item;
-				break;
-				case 7:
-					if(!this.items[item.part]){
-						this.items[item.part] = item;
-					}else if(!this.items[item.part + 1]){
-						this.items[item.part + 1] = item;
-					}else{
-						this.user.inventory.addItem(this.items[item.part]);
-						this.items[item.part] = item;
-					}
-				break;
-			}
-		break;
-	}
-	*/
+
 	this.user.inventory.displayEquipItems(this);
 	this.user.saveEquipItems();
 	this.updateStats();

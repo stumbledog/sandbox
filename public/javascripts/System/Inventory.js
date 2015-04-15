@@ -27,7 +27,6 @@ Inventory.prototype.initialize = function(builder, user){
 	if(builder.slots){
 		this.initInventoryItem(builder.slots);
 	}
-
 }
 
 Inventory.prototype.initFrame = function(){
@@ -56,7 +55,7 @@ Inventory.prototype.initFrame = function(){
 	bg.alpha = 0.9;
 
 	this.unit_sprite_container = new createjs.Container();
-	this.unit_sprite_container.x = 210;
+	this.unit_sprite_container.x = 230;
 	this.unit_sprite_container.y = 64;
 
 	this.close_button = new createjs.Container();
@@ -101,7 +100,7 @@ Inventory.prototype.initStatsTypeContainer = function(){
 	this.initStatsType("Health Regen", 10, 80);
 	this.initStatsType("Resource Regen", 10, 90);
 	this.initStatsType("Armor", 10, 100);
-	this.initStatsType("Life Steal", 10, 110);
+	this.initStatsType("Damage Reduction", 10, 110);
 
 	this.initStatsType("Right Damage", 10, 130);
 	this.initStatsType("Left Damage", 10, 140);
@@ -110,8 +109,9 @@ Inventory.prototype.initStatsTypeContainer = function(){
 	this.initStatsType("Crit. Rate", 10, 170);
 	this.initStatsType("Crit. Damage", 10, 180);
 
-	this.initStatsType("DPS", 160, 150);
+	this.initStatsType("DPS", 160, 140);
 
+	this.initStatsType("Life Steal", 160, 160);
 	this.initStatsType("Cooldown Reduction", 160, 170);
 	this.initStatsType("Movement Speed", 160, 180);
 
@@ -141,23 +141,23 @@ Inventory.prototype.displayStats = function(unit){
 	this.statsText["Health Regen"].text = unit.health_regen;
 	this.statsText["Resource Regen"].text = unit.resource_regen;
 	this.statsText["Armor"].text = unit.armor;
-	this.statsText["Life Steal"].text = unit.life_steal + "%";
+	this.statsText["Damage Reduction"].text = (unit.damage_reduction * 100).toFixed(1) + "%";
 
 	this.statsText["Right Damage"].text = unit.right_min_damage + " - " + unit.right_max_damage;
 	this.statsText["Left Damage"].text = unit.left_min_damage + " - " + unit.left_max_damage;
-	this.statsText["Right Att. Speed"].text = Math.round(30 / unit.right_attack_speed * 100)/100;
-	this.statsText["Left Att. Speed"].text = unit.left_attack_speed ? (30 / unit.left_attack_speed).toFixed(2) : 0;
-
+	this.statsText["Right Att. Speed"].text = Math.round(60 / unit.right_attack_speed * 100)/100;
+	this.statsText["Left Att. Speed"].text = unit.left_attack_speed ? (60 / unit.left_attack_speed).toFixed(2) : 0;
 	this.statsText["Crit. Rate"].text = unit.critical_rate + "%";
-	this.statsText["Crit. Damage"].text = unit.critical_damage + "%";
+	this.statsText["Crit. Damage"].text = "+"+unit.critical_damage + "%";
 
 	this.statsText["DPS"].text = unit.dps.toFixed(2);
 
+	this.statsText["Life Steal"].text = unit.life_steal + "%";
 	this.statsText["Cooldown Reduction"].text = unit.cooldown_reduction + "%";
 	this.statsText["Movement Speed"].text = unit.movement_speed;
 
 	for(key in this.statsText){
-		if(key === "DPS" || key === "Cooldown Reduction" || key === "Movement Speed"){
+		if(key === "DPS" || key === "Life Steal" || key === "Cooldown Reduction" || key === "Movement Speed"){
 			this.statsText[key].x = 300 - this.statsText[key].getMeasuredWidth();
 		}else{
 			this.statsText[key].x = 150 - this.statsText[key].getMeasuredWidth();
@@ -203,55 +203,21 @@ Inventory.prototype.displayEquipItems = function(unit){
 			equip_container.addChild(container);
 		}
 	}
-
-/*
-	unit.items.forEach(function(item, index){
-		if(item){
-			var container = new createjs.Container();
-			var border = new createjs.Shape();
-			border.graphics.s("#000").ss(1).f(item.colors[item.rating-1]).dr(0,0,20,20);
-			var icon = item.icon_img.clone();
-			icon.x = icon.y = 10;
-			container.addChild(border, icon)
-			container.addEventListener("rollover", function(event){
-				var x = this.equip_item_container.children[index].x - 140;
-				var y = this.equip_item_container.children[index].y + 200;
-				item.showDetail(x, y, this.stage);
-				this.stage.update();
-			}.bind(this));
-			container.addEventListener("rollout", function(event){
-				this.stage.removeChild(item.detail);
-				this.stage.update();
-			}.bind(this));
-			container.addEventListener("mousedown", function(event){
-				if(event.nativeEvent.button === 2){
-					this.addItem(unit.items[index]);
-					delete unit.items[index];
-					container.removeAllChildren();
-					this.user.saveEquipItems();
-					unit.updateStats();
-					this.displayStats(unit);
-				}
-			}.bind(this));
-
-			this.equip_item_container.children[index].addChild(container);
-		}
-	}, this);*/
 }
 
 Inventory.prototype.initEquipItemContainers = function(){
 	this.equip_item_container = new createjs.Container();
-	this.initEquipItemContainer("head", 200, 40, 244, 149, 16, 15);
-	this.initEquipItemContainer("chest", 200, 60, 316, 125, 16, 15);
-	this.initEquipItemContainer("gloves", 160, 70, 99, 126, 15, 15);
-	this.initEquipItemContainer("boots", 200, 100, 173, 173, 15, 16);
-	this.initEquipItemContainer("belt", 200, 80, 340, 150, 16, 15);
-	this.initEquipItemContainer("cape", 220, 50, 4, 173, 16, 16);
-	this.initEquipItemContainer("necklace", 180, 50, 148, 173, 16, 15);
-	this.initEquipItemContainer("right_ring", 180, 80, 78, 176, 12, 12);
-	this.initEquipItemContainer("left_ring", 220, 80, 78, 176, 12, 12);
-	this.initEquipItemContainer("main_hand", 160, 90, 245, 103, 13, 14);
-	this.initEquipItemContainer("off_hand", 240, 90, 198, 149, 13, 16);
+	this.initEquipItemContainer("head", 220, 40, 244, 149, 16, 15);
+	this.initEquipItemContainer("chest", 220, 60, 316, 125, 16, 15);
+	this.initEquipItemContainer("gloves", 180, 70, 99, 126, 15, 15);
+	this.initEquipItemContainer("boots", 220, 100, 173, 173, 15, 16);
+	this.initEquipItemContainer("belt", 220, 80, 340, 150, 16, 15);
+	this.initEquipItemContainer("cape", 240, 50, 4, 173, 16, 16);
+	this.initEquipItemContainer("necklace", 200, 50, 148, 173, 16, 15);
+	this.initEquipItemContainer("right_ring", 200, 80, 78, 176, 12, 12);
+	this.initEquipItemContainer("left_ring", 240, 80, 78, 176, 12, 12);
+	this.initEquipItemContainer("main_hand", 180, 90, 245, 103, 13, 14);
+	this.initEquipItemContainer("off_hand", 260, 90, 198, 149, 13, 16);
 	this.unit_detail_container.addChild(this.equip_item_container);
 }
 

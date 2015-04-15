@@ -67,9 +67,9 @@ Weapon.prototype.initDetail = function(){
 	damage_text.x = damage_amount_text.getMeasuredWidth() + 4;
 
 	if(this.attack_speed_bonus){
-		var attack_speed = (30 / (this.attack_speed * (100 - this.attack_speed_bonus) / 100)).toFixed(1);
+		var attack_speed = (60 / (this.attack_speed * (100 - this.attack_speed_bonus) / 100)).toFixed(1);
 	}else{
-		var attack_speed = (30 / this.attack_speed).toFixed(1);
+		var attack_speed = (60 / this.attack_speed).toFixed(1);
 	}
 
 	attack_speed_text.text = attack_speed + " Attacks Per Sec";
