@@ -26,7 +26,7 @@ Monster.prototype.initialize = function(builder){
 
 	this.team = "Monster";
 	this.health_color = "#C00";
-	this.damage_color = "#FFE11A";
+	this.damage_color = "#D40D12";
 	this.initHealthBar();
 	this.initEventListener();
 	this.rotate(0,1);
@@ -36,7 +36,6 @@ Monster.prototype.initialize = function(builder){
 Monster.prototype.initEventListener = function(){
 	this.addEventListener("mousedown", function(event){
 		if(event.nativeEvent.button == 2){
-			//this.getStage().setTarget(this);
 			this.stage.hero.attack(this);
 		}else{
 

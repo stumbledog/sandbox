@@ -134,8 +134,6 @@ var Game = (function(){
 		manifest.push({src:user_builder.hero.sprite, id:user_builder.hero.sprite.split('/').pop()});
 		manifest.push({src:user_builder.hero.portrait, id:user_builder.hero.portrait.split('/').pop()});
 
-		console.log(user_builder.inventory.slots);
-
 		if(user_builder.inventory.slots){
 			user_builder.inventory.slots.forEach(function(item){
 				manifest.push({src:item.icon.source, id:item.icon.source.split('/').pop()});
@@ -167,6 +165,8 @@ var Game = (function(){
 				manifest.push({src:unit_builder.portrait, id:unit_builder.portrait.split('/').pop()});
 			}
 		});
+
+		manifest.push({src:"assets/Graphics/effects/magic_0/round_shot.png",id:"round_shot"});
 
 		map_builder.maps.forEach(function(map){
 			manifest.push({src:map.src, id:map.src.split('/').pop()});
@@ -206,6 +206,8 @@ var Game = (function(){
 			}
 		});
 		*/
+		
+		console.log(manifest);
 
 		loader = new createjs.LoadQueue(false);
 		loader.addEventListener("complete", handleLoadComplete);

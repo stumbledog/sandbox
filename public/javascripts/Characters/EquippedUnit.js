@@ -99,7 +99,7 @@ EquippedUnit.prototype.updateStats = function(){
 		this.right_attack_speed = this.equipments.main_hand.attack_speed;
 		this.right_min_damage = this.equipments.main_hand.min_damage_bonus ? this.equipments.main_hand.min_damage + this.equipments.main_hand.min_damage_bonus : this.equipments.main_hand.min_damage;
 		this.right_max_damage = this.equipments.main_hand.max_damage_bonus ? this.equipments.main_hand.max_damage + this.equipments.main_hand.max_damage_bonus : this.equipments.main_hand.max_damage;
-		this.range = this.equipments.main_hand.range;		
+		this.range = this.equipments.main_hand.range;
 	}else{
 		this.right_weapon_tick = 0;
 		this.right_attack_speed = 60;
@@ -147,7 +147,6 @@ EquippedUnit.prototype.updateStats = function(){
 			movement_speed_bonus += item.movement_speed ? item.movement_speed : 0;
 		}
 	}
-
 
 	this.strength = this.char_strength + strength;
 	this.agility = this.char_agility + agility;

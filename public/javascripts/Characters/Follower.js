@@ -12,7 +12,7 @@ Follower.prototype.follower_initialize = function(builder){
 
 	this.team = "Player";
 	this.health_color = "#468966";
-	this.damage_color = "#C00";
+	this.damage_color = "#FFF0A5";
 
 	this.initHealthBar();
 	this.renderPortrait(builder.portrait.split('/').pop(), builder.index);

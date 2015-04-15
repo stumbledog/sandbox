@@ -12,7 +12,7 @@ Hero.prototype.hero_initialize = function(builder){
 
 	this.team = "Player";
 	this.health_color = "#0C0";
-	this.damage_color = "#D40D12";
+	this.damage_color = "#FFE11A";
 
 	this.initHealthBar();
 	this.renderPortrait(builder.portrait.split('/').pop(), builder.index);

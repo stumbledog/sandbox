@@ -51,14 +51,10 @@ Item.prototype.showDetail = function(x, y, container){
 	container.addChild(this.detail);
 }
 
-Item.prototype.getIcon = function(){
-	
-}
-
 Item.prototype.toObject = function(){
 	var obj = {};
 	for(key in this){
-		if((typeof this[key] === "boolean" || typeof this[key] === "string" || typeof this[key] === "number"  && !isNaN(this[key]) || key === "attributes" || key === "icon" && this[key] || key === "sprite" && this[key]) && key !== "summary_height"){
+		if((typeof this[key] === "boolean" || typeof this[key] === "string" || typeof this[key] === "number"  && !isNaN(this[key]) || key === "attributes" || key === "icon" && this[key] || key === "projectile" && this[key] || key === "sprite" && this[key]) && key !== "summary_height"){
 			obj[key] = this[key];
 		}
 	}

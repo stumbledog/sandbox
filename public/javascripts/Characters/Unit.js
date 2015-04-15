@@ -398,25 +398,53 @@ Unit.prototype.attackTarget = function(target, hand){
 		this.resource = this.resource > this.max_resource ? this.max_resource : this.resource;
 	}
 
+	if(this.equipments){
+		var weapon = hand === "right" ? this.equipments.main_hand : this.equipments.off_hand;
+	}else{
+		var weapon = null;
+	}
+
+	var attack_speed = hand === "right" ? this.right_attack_speed : this.left_attack_speed;		
+
 	this.rotate(target.x - this.x, target.y - this.y);
 
-	if(this.weapon){
-		createjs.Tween.get(this.weapon)
-			.to({rotation:this.weapon.rotation + this.weapon.swing},this.attack_speed * 5, createjs.Ease.backOut)
-			.call(function(){
-				target.hit(this, this.getDamage());
-			}.bind(this))
-			.to({rotation:this.weapon.rotation},this.attack_speed * 5, createjs.Ease.backOut);
+	if(weapon){
+		if(weapon.attack_type === "melee"){
+			target.addChild(weapon.bitmap);
+			weapon.bitmap.x = this.x > target.x ? 8 : -8;
+			weapon.bitmap.rotation = this.x > target.x ? 0 : 90;
+			createjs.Tween.get(weapon.bitmap)
+				.to({rotation:this.x > target.x ? -90 : 180},attack_speed * 5, createjs.Ease.backOut)
+				.call(function(){
+					target.hit(this, this.getDamage(hand));
+					target.removeChild(weapon.bitmap);
+				}.bind(this));			
+		}else if(weapon.attack_type === "range"){
+			var distance = Math.sqrt(this.getSquareDistance(target));
+			var projectile = new createjs.Bitmap(this.loader.getResult(weapon.projectile.source.split('/').pop()));
+			projectile.sourceRect = new createjs.Rectangle(parseInt(weapon.projectile.cropX),parseInt(weapon.projectile.cropY),parseInt(weapon.projectile.width),parseInt(weapon.projectile.height));
+			projectile.regX = weapon.projectile.regX;
+			projectile.regY = weapon.projectile.regY;
+			projectile.scaleX = projectile.scaleY = weapon.projectile.scale;
+			projectile.spin = weapon.projectile.spin;
+			this.addChild(projectile);
+			createjs.Tween.get(projectile)
+				.to({x:target.x - this.x,y:target.y - this.y, rotation: projectile.spin * distance}, distance * 3)
+				.call(function(){
+					target.hit(this, this.getDamage(hand));
+					this.removeChild(projectile);
+				}.bind(this));
+		}
 	}else{
 		createjs.Tween.get(this.sprite)
-			.to({y:-8},this.attack_speed * 5, createjs.Ease.backOut)
+			.to({y:-8},attack_speed * 5, createjs.Ease.backOut)
 			.call(function(){
 				target.hit(this, this.getDamage(hand));
 			}.bind(this))
-			.to({y:0},this.attack_speed * 5, createjs.Ease.backOut);
+			.to({y:0},attack_speed * 5, createjs.Ease.backOut);
 		createjs.Tween.get(this.outline)
-			.to({y:-8},this.attack_speed * 5, createjs.Ease.backOut)
-			.to({y:0},this.attack_speed * 5, createjs.Ease.backOut);
+			.to({y:-8},attack_speed * 5, createjs.Ease.backOut)
+			.to({y:0},attack_speed * 5, createjs.Ease.backOut);
 	}
 }
 
@@ -482,7 +510,7 @@ Unit.prototype.gainXP = function(exp){
 	var exp_text = new OutlineText("+" + Math.round(exp)+" exp","bold 8px Arial","#fff","#000",2);
 	exp_text.x = -exp_text.getMeasuredWidth()/2;
 	this.addChild(exp_text);
-	
+
 	createjs.Tween.get(exp_text).to({y:-28},1000, createjs.Ease.cubicOut).wait(500).call(function(item){
 		this.removeChild(exp_text);
 	},[],this);
@@ -588,10 +616,9 @@ Unit.prototype.moveAttackTick = function(distance){
 				this.left_weapon_tick = 0 ;
 				this.attackTarget(this.target, "left");
 			}
-
 		}else{
 			if(this.ticks % 30 === 0 || !this.target_map){
-				this.target = this.findClosestEnemy(this.aggro_radius) || this.target;
+				this.target = this.findClosestEnemy(this.aggro_radius + this.range) || this.target;
 				this.target_map = this.findPath({x:this.target.x,y:this.target.y});
 			}
 			this.procMove(this.target_map);
@@ -625,7 +652,7 @@ Unit.prototype.tick = function(){
 			break;
 		case "guard":
 		case "move_attack":
-			this.moveAttackTick(this.aggro_radius);
+			this.moveAttackTick(this.aggro_radius + this.range);
 			break;
 		case "annihilate":
 			this.moveAttackTick(null);

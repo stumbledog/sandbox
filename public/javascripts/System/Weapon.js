@@ -7,6 +7,8 @@ Weapon.prototype.constructor = Weapon;
 
 Weapon.prototype.weapon_initialize = function(attributes){
 	this._id = attributes._id;
+	this.attack_type = attributes.attack_type;
+	this.projectile = attributes.projectile;
 	this.hand = parseInt(attributes.hand);
 	this.level = parseInt(attributes.level);
 	this.part = attributes.part;
@@ -27,6 +29,16 @@ Weapon.prototype.weapon_initialize = function(attributes){
 	this.attributes = attributes.attributes;
 
 	this.initialize(attributes);
+	this.initBitmap();
+}
+
+Weapon.prototype.initBitmap = function(){
+	var bitmap = new createjs.Bitmap(this.loader.getResult(this.sprite.source));
+	bitmap.sourceRect = new createjs.Rectangle(parseInt(this.sprite.cropX), parseInt(this.sprite.cropY), parseInt(this.sprite.width), parseInt(this.sprite.height));
+	bitmap.regX = this.sprite.regX;
+	bitmap.regY = this.sprite.regY;
+	bitmap.scaleX = bitmap.scaleY = this.sprite.scale;
+	this.bitmap = bitmap;
 }
 
 Weapon.prototype.initDetail = function(){
