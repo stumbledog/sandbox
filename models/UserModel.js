@@ -11,7 +11,7 @@ var FollowerSchema = new Schema({
 	level:Number,
 	exp:Number,
 	items:Schema.Types.Mixed,
-	_skills:[{type:Schema.Types.ObjectId, ref:'Skill'}],
+	skills:Schema.Types.Mixed,
 	level_up_bonus:{
 		strength:Number,
 		agility:Number,
@@ -50,7 +50,7 @@ var UserSchema = new Schema({
 		exp:Number,
 		resource_type:String,
 		items:Schema.Types.Mixed,
-		_skills:[{type:Schema.Types.ObjectId, ref:'Skill'}],
+		skills:Schema.Types.Mixed,
 		level_up_bonus:{
 			strength:Number,
 			agility:Number,

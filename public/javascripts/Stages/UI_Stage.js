@@ -24,7 +24,7 @@ UI_Stage.prototype.initialize = function(){
 UI_Stage.prototype.initHeroUI = function(hero){
 	this.hero = hero;
 	this.renderPortrait();
-	this.renderSkill();
+	//this.renderSkill();
 	this.renderExpBar();
 	this.renderHealthBar();
 	this.update();

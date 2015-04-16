@@ -24,7 +24,7 @@ PrototypeArmorSchema.methods.setMerchantItem = function(level){
 
 	switch(armor.part){
 		case "shield":
-			armor.armor = Math.ceil(3 * level * (0.5 + armor.rating / 2) * (Math.random() / 4 + 0.75));
+			armor.armor = Math.ceil(4 * level * (0.5 + armor.rating / 2) * (Math.random() / 4 + 0.75));
 			armor.armor = armor.primary_attribute === 0 ? armor.armor * 2 : armor.armor;
 		break;
 		case "head":

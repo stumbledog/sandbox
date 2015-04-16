@@ -30,6 +30,23 @@ EquippedUnit.prototype.equipped_unit_initialize = function(builder){
 		this.resource = 100;
 	}
 
+	this.passive_skills = [];
+	this.active_skills = [];
+
+	builder.skills.forEach(function(skill){
+		switch(skill.type){
+			case "passive":
+				this.passive_skills.push(new PassiveSkill(skill));
+				break;
+			case "active":
+				this.active_skills.push(new ActiveSkill(skill));
+				break;
+		}
+	}, this);
+
+	console.log(this.passive_skills);
+	console.log(this.active_skills);
+
 	this.char_max_resource = 100;
 	this.char_radius = 12;
 	this.aggro_radius = 80;

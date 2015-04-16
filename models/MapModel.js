@@ -1,3 +1,11 @@
+var SkillSchema = new Schema({
+	type:String,
+	name:String,
+	description:String,
+	cost:Number,
+	cooldown:Number,
+});
+
 var RecrutableUnitSchema = new Schema({
 	character_class:String,
 	primary_attribute:Number,
@@ -11,13 +19,13 @@ var RecrutableUnitSchema = new Schema({
 	portrait:String,
 	index:Number,
 	resource_type:String,
-	_skills:[{type:Schema.Types.ObjectId, ref:'Skill'}],
 	level_up_bonus:{
 		strength:Number,
 		agility:Number,
 		intelligence:Number,
 		stamina:Number,
-	}
+	},
+	skills:[SkillSchema],
 });
 
 var NPCSchema = new Schema({
@@ -56,23 +64,8 @@ var MapSchema = new Schema({
 		block:Boolean,
 	}],
 	neutral_territory:Boolean,
-	monsters:Schema.Types.Mixed,//[MonsterSchema],
+	monsters:Schema.Types.Mixed,
 	npcs:[NPCSchema],
-	/*
-	monsters:[{
-		attribute:{type:Number, ref:"Monster"},
-		position:{
-			x:Number,
-			y:Number,
-		}
-	}],
-	npcs:[{
-		attribute:{type:Number, ref:"NPC"},
-		position:{
-			x:Number,
-			y:Number,
-		}
-	}],*/
 	act:Number,
 	chapter:Number,
 	name:String,

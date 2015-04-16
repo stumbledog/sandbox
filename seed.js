@@ -5,9 +5,7 @@ require('./models/PrototypeWeaponModel');
 require('./models/PrototypeArmorModel');
 require('./models/PrototypeConsumableItemModel');
 require('./models/PrototypeHeroModel');
-require('./models/PrototypeFollowerModel');
 require('./models/MapModel');
-require('./models/NPCModel');
 require('./models/UserModel');
 
 mongoose.connect('mongodb://localhost/condottiere');
@@ -49,7 +47,15 @@ function savePrototypeUnit(){
 	units.push(initPrototypeUnit(  7, 'Hero', 10, 3, 2, 10, "assets/Graphics/Characters/01 - Hero.png", "assets/Graphics/Faces/ds_face01-02.png", 7, 1, 0, "fury", 0, 100, 100, 1, 30, 2, 1.5, 0.1, 2, 12, 80, 16, "hero", "player", "#0C0", "#C00", 0, 0, false));
 */
 
-	units.push(new PrototypeHeroModel({name:"Albert", primary_attribute:"strength", sprite:"assets/Graphics/Characters/01 - Hero.png", portrait:"assets/Graphics/Faces/ds_face01-02.png", index:0, resource_type:"fury"}));
+	units.push(new PrototypeHeroModel({name:"Albert", primary_attribute:"strength", sprite:"assets/Graphics/Characters/01 - Hero.png", portrait:"assets/Graphics/Faces/ds_face01-02.png", index:0, resource_type:"fury", 
+		skills:[
+			{
+				type:"passive",
+				name:"Defend",
+				description:"Allow to equip shields in off-hand",
+			}
+		]
+	}));
 
 /*
 	units.push(new PrototypeFollowerModel({name:"Albert", primary_attribute:"strength", sprite:"assets/Graphics/Characters/01 - Hero.png", portrait:"assets/Graphics/Faces/ds_face01-02.png", index:1, resource_type:"fury"}));
@@ -144,7 +150,14 @@ function saveMap(){
 							agility:1,
 							intelligence:1,
 							stamina:2,
-						}
+						},
+						skills:[
+							{
+								type:"passive",
+								name:"Defend",
+								description:"Allow to equip shields in off-hand",
+							},
+						]
 					},
 					{
 						character_class:"Thief",
@@ -163,7 +176,14 @@ function saveMap(){
 							agility:2,
 							intelligence:1,
 							stamina:2,
-						}
+						},
+						skills:[
+							{
+								type:"passive",
+								name:"Dual Wield",
+								description:"Allow to equip one-hand weapons in off-hand",
+							},
+						]
 					},
 					{
 						character_class:"Mage",
@@ -182,7 +202,14 @@ function saveMap(){
 							agility:1,
 							intelligence:2,
 							stamina:2,
-						}
+						},
+						skills:[
+							{
+								type:"passive",
+								name:"Wand Specialization",
+								description:"Allow to equip wand weapons",
+							},
+						]
 					},
 				]
 			},

@@ -107,7 +107,12 @@ RecruiterStore.prototype.unitDetail = function(unit){
 	agility.y = 40;
 	Intelligence.y = 52;
 
-	var skill = new createjs.Text("Skills: ", "10px Arial","#000");
+	var skill_text = "";
+	unit.skills.forEach(function(skills){
+		skill_text += skills.name;
+	});
+
+	var skill = new createjs.Text("Skills: " + skill_text, "10px Arial","#000");
 	skill.x = 2;
 	skill.y = 64;
 

@@ -1,9 +1,8 @@
-function SKill(){
+function Skill(){
 
 }
 
-Skill.prototype.initialize = function(skill, unit){
+Skill.prototype.initialize = function(skill){
 	this.name = skill.name;
 	this.description = skill.description;
-	this.unit = unit;
 }
