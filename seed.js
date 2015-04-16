@@ -36,32 +36,136 @@ connection.once("open", function(){
 
 function savePrototypeUnit(){
 	var units = [];
-/*
-	units.push(initPrototypeUnit(  0, 'Hero', 10, 3, 2, 10, "assets/Graphics/Characters/01 - Hero.png", "assets/Graphics/Faces/ds_face01-02.png", 0, 1, 0, "fury", 0, 100, 100, 1, 30, 2, 1.5, 0.1, 2, 12, 80, 16, "hero", "player", "#0C0", "#C00", 0, 0, false));
-	units.push(initPrototypeUnit(  1, 'Hero', 10, 3, 2, 10, "assets/Graphics/Characters/01 - Hero.png", "assets/Graphics/Faces/ds_face01-02.png", 1, 1, 0, "fury", 0, 100, 100, 1, 30, 2, 1.5, 0.1, 2, 12, 80, 16, "hero", "player", "#0C0", "#C00", 0, 0, false));
-	units.push(initPrototypeUnit(  2, 'Hero', 10, 3, 2, 10, "assets/Graphics/Characters/01 - Hero.png", "assets/Graphics/Faces/ds_face01-02.png", 2, 1, 0, "fury", 0, 100, 100, 1, 30, 2, 1.5, 0.1, 2, 12, 80, 16, "hero", "player", "#0C0", "#C00", 0, 0, false));
-	units.push(initPrototypeUnit(  3, 'Hero', 10, 3, 2, 10, "assets/Graphics/Characters/01 - Hero.png", "assets/Graphics/Faces/ds_face01-02.png", 3, 1, 0, "fury", 0, 100, 100, 1, 30, 2, 1.5, 0.1, 2, 12, 80, 16, "hero", "player", "#0C0", "#C00", 0, 0, false));
-	units.push(initPrototypeUnit(  4, 'Hero', 10, 3, 2, 10, "assets/Graphics/Characters/01 - Hero.png", "assets/Graphics/Faces/ds_face01-02.png", 4, 1, 0, "fury", 0, 100, 100, 1, 30, 2, 1.5, 0.1, 2, 12, 80, 16, "hero", "player", "#0C0", "#C00", 0, 0, false));
-	units.push(initPrototypeUnit(  5, 'Hero', 10, 3, 2, 10, "assets/Graphics/Characters/01 - Hero.png", "assets/Graphics/Faces/ds_face01-02.png", 5, 1, 0, "fury", 0, 100, 100, 1, 30, 2, 1.5, 0.1, 2, 12, 80, 16, "hero", "player", "#0C0", "#C00", 0, 0, false));
-	units.push(initPrototypeUnit(  6, 'Hero', 10, 3, 2, 10, "assets/Graphics/Characters/01 - Hero.png", "assets/Graphics/Faces/ds_face01-02.png", 6, 1, 0, "fury", 0, 100, 100, 1, 30, 2, 1.5, 0.1, 2, 12, 80, 16, "hero", "player", "#0C0", "#C00", 0, 0, false));
-	units.push(initPrototypeUnit(  7, 'Hero', 10, 3, 2, 10, "assets/Graphics/Characters/01 - Hero.png", "assets/Graphics/Faces/ds_face01-02.png", 7, 1, 0, "fury", 0, 100, 100, 1, 30, 2, 1.5, 0.1, 2, 12, 80, 16, "hero", "player", "#0C0", "#C00", 0, 0, false));
-*/
 
 	units.push(new PrototypeHeroModel({name:"Albert", primary_attribute:"strength", sprite:"assets/Graphics/Characters/01 - Hero.png", portrait:"assets/Graphics/Faces/ds_face01-02.png", index:0, resource_type:"fury", 
-		skills:[
+		passive_skills:[
 			{
-				type:"passive",
 				name:"Defend",
 				description:"Allow to equip shields in off-hand",
+				key:"defend",
+			},
+			{
+				name:"Endurance",
+				description:"Reduce incoming damage by 10%",
+				key:"endurance",
+			}
+		],
+		active_skills:[
+			{
+				name:"Charge",
+				description:"Charge to an enemy in 15 yards and deals 500% dps damage to the enemy",
+				key:"q",
+				target:true,
+				radius:120,
+				damage:500,
+				cost:0,
+				cooldown:8,
+				icon_source:"assets/Graphics/icons/50x50/123.png",
+			},
+			{
+				name:"Shockwave",
+				description:"Send a wave that deals 200% dps damage to enemies up to 10 yards in a cone.",
+				key:"w",
+				target:false,
+				radius:80,
+				angle:90,
+				type:"cone",
+				damage:200,
+				cost:15,
+				cooldown:10,
+				icon_source:"assets/Graphics/icons/50x50/129.png",
+				animation:{
+					scale:0.5,
+					width:163,
+					height:167,
+					regX:81,
+					regY:167,
+					images:[
+						"assets/Graphics/effects/shooter_fx/lava_shot_impact1.png",
+						"assets/Graphics/effects/shooter_fx/lava_shot_impact2.png",
+						"assets/Graphics/effects/shooter_fx/lava_shot_impact3.png",
+						"assets/Graphics/effects/shooter_fx/lava_shot_impact4.png",
+					]
+				}
+			},
+			{
+				name:"Bladestorm",
+				description:"Deal 150% dps damage to all enemies within 5 yards.",
+				key:"e",
+				target:false,
+				radius:40,
+				type:"circle",
+				damage:150,
+				cost:30,
+				cooldown:20,
+				icon_source:"assets/Graphics/icons/50x50/115.png",
+				animation:{
+					scale:1,
+					rotate:-45,
+					width:160,
+					height:160,
+					regX:80,
+					regY:80,
+					images:[
+						"assets/Graphics/effects/impacts/orange_impx_0.png",
+						"assets/Graphics/effects/impacts/orange_impx_1.png",
+						"assets/Graphics/effects/impacts/orange_impx_2.png",
+					]
+				}
+			},
+			{
+				name:"Shockwave",
+				description:"Send a wave that deals 200% dps to enemies up to 10 yards in a cone.",
+				key:"e",
+				target:false,
+				radius:160,
+				angle:60,
+				type:"cone",
+				damage:200,
+				cost:15,
+				cooldown:10,
+				icon_source:"assets/Graphics/icons/50x50/129.png",
+				animation:{
+					scale:0.5,
+					width:163,
+					height:167,
+					regX:81,
+					regY:167,
+					images:[
+						"assets/Graphics/effects/shooter_fx/lava_shot_impact1.png",
+						"assets/Graphics/effects/shooter_fx/lava_shot_impact2.png",
+						"assets/Graphics/effects/shooter_fx/lava_shot_impact3.png",
+						"assets/Graphics/effects/shooter_fx/lava_shot_impact4.png",
+					]
+				}
+			},
+			{
+				name:"Shockwave",
+				description:"Send a wave that deals 200% dps to enemies up to 10 yards in a cone.",
+				key:"r",
+				radius:160,
+				angle:60,
+				type:"cone",
+				damage:200,
+				cost:15,
+				cooldown:10,
+				icon_source:"assets/Graphics/icons/50x50/129.png",
+				animation:{
+					scale:0.5,
+					width:163,
+					height:167,
+					regX:81,
+					regY:167,
+					images:[
+						"assets/Graphics/effects/shooter_fx/lava_shot_impact1.png",
+						"assets/Graphics/effects/shooter_fx/lava_shot_impact2.png",
+						"assets/Graphics/effects/shooter_fx/lava_shot_impact3.png",
+						"assets/Graphics/effects/shooter_fx/lava_shot_impact4.png",
+					]
+				}
 			}
 		]
 	}));
-
-/*
-	units.push(new PrototypeFollowerModel({name:"Albert", primary_attribute:"strength", sprite:"assets/Graphics/Characters/01 - Hero.png", portrait:"assets/Graphics/Faces/ds_face01-02.png", index:1, resource_type:"fury"}));
-	units.push(new PrototypeFollowerModel({name:"Albert", primary_attribute:"strength", sprite:"assets/Graphics/Characters/01 - Hero.png", portrait:"assets/Graphics/Faces/ds_face01-02.png", index:2, resource_type:"fury"}));
-	units.push(initPrototypeUnit(300, 'slime', 10, 3, 2, 10, "assets/Graphics/Characters/29 - Monster.png", null, 0, 1, 10, "mana", 100, 100, 5, 1, 60, 0, 1, 0, 1, 4, 80, 16, "monster", "enemy", "#C00", "#CC0", 0, 8, false));
-*/
 
 	var count = 0;
 	units.forEach(function(unit){
@@ -151,9 +255,20 @@ function saveMap(){
 							intelligence:1,
 							stamina:2,
 						},
-						skills:[
+						passive_skills:[
 							{
-								type:"passive",
+								name:"Defend",
+								description:"Allow to equip shields in off-hand",
+								key:"defend",
+							},
+							{
+								name:"Endurance",
+								description:"Reduce incoming damage by 10%",
+								key:"endurance",
+							},
+						],
+						active_skills:[
+							{
 								name:"Defend",
 								description:"Allow to equip shields in off-hand",
 							},
@@ -177,11 +292,22 @@ function saveMap(){
 							intelligence:1,
 							stamina:2,
 						},
-						skills:[
+						passive_skills:[
 							{
-								type:"passive",
 								name:"Dual Wield",
 								description:"Allow to equip one-hand weapons in off-hand",
+								key:"dual_wield",
+							},
+							{
+								name:"Swift Runner",
+								description:"Increse movement speed by 15%",
+								key:"swift_runner",
+							},
+						],
+						active_skills:[
+							{
+								name:"Defend",
+								description:"Allow to equip shields in off-hand",
 							},
 						]
 					},
@@ -203,11 +329,23 @@ function saveMap(){
 							intelligence:2,
 							stamina:2,
 						},
-						skills:[
+						passive_skills:[
 							{
-								type:"passive",
 								name:"Wand Specialization",
 								description:"Allow to equip wand weapons",
+								key:"wand",
+							},
+							{
+								name:"Critical Magic",
+								description:"Increase critical rate by 5%",
+								key:"critical_magic",
+							},
+
+						],
+						active_skills:[
+							{
+								name:"Defend",
+								description:"Allow to equip shields in off-hand",
 							},
 						]
 					},
@@ -252,97 +390,26 @@ function saveMap(){
 			},
 		],false,[],
 		[
-		//units.push(initPrototypeUnit(300, 'slime', 10, 3, 2, 10, "assets/Graphics/Characters/29 - Monster.png", null, 0, 1, 10, "mana", 100, 100, 5, 1, 60, 0, 1, 0, 1, 4, 80, 16, "monster", "enemy", "#C00", "#CC0", 0, 8, false));
-			{
-				name:"slime",
-				sprite:"assets/Graphics/Characters/29 - Monster.png",
-				index:0,
-				x:300,
-				y:100,
-				regY:9,
-				radius:10,
-				type:"melee",
-				health:100,
-				damage:1,
-				range:16,
-				attack_speed:90,
-				movement_speed:1,
-				skills:null,
-				gold:3,
-				xp:5,
-			},
-			{
-				name:"slime",
-				sprite:"assets/Graphics/Characters/29 - Monster.png",
-				index:0,
-				x:300,
-				y:120,
-				regY:9,
-				radius:10,
-				type:"melee",
-				health:100,
-				damage:1,
-				range:16,
-				attack_speed:90,
-				movement_speed:1,
-				skills:null,
-				gold:3,
-				xp:5,
-			},
-			{
-				name:"slime",
-				sprite:"assets/Graphics/Characters/29 - Monster.png",
-				index:0,
-				x:300,
-				y:140,
-				regY:9,
-				radius:10,
-				type:"melee",
-				health:100,
-				damage:1,
-				range:16,
-				attack_speed:90,
-				movement_speed:1,
-				skills:null,
-				gold:3,
-				xp:5,
-			},
-			{
-				name:"slime",
-				sprite:"assets/Graphics/Characters/29 - Monster.png",
-				index:0,
-				x:300,
-				y:160,
-				regY:9,
-				radius:10,
-				type:"melee",
-				health:100,
-				damage:1,
-				range:16,
-				attack_speed:90,
-				movement_speed:1,
-				skills:null,
-				gold:3,
-				xp:5,
-			},
-			{
-				name:"slime",
-				sprite:"assets/Graphics/Characters/29 - Monster.png",
-				index:0,
-				x:300,
-				y:180,
-				regY:9,
-				radius:10,
-				type:"melee",
-				health:100,
-				damage:1,
-				range:16,
-				attack_speed:90,
-				movement_speed:1,
-				skills:null,
-				gold:3,
-				xp:5,
-			},
+			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:0,x:300,y:100,regY:9,radius:10,type:"melee",health:100,damage:1,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,},
+			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:0,x:320,y:100,regY:9,radius:10,type:"melee",health:100,damage:1,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,},
+			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:0,x:340,y:100,regY:9,radius:10,type:"melee",health:100,damage:1,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,},
+			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:0,x:360,y:100,regY:9,radius:10,type:"melee",health:100,damage:1,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,},
+			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:0,x:380,y:100,regY:9,radius:10,type:"melee",health:100,damage:1,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,},
+			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:0,x:300,y:120,regY:9,radius:10,type:"melee",health:100,damage:1,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,},
+			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:0,x:320,y:120,regY:9,radius:10,type:"melee",health:100,damage:1,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,},
+			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:0,x:340,y:120,regY:9,radius:10,type:"melee",health:100,damage:1,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,},
+			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:0,x:360,y:120,regY:9,radius:10,type:"melee",health:100,damage:1,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,},
+			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:0,x:380,y:120,regY:9,radius:10,type:"melee",health:100,damage:1,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,},
+			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:0,x:300,y:140,regY:9,radius:10,type:"melee",health:100,damage:1,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,},
+			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:0,x:320,y:140,regY:9,radius:10,type:"melee",health:100,damage:1,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,},
+			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:0,x:340,y:140,regY:9,radius:10,type:"melee",health:100,damage:1,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,},
+			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:0,x:360,y:140,regY:9,radius:10,type:"melee",health:100,damage:1,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,},
+			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:0,x:380,y:140,regY:9,radius:10,type:"melee",health:100,damage:1,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,},
+			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:0,x:300,y:160,regY:9,radius:10,type:"melee",health:100,damage:1,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,},
+			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:0,x:320,y:160,regY:9,radius:10,type:"melee",health:100,damage:1,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,},
+			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:0,x:340,y:160,regY:9,radius:10,type:"melee",health:100,damage:1,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,},
+			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:0,x:360,y:160,regY:9,radius:10,type:"melee",health:100,damage:1,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,},
+			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:0,x:380,y:160,regY:9,radius:10,type:"melee",health:100,damage:1,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,},
 		],1, 1,"Ridgefield Park",false,false,640,640,20,20,[160,160]));
 	maps.push(initMap([],false,[],[],1, 2,"Palisade Park",false,false,320,320,10,10,[160,160]));
 	maps.push(initMap([],false,[],[],1, 3,"Leonia",false,false,320,320,10,10,[160,160]));
@@ -406,7 +473,7 @@ function saveItems(){
 	items.push(new PrototypeWeaponModel({primary_attribute:0, hand:2, type:"weapon", attack_type:"melee", name:"Great\nSword",
 		sprite:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:292,cropY:100,width:16,height:16,regX:12,regY:12,scale:0.8},
 		icon:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:292,cropY:100,width:16,height:16,regX:12,regY:12,scale:0.8},
-		min_damage:3,max_damage:6,range:32,attack_speed:90,
+		min_damage:4,max_damage:8,range:32,attack_speed:90,
 	}));
 
 	items.push(new PrototypeWeaponModel({primary_attribute:0, hand:1, type:"weapon", attack_type:"melee", name:"Masamune",
@@ -418,7 +485,7 @@ function saveItems(){
 	items.push(new PrototypeWeaponModel({primary_attribute:0, hand:2, type:"weapon", attack_type:"melee", name:"Spear",
 		sprite:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:6,cropY:124,width:16,height:16,regX:12,regY:12,scale:0.8},
 		icon:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:6,cropY:124,width:16,height:16,regX:12,regY:12,scale:0.8},
-		min_damage:3,max_damage:6,range:32,attack_speed:90,
+		min_damage:4,max_damage:8,range:32,attack_speed:90,
 	}));
 
 	items.push(new PrototypeWeaponModel({primary_attribute:0, hand:1, type:"weapon", attack_type:"melee", name:"Battle Axe",
@@ -443,21 +510,21 @@ function saveItems(){
 		sprite:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:175,cropY:125,width:13,height:16,regX:6,regY:8,scale:0.8},
 		icon:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:175,cropY:125,width:13,height:16,regX:6,regY:8,scale:0.8},
 		projectile:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:175,cropY:126,width:13,height:14,regX:6,regY:8,scale:0.8, spin:10},
-		min_damage:2,max_damage:4,range:80,attack_speed:75,
+		min_damage:3,max_damage:6,range:80,attack_speed:75,
 	}));
 
 	items.push(new PrototypeWeaponModel({primary_attribute:2, hand:2, type:"weapon", attack_type:"range", name:"Wand",
 		sprite:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:196,cropY:125,width:16,height:16,regX:4,regY:12,scale:0.8},
 		icon:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:196,cropY:125,width:16,height:16,regX:4,regY:12,scale:0.8},
 		projectile:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:245,cropY:79,width:14,height:14,regX:7,regY:7,scale:0.8, spin:0},
-		min_damage:2,max_damage:4,range:80,attack_speed:75,
+		min_damage:3,max_damage:6,range:80,attack_speed:75,
 	}));
 
 	items.push(new PrototypeWeaponModel({primary_attribute:2, hand:2, type:"weapon", attack_type:"range", name:"Staff",
 		sprite:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:244,cropY:125,width:16,height:16,regX:4,regY:12,scale:0.8},
 		icon:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:244,cropY:125,width:16,height:16,regX:4,regY:12,scale:0.8},
 		projectile:{source:"assets/Graphics/System/Icons/IconSet.png",cropX:269,cropY:79,width:14,height:14,regX:7,regY:7,scale:0.8, spin:0},
-		min_damage:3,max_damage:6,range:80,attack_speed:90,
+		min_damage:4,max_damage:8,range:80,attack_speed:90,
 	}));
 
 	items.push(new PrototypeArmorModel({primary_attribute:1, part:"head", type:"armor", name:"Leather\nHelm",

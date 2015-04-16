@@ -53,7 +53,7 @@ PrototypeWeaponSchema.methods.setMerchantItem = function(level){
 
 	weapon.attributes = []
 	while(weapon.attributes.length < weapon.rating){
-		var randomnumber = Math.floor(Math.random() * 6)
+		var randomnumber = parseInt(Math.floor(Math.random() * 6));
 		var found=false;
 		for(var j = 0 ; j < weapon.attributes.length ; j++){
 			if(weapon.attributes[j] === randomnumber){
@@ -65,14 +65,14 @@ PrototypeWeaponSchema.methods.setMerchantItem = function(level){
 			weapon.attributes[weapon.attributes.length] = randomnumber;
 		}
 	}
-	weapon.attributes.sort();
+	weapon.attributes.sort(function(a, b){return a-b});
 	weapon.attributes.forEach(function(attribute){
 		switch(attribute){
 			case 0:
 				weapon.min_damage_bonus = (0.5 + weapon.hand / 2) * level * (0.5 + weapon.rating / 2) * (Math.random() / 4 + 0.5);
 				weapon.max_damage_bonus = (0.5 + weapon.hand / 2) * level * (0.5 + weapon.rating / 2) * (Math.random() / 4 + 0.75);
-				weapon.min_damage_bonus *= weapon.hand === 2 ? 1.5 : 1;
-				weapon.max_damage_bonus *= weapon.hand === 2 ? 1.5 : 1;
+				weapon.min_damage_bonus *= (weapon.hand === 2 ? 1.5 : 1) * weapon.attack_speed / 60;
+				weapon.max_damage_bonus *= (weapon.hand === 2 ? 1.5 : 1) * weapon.attack_speed / 60;
 				weapon.min_damage_bonus = Math.round(weapon.min_damage_bonus * 10) / 10;
 				weapon.max_damage_bonus = Math.round(weapon.max_damage_bonus * 10) / 10;
 				weapon.price += (weapon.min_damage_bonus + weapon.max_damage_bonus) * 2;

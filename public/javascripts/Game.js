@@ -196,18 +196,19 @@ var Game = (function(){
 				manifest.push({src:monster.sprite, id:monster.sprite.split('/').pop()});
 			});
 		}
-		/*
-		hero_builder.skills.forEach(function(skill){
-			manifest.push({src:skill.src,id:skill.name});
-			if(skill.animation.images){
-				skill.animation.images.forEach(function(frame){
-					manifest.push({src:frame.src,id:frame.index});
-				});
-			}
-		});
-		*/
-		
-		console.log(manifest);
+
+		if(user_builder.hero.active_skills){
+			user_builder.hero.active_skills.forEach(function(skill){
+				if(skill.icon_source){
+					manifest.push({src:skill.icon_source,id:skill.icon_source.split('/').pop()});
+				}
+				if(skill.animation){
+					skill.animation.images.forEach(function(image){
+						manifest.push({src:image,id:image.split('/').pop()});
+					});
+				}
+			});
+		}
 
 		loader = new createjs.LoadQueue(false);
 		loader.addEventListener("complete", handleLoadComplete);
@@ -276,20 +277,17 @@ var Game = (function(){
 			switch(builder.type){
 				case "merchant":
 					unit_stage.addUnit(new Merchant(builder));
-				break;
+					break;
 				case "recruiter":
 					unit_stage.addUnit(new Recruiter(builder));
-				break;
+					break;
 				case "blacksmith":
 					unit_stage.addUnit(new Blacksmith(builder));
-				break;
+					break;
 				case "battlemaster":
 					builder.world_map = map_builder.world_map;
 					unit_stage.addUnit(new Battlemaster(builder));
-				break;
-				default:
-					//unit_stage.addUnit(new NPC(builder));
-				break;
+					break;
 			}
 			
 		}

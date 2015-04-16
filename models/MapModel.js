@@ -2,6 +2,7 @@ var SkillSchema = new Schema({
 	type:String,
 	name:String,
 	description:String,
+	key:String,
 	cost:Number,
 	cooldown:Number,
 });
@@ -25,7 +26,8 @@ var RecrutableUnitSchema = new Schema({
 		intelligence:Number,
 		stamina:Number,
 	},
-	skills:[SkillSchema],
+	passive_skills:[SkillSchema],
+	active_skills:[SkillSchema],
 });
 
 var NPCSchema = new Schema({
@@ -36,24 +38,6 @@ var NPCSchema = new Schema({
 	x:Number,
 	y:Number,
 	recruitable_units:[RecrutableUnitSchema],
-});
-
-var MonsterSchema = new Schema({
-	name:String,
-	sprite:String,
-	index:Number,
-	x:Number,
-	y:Number,
-	radius:Number,
-	type:String,
-	health:Number,
-	damage:Number,
-	range:Number,
-	attack_speed:Number,
-	movement_speed:Number,
-	skills:Schema.Types.Mixed,
-	gold:Number,
-	xp:Number,
 });
 
 var MapSchema = new Schema({

@@ -23,6 +23,7 @@ EquippedUnit.prototype.equipped_unit_initialize = function(builder){
 	this.level_up_bonus = builder.level_up_bonus;
 
 	this.max_health = this.health = 100;
+	this.max_resource = 100;
 
 	if(this.resource_type === "fury"){
 		this.resource = 0;
@@ -31,21 +32,16 @@ EquippedUnit.prototype.equipped_unit_initialize = function(builder){
 	}
 
 	this.passive_skills = [];
-	this.active_skills = [];
+	this.active_skills = {};
 
-	builder.skills.forEach(function(skill){
-		switch(skill.type){
-			case "passive":
-				this.passive_skills.push(new PassiveSkill(skill));
-				break;
-			case "active":
-				this.active_skills.push(new ActiveSkill(skill));
-				break;
-		}
+	builder.passive_skills.forEach(function(skill){
+		this.passive_skills.push(new PassiveSkill(skill, this));
 	}, this);
 
-	console.log(this.passive_skills);
-	console.log(this.active_skills);
+
+	builder.active_skills.forEach(function(skill){
+		this.active_skills[skill.key] = new ActiveSkill(skill, this);
+	}, this);
 
 	this.char_max_resource = 100;
 	this.char_radius = 12;
@@ -170,11 +166,11 @@ EquippedUnit.prototype.updateStats = function(){
 	this.intelligence = this.char_intelligence + intelligence;
 	this.stamina = this.char_stamina + stamina;
 
-	var health_rate = this.health/this.max_health; 
+	var health_rate = this.health/this.max_health;
 	this.max_health = this.stamina * 10 + this.strength * 5;
 	this.health = health_rate * this.max_health;
-	this.max_resource = 100;
-	this.resource = this.resource_type === "fury" ? 0 : 100;
+	/*this.max_resource = 100;
+	this.resource = this.resource_type === "fury" ? 0 : 100;*/
 
 	this.attack_speed_bonus = attack_speed_bonus;
 	this.right_attack_speed *= (100 - this.attack_speed_bonus)/100;
@@ -182,17 +178,17 @@ EquippedUnit.prototype.updateStats = function(){
 		this.left_attack_speed *= (100 - this.attack_speed_bonus)/100;
 	}
 
-	this.critical_rate = critical_rate;
+	this.critical_rate = critical_rate + (this.critical_magic ? 5 : 0);
 	this.critical_damage = critical_damage;
 
 	this.health_regen = health_regen + this.stamina;
 	this.resource_regen = resource_regen;
 	this.armor = armor;
-	this.damage_reduction = armor / (armor + 100);
+	this.damage_reduction = armor / (armor + 100) + (this.endurance ? 0.1 : 0);
 	this.life_steal = life_steal;
 
-	this.cooldown_reduction = cooldown_reduction;
-	this.movement_speed = (Math.round(this.char_movement_speed * (1 + movement_speed_bonus/100) * 10))/10;
+	this.cooldown_reduction = cooldown_reduction;	
+	this.movement_speed = (Math.round(this.char_movement_speed * (1 + (movement_speed_bonus + (this.swift_runner ? 15 : 0) )/100) * 10))/10;
 
 	switch(this.primary_attribute){
 		case 0:
@@ -200,19 +196,19 @@ EquippedUnit.prototype.updateStats = function(){
 			this.right_max_damage = Math.round(this.right_max_damage * (1 + this.strength/100));
 			this.left_min_damage = this.left_min_damage ? Math.round(this.left_min_damage * (1 + this.strength/100)) : 0;
 			this.left_max_damage = this.left_max_damage ? Math.round(this.left_max_damage * (1 + this.strength/100)) : 0;
-		break;
+			break;
 		case 1:
 			this.right_min_damage = Math.round(this.right_min_damage * (1 + this.agility/100));
 			this.right_max_damage = Math.round(this.right_max_damage * (1 + this.agility/100));
 			this.left_min_damage = this.left_min_damage ? Math.round(this.left_min_damage * (1 + this.agility/100)) : 0;
 			this.left_max_damage = this.left_max_damage ? Math.round(this.left_max_damage * (1 + this.agility/100)) : 0;
-		break;
+			break;
 		case 2:
 			this.right_min_damage = Math.round(this.right_min_damage * (1 + this.intelligence/100));
 			this.right_max_damage = Math.round(this.right_max_damage * (1 + this.intelligence/100));
 			this.left_min_damage = this.left_min_damage ? Math.round(this.left_min_damage * (1 + this.intelligence/100)) : 0;
 			this.left_max_damage = this.left_max_damage ? Math.round(this.left_max_damage * (1 + this.intelligence/100)) : 0;
-		break;
+			break;
 	}
 
 	this.radius = this.char_radius = 12;
@@ -223,71 +219,88 @@ EquippedUnit.prototype.updateStats = function(){
 }
 
 EquippedUnit.prototype.equipItem = function(item){
-	switch(item.part){
-		case "weapon":
-			switch(item.hand){
-				case 1:
+	if(this.level >= item.level){
+		switch(item.part){
+			case "weapon":
+				switch(item.hand){
+					case 1:
+						console.log(this.dual_wield);
+						if(this.equipments.main_hand && this.equipments.main_hand.hand === 2){
+							this.user.inventory.addItem(this.equipments.main_hand);
+							this.equipments.main_hand = item;
+						}else if(!this.equipments.main_hand){
+							this.equipments.main_hand = item;
+						}else if(!this.equipments.off_hand && this.dual_wield){
+							this.equipments.off_hand = item;
+						}else if(this.equipments.main_hand){
+							this.user.inventory.addItem(this.equipments.main_hand);
+							this.equipments.main_hand = item;
+						}
+					break;
+					case 2:
+						if((item.name === "Wand" || item.name === "Staff") && !this.wand){
+							this.user.inventory.addItem(item);
+							alert("This unit can't equip staff or wand weapons");
+							return;
+						}
+						var count = 0;
+						if(this.equipments.main_hand){	count++;	}
+						if(this.equipments.off_hand){	count++;	}
+
+						if(this.user.inventory.countEmptySpace() >= count){
+							if(this.equipments.main_hand){	this.user.inventory.addItem(this.equipments.main_hand);	}
+							if(this.equipments.off_hand){	this.user.inventory.addItem(this.equipments.off_hand);	}
+							this.equipments.main_hand = item;
+							this.equipments.off_hand = null;
+						}else{
+							alert("Not enough space.");
+						}
+					break;
+				}
+			break;
+			case "shield":
+				if(this.defend){
 					if(this.equipments.main_hand && this.equipments.main_hand.hand === 2){
 						this.user.inventory.addItem(this.equipments.main_hand);
-						this.equipments.main_hand = item;
-					}else if(!this.equipments.main_hand){
-						this.equipments.main_hand = item;
-					}else if(!this.equipments.off_hand){
+						this.equipments.main_hand = null;
 						this.equipments.off_hand = item;
-					}else if(this.equipments.main_hand){
-						this.user.inventory.addItem(this.equipments.main_hand);
-						this.equipments.main_hand = item;
-					}
-				break;
-				case 2:
-					var count = 0;
-					if(this.equipments.main_hand){	count++;	}
-					if(this.equipments.off_hand){	count++;	}
-
-					if(this.user.inventory.countEmptySpace() >= count){
-						if(this.equipments.main_hand){	this.user.inventory.addItem(this.equipments.main_hand);	}
-						if(this.equipments.off_hand){	this.user.inventory.addItem(this.equipments.off_hand);	}
-						this.equipments.main_hand = item;
-						this.equipments.off_hand = null;
+					}else if(this.equipments.off_hand){
+						this.user.inventory.addItem(this.equipments.off_hand);
+						this.equipments.off_hand = item;
 					}else{
-						alert("Not enough space.");
+						this.equipments.off_hand = item;
 					}
-				break;
-			}
-		break;
-		case "shield":
-			if(this.equipments.main_hand && this.equipments.main_hand.hand === 2){
-				this.user.inventory.addItem(this.equipments.main_hand);
-				this.equipments.main_hand = null;
-				this.equipments.off_hand = item;
-			}else if(this.equipments.off_hand){
-				this.user.inventory.addItem(this.equipments.off_hand);
-				this.equipments.off_hand = item;
-			}else{
-				this.equipments.off_hand = item;
-			}
-		break;
-		case "ring":
-			if(!this.equipments.right_ring){
-				this.equipments.right_ring = item;
-			}else if(!this.equipments.left_ring){
-				this.equipments.left_ring = item;
-			}else{
-				this.user.inventory.addItem(this.equipments.right_ring);
-				this.equipments.right_ring = item;
-			}
-		break
-		default:
-			if(this.equipments[item.part]){
-				this.user.inventory.addItem(this.equipments[item.part]);
-				this.equipments[item.part] = item;
-			}else{
-				this.equipments[item.part] = item;
-			}
-		break;
+				}else{
+					alert("This unit can't equip shields");
+					this.user.inventory.addItem(item);
+				}
+			break;
+			case "ring":
+				if(!this.equipments.right_ring){
+					this.equipments.right_ring = item;
+				}else if(!this.equipments.left_ring){
+					this.equipments.left_ring = item;
+				}else{
+					this.user.inventory.addItem(this.equipments.right_ring);
+					this.equipments.right_ring = item;
+				}
+			break
+			default:
+				if(this.equipments[item.part]){
+					this.user.inventory.addItem(this.equipments[item.part]);
+					this.equipments[item.part] = item;
+				}else{
+					this.equipments[item.part] = item;
+				}
+			break;
+		}
+		this.user.inventory.displayEquipItems(this);
+		this.user.saveEquipItems();
+		this.updateStats();
+	}else{
+		this.user.inventory.addItem(item);
+		//this.user.inventory.displayEquipItems(this);
+		this.user.saveEquipItems();
+		alert("Not enough unit level to equip this item");
 	}
-
-	this.user.inventory.displayEquipItems(this);
-	this.user.saveEquipItems();
-	this.updateStats();
 }

@@ -84,7 +84,11 @@ Unit.prototype.initSkills = function(skills){
 }
 
 Unit.prototype.useSkill = function(key, mouse_position){
-	this.skills[key].useSkill(mouse_position);
+	if(this.active_skills[key].target){
+		this.active_skills[key].useOnTarget();
+	}else{
+		this.active_skills[key].use(mouse_position);
+	}
 }
 
 Unit.prototype.renderUnit = function(src_id, index, regX, regY){
@@ -412,9 +416,10 @@ Unit.prototype.attackTarget = function(target, hand){
 		if(weapon.attack_type === "melee"){
 			target.addChild(weapon.bitmap);
 			weapon.bitmap.x = this.x > target.x ? 8 : -8;
-			weapon.bitmap.rotation = this.x > target.x ? 0 : 90;
+			weapon.bitmap.scaleX = this.x > target.x ? weapon.bitmap.scaleY : -weapon.bitmap.scaleY;
+			weapon.bitmap.rotation = 0;
 			createjs.Tween.get(weapon.bitmap)
-				.to({rotation:this.x > target.x ? -90 : 180},attack_speed * 5, createjs.Ease.backOut)
+				.to({rotation:this.x > target.x ? -90 : 90},attack_speed * 5, createjs.Ease.backOut)
 				.call(function(){
 					target.hit(this, this.getDamage(hand));
 					target.removeChild(weapon.bitmap);
@@ -470,7 +475,6 @@ Unit.prototype.hit = function(attacker, damage_object){
 			stage.removeChild(damage_text);
 		});
 		if(this.health <= 0){
-			this.health = 0;
 			this.die(attacker);
 		}else{
 			createjs.Tween.get(this).call(function(event){
@@ -524,6 +528,12 @@ Unit.prototype.gainXP = function(exp){
 Unit.prototype.levelUp = function(){
 	this.level++;
 	this.heal(this.max_health/10);
+	this.char_strength += parseInt(this.level_up_bonus.strength);
+	this.char_agility += parseInt(this.level_up_bonus.agility);
+	this.char_intelligence += parseInt(this.level_up_bonus.intelligence);
+	this.char_stamina += parseInt(this.level_up_bonus.stamina);
+	this.updateStats();
+	console.log(this);
 	var levelup_text = new OutlineText("Level Up","bold 10px Arial","#E9A119","#000",2);
 	levelup_text.x = -levelup_text.getMeasuredWidth()/2;
 	this.addChild(levelup_text);
@@ -533,7 +543,9 @@ Unit.prototype.levelUp = function(){
 }
 
 Unit.prototype.die = function(attacker){
+	this.health = 0;
 	this.status = "death";
+	this.removeChild(this.outline);
 	createjs.Tween.get(this).call(function(event){
 		die_animation(event.target, new createjs.ColorFilter(1,1,1,0));
 	}).wait(300).call(function(event){

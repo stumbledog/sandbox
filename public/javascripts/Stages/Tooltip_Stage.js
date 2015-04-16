@@ -33,7 +33,7 @@ Tooltip_Stage.prototype.initialize = function(){
 		this.skill_cooldown, this.skill_cooldown_amount, this.skill_cooldown_seconds, this.skill_description);
 }
 
-Tooltip_Stage.prototype.showSkillTooltip = function(event, skill){
+Tooltip_Stage.prototype.showSkillTooltip = function(event, skill, unit){
 	this.canvas.style.bottom = 90 + "px";
 	this.canvas.style.left = window.innerWidth/2 - 150 + "px";
 	this.canvas.style.display = "block";
@@ -47,7 +47,7 @@ Tooltip_Stage.prototype.showSkillTooltip = function(event, skill){
 	this.skill_cost_type.x = 40 + this.skill_cost_amount.getMeasuredWidth();
 
 	this.skill_cooldown.text = "Cooldown:";
-	this.skill_cooldown_amount.text = skill.cooldown;
+	this.skill_cooldown_amount.text = skill.cooldown * (100 - unit.cooldown_reduction) / 100;
 	this.skill_cooldown_seconds.text = "seconds";
 	this.skill_cooldown_amount.x = 69;
 	this.skill_cooldown_seconds.x = 71 + this.skill_cooldown_amount.getMeasuredWidth();

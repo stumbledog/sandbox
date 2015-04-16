@@ -422,6 +422,31 @@ Inventory.prototype.selectCharacter = function(unit){
 	this.displayStats(unit);
 	this.displayEquipItems(unit);
 	this.renderUnitDetail(unit);
+
+	//this.equipableItems();
+}
+
+Inventory.prototype.equipableItems = function(){
+	//console.log(this.equip_item_container.getChildByName("off_hand"));
+	var shield, dual_wield, wand;
+	shield = wand = dual_wield = false;
+	this.selectedCharacter.passive_skills.forEach(function(skill){
+		if(skill.name === "Defend"){
+			shield = true;
+		}else if(skill.name === "Dual Wield"){
+			dual_wield = true;
+		}else if(skill.name === "Wand Specialization"){
+			wand = true;
+		}
+	}, this);
+
+	this.containers.forEach(function(container){
+		if(!shield && container.children.length > 1 && container.children[1].item.part === "shield"){
+			console.log(container.children[1].item);
+		}else if(!wand && container.children.length > 1 && (container.children[1].item.name === "Wand" || container.children[1].item.name === "Staff")){
+			console.log(container.children[1].item);
+		}
+	});
 }
 
 Inventory.prototype.renderUnitDetail = function(unit){
@@ -512,6 +537,9 @@ Inventory.prototype.open = function(){
 	this.renderPortrait();
 	this.stage.canvas.width = this.width;
 	this.stage.canvas.height = this.height;
+	if(this.selectedCharacter){
+		this.selectCharacter(this.selectedCharacter);
+	}
 	this.stage.open();
 }
 

@@ -24,7 +24,7 @@ UI_Stage.prototype.initialize = function(){
 UI_Stage.prototype.initHeroUI = function(hero){
 	this.hero = hero;
 	this.renderPortrait();
-	//this.renderSkill();
+	this.renderSkill();
 	this.renderExpBar();
 	this.renderHealthBar();
 	this.update();
@@ -46,11 +46,10 @@ UI_Stage.prototype.renderPortrait = function(){
 }
 
 UI_Stage.prototype.renderSkill = function(){
-	if(this.hero.skills){
-		this.skills['q'] = this.renderSkillButton('Q',0, this.hero.skills['q']);
-		this.skills['w'] = this.renderSkillButton('W',1, this.hero.skills['w']);
-		this.skills['e'] = this.renderSkillButton('E',2, this.hero.skills['e']);
-		this.skills['r'] = this.renderSkillButton('R',3, this.hero.skills['r']);
+	var index = 0;
+	for(key in this.hero.active_skills){
+		this.skills[key] = this.renderSkillButton(key.toUpperCase(), index, this.hero.active_skills[key]);
+		index++;
 	}
 }
 
@@ -67,7 +66,7 @@ UI_Stage.prototype.renderSkillButton = function(hotkey, index, skill){
 	hotkey_text.textBaseline = "middle";
 	hotkey_text.x = 7;
 	hotkey_text.y = 8;
-	var icon = new createjs.Bitmap(this.loader.getResult(skill.name));
+	var icon = new createjs.Bitmap(this.loader.getResult(skill.icon_source.split('/').pop()));
 	var available = new createjs.Shape();
 	available.graphics.f("#c00").dr(0,0,50,50);
 	available.alpha = 0;
@@ -84,7 +83,7 @@ UI_Stage.prototype.renderSkillButton = function(hotkey, index, skill){
 	this.addChild(container);
 
 	icon.on("rollover", function(event){
-		this.tooltip_stage.showSkillTooltip(event, skill);
+		this.tooltip_stage.showSkillTooltip(event, skill, this.hero);
 	}.bind(this));
 
 	icon.on("rollout", function(event){
@@ -97,7 +96,7 @@ UI_Stage.prototype.renderSkillButton = function(hotkey, index, skill){
 UI_Stage.prototype.refreshSkillButton = function(){
 	for(key in this.skills){
 		var skill_button = this.skills[key];
-		var skill = this.hero.skills[key];
+		var skill = this.hero.active_skills[key];
 		var available = skill_button.children[4];
 		if(skill.cost <= this.hero.resource){
 			available.alpha = 0;

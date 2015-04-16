@@ -5,7 +5,8 @@ var PrototypeHeroSchema = new Schema({
 	portrait:String,
 	index:Number,
 	resource_type:String,
-	skills:Schema.Types.Mixed,
+	passive_skills:Schema.Types.Mixed,
+	active_skills:Schema.Types.Mixed,
 });
 
 PrototypeHeroSchema.methods.initHero = function(callback){

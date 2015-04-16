@@ -46,6 +46,7 @@ Monster.prototype.initEventListener = function(){
 		if(this.status !== "death"){
 			this.mouseover = true;
 			this.outline.visible = true;
+			this.stage.hero.skill_target = this;
 		}
 	}.bind(this));
 

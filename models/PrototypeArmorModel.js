@@ -46,7 +46,7 @@ PrototypeArmorSchema.methods.setMerchantItem = function(level){
 
 	armor.attributes = []
 	while(armor.attributes.length < armor.rating){
-		var randomnumber = Math.floor(Math.random() * 11)
+		var randomnumber = parseInt(Math.floor(Math.random() * 11));
 		var found=false;
 		for(var j = 0 ; j < armor.attributes.length ; j++){
 			if(armor.attributes[j] === randomnumber){
@@ -59,7 +59,7 @@ PrototypeArmorSchema.methods.setMerchantItem = function(level){
 		}
 	}
 
-	armor.attributes.sort();
+	armor.attributes.sort(function(a, b){return a-b});
 	armor.attributes.forEach(function(attribute){
 		switch(attribute){
 			case 0:
@@ -91,7 +91,7 @@ PrototypeArmorSchema.methods.setMerchantItem = function(level){
 				armor.price += level * armor.attack_speed_bonus;
 			break;
 			case 4:
-				armor.movement_speed = (armor.rating - 1) * 2 + Math.ceil(Math.random() * 2);
+				armor.movement_speed = ((armor.rating - 1) * 2 + Math.ceil(Math.random() * 2)) * (armor.part === "boots"?2:1);
 				armor.price += level * armor.movement_speed;
 			break;
 			case 5:

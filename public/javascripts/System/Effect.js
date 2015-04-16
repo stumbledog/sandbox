@@ -8,7 +8,7 @@ Effect.prototype.play = function(animation, x, y, degree){
 	var frames = [];
 	var animation_frame = [];
 	animation.images.forEach(function(image, index){
-		images.push(this.loader.getResult(image.id));
+		images.push(this.loader.getResult(image.split('/').pop()));
 		frames.push([0,0,animation.width,animation.height,index,animation.regX,animation.regY]);
 		animation_frame.push(index);
 	},this);
