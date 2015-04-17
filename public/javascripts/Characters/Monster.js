@@ -22,8 +22,6 @@ Monster.prototype.initialize = function(builder){
 
 	this.right_weapon_tick = 0;
 
-	console.log(builder);
-
 	this.team = "Monster";
 	this.health_color = "#C00";
 	this.damage_color = "#D40D12";

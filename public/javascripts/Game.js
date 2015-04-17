@@ -16,117 +16,6 @@ var Game = (function(){
 			right_stage.update();
 		};
 
-		/*
-			skills:[
-				{
-					key:"q",
-					name:"Shockwave",
-					description:"Send a wave that deals 200% weapon damage to enemies up to 10 yards in a cone.",
-					src:"assets/Graphics/icons/50x50/129.png",
-					resource:"fury",
-					radius:160,
-					angle:60,
-					type:"cone",
-					damage:300,
-					cost:15,
-					cooldown:5,
-					animation:{
-						scale:0.5,
-						width:163,
-						height:167,
-						regX:81,
-						regY:167,
-						images:[
-							{src:"assets/Graphics/effects/shooter_fx/lava_shot_impact1.png",index:"lava_shot_impact1"},
-							{src:"assets/Graphics/effects/shooter_fx/lava_shot_impact2.png",index:"lava_shot_impact2"},
-							{src:"assets/Graphics/effects/shooter_fx/lava_shot_impact3.png",index:"lava_shot_impact3"},
-							{src:"assets/Graphics/effects/shooter_fx/lava_shot_impact4.png",index:"lava_shot_impact4"},
-						]
-					}
-				},{
-					key:"w",
-					name:"Bladestorm",
-					description:"Deal 150% weapon damage to all enemies within 5 yards",
-					src:"assets/Graphics/icons/50x50/115.png",
-					resource:"fury",
-					radius:80,
-					angle:90,
-					type:"impact",
-					damage:200,
-					cost:30,
-					cooldown:10,
-					animation:{
-						scale:1,
-						rotate:-45,
-						width:160,
-						height:160,
-						regX:80,
-						regY:80,
-						images:[
-							{src:"assets/Graphics/effects/impacts/orange_impx_0.png",index:"orange_impx_0"},
-							{src:"assets/Graphics/effects/impacts/orange_impx_1.png",index:"orange_impx_1"},
-							{src:"assets/Graphics/effects/impacts/orange_impx_2.png",index:"orange_impx_2"},
-						]
-					}
-				},{
-					key:"e",
-					name:"Regeneration",
-					description:"Heal you for 10% of your maximum health",
-					src:"assets/Graphics/icons/50x50/108.png",
-					resource:"fury",
-					radius:80,
-					angle:90,
-					type:"heal",
-					target:"self",
-					heal:{
-						type:"max_health",
-						unit:"%",
-						amount:10,
-					},
-					cost:25,
-					cooldown:10,
-					animation:{
-						scale:0.5,
-						rotate:0,
-						width:160,
-						height:160,
-						regX:80,
-						regY:80,
-						images:[
-							{src:"assets/Graphics/effects/shooter_fx/ring_shot_impact1.png",index:"ring_shot_impact1"},
-							{src:"assets/Graphics/effects/shooter_fx/ring_shot_impact2.png",index:"ring_shot_impact2"},
-							{src:"assets/Graphics/effects/shooter_fx/ring_shot_impact3.png",index:"ring_shot_impact3"},
-						]
-					}
-				},{
-					key:"r",
-					name:"Berserk",
-					description:"Increases all damage, attack speed, and movement speed 50% for 15 seconds",
-					src:"assets/Graphics/icons/50x50/107.png",
-					resource:"fury",
-					angle:90,
-					type:"buff",
-					buff:{
-						damage:0.5,
-						attack_speed:0.5,
-						movement_speed:0.5,
-					},
-					filter:[0.6,0,0,1],
-					cost:50,
-					cooldown:60,
-					duration:15,
-					animation:{
-						images:[
-							{src:"assets/Graphics/effects/impacts/orange_impx_0.png",index:"orange_impx_0"},
-							{src:"assets/Graphics/effects/impacts/orange_impx_1.png",index:"orange_impx_1"},
-							{src:"assets/Graphics/effects/impacts/orange_impx_2.png",index:"orange_impx_2"},
-						]
-					}
-				}
-			]
-		};
-		*/
-
 		var manifest = [];
 
 		manifest.push({src:"assets/Graphics/System/Icons/IconSet.png", id:"icon"});
@@ -164,6 +53,18 @@ var Game = (function(){
 			if(unit_builder.portrait){
 				manifest.push({src:unit_builder.portrait, id:unit_builder.portrait.split('/').pop()});
 			}
+			if(unit_builder.active_skills){
+				unit_builder.active_skills.forEach(function(skill){
+					if(skill.icon_source){
+						manifest.push({src:skill.icon_source,id:skill.icon_source.split('/').pop()});
+					}
+					if(skill.animation){
+						skill.animation.images.forEach(function(image){
+							manifest.push({src:image,id:image.split('/').pop()});
+						});
+					}
+				});
+			}
 		});
 
 		manifest.push({src:"assets/Graphics/effects/magic_0/round_shot.png",id:"round_shot"});
@@ -187,6 +88,18 @@ var Game = (function(){
 				npc.recruitable_units.forEach(function(recruitable_unit){
 					manifest.push({src:recruitable_unit.sprite, id:recruitable_unit.sprite.split('/').pop()});
 					manifest.push({src:recruitable_unit.portrait, id:recruitable_unit.portrait.split('/').pop()});
+					if(recruitable_unit.active_skills){
+						recruitable_unit.active_skills.forEach(function(skill){
+							if(skill.icon_source){
+								manifest.push({src:skill.icon_source,id:skill.icon_source.split('/').pop()});
+							}
+							if(skill.animation){
+								skill.animation.images.forEach(function(image){
+									manifest.push({src:image,id:image.split('/').pop()});
+								});
+							}
+						});
+					}
 				});
 			});
 		}

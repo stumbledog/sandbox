@@ -41,40 +41,39 @@ function savePrototypeUnit(){
 		passive_skills:[
 			{
 				name:"Defend",
-				description:"Allow to equip shields in off-hand",
+				description:"Allows to equip shields in off-hand",
 				key:"defend",
 			},
 			{
 				name:"Endurance",
-				description:"Reduce incoming damage by 10%",
+				description:"Reduces incoming damage by 10%",
 				key:"endurance",
 			}
 		],
 		active_skills:[
 			{
 				name:"Charge",
-				description:"Charge and deals 500% dps damage to enemies in its path.",
+				description:"Charges and deal 300% damage to enemies in its path.",
 				key:"q",
 				target:false,
 				distance:120,
 				radius:30,
-				damage:300,
-				cost:0,
-				cooldown:8,
-				icon_source:"assets/Graphics/icons/50x50/123.png",
+				damage:3,
+				cost:15,
+				cooldown:10,
+				icon_source:"assets/Graphics/icons/50x50/518.png",
 			},
 			{
 				name:"Shockwave",
-				description:"Send a wave that deals 200% dps damage to enemies up to 10 yards in a cone.",
+				description:"Sends a wave that deals 200% damage to enemies up to 10 yards in a cone.",
 				key:"w",
 				target:false,
 				radius:80,
 				angle:90,
-				type:"cone",
-				damage:200,
-				cost:15,
-				cooldown:10,
-				icon_source:"assets/Graphics/icons/50x50/129.png",
+				damage:2,
+				cost:20,
+				cooldown:6,
+				icon_source:"assets/Graphics/icons/50x50/514.png",
 				animation:{
 					scale:0.5,
 					width:163,
@@ -90,34 +89,64 @@ function savePrototypeUnit(){
 				}
 			},
 			{
-				name:"Bladestorm",
-				description:"Deal 150% dps damage to all enemies within 5 yards.",
+				name:"Last Defender",
+				description:"Reduces damage taken by 20% for 12 sec and increases Health regeneration by 50%",
 				key:"e",
 				target:false,
-				radius:40,
-				type:"circle",
-				damage:150,
 				cost:30,
-				cooldown:20,
-				icon_source:"assets/Graphics/icons/50x50/115.png",
+				cooldown:30,
+				duration:12000,
+				icon_source:"assets/Graphics/icons/50x50/525.png",
 				animation:{
-					scale:1,
+					scale:0.5,
 					rotate:-45,
-					width:160,
-					height:160,
-					regX:80,
-					regY:80,
+					width:84,
+					height:79,
+					regX:42,
+					regY:40,
 					images:[
-						"assets/Graphics/effects/impacts/orange_impx_0.png",
-						"assets/Graphics/effects/impacts/orange_impx_1.png",
-						"assets/Graphics/effects/impacts/orange_impx_2.png",
+						"assets/Graphics/effects/shooter_fx/lava_ball_fx1.png",
+						"assets/Graphics/effects/shooter_fx/lava_ball_fx2.png",
+						"assets/Graphics/effects/shooter_fx/lava_ball_fx3.png",
+						"assets/Graphics/effects/shooter_fx/lava_ball_fx4.png",
+					]
+				}
+			},
+			{
+				name:"Judgement",
+				description:"Sours up to the sky, deals 1000% damage to all enemies within 5 yards, and knocks back them.",
+				key:"r",
+				distance:120,
+				radius:40,
+				angle:60,
+				damage:10,
+				cost:0,
+				cooldown:0,
+				icon_source:"assets/Graphics/icons/50x50/529.png",
+				animation:{
+					scale:0.5,
+					width:232,
+					height:218,
+					regX:116,
+					regY:99,
+					images:[
+						"assets/Graphics/effects/explosion_0/Oexplosiona_0.png",
+						"assets/Graphics/effects/explosion_0/Oexplosiona_1.png",
+						"assets/Graphics/effects/explosion_0/Oexplosiona_2.png",
+						"assets/Graphics/effects/explosion_0/Oexplosiona_3.png",
+						"assets/Graphics/effects/explosion_0/Oexplosiona_4.png",
+						"assets/Graphics/effects/explosion_0/Oexplosiona_5.png",
+						"assets/Graphics/effects/explosion_0/Oexplosiona_6.png",
+						"assets/Graphics/effects/explosion_0/Oexplosiona_7.png",
+						"assets/Graphics/effects/explosion_0/Oexplosiona_8.png",
+						"assets/Graphics/effects/explosion_0/Oexplosiona_9.png",
 					]
 				}
 			},
 			{
 				name:"Shockwave",
 				description:"Send a wave that deals 200% dps to enemies up to 10 yards in a cone.",
-				key:"r",
+				key:"t",
 				radius:160,
 				angle:60,
 				type:"cone",
@@ -126,11 +155,11 @@ function savePrototypeUnit(){
 				cooldown:10,
 				icon_source:"assets/Graphics/icons/50x50/129.png",
 				animation:{
-					scale:0.5,
-					width:163,
-					height:167,
-					regX:81,
-					regY:167,
+					scale:0.2,
+					width:232,
+					height:218,
+					regX:0,
+					regY:0,
 					images:[
 						"assets/Graphics/effects/shooter_fx/lava_shot_impact1.png",
 						"assets/Graphics/effects/shooter_fx/lava_shot_impact2.png",
@@ -233,19 +262,19 @@ function saveMap(){
 						passive_skills:[
 							{
 								name:"Defend",
-								description:"Allow to equip shields in off-hand",
+								description:"Allows to equip shields in off-hand",
 								key:"defend",
 							},
 							{
 								name:"Endurance",
-								description:"Reduce incoming damage by 10%",
+								description:"Reduces incoming damage by 10%",
 								key:"endurance",
 							},
 						],
 						active_skills:[
 							{
 								name:"Defend",
-								description:"Allow to equip shields in off-hand",
+								description:"Allows to equip shields in off-hand",
 							},
 						]
 					},
@@ -270,19 +299,40 @@ function saveMap(){
 						passive_skills:[
 							{
 								name:"Dual Wield",
-								description:"Allow to equip one-hand weapons in off-hand",
+								description:"Allows to equip one-hand weapons in off-hand",
 								key:"dual_wield",
 							},
 							{
 								name:"Swift Runner",
-								description:"Increse movement speed by 15%",
+								description:"Increses movement speed by 15%",
 								key:"swift_runner",
 							},
 						],
 						active_skills:[
 							{
-								name:"Defend",
-								description:"Allow to equip shields in off-hand",
+								name:"Backstab",
+								description:"Moves behind target and deals 600% damage to target and then hides for 5 sec",
+								key:"backstab",
+								target:true,
+								distance:60,
+								damage:6,
+								cost:15,
+								cooldown:20,
+								icon_source:"assets/Graphics/icons/50x50/400.png",
+								animation:{
+									scale:0.25,
+									width:240,
+									height:203,
+									regX:120,
+									regY:101,
+									images:[
+										"assets/Graphics/effects/splatters/blood_slash_0.png",
+										"assets/Graphics/effects/splatters/blood_slash_1.png",
+										"assets/Graphics/effects/splatters/blood_slash_2.png",
+										"assets/Graphics/effects/splatters/blood_slash_3.png",
+										"assets/Graphics/effects/splatters/blood_slash_4.png",
+									]
+								}
 							},
 						]
 					},
@@ -307,20 +357,37 @@ function saveMap(){
 						passive_skills:[
 							{
 								name:"Wand Specialization",
-								description:"Allow to equip wand weapons",
+								description:"Allows to equip wand weapons",
 								key:"wand",
 							},
 							{
 								name:"Critical Magic",
-								description:"Increase critical rate by 5%",
+								description:"Increases critical rate by 5%",
 								key:"critical_magic",
 							},
-
 						],
 						active_skills:[
 							{
-								name:"Defend",
-								description:"Allow to equip shields in off-hand",
+								name:"Chain Lightning",
+								description:"Deals 200% damage to target and then jumps to nearby enemies. Affects 5 total targets.",
+								key:"chain_lightning",
+								target:true,
+								distance:120,
+								damage:2,
+								cost:20,
+								cooldown:15,
+								icon_source:"assets/Graphics/icons/50x50/624.png",
+								animation:{
+									scale:0.25,
+									width:96,
+									height:640,
+									regX:48,
+									regY:0,
+									images:[
+										"assets/Graphics/effects/electricity/Lightning_0.png",
+										"assets/Graphics/effects/electricity/Lightning_1.png",
+									]
+								}
 							},
 						]
 					},
@@ -386,6 +453,7 @@ function saveMap(){
 			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:0,x:360,y:160,regY:9,radius:10,type:"melee",health:100,damage:1,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,},
 			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:0,x:380,y:160,regY:9,radius:10,type:"melee",health:100,damage:1,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,},
 		],1, 1,"Ridgefield Park",false,false,640,640,20,20,[160,160]));
+
 	maps.push(initMap([],false,[],[],1, 2,"Palisade Park",false,false,320,320,10,10,[160,160]));
 	maps.push(initMap([],false,[],[],1, 3,"Leonia",false,false,320,320,10,10,[160,160]));
 	maps.push(initMap([],false,[],[],1, 4,"Fort Lee",false,false,320,320,10,10,[160,160]));

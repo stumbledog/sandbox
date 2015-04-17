@@ -169,8 +169,6 @@ EquippedUnit.prototype.updateStats = function(){
 	var health_rate = this.health/this.max_health;
 	this.max_health = this.stamina * 10 + this.strength * 5;
 	this.health = health_rate * this.max_health;
-	/*this.max_resource = 100;
-	this.resource = this.resource_type === "fury" ? 0 : 100;*/
 
 	this.attack_speed_bonus = attack_speed_bonus;
 	this.right_attack_speed *= (100 - this.attack_speed_bonus)/100;
@@ -181,10 +179,10 @@ EquippedUnit.prototype.updateStats = function(){
 	this.critical_rate = critical_rate + (this.critical_magic ? 5 : 0);
 	this.critical_damage = critical_damage;
 
-	this.health_regen = health_regen + this.stamina;
+	this.health_regen = (health_regen + this.stamina) * (this.last_defender ? 1.5 : 1);
 	this.resource_regen = resource_regen;
 	this.armor = armor;
-	this.damage_reduction = armor / (armor + 100) + (this.endurance ? 0.1 : 0);
+	this.damage_reduction = armor / (armor + 100) + (this.endurance ? 0.1 : 0) + (this.last_defender ? 0.2 : 0);
 	this.life_steal = life_steal;
 
 	this.cooldown_reduction = cooldown_reduction;	
@@ -215,6 +213,10 @@ EquippedUnit.prototype.updateStats = function(){
 	this.dps = (this.right_min_damage + this.right_max_damage) / 2 * 60 / this.right_attack_speed * (1 - this.critical_rate / 100 + ((2+critical_damage/100) * this.critical_rate/100));
 	if(this.equipments.off_hand && this.equipments.off_hand.type === "weapon"){
 		this.dps += (this.left_min_damage + this.left_max_damage) / 2 * 60 / this.left_attack_speed * (1 - this.critical_rate / 100 + ((2+critical_damage/100) * this.critical_rate/100));
+	}
+
+	if(this.user.inventory.selectedCharacter === this){
+		this.user.inventory.displayStats(this);
 	}
 }
 

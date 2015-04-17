@@ -27,3 +27,15 @@ Follower.prototype.getClassColor = function(){
 	};
 	return color[this.character_class];
 }
+
+Follower.prototype.tick = function(){
+	Unit.prototype.tick.call(this);
+	for(key in this.active_skills){
+		var skill = this.active_skills[key];
+		if(skill.remain_cooldown > 0){
+			skill.remain_cooldown -= 1/60;
+			skill.remain_cooldown = skill.remain_cooldown < 0 ? 0 : skill.remain_cooldown;
+			//this.ui_stage.renderCooldown(key, skill.remain_cooldown, skill.cooldown);
+		}
+	}
+}

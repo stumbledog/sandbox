@@ -19,10 +19,17 @@ ActiveSkill.prototype.active_skill_initialize = function(skill, unit){
 	this.damage = skill.damage;
 	this.cost = skill.cost;
 	this.cooldown = skill.cooldown;
+	this.duration = skill.duration;
 	this.icon_source = skill.icon_source;
 	this.animation = skill.animation;
 
 	this.remain_cooldown = 0;
+
+	if(this.name === "Chain Lightning"){
+		this.unit.chain_lightning = true;
+	}else if(this.name === "Backstab"){
+		this.unit.backstab = true;
+	}
 }
 
 ActiveSkill.prototype.use = function(mouse_position){
@@ -46,6 +53,12 @@ ActiveSkill.prototype.use = function(mouse_position){
 			case "Bladestorm":
 				this.Bladestorm();
 				break;
+			case "Last Defender":
+				this.lastDefender();
+				break;
+			case "Judgement":
+				this.judgement(mouse_position);
+				break;
 			case "Fireball":
 				this.fireball(mouse_position);
 				break;
@@ -56,14 +69,15 @@ ActiveSkill.prototype.use = function(mouse_position){
 	}
 }
 
-ActiveSkill.prototype.useOnTarget = function(){
-	if(!this.unit.skill_target){
+ActiveSkill.prototype.useOnTarget = function(target){
+	var target = this.unit.skill_target ? this.unit.skill_target : target;
+	if(!target){
 		console.log("Hover the pointer over its target");
 	}else if(this.unit.resource < this.cost){
 		console.log("Not enough resource.");
 	}else if(this.remain_cooldown > 0){
 		console.log("This spell is not ready yet.");
-	}else if(Math.sqrt(this.unit.getSquareDistance(this.unit.skill_target)) > this.radius){
+	}else if(Math.sqrt(this.unit.getSquareDistance(target)) > this.distance){
 		console.log("Out of range");
 	}else{
 		this.unit.resource -= this.cost;
@@ -71,11 +85,11 @@ ActiveSkill.prototype.useOnTarget = function(){
 		this.enemies = this.unit.unit_stage.getEnemies(this.unit);
 
 		switch(this.name){
-			case "Charge":
-				this.charge(this.unit.skill_target);
+			case "Chain Lightning":
+				this.chainLightning(target);
 				break;
-			case "Fireball":
-				this.fireball(this.unit.skill_target);
+			case "Backstab":
+				this.backstab(target);
 				break;
 		}
 
@@ -101,33 +115,32 @@ ActiveSkill.prototype.charge = function(mouse_position){
 		var unit_y = (mouse_position.y - this.unit.y) / 10;
 	}
 	
-	var destination = {x:0,y:0};
+	var arrival = new Vector(this.unit.x, this.unit.y);
+	var destination = new Vector(0, 0);
 
 	for(var i = 1; i <11 ; i++){
 		var x = parseInt(unit_x * i);
 		var y = parseInt(unit_y * i);
-		console.log(this.unit.blocks[parseInt((this.unit.y + y)/16)][parseInt((this.unit.x + x)/16)]);
 		if(this.unit.blocks[parseInt((this.unit.y + y)/16)] && 
 			this.unit.blocks[parseInt((this.unit.y + y)/16)][parseInt((this.unit.x + x)/16)] === 'E'){
-			destination = {x:x, y:y};
+			destination = new Vector(x, y);
 		}
 	}
 
-	
-
-	this.unit.moveAttack(this.unit.x + destination.x, this.unit.y + destination.y);
+	destination.add(arrival);
+	this.unit.invincibility = true;
+	this.unit.moveAttack(destination.x, destination.y);
 	createjs.Tween.get(this.unit)
-		.to({x:this.unit.x + destination.x, y:this.unit.y + destination.y}, distance * 3)
+		.to({x:destination.x, y:destination.y}, distance * 3)
 		.call(function(){
+			this.unit.invincibility = false;
 			this.enemies.forEach(function(enemy){
-				if(Vector.dist(this.unit, enemy) <= this.radius && mouse_vector.diffDegree(Vector.sub(enemy, current_position)) < this.angle/2){
-					enemy.hit(this.unit, this.getSkillDamage());
+				var enemy_position = new Vector(enemy.x, enemy.y);
+				var diff = enemy_position.distToSegment(arrival, destination);
+				if(diff <= this.radius){
+					enemy.hit(this.unit, this.unit.getDamage("skill", this.damage));
 				}
 			}, this);
-			//console.log(this.unit.blocks[parseInt(mouse_position.y/16)][parseInt(mouse_position.x/16)]);
-			//if()
-			//mouse_position.hit(this.unit, this.getSkillDamage());
-			//this.unit.moveAttack(this.unit.x, this.unit.y);
 		}.bind(this));
 }
 
@@ -140,7 +153,7 @@ ActiveSkill.prototype.shockwave = function(mouse_position){
 	this.effect.play(this.animation, this.unit.x, this.unit.y, degree);
 	this.enemies.forEach(function(enemy){
 		if(Vector.dist(this.unit, enemy) <= this.radius && mouse_vector.diffDegree(Vector.sub(enemy, current_position)) < this.angle/2){
-			enemy.hit(this.unit, this.getSkillDamage());
+			enemy.hit(this.unit, this.unit.getDamage("skill", this.damage));
 		}
 	}, this);
 }
@@ -149,17 +162,104 @@ ActiveSkill.prototype.Bladestorm = function(){
 	this.effect.play(this.animation, this.unit.x, this.unit.y, this.animation.rotate);
 	this.enemies.forEach(function(enemy){
 		if(Vector.dist(this.unit, enemy) <= this.radius){
-			enemy.hit(this.unit, this.getSkillDamage());
+			enemy.hit(this.unit, this.unit.getDamage("skill", this.damage));
 		}
 	}, this);
 }
 
-ActiveSkill.prototype.getSkillDamage = function(){
-	var damage = this.unit.dps * this.damage/100;
-	if(this.unit.critical_rate/100 >= Math.random()){
-		return {damage:(2 + this.unit.critical_damage / 100) * damage, critical:true};
+ActiveSkill.prototype.lastDefender = function(){
+	this.unit.last_defender = true;
+	this.unit.updateStats();
+
+	this.effect.playOnUnit(this.animation, this.unit);
+
+	setTimeout(function(){ 
+		this.unit.last_defender = false;
+		this.unit.updateStats();
+	}.bind(this), this.duration);
+}
+
+ActiveSkill.prototype.judgement = function(mouse_position){
+	var distance = Math.sqrt(this.unit.getSquareDistance(mouse_position));
+
+	if(this.distance < distance){
+		var unit_x = (mouse_position.x - this.unit.x) * this.distance / distance / 10;
+		var unit_y = (mouse_position.y - this.unit.y) * this.distance / distance / 10;
+		distance = this.distance;
 	}else{
-		return {damage:damage, critical:false};
+		var unit_x = (mouse_position.x - this.unit.x) / 10;
+		var unit_y = (mouse_position.y - this.unit.y) / 10;
+	}
+	
+	var arrival = new Vector(this.unit.x, this.unit.y);
+	var destination = new Vector(0, 0);
+
+	for(var i = 1; i <11 ; i++){
+		var x = parseInt(unit_x * i);
+		var y = parseInt(unit_y * i);
+		if(this.unit.blocks[parseInt((this.unit.y + y)/16)] && 
+			this.unit.blocks[parseInt((this.unit.y + y)/16)][parseInt((this.unit.x + x)/16)] === 'E'){
+			destination = new Vector(x, y);
+		}
 	}
 
+	destination.add(arrival);
+	this.unit.invincibility = true;
+	createjs.Tween.get(this.unit)
+		.to({regY: 200}, 200, createjs.Ease.circOut)
+		.call(function(){
+			this.unit.visible = false;
+		}.bind(this))
+		.to({x:destination.x,y:destination.y}, 300)
+		.call(function(){
+			this.unit.visible = true;
+			this.effect.play(this.animation, this.unit.x, this.unit.y, -90);
+		}.bind(this))
+		.to({regY: 0}, 200, createjs.Ease.circIn)
+		.call(function(){
+			this.unit.invincibility = false;
+			this.unit.moveAttack(destination.x, destination.y);
+			this.enemies.forEach(function(enemy){
+				if(Vector.dist(this.unit, enemy) <= this.radius){
+					enemy.hit(this.unit, this.unit.getDamage("skill", this.damage));
+					var v = new Vector(enemy.x, enemy.y);
+					v.sub(new Vector(this.unit.x, this.unit.y)).normalize().mult(50);
+					createjs.Tween.get(enemy)
+						.to({x:enemy.x + v.x/2, y:enemy.y + v.y/2}, 500)
+						.to({x:enemy.x + v.x/2, y:enemy.y + v.y/2}, 500);
+				}
+			}, this);
+		}.bind(this));
+}
+
+ActiveSkill.prototype.chainLightning = function(target){
+	var temp;
+	var counter = 0;
+	var prev_target = this.unit;
+	var interval = setInterval(function(){
+		target.hit(this.unit, this.unit.getDamage("skill", this.damage));
+		this.effect.play(this.animation, target.x, target.y, 90);
+		temp = target.findClosestAlly(this.distance);
+		prev_target = target;
+		target = temp;
+		
+		counter++;
+		if(counter === 5 || !target) {
+			clearInterval(interval);
+		}
+	}.bind(this), 200);
+}
+
+ActiveSkill.prototype.backstab = function(target){
+	this.unit.invincibility = true;
+	this.unit.x = target.x;
+	this.unit.y = target.y;
+	this.effect.play(this.animation, target.x, target.y, -90);
+	target.hit(this.unit, this.unit.getDamage("skill", this.damage));
+	/*
+	this.unit.hide();
+
+	this.unit.alpha = 0.5;
+	this.hide = true;
+	*/
 }

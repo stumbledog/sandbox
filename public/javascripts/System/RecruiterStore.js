@@ -108,9 +108,11 @@ RecruiterStore.prototype.unitDetail = function(unit){
 	Intelligence.y = 52;
 
 	var skill_text = "";
-	unit.passive_skills.forEach(function(skills, index){
+
+	var skill_array = unit.passive_skills.concat(unit.active_skills);
+	skill_array.forEach(function(skills, index){
 		skill_text += skills.name;
-		if(unit.passive_skills[index+1]){
+		if(skill_array[index+1]){
 			skill_text += ", ";
 		}
 	});
@@ -174,14 +176,13 @@ RecruiterStore.prototype.unitToObject = function(unit){
 	var passive_skills = [];
 	var active_skills = [];
 	unit.passive_skills.forEach(function(skill){
-		console.log(skill.key);
 		passive_skills.push({name:skill.name, description:skill.description, key:skill.key});
 	});
-
+/*
 	unit.active_skills.forEach(function(skill){
-		active_skills.push({name:skill.name, description:skill.description});
+		active_skills.push(skill);
 	});
-	
+*/	
 	var obj = {
 		character_class:unit.character_class,
 		primary_attribute:unit.primary_attribute,
@@ -197,7 +198,7 @@ RecruiterStore.prototype.unitToObject = function(unit){
 		items:unit.items,
 		level_up_bonus:unit.level_up_bonus,
 		passive_skills:passive_skills,
-		active_skills:active_skills,
+		active_skills:unit.active_skills,
 	};
 	return obj;
 }

@@ -1,12 +1,3 @@
-var SkillSchema = new Schema({
-	type:String,
-	name:String,
-	description:String,
-	key:String,
-	cost:Number,
-	cooldown:Number,
-});
-
 var RecrutableUnitSchema = new Schema({
 	character_class:String,
 	primary_attribute:Number,
@@ -26,8 +17,8 @@ var RecrutableUnitSchema = new Schema({
 		intelligence:Number,
 		stamina:Number,
 	},
-	passive_skills:[SkillSchema],
-	active_skills:[SkillSchema],
+	passive_skills:Schema.Types.Mixed,
+	active_skills:Schema.Types.Mixed,
 });
 
 var NPCSchema = new Schema({

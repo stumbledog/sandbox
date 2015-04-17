@@ -49,23 +49,19 @@ Unit.prototype.initialize = function(builder){
 
 	this.shadow = new createjs.Shadow("#333",3,3,10);
 	this.renderUnit(builder.sprite.split('/').pop(), builder.index, builder.regX, builder.regY);
-
-	if(builder.weapon){
-		this.renderWeapon(builder.weapon);
-	}
-
-	if(builder.skills){
-		this.initSkills(builder.skills);
-	}
 }
 
-Unit.prototype.getDamage = function(hand){
-	switch(hand){
+Unit.prototype.getDamage = function(type, multiplier){
+	switch(type){
 		case "right":
 			var damage = Math.random() * (this.right_max_damage - this.right_min_damage) + this.right_min_damage;
 			break;
 		case "left":
 			var damage = Math.random() * (this.left_max_damage - this.left_min_damage) + this.left_min_damage;
+			break;
+		case "skill":
+			var damage = Math.random() * (this.left_max_damage + this.right_max_damage - this.left_min_damage - this.right_min_damage) + this.left_min_damage + this.right_min_damage;
+			damage *= multiplier;
 			break;
 	}
 	if(this.critical_rate/100 >= Math.random()){
@@ -73,14 +69,6 @@ Unit.prototype.getDamage = function(hand){
 	}else{
 		return {damage:damage, critical:false};
 	}
-}
-
-Unit.prototype.initSkills = function(skills){
-	this.skills = [];
-	skills.forEach(function(skill){
-		skill.unit = this;
-		this.skills[skill.key] = new Skill(skill);
-	}, this);
 }
 
 Unit.prototype.useSkill = function(key, mouse_position){
@@ -142,22 +130,6 @@ Unit.prototype.getPortrait = function(){
 
 Unit.prototype.getSprite = function(){
 	return this.sprite.clone();
-}
-
-Unit.prototype.renderWeapon = function(weapon){
-	this.weapon = new createjs.Bitmap(this.game.getLoader().getResult(weapon.src_id));
-	this.weapon.sourceRect = new createjs.Rectangle(weapon.cropX, weapon.cropY, weapon.width, weapon.height);
-	this.weapon.regX = weapon.regX;
-	this.weapon.regY = weapon.regY;
-	this.weapon.scaleX = this.weapon.scaleY = weapon.scale;
-	this.weapon.z = 1;
-	this.weapon.rotation = -90;
-	this.weapon.swing = -90;
-	this.weapon.x = -6;
-	this.weapon.y = 10;
-	this.weapon.type = weapon.type;
-
-	this.addChild(this.weapon);
 }
 
 Unit.prototype.initHealthBar = function(){
@@ -349,47 +321,6 @@ Unit.prototype.rotate = function(dx, dy){
 		}
 	}
 
-	if(this.direction === "back"){
-		if(this.weapon && this.weapon.type === "melee"){
-			if(this.getChildIndex(this.weapon) === 1){
-				this.swapChildren(this.weapon, this.sprite);
-			}
-			this.weapon.rotation = 90;
-			this.weapon.swing = -90;
-			this.weapon.x = 6;
-			this.weapon.y = 6;
-		}
-	}else if(this.direction === "right"){
-		if(this.weapon && this.weapon.type === "melee"){
-			if(this.getChildIndex(this.weapon) === 0){
-				this.swapChildren(this.weapon, this.sprite);
-			}
-			this.weapon.rotation = 90;
-			this.weapon.swing = 90;
-			this.weapon.x = 0;
-			this.weapon.y = 10;
-		}
-	}else if(this.direction === "front"){
-		if(this.weapon && this.weapon.type === "melee"){
-			if(this.getChildIndex(this.weapon) === 0){
-				this.swapChildren(this.weapon, this.sprite);
-			}
-			this.weapon.rotation = -90;
-			this.weapon.swing = -90;
-			this.weapon.x = -6;
-			this.weapon.y = 10;
-		}
-	}else if(this.direction === "left"){
-		if(this.weapon && this.weapon.type === "melee"){
-			if(this.getChildIndex(this.weapon) === 1){
-				this.swapChildren(this.weapon, this.sprite);
-			}
-			this.weapon.rotation = 0;
-			this.weapon.swing = -90;
-			this.weapon.x = -4;
-			this.weapon.y = 8;
-		}
-	}
 	this.sprite.gotoAndPlay(this.direction);
 	this.outline.gotoAndPlay(this.direction);
 
@@ -459,7 +390,7 @@ Unit.prototype.hit = function(attacker, damage_object){
 		this.resource = this.resource > this.max_resource ? this.max_resource : this.resource;
 	}
 
-	if(this.status !== "death"){
+	if(this.status !== "death" && !this.invincibility){
 		var damage = (1 - this.damage_reduction) * damage_object.damage;
 		this.health -= damage;
 		var font_size = damage_object.critical ? "16" : "12";
@@ -569,8 +500,29 @@ Unit.prototype.die = function(attacker){
 	}
 }
 
+Unit.prototype.findClosestAlly = function(range){
+	var allies = this.unit_stage.getAlliedUnits(this);
+	var min = null;
+	allies.forEach(function(ally){
+		if(ally.status !== "death" && this !== ally){
+			ally.distance = this.getSquareDistance(ally);
+			if(range){
+				if(ally.distance < Math.pow(range,2))
+				if((!min || ally.distance < min.distance) && ally.distance < Math.pow(range,2)){
+					min = ally;
+				}
+			}else{
+				if((!min || ally.distance < min.distance)){
+					min = ally;
+				}
+			}
+		}
+	},this);
+	return min;
+}
+
 Unit.prototype.findClosestEnemy = function(range){
-	var enemies = this.parent.parent.getEnemies(this);
+	var enemies = this.unit_stage.getEnemies(this);
 	var min = null;
 	enemies.forEach(function(enemy){
 		if(enemy.status !== "death"){
@@ -653,6 +605,24 @@ Unit.prototype.interactNPC = function(){
 	}
 }
 
+Unit.prototype.castSpell = function(){
+	if(this.chain_lightning && this.order.action !== "move" && this.order.action !== "stop"){
+		var spell = this.active_skills["chain_lightning"];
+		var target = this.findClosestEnemy(spell.distance);
+		if(target && spell.remain_cooldown === 0){
+			this.active_skills["chain_lightning"].useOnTarget(target);
+		}
+	}
+
+	if(this.backstab && this.order.action !== "move" && this.order.action !== "stop"){
+		var spell = this.active_skills["backstab"];
+		var target = this.findClosestEnemy(spell.distance);
+		if(target && spell.remain_cooldown === 0){
+			this.active_skills["backstab"].useOnTarget(target);
+		}
+	}
+}
+
 Unit.prototype.tick = function(){
 	switch(this.order.action){
 		case "move":
@@ -687,9 +657,11 @@ Unit.prototype.tick = function(){
 		this.heal(this.health_regen);
 	}
 
-	if(this.resource_type && this.ticks % 60 === 0){
+	if(this.resource_regen && this.ticks % 60 === 0){
 		this.regenerate_resource(this.resource_regen);
 	}
+
+	this.castSpell();
 
 	this.ticks++;
 	this.right_weapon_tick++;
