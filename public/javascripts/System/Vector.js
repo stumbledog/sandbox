@@ -89,3 +89,5 @@ Vector.dist = function(v1, v2){
 Vector.orthogonal = function(v1, v2){
 	return new Vector(v2.y - v1.y, v1.x - v2.x);
 }
+
+Vector.dist

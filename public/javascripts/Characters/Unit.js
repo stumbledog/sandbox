@@ -423,7 +423,7 @@ Unit.prototype.attackTarget = function(target, hand){
 				.call(function(){
 					target.hit(this, this.getDamage(hand));
 					target.removeChild(weapon.bitmap);
-				}.bind(this));			
+				}.bind(this));
 		}else if(weapon.attack_type === "range"){
 			var distance = Math.sqrt(this.getSquareDistance(target));
 			var projectile = new createjs.Bitmap(this.loader.getResult(weapon.projectile.source.split('/').pop()));

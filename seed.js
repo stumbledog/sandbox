@@ -53,11 +53,12 @@ function savePrototypeUnit(){
 		active_skills:[
 			{
 				name:"Charge",
-				description:"Charge to an enemy in 15 yards and deals 500% dps damage to the enemy",
+				description:"Charge and deals 500% dps damage to enemies in its path.",
 				key:"q",
-				target:true,
-				radius:120,
-				damage:500,
+				target:false,
+				distance:120,
+				radius:30,
+				damage:300,
 				cost:0,
 				cooldown:8,
 				icon_source:"assets/Graphics/icons/50x50/123.png",
@@ -110,32 +111,6 @@ function savePrototypeUnit(){
 						"assets/Graphics/effects/impacts/orange_impx_0.png",
 						"assets/Graphics/effects/impacts/orange_impx_1.png",
 						"assets/Graphics/effects/impacts/orange_impx_2.png",
-					]
-				}
-			},
-			{
-				name:"Shockwave",
-				description:"Send a wave that deals 200% dps to enemies up to 10 yards in a cone.",
-				key:"e",
-				target:false,
-				radius:160,
-				angle:60,
-				type:"cone",
-				damage:200,
-				cost:15,
-				cooldown:10,
-				icon_source:"assets/Graphics/icons/50x50/129.png",
-				animation:{
-					scale:0.5,
-					width:163,
-					height:167,
-					regX:81,
-					regY:167,
-					images:[
-						"assets/Graphics/effects/shooter_fx/lava_shot_impact1.png",
-						"assets/Graphics/effects/shooter_fx/lava_shot_impact2.png",
-						"assets/Graphics/effects/shooter_fx/lava_shot_impact3.png",
-						"assets/Graphics/effects/shooter_fx/lava_shot_impact4.png",
 					]
 				}
 			},
