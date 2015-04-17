@@ -251,15 +251,13 @@ ActiveSkill.prototype.chainLightning = function(target){
 }
 
 ActiveSkill.prototype.backstab = function(target){
-	this.unit.invincibility = true;
+	this.unit.hide();
 	this.unit.x = target.x;
 	this.unit.y = target.y;
 	this.effect.play(this.animation, target.x, target.y, -90);
 	target.hit(this.unit, this.unit.getDamage("skill", this.damage));
-	/*
-	this.unit.hide();
 
-	this.unit.alpha = 0.5;
-	this.hide = true;
-	*/
+	setTimeout(function(){ 
+		this.unit.reveal();
+	}.bind(this), this.duration);
 }

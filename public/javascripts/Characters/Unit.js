@@ -525,7 +525,7 @@ Unit.prototype.findClosestEnemy = function(range){
 	var enemies = this.unit_stage.getEnemies(this);
 	var min = null;
 	enemies.forEach(function(enemy){
-		if(enemy.status !== "death"){
+		if(enemy.status !== "death" && !enemy.isHide){
 			enemy.distance = this.getSquareDistance(enemy);
 			if(range){
 				if(enemy.distance < Math.pow(range,2))
@@ -547,7 +547,7 @@ Unit.prototype.getSquareDistance = function(target){
 }
 
 Unit.prototype.attackTick = function(){
-	if(this.order.target && this.order.target.status !== "death"){
+	if(this.order.target && this.order.target.status !== "death" && !this.order.target.isHide){
 		if(this.getSquareDistance(this.order.target) <= Math.pow(this.range + this.radius + this.order.target.radius,2)){
 			this.velocity = new Vector(0,0);
 
@@ -567,7 +567,7 @@ Unit.prototype.attackTick = function(){
 }
 
 Unit.prototype.moveAttackTick = function(distance){
-	if(this.target && this.target.status !== "death"){
+	if(this.target && this.target.status !== "death" && !this.target.isHide){
 		if(this.getSquareDistance(this.target) <= Math.pow(this.range + this.radius + this.target.radius,2)){
 			this.velocity = new Vector(0,0);
 
@@ -621,6 +621,16 @@ Unit.prototype.castSpell = function(){
 			this.active_skills["backstab"].useOnTarget(target);
 		}
 	}
+}
+
+Unit.prototype.hide = function(){
+	this.sprite.alpha = 0.5;
+	this.isHide = true;
+}
+
+Unit.prototype.reveal = function(){
+	this.sprite.alpha = 1.0;
+	this.isHide = false;
 }
 
 Unit.prototype.tick = function(){
