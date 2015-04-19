@@ -35,7 +35,6 @@ Follower.prototype.tick = function(){
 		if(skill.remain_cooldown > 0){
 			skill.remain_cooldown -= 1/60;
 			skill.remain_cooldown = skill.remain_cooldown < 0 ? 0 : skill.remain_cooldown;
-			//this.ui_stage.renderCooldown(key, skill.remain_cooldown, skill.cooldown);
 		}
 	}
 }

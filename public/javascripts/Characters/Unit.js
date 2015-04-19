@@ -616,7 +616,7 @@ Unit.prototype.castSpell = function(){
 
 	if(this.backstab && this.order.action !== "move" && this.order.action !== "stop"){
 		var spell = this.active_skills["backstab"];
-		var target = this.findClosestEnemy(spell.distance);
+		var target = this.findClosestEnemy(spell.range);
 		if(target && spell.remain_cooldown === 0){
 			this.active_skills["backstab"].useOnTarget(target);
 		}

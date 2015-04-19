@@ -48,6 +48,11 @@ function savePrototypeUnit(){
 				name:"Endurance",
 				description:"Reduces incoming damage by 10%",
 				key:"endurance",
+			},
+			{
+				name:"Taunt",
+				description:"Normal attack taunts its target",
+				key:"taunt",
 			}
 		],
 		active_skills:[
@@ -56,7 +61,7 @@ function savePrototypeUnit(){
 				description:"Charges and deal 300% damage to enemies in its path.",
 				key:"q",
 				target:false,
-				distance:120,
+				range:120,
 				radius:30,
 				damage:3,
 				cost:15,
@@ -65,10 +70,10 @@ function savePrototypeUnit(){
 			},
 			{
 				name:"Shockwave",
-				description:"Sends a wave that deals 200% damage to enemies up to 10 yards in a cone.",
+				description:"Sends a wave that deals 200% damage to enemies up to 100 range in a cone.",
 				key:"w",
 				target:false,
-				radius:80,
+				radius:100,
 				angle:90,
 				damage:2,
 				cost:20,
@@ -114,10 +119,10 @@ function savePrototypeUnit(){
 			},
 			{
 				name:"Judgement",
-				description:"Sours up to the sky, deals 1000% damage to all enemies within 5 yards, and knocks back them.",
+				description:"Sours up to the sky, deals 1000% damage to all enemies within 60 range, and knocks back them.",
 				key:"r",
-				distance:120,
-				radius:40,
+				range:120,
+				radius:60,
 				angle:60,
 				damage:10,
 				cost:0,
@@ -273,8 +278,27 @@ function saveMap(){
 						],
 						active_skills:[
 							{
-								name:"Defend",
-								description:"Allows to equip shields in off-hand",
+								name:"Leap Attack",
+								description:"Jump in to the air and then deal 300% damage to enemies with in 40 range",
+								key:"chain_lightning",
+								target:false,
+								range:120,
+								radius:40,
+								damage:3,
+								cost:20,
+								cooldown:15,
+								icon_source:"assets/Graphics/icons/50x50/624.png",
+								animation:{
+									scale:0.25,
+									width:96,
+									height:640,
+									regX:48,
+									regY:0,
+									images:[
+										"assets/Graphics/effects/electricity/Lightning_0.png",
+										"assets/Graphics/effects/electricity/Lightning_1.png",
+									]
+								}
 							},
 						]
 					},
@@ -314,7 +338,7 @@ function saveMap(){
 								description:"Moves behind target and deals 600% damage to target and then hides for 5 sec",
 								key:"backstab",
 								target:true,
-								distance:60,
+								range:60,
 								damage:6,
 								cost:15,
 								cooldown:20,
@@ -373,7 +397,7 @@ function saveMap(){
 								description:"Deals 200% damage to target and then jumps to nearby enemies. Affects 5 total targets.",
 								key:"chain_lightning",
 								target:true,
-								distance:120,
+								range:120,
 								damage:2,
 								cost:20,
 								cooldown:15,

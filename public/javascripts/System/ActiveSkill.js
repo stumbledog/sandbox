@@ -12,7 +12,7 @@ ActiveSkill.prototype.active_skill_initialize = function(skill, unit){
 
 	this.key = skill.key;
 	this.target = skill.target;
-	this.distance = skill.distance;
+	this.range = skill.range;
 	this.radius = skill.radius;
 	this.angle = skill.angle;
 	this.type = skill.type;
@@ -77,7 +77,7 @@ ActiveSkill.prototype.useOnTarget = function(target){
 		console.log("Not enough resource.");
 	}else if(this.remain_cooldown > 0){
 		console.log("This spell is not ready yet.");
-	}else if(Math.sqrt(this.unit.getSquareDistance(target)) > this.distance){
+	}else if(Math.sqrt(this.unit.getSquareDistance(target)) > this.range){
 		console.log("Out of range");
 	}else{
 		this.unit.resource -= this.cost;
@@ -104,12 +104,12 @@ ActiveSkill.prototype.fireball = function(mouse_position){
 }
 
 ActiveSkill.prototype.charge = function(mouse_position){
-	var distance = Math.sqrt(this.unit.getSquareDistance(mouse_position));
+	var range = Math.sqrt(this.unit.getSquareDistance(mouse_position));
 
-	if(this.distance < distance){
-		var unit_x = (mouse_position.x - this.unit.x) * this.distance / distance / 10;
-		var unit_y = (mouse_position.y - this.unit.y) * this.distance / distance / 10;
-		distance = this.distance;
+	if(this.range < range){
+		var unit_x = (mouse_position.x - this.unit.x) * this.range / range / 10;
+		var unit_y = (mouse_position.y - this.unit.y) * this.range / range / 10;
+		range = this.range;
 	}else{
 		var unit_x = (mouse_position.x - this.unit.x) / 10;
 		var unit_y = (mouse_position.y - this.unit.y) / 10;
@@ -131,7 +131,7 @@ ActiveSkill.prototype.charge = function(mouse_position){
 	this.unit.invincibility = true;
 	this.unit.moveAttack(destination.x, destination.y);
 	createjs.Tween.get(this.unit)
-		.to({x:destination.x, y:destination.y}, distance * 3)
+		.to({x:destination.x, y:destination.y}, range * 3)
 		.call(function(){
 			this.unit.invincibility = false;
 			this.enemies.forEach(function(enemy){
@@ -139,6 +139,10 @@ ActiveSkill.prototype.charge = function(mouse_position){
 				var diff = enemy_position.distToSegment(arrival, destination);
 				if(diff <= this.radius){
 					enemy.hit(this.unit, this.unit.getDamage("skill", this.damage));
+					var v = new Vector(enemy.x, enemy.y);
+					v.sub(arrival).normalize().mult(50);
+					createjs.Tween.get(enemy)
+						.to({x:enemy.x + v.x, y:enemy.y + v.y}, 600);
 				}
 			}, this);
 		}.bind(this));
@@ -180,12 +184,12 @@ ActiveSkill.prototype.lastDefender = function(){
 }
 
 ActiveSkill.prototype.judgement = function(mouse_position){
-	var distance = Math.sqrt(this.unit.getSquareDistance(mouse_position));
+	var range = Math.sqrt(this.unit.getSquareDistance(mouse_position));
 
-	if(this.distance < distance){
-		var unit_x = (mouse_position.x - this.unit.x) * this.distance / distance / 10;
-		var unit_y = (mouse_position.y - this.unit.y) * this.distance / distance / 10;
-		distance = this.distance;
+	if(this.range < range){
+		var unit_x = (mouse_position.x - this.unit.x) * this.range / range / 10;
+		var unit_y = (mouse_position.y - this.unit.y) * this.range / range / 10;
+		range = this.range;
 	}else{
 		var unit_x = (mouse_position.x - this.unit.x) / 10;
 		var unit_y = (mouse_position.y - this.unit.y) / 10;
@@ -225,8 +229,7 @@ ActiveSkill.prototype.judgement = function(mouse_position){
 					var v = new Vector(enemy.x, enemy.y);
 					v.sub(new Vector(this.unit.x, this.unit.y)).normalize().mult(50);
 					createjs.Tween.get(enemy)
-						.to({x:enemy.x + v.x/2, y:enemy.y + v.y/2}, 500)
-						.to({x:enemy.x + v.x/2, y:enemy.y + v.y/2}, 500);
+						.to({x:enemy.x + v.x, y:enemy.y + v.y}, 600);
 				}
 			}, this);
 		}.bind(this));
@@ -239,7 +242,7 @@ ActiveSkill.prototype.chainLightning = function(target){
 	var interval = setInterval(function(){
 		target.hit(this.unit, this.unit.getDamage("skill", this.damage));
 		this.effect.play(this.animation, target.x, target.y, 90);
-		temp = target.findClosestAlly(this.distance);
+		temp = target.findClosestAlly(this.range);
 		prev_target = target;
 		target = temp;
 		
