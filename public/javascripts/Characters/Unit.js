@@ -621,11 +621,23 @@ Unit.prototype.castSpell = function(){
 			this.active_skills["backstab"].useOnTarget(target);
 		}
 	}
+
+	if(this.leap_attack && this.order.action !== "move" && this.order.action !== "stop"){
+		var spell = this.active_skills["leap_attack"];
+		var target = this.findClosestEnemy(spell.range);
+		if(target && spell.remain_cooldown === 0){
+			this.active_skills["leap_attack"].use({x:target.x, y:target.y});
+		}
+	}
 }
 
-Unit.prototype.hide = function(){
+Unit.prototype.hide = function(duration){
 	this.sprite.alpha = 0.5;
 	this.isHide = true;
+
+	setTimeout(function(){ 
+		this.reveal();
+	}.bind(this), duration);
 }
 
 Unit.prototype.reveal = function(){

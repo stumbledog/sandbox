@@ -275,29 +275,75 @@ function saveMap(){
 								description:"Reduces incoming damage by 10%",
 								key:"endurance",
 							},
+							{
+								name:"Taunt",
+								description:"Normal attack taunts its target",
+								key:"taunt",
+							}
 						],
 						active_skills:[
 							{
 								name:"Leap Attack",
 								description:"Jump in to the air and then deal 300% damage to enemies with in 40 range",
-								key:"chain_lightning",
+								key:"leap_attack",
 								target:false,
 								range:120,
 								radius:40,
 								damage:3,
-								cost:20,
-								cooldown:15,
-								icon_source:"assets/Graphics/icons/50x50/624.png",
+								cost:0,
+								cooldown:5,
+								icon_source:"assets/Graphics/icons/50x50/517.png",
 								animation:{
-									scale:0.25,
-									width:96,
-									height:640,
-									regX:48,
-									regY:0,
 									images:[
-										"assets/Graphics/effects/electricity/Lightning_0.png",
-										"assets/Graphics/effects/electricity/Lightning_1.png",
-									]
+										"assets/Graphics/effects/impacts/Dustring0.png",
+										"assets/Graphics/effects/impacts/Dustring1.png",
+										"assets/Graphics/effects/impacts/Dustring2.png",
+										"assets/Graphics/effects/impacts/Dustring3.png",
+										"assets/Graphics/effects/impacts/Dustring4.png",
+										"assets/Graphics/effects/explosion_0/Oexplosiona_0.png",
+										"assets/Graphics/effects/explosion_0/Oexplosiona_1.png",
+										"assets/Graphics/effects/explosion_0/Oexplosiona_2.png",
+										"assets/Graphics/effects/explosion_0/Oexplosiona_3.png",
+										"assets/Graphics/effects/explosion_0/Oexplosiona_4.png",
+										"assets/Graphics/effects/explosion_0/Oexplosiona_5.png",
+										"assets/Graphics/effects/explosion_0/Oexplosiona_6.png",
+										"assets/Graphics/effects/explosion_0/Oexplosiona_7.png",
+										"assets/Graphics/effects/explosion_0/Oexplosiona_8.png",
+										"assets/Graphics/effects/explosion_0/Oexplosiona_9.png",
+									],
+									jump:{
+										scale:0.25,
+										width:212,
+										height:79,
+										regX:106,
+										regY:40,
+										images:[
+											"assets/Graphics/effects/impacts/Dustring0.png",
+											"assets/Graphics/effects/impacts/Dustring1.png",
+											"assets/Graphics/effects/impacts/Dustring2.png",
+											"assets/Graphics/effects/impacts/Dustring3.png",
+											"assets/Graphics/effects/impacts/Dustring4.png",
+										]						
+									},
+									land:{
+										scale:0.25,
+										width:232,
+										height:218,
+										regX:116,
+										regY:99,
+										images:[
+											"assets/Graphics/effects/explosion_0/Oexplosiona_0.png",
+											"assets/Graphics/effects/explosion_0/Oexplosiona_1.png",
+											"assets/Graphics/effects/explosion_0/Oexplosiona_2.png",
+											"assets/Graphics/effects/explosion_0/Oexplosiona_3.png",
+											"assets/Graphics/effects/explosion_0/Oexplosiona_4.png",
+											"assets/Graphics/effects/explosion_0/Oexplosiona_5.png",
+											"assets/Graphics/effects/explosion_0/Oexplosiona_6.png",
+											"assets/Graphics/effects/explosion_0/Oexplosiona_7.png",
+											"assets/Graphics/effects/explosion_0/Oexplosiona_8.png",
+											"assets/Graphics/effects/explosion_0/Oexplosiona_9.png",
+										]
+									}
 								}
 							},
 						]

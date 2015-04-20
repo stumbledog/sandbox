@@ -7,6 +7,15 @@ Effect.prototype.play = function(animation, x, y, degree){
 	var images = [];
 	var frames = [];
 	var animation_frame = [];
+
+	/*
+	for(key in animation.images){
+		images.push(this.loader.getResult(animation.images[key].split('/').pop()));
+		frames.push([0,0,animation.width,animation.height,index,animation.regX,animation.regY]);
+		animation_frame.push(index);
+	}
+	*/
+
 	animation.images.forEach(function(image, index){
 		images.push(this.loader.getResult(image.split('/').pop()));
 		frames.push([0,0,animation.width,animation.height,index,animation.regX,animation.regY]);
@@ -28,7 +37,7 @@ Effect.prototype.play = function(animation, x, y, degree){
 	var sprite = new createjs.Sprite(spriteSheet);
 	sprite.x = x;
 	sprite.y = y;
-	sprite.rotation = degree + 90;
+	sprite.rotation = degree;
 	sprite.gotoAndPlay("animation");
 	sprite.scaleX = sprite.scaleY = animation.scale;
 	sprite.addEventListener("animationend", function(event){

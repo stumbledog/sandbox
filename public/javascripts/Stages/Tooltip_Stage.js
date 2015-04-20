@@ -48,7 +48,7 @@ Tooltip_Stage.prototype.showSkillTooltip = function(event, skill, unit){
 
 	this.skill_cooldown.text = "Cooldown:";
 	this.skill_cooldown_amount.text = skill.cooldown * (100 - unit.cooldown_reduction) / 100;
-	this.skill_cooldown_seconds.text = "seconds";
+	this.skill_cooldown_seconds.text = "sec";
 	this.skill_cooldown_amount.x = 69;
 	this.skill_cooldown_seconds.x = 71 + this.skill_cooldown_amount.getMeasuredWidth();
 
