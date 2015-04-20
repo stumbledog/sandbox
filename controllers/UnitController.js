@@ -28,7 +28,13 @@ UnitController = {
 
 	},
 	purchaseFollower:function(unit, user_id, callback){
-		console.log(unit);
+		unit.active_skills.forEach(function(skill){
+			if(skill.name === "Leap Attack"){
+				skill.animation.jump.images = skill.animation.jump.images["[]"];
+				skill.animation.land.images = skill.animation.land.images["[]"];
+			}
+		})
+
 		unit.exp = 0;
 		UserModel.findById(user_id, function(err, user){
 			user.followers.push(unit);

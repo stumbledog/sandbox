@@ -501,6 +501,35 @@ function saveMap(){
 				src:"assets/Graphics/Tilesets/A5/Overworld_TileA5.png",
 				block:false
 			},
+			{
+				tiles:[
+					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+				],
+				tile_map:[
+					[32*3,	32*2],	[32*3,	32*3],	[32*4,	32*2],	[32*4,	32*3],
+				], 
+				src:"assets/Graphics/Tilesets/B/Exterior_Forest_TileB.png",
+				block:true
+			}
 		],false,[],
 		[
 			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:0,x:300,y:100,regY:9,radius:10,type:"melee",health:100,damage:1,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,},
@@ -523,7 +552,7 @@ function saveMap(){
 			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:0,x:340,y:160,regY:9,radius:10,type:"melee",health:100,damage:1,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,},
 			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:0,x:360,y:160,regY:9,radius:10,type:"melee",health:100,damage:1,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,},
 			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:0,x:380,y:160,regY:9,radius:10,type:"melee",health:100,damage:1,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,},
-		],1, 1,"Ridgefield Park",false,false,640,640,20,20,[160,160]));
+		],1, 1,"Ridgefield Park",false,false,640,640,20,20,[600,600]));
 
 	maps.push(initMap([],false,[],[],1, 2,"Palisade Park",false,false,320,320,10,10,[160,160]));
 	maps.push(initMap([],false,[],[],1, 3,"Leonia",false,false,320,320,10,10,[160,160]));

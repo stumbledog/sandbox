@@ -30,8 +30,6 @@ ActiveSkill.prototype.active_skill_initialize = function(skill, unit){
 	}else if(this.name === "Backstab"){
 		this.unit.backstab = true;
 	}else if(this.name === "Leap Attack"){
-		this.animation.jump.images = this.animation.jump.images["[]"];
-		this.animation.land.images = this.animation.land.images["[]"];
 		this.unit.leap_attack = true;
 	}
 }
@@ -44,7 +42,6 @@ ActiveSkill.prototype.use = function(mouse_position){
 		//alert("This spell is not ready yet.");
 		console.log("This spell is not ready yet.");
 	}else{
-		console.log(this);
 		this.unit.resource -= this.cost;
 		this.remain_cooldown = this.cooldown * (100 - this.unit.cooldown_reduction)/100;
 		this.enemies = this.unit.unit_stage.getEnemies(this.unit);
@@ -113,7 +110,6 @@ ActiveSkill.prototype.findDestination = function(mouse_position){
 	if(this.range < range){
 		var unit_x = (mouse_position.x - this.unit.x) * this.range / range / 10;
 		var unit_y = (mouse_position.y - this.unit.y) * this.range / range / 10;
-		range = this.range;
 	}else{
 		var unit_x = (mouse_position.x - this.unit.x) / 10;
 		var unit_y = (mouse_position.y - this.unit.y) / 10;
@@ -131,6 +127,24 @@ ActiveSkill.prototype.findDestination = function(mouse_position){
 		}
 	}
 	return destination;
+}
+
+ActiveSkill.prototype.knockBack = function(unit, destination){
+	var start = new Vector(unit.x, unit.y);
+	var v = new Vector(0, 0);
+
+	var unit_x = (destination.x - unit.x) / 10;
+	var unit_y = (destination.y - unit.y) / 10;
+
+	for(var i = 1; i <11 ; i++){
+		var x = parseInt(unit_x * i);
+		var y = parseInt(unit_y * i);
+		if(this.unit.blocks[Math.floor((unit.y + y)/16)] && 
+			this.unit.blocks[Math.floor((unit.y + y)/16)][Math.floor((unit.x + x)/16)] === 'E'){
+			v = new Vector(unit.x + x, unit.y + y);
+		}
+	}
+	return v;
 }
 
 ActiveSkill.prototype.fireball = function(mouse_position){
@@ -173,10 +187,9 @@ ActiveSkill.prototype.charge = function(mouse_position){
 				var diff = enemy_position.distToSegment(start, destination);
 				if(diff <= this.radius){
 					enemy.hit(this.unit, this.unit.getDamage("skill", this.damage));
-					var v = new Vector(enemy.x, enemy.y);
-					v.sub(start).normalize().mult(50);
-					createjs.Tween.get(enemy)
-						.to({x:enemy.x + v.x, y:enemy.y + v.y}, 300);
+					var v = new Vector(enemy.x, enemy.y).sub(start).normalize().mult(50);
+					var v2 = this.knockBack(enemy,{x:enemy.x + v.x, y:enemy.y + v.y});
+					createjs.Tween.get(enemy).to({x:v2.x, y:v2.y}, 300);
 				}
 			}, this);
 		}.bind(this));
@@ -218,6 +231,9 @@ ActiveSkill.prototype.lastDefender = function(){
 }
 
 ActiveSkill.prototype.judgement = function(mouse_position){
+	var start = new Vector(this.unit.x, this.unit.y);
+	var destination = this.findDestination(mouse_position);
+	/*
 	var range = Math.sqrt(this.unit.getSquareDistance(mouse_position));
 
 	if(this.range < range){
@@ -239,7 +255,7 @@ ActiveSkill.prototype.judgement = function(mouse_position){
 			this.unit.blocks[parseInt((this.unit.y + y)/16)][parseInt((this.unit.x + x)/16)] === 'E'){
 			destination = new Vector(x, y);
 		}
-	}
+	}*/
 
 	destination.add(start);
 	this.unit.invincibility = true;
@@ -260,10 +276,10 @@ ActiveSkill.prototype.judgement = function(mouse_position){
 			this.enemies.forEach(function(enemy){
 				if(Vector.dist(this.unit, enemy) <= this.radius){
 					enemy.hit(this.unit, this.unit.getDamage("skill", this.damage));
-					var v = new Vector(enemy.x, enemy.y);
-					v.sub(new Vector(this.unit.x, this.unit.y)).normalize().mult(50);
-					createjs.Tween.get(enemy)
-						.to({x:enemy.x + v.x, y:enemy.y + v.y}, 600);
+					var v = new Vector(enemy.x, enemy.y).sub(new Vector(this.unit.x, this.unit.y)).normalize().mult(50);
+					var v2 = this.knockBack(enemy,{x:enemy.x + v.x, y:enemy.y + v.y});
+					var range = Vector.dist(v2, new Vector(enemy.x, enemy.y));
+					createjs.Tween.get(enemy).to({x:v2.x, y:v2.y}, range * 10);
 				}
 			}, this);
 		}.bind(this));
@@ -327,17 +343,17 @@ ActiveSkill.prototype.leapAttack = function(mouse_position){
 
 	createjs.Tween.get(this.unit)
 		.to({x:(destination.x + this.unit.x) / 2, y:(destination.y + this.unit.y) / 2, regY:32}, range * 3)
-		.to({x:destination.x, y:destination.y, regY:0}, range * 3)
+		.to({x:destination.x, y:destination.y, regY:0}, range)
 		.call(function(){
 			this.effect.play(this.animation.land, this.unit.x, this.unit.y, 0);
 			this.unit.moveAttack(destination.x, destination.y);
 			this.enemies.forEach(function(enemy){
 				if(Vector.dist(this.unit, enemy) <= this.radius){
 					enemy.hit(this.unit, this.unit.getDamage("skill", this.damage));
-					var v = new Vector(enemy.x, enemy.y);
-					v.sub(new Vector(this.unit.x, this.unit.y)).normalize().mult(20);
-					createjs.Tween.get(enemy)
-						.to({x:enemy.x + v.x, y:enemy.y + v.y}, 600);
+					var v = new Vector(enemy.x, enemy.y).sub(new Vector(this.unit.x, this.unit.y)).normalize().mult(20);
+					var v2 = this.knockBack(enemy,{x:enemy.x + v.x, y:enemy.y + v.y});
+					createjs.Tween.get(enemy).to({x:v2.x, y:v2.y}, 600);
+					this.unit.invincibility = false;
 				}
 			}, this);
 		}.bind(this));

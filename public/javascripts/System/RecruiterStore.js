@@ -80,9 +80,9 @@ RecruiterStore.prototype.unitSummary = function(unit, x, y){
 	unit.store_summary.addChild(frame, sprite, level, character_class, price, coin);
 	unit.store_summary.cursor = "pointer";
 
+	unit.store_summary.addEventListener("mousedown", this.mousedownStoreItem.bind(this, unit));
 	unit.store_summary.addEventListener("rollover", this.rolloverStore.bind(this, unit));
 	unit.store_summary.addEventListener("rollout", this.rolloutStore.bind(this, unit));
-	unit.store_summary.addEventListener("mousedown", this.mousedownStoreItem.bind(this, unit));
 }
 
 RecruiterStore.prototype.unitDetail = function(unit){
@@ -131,27 +131,26 @@ RecruiterStore.prototype.renderUnits = function(){
 	this.stage.update();
 }
 
-RecruiterStore.prototype.rolloverStore = function(item){	
-	if(item.store_summary.x !== 200){
-		var x = item.store_summary.x + 5;
+RecruiterStore.prototype.rolloverStore = function(unit){	
+	if(unit.store_summary.x !== 200){
+		var x = unit.store_summary.x + 5;
 	}else{
 		var x = 165;
 	}
 
-	if(item.store_summary.y > 120){
-		var y = item.store_summary.y - (item.summary_height) + 50;
+	if(unit.store_summary.y > 120){
+		var y = unit.store_summary.y - (unit.summary_height) + 50;
 	}else{
-		var y = item.store_summary.y + 110;
+		var y = unit.store_summary.y + 110;
 	}
-
-	item.detail.x = x;
-	item.detail.y = y;
-	this.stage.addChild(item.detail);
+	unit.detail.x = x;
+	unit.detail.y = y;
+	this.stage.addChild(unit.detail);
 	this.stage.update();
 }
 
-RecruiterStore.prototype.rolloutStore = function(item){
-	this.stage.removeChild(item.detail);
+RecruiterStore.prototype.rolloutStore = function(unit){
+	this.stage.removeChild(unit.detail);
 	this.stage.update();
 }
 
@@ -178,11 +177,7 @@ RecruiterStore.prototype.unitToObject = function(unit){
 	unit.passive_skills.forEach(function(skill){
 		passive_skills.push({name:skill.name, description:skill.description, key:skill.key});
 	});
-/*
-	unit.active_skills.forEach(function(skill){
-		active_skills.push(skill);
-	});
-*/	
+
 	var obj = {
 		character_class:unit.character_class,
 		primary_attribute:unit.primary_attribute,

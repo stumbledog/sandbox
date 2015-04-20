@@ -385,6 +385,10 @@ Unit.prototype.attackTarget = function(target, hand){
 }
 
 Unit.prototype.hit = function(attacker, damage_object){
+	if(attacker.taunt){
+		this.target = attacker;
+	}
+
 	if(this.resource_type === "fury"){
 		this.resource += 1;
 		this.resource = this.resource > this.max_resource ? this.max_resource : this.resource;
