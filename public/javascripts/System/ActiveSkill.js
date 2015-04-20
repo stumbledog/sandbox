@@ -31,6 +31,7 @@ ActiveSkill.prototype.active_skill_initialize = function(skill, unit){
 		this.unit.backstab = true;
 	}else if(this.name === "Leap Attack"){
 		this.animation.jump.images = this.animation.jump.images["[]"];
+		this.animation.land.images = this.animation.land.images["[]"];
 		this.unit.leap_attack = true;
 	}
 }
@@ -106,6 +107,32 @@ ActiveSkill.prototype.useOnTarget = function(target){
 	}
 }
 
+ActiveSkill.prototype.findDestination = function(mouse_position){
+	var range = Math.sqrt(this.unit.getSquareDistance(mouse_position));
+
+	if(this.range < range){
+		var unit_x = (mouse_position.x - this.unit.x) * this.range / range / 10;
+		var unit_y = (mouse_position.y - this.unit.y) * this.range / range / 10;
+		range = this.range;
+	}else{
+		var unit_x = (mouse_position.x - this.unit.x) / 10;
+		var unit_y = (mouse_position.y - this.unit.y) / 10;
+	}
+	
+	var start = new Vector(this.unit.x, this.unit.y);
+	var destination = new Vector(0, 0);
+
+	for(var i = 1; i <11 ; i++){
+		var x = parseInt(unit_x * i);
+		var y = parseInt(unit_y * i);
+		if(this.unit.blocks[parseInt((this.unit.y + y)/16)] && 
+			this.unit.blocks[parseInt((this.unit.y + y)/16)][parseInt((this.unit.x + x)/16)] === 'E'){
+			destination = new Vector(x, y);
+		}
+	}
+	return destination;
+}
+
 ActiveSkill.prototype.fireball = function(mouse_position){
 
 }
@@ -122,7 +149,7 @@ ActiveSkill.prototype.charge = function(mouse_position){
 		var unit_y = (mouse_position.y - this.unit.y) / 10;
 	}
 	
-	var arrival = new Vector(this.unit.x, this.unit.y);
+	var start = new Vector(this.unit.x, this.unit.y);
 	var destination = new Vector(0, 0);
 
 	for(var i = 1; i <11 ; i++){
@@ -134,7 +161,7 @@ ActiveSkill.prototype.charge = function(mouse_position){
 		}
 	}
 
-	destination.add(arrival);
+	destination.add(start);
 	this.unit.invincibility = true;
 	this.unit.moveAttack(destination.x, destination.y);
 	createjs.Tween.get(this.unit)
@@ -143,11 +170,11 @@ ActiveSkill.prototype.charge = function(mouse_position){
 			this.unit.invincibility = false;
 			this.enemies.forEach(function(enemy){
 				var enemy_position = new Vector(enemy.x, enemy.y);
-				var diff = enemy_position.distToSegment(arrival, destination);
+				var diff = enemy_position.distToSegment(start, destination);
 				if(diff <= this.radius){
 					enemy.hit(this.unit, this.unit.getDamage("skill", this.damage));
 					var v = new Vector(enemy.x, enemy.y);
-					v.sub(arrival).normalize().mult(50);
+					v.sub(start).normalize().mult(50);
 					createjs.Tween.get(enemy)
 						.to({x:enemy.x + v.x, y:enemy.y + v.y}, 300);
 				}
@@ -202,7 +229,7 @@ ActiveSkill.prototype.judgement = function(mouse_position){
 		var unit_y = (mouse_position.y - this.unit.y) / 10;
 	}
 	
-	var arrival = new Vector(this.unit.x, this.unit.y);
+	var start = new Vector(this.unit.x, this.unit.y);
 	var destination = new Vector(0, 0);
 
 	for(var i = 1; i <11 ; i++){
@@ -214,7 +241,7 @@ ActiveSkill.prototype.judgement = function(mouse_position){
 		}
 	}
 
-	destination.add(arrival);
+	destination.add(start);
 	this.unit.invincibility = true;
 	createjs.Tween.get(this.unit)
 		.to({regY: 200}, 200, createjs.Ease.circOut)
@@ -282,7 +309,7 @@ ActiveSkill.prototype.leapAttack = function(mouse_position){
 		var unit_y = (mouse_position.y - this.unit.y) / 10;
 	}
 	
-	var arrival = new Vector(this.unit.x, this.unit.y);
+	var start = new Vector(this.unit.x, this.unit.y);
 	var destination = new Vector(0, 0);
 
 	for(var i = 1; i <11 ; i++){
@@ -294,10 +321,24 @@ ActiveSkill.prototype.leapAttack = function(mouse_position){
 		}
 	}
 
-	destination.add(arrival);
+	destination.add(start);
 	this.unit.invincibility = true;
 	this.unit.moveAttack(destination.x, destination.y);
 
 	createjs.Tween.get(this.unit)
-		.to({x:destination.x, y:destination.y}, range * 3)
+		.to({x:(destination.x + this.unit.x) / 2, y:(destination.y + this.unit.y) / 2, regY:32}, range * 3)
+		.to({x:destination.x, y:destination.y, regY:0}, range * 3)
+		.call(function(){
+			this.effect.play(this.animation.land, this.unit.x, this.unit.y, 0);
+			this.unit.moveAttack(destination.x, destination.y);
+			this.enemies.forEach(function(enemy){
+				if(Vector.dist(this.unit, enemy) <= this.radius){
+					enemy.hit(this.unit, this.unit.getDamage("skill", this.damage));
+					var v = new Vector(enemy.x, enemy.y);
+					v.sub(new Vector(this.unit.x, this.unit.y)).normalize().mult(20);
+					createjs.Tween.get(enemy)
+						.to({x:enemy.x + v.x, y:enemy.y + v.y}, 600);
+				}
+			}, this);
+		}.bind(this));
 }
