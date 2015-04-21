@@ -38,12 +38,12 @@ UserController = {
 			}
 		}.bind(this));
 	},
-	loadStage:function(user_id, act, chapter, difficulty_level, res, callback){
+	loadStage:function(user_id, act, chapter, res, callback){
 		UserModel.findById(user_id, function(err, user){
 			if(err || !user){
 				res.redirect('/');
 			}else{
-				MapController.loadMap(user.hero.level, act, chapter, difficulty_level, function(err, map){
+				MapController.loadMap(act, chapter, function(err, map){
 					callback(user, map);
 				});				
 			}
@@ -67,5 +67,34 @@ UserController = {
 			user.markModified('followers');
 			user.save(callback);
 		});
+	},
+	saveStats:function(hero, followers, user_id, callback){
+		UserModel.findById(user_id, function(err, user){
+			user.hero.level = hero.level;
+			user.hero.exp = hero.exp;
+			user.hero.strength = user.hero.level_up_bonus.strength * hero.level;
+			user.hero.agility = user.hero.level_up_bonus.agility * hero.level;
+			user.hero.intelligence = user.hero.level_up_bonus.intelligence * hero.level;
+			user.hero.stamina = user.hero.level_up_bonus.stamina * hero.level;
+
+			followers.forEach(function(follower, follower_index){
+				user.followers[follower_index].level = follower.level;
+				user.followers[follower_index].exp = follower.exp;
+				user.followers[follower_index].strength = user.followers[follower_index].level_up_bonus.strength * follower.level;
+				user.followers[follower_index].agility = user.followers[follower_index].level_up_bonus.agility * follower.level;
+				user.followers[follower_index].intelligence = user.followers[follower_index].level_up_bonus.intelligence * follower.level;
+				user.followers[follower_index].stamina = user.followers[follower_index].level_up_bonus.stamina * follower.level;
+			});
+
+			user.markModified('hero.level');
+			user.markModified('hero.exp');
+			user.markModified('hero.strength');
+			user.markModified('hero.agility');
+			user.markModified('hero.intelligence');
+			user.markModified('hero.stamina');
+			user.markModified('followers');
+
+			user.save(callback);
+		})
 	}
 };

@@ -101,3 +101,22 @@ User.prototype.saveEquipItems = function(){
 
 	this.inventory.saveInventory();
 }
+
+User.prototype.saveStats = function(){
+	var followers = [];
+	var hero = {
+		level:this.hero.level,
+		exp:this.hero.exp,
+	};
+
+	this.followers.forEach(function(follower, follower_index){
+		followers[follower_index] = {
+			level:follower.level,
+			exp:follower.exp,
+		};
+	});
+
+	$.post("savestats",{hero:hero, followers:followers}, function(res){
+		console.log(res);
+	});
+}

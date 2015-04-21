@@ -130,8 +130,7 @@ ActiveSkill.prototype.findDestination = function(mouse_position){
 }
 
 ActiveSkill.prototype.knockBack = function(unit, destination){
-	var start = new Vector(unit.x, unit.y);
-	var v = new Vector(0, 0);
+	var v = new Vector(unit.x, unit.y);
 
 	var unit_x = (destination.x - unit.x) / 10;
 	var unit_y = (destination.y - unit.y) / 10;
@@ -189,7 +188,7 @@ ActiveSkill.prototype.charge = function(mouse_position){
 					enemy.hit(this.unit, this.unit.getDamage("skill", this.damage));
 					var v = new Vector(enemy.x, enemy.y).sub(start).normalize().mult(50);
 					var v2 = this.knockBack(enemy,{x:enemy.x + v.x, y:enemy.y + v.y});
-					createjs.Tween.get(enemy).to({x:v2.x, y:v2.y}, 300);
+					createjs.Tween.get(enemy).to({x:v2.x, y:v2.y}, 200);
 				}
 			}, this);
 		}.bind(this));
@@ -291,7 +290,7 @@ ActiveSkill.prototype.chainLightning = function(target){
 	var prev_target = this.unit;
 	var interval = setInterval(function(){
 		target.hit(this.unit, this.unit.getDamage("skill", this.damage));
-		this.effect.play(this.animation, target.x, target.y, 0);
+		this.effect.play(this.animation, target.x, target.y, 180);
 		temp = target.findClosestAlly(this.range);
 		prev_target = target;
 		target = temp;
@@ -339,14 +338,12 @@ ActiveSkill.prototype.leapAttack = function(mouse_position){
 
 	destination.add(start);
 	this.unit.invincibility = true;
-	this.unit.moveAttack(destination.x, destination.y);
 
 	createjs.Tween.get(this.unit)
 		.to({x:(destination.x + this.unit.x) / 2, y:(destination.y + this.unit.y) / 2, regY:32}, range * 3)
 		.to({x:destination.x, y:destination.y, regY:0}, range)
 		.call(function(){
 			this.effect.play(this.animation.land, this.unit.x, this.unit.y, 0);
-			this.unit.moveAttack(destination.x, destination.y);
 			this.enemies.forEach(function(enemy){
 				if(Vector.dist(this.unit, enemy) <= this.radius){
 					enemy.hit(this.unit, this.unit.getDamage("skill", this.damage));

@@ -7,8 +7,8 @@ Minimap_Stage = createjs.promote(Minimap_Stage, "Stage");
 
 Minimap_Stage.prototype.initialize = function(){
 	this.canvas = document.getElementById("minimap");
-	this.canvas.width = 160;
-	this.canvas.height = 160;
+	//this.canvas.width = 160;
+	//this.canvas.height = 160;
 
 	this.Stage_constructor(this.canvas);
 	this.enableMouseOver();
@@ -17,9 +17,6 @@ Minimap_Stage.prototype.initialize = function(){
 	this.map = this.game.getMapStage();
 	this.loader = this.game.getLoader();
 
-	var background = new createjs.Shape();
-	background.graphics.f("#fff").dr(0,0,160,160);
-	this.addChild(background);
 
 	this.renderBlock();
 	this.update();
@@ -29,6 +26,17 @@ Minimap_Stage.prototype.renderBlock = function(){
 	var block = this.map.getBlock();
 	var size = this.map.getSize();
 	this.max_side = size.width > size.height ? size.width : size.height;
+
+
+
+	var background = new createjs.Shape();
+
+	this.canvas.width = size.width / this.max_side * 160;
+	this.canvas.height = size.height / this.max_side * 160;
+
+	background.graphics.f("#fff").dr(0, 0, size.width / this.max_side * 160, size.height / this.max_side * 160);
+	this.addChild(background);
+
 
 	block.forEach(function(rows, index_row){
 		rows.forEach(function(cell, index_col){

@@ -484,16 +484,6 @@ function saveMap(){
 					[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
 					[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
 					[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-					[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-					[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-					[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-					[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-					[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-					[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-					[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-					[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-					[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-					[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
 				],
 				tile_map:[
 					[32,0],
@@ -503,56 +493,59 @@ function saveMap(){
 			},
 			{
 				tiles:[
-					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+					[0,0,3,5,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+					[0,0,0,3,5,2,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+					[2,0,0,0,3,5,2,0,0,0,1,2,1,2,1,2,0,0,1,6],
+					[5,2,0,0,1,6,4,0,0,0,3,5,6,5,6,4,0,0,3,5],
+					[6,4,0,0,3,5,2,0,0,0,1,6,5,6,4,0,0,0,0,3],
+					[4,0,0,0,1,6,4,0,0,0,3,5,6,4,0,0,0,0,0,0],
+					[0,0,0,1,6,5,2,0,0,0,1,6,5,2,0,0,0,0,0,0],
+					[0,0,0,3,4,3,4,0,0,0,3,5,6,4,0,0,0,0,0,0],
+					[0,0,0,0,0,0,0,0,0,0,1,6,5,2,0,0,0,0,0,0],
+					[0,0,0,0,0,0,0,0,0,1,6,5,6,5,2,0,0,0,0,1],
 				],
 				tile_map:[
-					[32*3,	32*2],	[32*3,	32*3],	[32*4,	32*2],	[32*4,	32*3],
+					[32*3,	32*0],	[32*4,	32*0],
+					[32*3,	32*1],	[32*4,	32*1],
+					[32*3,	32*2],	[32*4,	32*2],
 				], 
 				src:"assets/Graphics/Tilesets/B/Exterior_Forest_TileB.png",
 				block:true
 			}
 		],false,[],
 		[
-			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:0,x:300,y:100,regY:9,radius:10,type:"melee",health:100,damage:1,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,},
-			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:0,x:320,y:100,regY:9,radius:10,type:"melee",health:100,damage:1,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,},
-			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:0,x:340,y:100,regY:9,radius:10,type:"melee",health:100,damage:1,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,},
-			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:0,x:360,y:100,regY:9,radius:10,type:"melee",health:100,damage:1,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,},
-			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:0,x:380,y:100,regY:9,radius:10,type:"melee",health:100,damage:1,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,},
-			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:0,x:300,y:120,regY:9,radius:10,type:"melee",health:100,damage:1,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,},
-			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:0,x:320,y:120,regY:9,radius:10,type:"melee",health:100,damage:1,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,},
-			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:0,x:340,y:120,regY:9,radius:10,type:"melee",health:100,damage:1,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,},
-			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:0,x:360,y:120,regY:9,radius:10,type:"melee",health:100,damage:1,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,},
-			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:0,x:380,y:120,regY:9,radius:10,type:"melee",health:100,damage:1,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,},
-			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:0,x:300,y:140,regY:9,radius:10,type:"melee",health:100,damage:1,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,},
-			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:0,x:320,y:140,regY:9,radius:10,type:"melee",health:100,damage:1,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,},
-			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:0,x:340,y:140,regY:9,radius:10,type:"melee",health:100,damage:1,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,},
-			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:0,x:360,y:140,regY:9,radius:10,type:"melee",health:100,damage:1,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,},
-			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:0,x:380,y:140,regY:9,radius:10,type:"melee",health:100,damage:1,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,},
-			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:0,x:300,y:160,regY:9,radius:10,type:"melee",health:100,damage:1,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,},
-			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:0,x:320,y:160,regY:9,radius:10,type:"melee",health:100,damage:1,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,},
-			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:0,x:340,y:160,regY:9,radius:10,type:"melee",health:100,damage:1,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,},
-			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:0,x:360,y:160,regY:9,radius:10,type:"melee",health:100,damage:1,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,},
-			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:0,x:380,y:160,regY:9,radius:10,type:"melee",health:100,damage:1,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,},
-		],1, 1,"Ridgefield Park",false,false,640,640,20,20,[600,600]));
+			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:0,x:32*3,y:32*4,regY:9,radius:10,type:"melee",health:5,damage:0.5,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,},
+			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:0,x:32*3,y:32*4,regY:9,radius:10,type:"melee",health:5,damage:0.5,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,},
+			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:0,x:32*3,y:32*4,regY:9,radius:10,type:"melee",health:5,damage:0.5,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,},
+			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:0,x:32*3,y:32*4,regY:9,radius:10,type:"melee",health:5,damage:0.5,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,},
+
+			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:0,x:32*2,y:32*8,regY:9,radius:10,type:"melee",health:5,damage:0.5,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,},
+			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:0,x:32*2,y:32*8,regY:9,radius:10,type:"melee",health:5,damage:0.5,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,},
+			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:0,x:32*2,y:32*8,regY:9,radius:10,type:"melee",health:5,damage:0.5,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,},
+			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:0,x:32*2,y:32*8,regY:9,radius:10,type:"melee",health:5,damage:0.5,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,},
+
+			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:1,x:32*8,y:32*8,regY:9,radius:10,type:"melee",health:5,damage:0.5,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,},
+			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:1,x:32*8,y:32*8,regY:9,radius:10,type:"melee",health:5,damage:0.5,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,},
+			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:1,x:32*8,y:32*8,regY:9,radius:10,type:"melee",health:5,damage:0.5,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,},
+			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:1,x:32*8,y:32*8,regY:9,radius:10,type:"melee",health:5,damage:0.5,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,},
+
+			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:1,x:32*8,y:32*1,regY:9,radius:10,type:"melee",health:5,damage:0.5,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,},
+			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:1,x:32*8,y:32*1,regY:9,radius:10,type:"melee",health:5,damage:0.5,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,},
+			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:1,x:32*8,y:32*1,regY:9,radius:10,type:"melee",health:5,damage:0.5,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,},
+			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:1,x:32*8,y:32*1,regY:9,radius:10,type:"melee",health:5,damage:0.5,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,},
+
+			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:1,x:32*13,y:32*1,regY:9,radius:10,type:"melee",health:5,damage:0.5,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,},
+			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:1,x:32*13,y:32*1,regY:9,radius:10,type:"melee",health:5,damage:0.5,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,},
+			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:1,x:32*13,y:32*1,regY:9,radius:10,type:"melee",health:5,damage:0.5,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,},
+			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:1,x:32*13,y:32*1,regY:9,radius:10,type:"melee",health:5,damage:0.5,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,},
+
+			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:2,x:32*18,y:32*1,regY:9,radius:10,type:"melee",health:5,damage:0.5,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,},
+			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:2,x:32*18,y:32*1,regY:9,radius:10,type:"melee",health:5,damage:0.5,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,},
+			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:2,x:32*18,y:32*1,regY:9,radius:10,type:"melee",health:5,damage:0.5,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,},
+			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:2,x:32*18,y:32*1,regY:9,radius:10,type:"melee",health:5,damage:0.5,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,},
+
+			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:3,x:32*17,y:32*7,regY:9,radius:30,scale:3,type:"melee",health:50,damage:3,range:16,attack_speed:120,movement_speed:1,skills:null,gold:3,xp:5,},
+		],1, 1,"Ridgefield Park",false,false,640,320,20,10,[32,32]));
 
 	maps.push(initMap([],false,[],[],1, 2,"Palisade Park",false,false,320,320,10,10,[160,160]));
 	maps.push(initMap([],false,[],[],1, 3,"Leonia",false,false,320,320,10,10,[160,160]));
@@ -822,7 +815,7 @@ function initPrototypeUnit(id, name, strength, dexterity, intelligence, vitality
 	});
 }
 
-function initMap(maps, neutral_territory, npcs, monsters, act, chapter, name, merchant, recruiter, width, height, cols, rows, start_point){
+function initMap(maps, neutral_territory, npcs, monsters, act, chapter, name, merchant, recruiter, width, height, rows, cols, start_point){
 	return new MapModel({
 		maps:maps,
 		neutral_territory:neutral_territory,

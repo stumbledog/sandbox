@@ -256,6 +256,10 @@ Unit_Stage.prototype.getEnemies = function(self){
 	return this.unit_container.children.filter(function(unit){return unit.team !== "NPC" && self.team !== unit.team && unit.status !== "death";});
 }
 
+Unit_Stage.prototype.getAliveMonsters = function(self){
+	return this.unit_container.children.filter(function(unit){return unit.team === "Monster" && unit.status !== "death";});
+}
+
 Unit_Stage.prototype.setCanvasSize = function(width, height){
 	this.canvas.width = width;
 	this.canvas.height = height;

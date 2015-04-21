@@ -10,9 +10,8 @@ MapController = {
 			this.loadWorldMap(map, callback);
 		}.bind(this));
 	},
-	loadMap:function(level, act, chapter, difficulty_level, callback){
+	loadMap:function(act, chapter, callback){
 		MapModel.findOne({act:act,chapter:chapter}, function(err, map){
-			//map.initMap();
 			callback(err, map);
 		}.bind(this));
 	},

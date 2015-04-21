@@ -4,7 +4,7 @@ var router = express.Router();
 /* GET home page. */
 router.get('/', function(req, res) {
 	UserController.authenticate(req, res, function(user, map){
-		res.render('game', { title: 'Express', user:user, map:map});
+		res.render('game', { title: 'Express', user:user, map:map, difficulty_level:0});
 	});
 });
 
@@ -16,8 +16,8 @@ router.post('/', function(req, res) {
 		var act = req.body.act;
 		var chapter = req.body.chapter;
 		var difficulty_level = req.body.difficulty_level;
-		UserController.loadStage(user_id, act, chapter, difficulty_level, res, function(user, map){
-			res.render('game', { title: 'Express', user:user, map:map});
+		UserController.loadStage(user_id, act, chapter, res, function(user, map){
+			res.render('game', { title: 'Express', user:user, map:map, difficulty_level:difficulty_level});
 		});
 	}
 });
@@ -68,9 +68,18 @@ router.post('/saveequipitem', function(req, res){
 	var follower_items = typeof req.body.follower_items !== 'undefined' ? req.body.follower_items : [];
 	var user_id = req.session.user_id;
 	UserController.saveItems(hero_items, follower_items, user_id, function(err, user){
-		res.send("ok");
+		res.send(user);
 	});
-})
+});
+
+router.post('/savestats', function(req, res){
+	var hero = req.body.hero;
+	var followers = typeof req.body.followers !== 'undefined' ? req.body.followers : [];
+	var user_id = req.session.user_id;
+	UserController.saveStats(hero, followers, user_id, function(err, user){
+		res.send(user);
+	});
+});
 
 
 router.get('/game', function(req, res) {

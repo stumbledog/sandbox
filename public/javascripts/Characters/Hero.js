@@ -98,3 +98,10 @@ Hero.prototype.tick = function(){
 	}
 	this.ui_stage.refreshSkillButton();
 }
+
+Hero.prototype.die = function(){
+	Unit.prototype.die.call(this);
+	alert("game over");
+	var user = this.game.getUser();
+	user.saveStats();
+}

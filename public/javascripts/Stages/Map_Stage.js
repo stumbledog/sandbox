@@ -30,6 +30,8 @@ Map_Stage.prototype.initialize = function(){
 
 	this.loader = this.game.getLoader();
 
+	console.log(this);
+
 	for(i = 0 ; i < this.cols ; i++){
 		for(j = 0 ; j < this.rows ; j++){
 			this.block[2*i][2*j] =  this.block[2*i+1][2*j] = this.block[2*i][2*j+1]= this.block[2*i+1][2*j+1] = 'E';

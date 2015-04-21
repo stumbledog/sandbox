@@ -468,7 +468,7 @@ Unit.prototype.levelUp = function(){
 	this.char_intelligence += parseInt(this.level_up_bonus.intelligence);
 	this.char_stamina += parseInt(this.level_up_bonus.stamina);
 	this.updateStats();
-	console.log(this);
+
 	var levelup_text = new OutlineText("Level Up","bold 10px Arial","#E9A119","#000",2);
 	levelup_text.x = -levelup_text.getMeasuredWidth()/2;
 	this.addChild(levelup_text);
