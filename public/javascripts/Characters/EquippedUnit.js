@@ -221,7 +221,7 @@ EquippedUnit.prototype.updateStats = function(){
 }
 
 EquippedUnit.prototype.equipItem = function(item){
-	if(this.level >= item.level){
+	if(this.level >= item.level || true){
 		switch(item.part){
 			case "weapon":
 				switch(item.hand){

@@ -21,6 +21,7 @@ Unit_Stage.prototype.initialize = function(width, height){
 	this.map = this.game.getMapStage();
 	this.mapSize = this.map.getSize();
 	this.minimap = this.game.getMinimapStage();
+	this.message = this.game.getMessageStage();
 
 	this.followership_type = "follow"
 
@@ -49,6 +50,7 @@ Unit_Stage.prototype.initialize = function(width, height){
 		if(this.ticks % 10 === 0){
 			this.minimap.renderUnits(this.getUnits());
 		}
+		this.message.update();
 		this.update();
 		this.ticks++;
 	}.bind(this));

@@ -4,7 +4,7 @@ var Game = (function(){
 
 	function init(user_builder, map_builder, difficulty_level){
 		var user, loader, hero, blocks;
-		var minimap_stage, tooltip_stage, unit_stage, map_stage, ui_stage, left_stage, right_stage, effect;
+		var minimap_stage, tooltip_stage, unit_stage, map_stage, ui_stage, left_stage, right_stage, effect, message_stage;
 		var scale = 5;
 
 		window.onresize = function(){
@@ -149,14 +149,15 @@ var Game = (function(){
 			minimap_stage.initUnits(unit_stage.getNPCUnits());
 			minimap_stage.initUnits(unit_stage.getUnits());
 
-			effect.message("left_to_right", map_builder.name, 24, "#fff", 10, "#000", 1000, hero.x, hero.y);
-			if(difficulty_level > 0){
-				
+			message_stage.displayMessage("left_to_right", map_builder.name, 60, "#B64926", 20, "#000", 2000, 0, -60);
+			if(map_builder.act !== 0){
+				var index = difficulty_level;
+				message_stage.displayMessage("left_to_right", Math.round(100 * Math.pow(2,index))+"% Health\n"+Math.round(100 * Math.pow(1.6,index))+"% Damage\n" + 100 * index + "% Extra Gold Bonus\n" + 100 * index + "% Extra XP Bonus\n" + 100 * index + "% Item Drop Bonus", 20, "#fff", 5, "#000", 2000, 0, 0);
 			}
-
 		}
 
 		function initStages(){
+			message_stage = new MessageStage();
 			map_stage = new Map_Stage(map_builder);
 			minimap_stage = new Minimap_Stage();
 			unit_stage = new Unit_Stage(map_builder.width,map_builder.height);
@@ -223,9 +224,6 @@ var Game = (function(){
 			getLoader:function(){
 				return loader;
 			},
-			getEffect:function(){
-				return effect;
-			},
 			getBlock:function(){
 				return map_stage.getBlock();
 			},
@@ -249,6 +247,9 @@ var Game = (function(){
 			},
 			getRighttMenuStage:function(){
 				return right_stage;
+			},
+			getMessageStage:function(){
+				return message_stage;
 			},
 			getStartPosition:function(){
 				return map_stage.getStartPosition();

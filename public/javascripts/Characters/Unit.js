@@ -181,7 +181,7 @@ Unit.prototype.procMove = function(map){
 	var coh = this.cohesion(units);
 	var flo = this.flowField(map);
 
-	sep.mult(2.0);
+	sep.mult(1.5);
 	ali.mult(0.5);
 	coh.mult(1.0);
 	flo.mult(2.0);

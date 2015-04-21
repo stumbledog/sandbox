@@ -68,22 +68,3 @@ Effect.prototype.playOnUnit = function(animation, unit){
 	}.bind(this));
 	unit.addChild(sprite);
 }
-
-Effect.prototype.message = function(animation, text, font_size, color, width, border_color, duration, x, y){
-	var message = new OutlineText(text, font_size+"px Arial", color, width, border_color);
-	message.textAlign("center");
-	message.textBaseline("middle");
-	this.effect_container.addChild(message);
-	switch(animation){
-		case "left_to_right":
-			message.x = -message.getMeasuredWidth();
-			message.y = y;
-			createjs.Tween.get(message).to({x:x},300)
-			.wait(duration)
-			.to({x:2*x},300).call(function(){
-				this.effect_container.removeChild(message);
-			}.bind(this));
-			break;
-		case "":
-	}
-}
