@@ -11,8 +11,6 @@ Monster.prototype.initialize = function(builder){
 
 	this.difficulty_level = builder.difficulty_level;
 	this.hero_level = builder.hero_level;
-	//console.log(this.difficulty_level, this.hero_level);
-	//Math.round(100 * Math.pow(2,index))+"% Health\n"+Math.round(100 * Math.pow(1.6,index))+"% Damage\n" + 100 * index + "% Extra Gold Bonus\n" + 100 * index + "% Extra XP Bonus\n" + 100 * index + "% Item Drop Bonus";
 	this.max_health = this.health = builder.health * Math.pow(2,this.difficulty_level) * this.hero_level;
 	this.right_min_damage = builder.damage * Math.pow(1.6,this.difficulty_level) * this.hero_level;
 	this.right_max_damage = builder.damage * 2 * Math.pow(1.6,this.difficulty_level) * this.hero_level;
@@ -23,7 +21,8 @@ Monster.prototype.initialize = function(builder){
 	this.damage_reduction = 0;
 	this.gold = builder.gold * (1 + this.difficulty_level) * (1 + (this.hero_level - 1) / 5);
 	this.xp = builder.xp * (1 + this.difficulty_level) * (1 + (this.hero_level - 1) / 5);
-
+	this.drop_rate = builder.drop_rate * (1 + this.difficulty_level);
+	console.log(this.drop_rate);
 	this.scaleX = this.scaleY = builder.scale ? builder.scale : 1;
 
 	this.right_weapon_tick = 0;
@@ -78,11 +77,43 @@ Monster.prototype.die = function(attacker){
 		unit.gainXP(this.xp/allied_units.length * (1 + (allied_units.length - 1) / 10));
 	},this);
 
+	this.dropGold(attacker);
+	this.dropItem();
+
 	var monsters = this.unit_stage.getAliveMonsters();
 	if(monsters.length === 0){
 		this.game.getMessageStage().displayMessage("left_to_right", "Victory", 60, "#B64926", 20, "#000", 2000, 0, -60);
 		var user = this.game.getUser();
 		user.saveStats();
+	}
+}
+
+Monster.prototype.dropGold = function(attacker){
+	var gold = Math.ceil(this.gold * ( Math.random() * 0.5 + 0.5));
+	var user = this.game.getUser();
+	user.addGold(gold);
+
+	var text = new OutlineText("+"+gold+" gold", "bold 8px Arial", "#FFD34E", "#000", 2);
+	text.textAlign("center");
+	attacker.addChild(text);
+
+	createjs.Tween.get(text).to({regY:40},1000,createjs.Ease.circOut).wait(500).call(function(){
+		attacker.removeChild(this);
+	});
+}
+
+Monster.prototype.dropItem = function(){
+	var foo = Math.random() * 100;
+	if(foo <= 0.01 * this.drop_rate){
+		console.log("legendary");
+	}else if(foo <= 0.1 * this.drop_rate){
+		console.log("epic");
+	}else if(foo <= 1 * this.drop_rate){
+		console.log("rare");
+	}else if(foo <= 5 * this.drop_rate){
+		console.log("uncommon");
+	}else if(foo <= 10 * this.drop_rate){
+		console.log("common");
 	}
 }
 

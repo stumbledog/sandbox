@@ -528,7 +528,10 @@ Inventory.prototype.saveInventory = function(){
 Inventory.prototype.updateGold = function(gold){
 	this.gold.setText(gold);
 	this.gold.x = 310 - this.gold.getMeasuredWidth() - 22;
-	this.stage.update();
+	if(this.stage){
+		this.stage.update();
+	}
+
 }
 
 Inventory.prototype.open = function(){

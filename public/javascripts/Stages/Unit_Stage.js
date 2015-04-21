@@ -161,10 +161,11 @@ Unit_Stage.prototype.initEvent = function(){
 }
 
 Unit_Stage.prototype.initContainer = function(){
+	this.coin_container = new createjs.Container();
 	this.unit_container = new createjs.Container();
 	this.ui_container = new createjs.Container();
 	this.effect_container = new createjs.Container();
-	this.addChild(this.unit_container, this.ui_container, this.effect_container);
+	this.addChild(this.coin_container, this.unit_container, this.ui_container, this.effect_container);
 }
 
 Unit_Stage.prototype.toggleFollowerShipType = function(){
@@ -200,6 +201,21 @@ Unit_Stage.prototype.addUnit = function(unit, x, y){
 Unit_Stage.prototype.removeUnit = function(target){
 	this.minimap.removeMinimapBlock(target);
 	this.unit_container.removeChild(target);
+}
+
+Unit_Stage.prototype.dropGold = function(gold, x, y){
+	if(gold < 100){
+		var coin = new createjs.Bitmap(this.loader.getResult("icon"));
+		coin.sourceRect = new createjs.Rectangle(246,55,12,12);
+		coin.regX = coin.regY = 6;
+		coin.scaleX = coin.scaleY = 0.5;
+		coin.x = x;
+		coin.y = y;
+	}
+	this.coin_container.addChild(coin);
+	createjs.Tween.get(coin).to({regY:40},300,createjs.Ease.circOut).to({regY:0},300,createjs.Ease.circIn).call(function(){
+		
+	}).bind(this);
 }
 
 Unit_Stage.prototype.setCommand = function(type){
