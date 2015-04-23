@@ -81,6 +81,16 @@ router.post('/savestats', function(req, res){
 	});
 });
 
+router.post('/dropitem', function(req, res){
+	var level = req.body.level;
+	var rating = req.body.rating;
+	//var user_id = req.session.user_id;
+	console.log(rating, level);
+	ItemController.dropItem(level, rating, function(item){
+		res.send(item);
+	});
+});
+
 
 router.get('/game', function(req, res) {
 	res.render('game', { title: 'Express' });

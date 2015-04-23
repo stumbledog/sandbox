@@ -357,7 +357,7 @@ Unit.prototype.attackTarget = function(target, hand){
 				}.bind(this));
 		}else if(weapon.attack_type === "range"){
 			var distance = Math.sqrt(this.getSquareDistance(target));
-			var projectile = new createjs.Bitmap(this.loader.getResult(weapon.projectile.source.split('/').pop()));
+			var projectile = new createjs.Bitmap(this.loader.getResult("icon"));
 			projectile.sourceRect = new createjs.Rectangle(parseInt(weapon.projectile.cropX),parseInt(weapon.projectile.cropY),parseInt(weapon.projectile.width),parseInt(weapon.projectile.height));
 			projectile.regX = weapon.projectile.regX;
 			projectile.regY = weapon.projectile.regY;

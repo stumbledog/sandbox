@@ -25,6 +25,19 @@ ItemController = {
 			});
 		});
 	},
+	dropItem:function(level, rating, callback){
+		if(Math.random() > 0.5){
+			PrototypeWeaponModel.find({}, function(err, prototype_weapons){
+				var prototype_weapon = prototype_weapons[Math.floor(Math.random() * prototype_weapons.length)];
+				callback(prototype_weapon.setMerchantItem(level, rating));
+			});
+		}else{
+			PrototypeArmorModel.find({}, function(err, prototype_armors){
+				var prototype_armor = prototype_armors[Math.floor(Math.random() * prototype_armors.length)];
+				callback(prototype_armor.setMerchantItem(level, rating));
+			});
+		}
+	},
 	purchase:function(item, user_id, callback){
 		console.log(item);
 		var price = item.repurchase === "true" ? parseInt(item.sell_price) : parseInt(item.price);

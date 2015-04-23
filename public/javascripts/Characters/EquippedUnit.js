@@ -226,7 +226,6 @@ EquippedUnit.prototype.equipItem = function(item){
 			case "weapon":
 				switch(item.hand){
 					case 1:
-						console.log(this.dual_wield);
 						if(this.equipments.main_hand && this.equipments.main_hand.hand === 2){
 							this.user.inventory.addItem(this.equipments.main_hand);
 							this.equipments.main_hand = item;

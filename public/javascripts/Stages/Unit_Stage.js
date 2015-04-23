@@ -161,11 +161,11 @@ Unit_Stage.prototype.initEvent = function(){
 }
 
 Unit_Stage.prototype.initContainer = function(){
-	this.coin_container = new createjs.Container();
+	this.item_container = new createjs.Container();
 	this.unit_container = new createjs.Container();
 	this.ui_container = new createjs.Container();
 	this.effect_container = new createjs.Container();
-	this.addChild(this.coin_container, this.unit_container, this.ui_container, this.effect_container);
+	this.addChild(this.item_container, this.unit_container, this.ui_container, this.effect_container);
 }
 
 Unit_Stage.prototype.toggleFollowerShipType = function(){
@@ -216,6 +216,34 @@ Unit_Stage.prototype.dropGold = function(gold, x, y){
 	createjs.Tween.get(coin).to({regY:40},300,createjs.Ease.circOut).to({regY:0},300,createjs.Ease.circIn).call(function(){
 		
 	}).bind(this);
+}
+
+Unit_Stage.prototype.dropItem = function(item, x, y){
+	var drop_item = item;
+	var outline = drop_item.icon_img.clone();
+	outline.scaleX = outline.scaleY = 1.2;
+	outline.filters = [new createjs.ColorFilter(0,0,0,1,hexToRgb(drop_item.colors[drop_item.rating-1]).r,hexToRgb(drop_item.colors[drop_item.rating-1]).g,hexToRgb(item.colors[drop_item.rating-1]).b,0)];
+	outline.cache(-2,-2,20,20);
+	outline.visible = false;
+	this.item_container.addChild(outline, drop_item.icon_img);
+	var regY = drop_item.icon_img.regY;
+	createjs.Tween.get(drop_item.icon_img).to({regY:regY + 40},300,createjs.Ease.circOut).to({regY:regY},300,createjs.Ease.circIn).call(function(){
+		outline.visible = true;
+		drop_item.icon_img.addEventListener("rollover", function(){
+			console.log("rollover");
+			console.log(drop_item.rating);
+		});
+	});
+	//item.icon_img.scaleX = item.icon_img.scaleY = 0.5;
+
+	function hexToRgb(hex) {
+		var result = /^#?([A-F\d]{2})([A-F\d]{2})([A-F\d]{2})$/i.exec(hex);
+		return result ? {
+			r: parseInt(result[1], 16),
+			g: parseInt(result[2], 16),
+			b: parseInt(result[3], 16)
+		} : null;
+	}
 }
 
 Unit_Stage.prototype.setCommand = function(type){

@@ -15,7 +15,6 @@ MessageStage.prototype.initialize = function(){
 
 MessageStage.prototype.displayMessage = function(animation, text, font_size, color, width, border_color, duration, x, y){
 	this.canvas.style.zIndex = 10;
-	console.log(this);
 	var message = new OutlineText(text, font_size+"px Arial", color, border_color, width);
 	message.textAlign("center");
 	message.textBaseline("middle");

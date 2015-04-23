@@ -29,6 +29,7 @@ var Game = (function(){
 			});
 		}
 
+		/*
 		if(user_builder.hero.items){
 			for(key in user_builder.hero.items){
 				if(user_builder.hero.items[key]){
@@ -38,8 +39,10 @@ var Game = (function(){
 				}
 			}
 		}
+		*/
 
 		user_builder.followers.forEach(function(unit_builder){
+			/*
 			if(unit_builder.items){
 				for(key in unit_builder.items){
 					if(unit_builder.items[key]){
@@ -48,7 +51,7 @@ var Game = (function(){
 						}
 					}
 				}
-			}
+			}*/
 			manifest.push({src:unit_builder.sprite, id:unit_builder.sprite.split('/').pop()});
 			if(unit_builder.portrait){
 				manifest.push({src:unit_builder.portrait, id:unit_builder.portrait.split('/').pop()});
@@ -76,12 +79,13 @@ var Game = (function(){
 		map_builder.npcs.forEach(function(npc){
 			manifest.push({src:npc.sprite, id:npc.sprite.split('/').pop()});
 		});
-
+		/*
 		if(map_builder.merchantable_items){
 			map_builder.merchantable_items.forEach(function(item){
 				manifest.push({src:item.icon.source, id:item.icon.source.split('/').pop()});
 			});
 		}
+		*/
 
 		if(map_builder.npcs){
 			map_builder.npcs.forEach(function(npc){

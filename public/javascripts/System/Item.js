@@ -28,7 +28,7 @@ Item.prototype.initialize = function(attributes){
 }
 
 Item.prototype.initIcon = function(){
-	this.icon_img = new createjs.Bitmap(this.loader.getResult(this.icon.source.split('/').pop()));
+	this.icon_img = new createjs.Bitmap(this.loader.getResult("icon"));
 	this.icon_img.sourceRect = new createjs.Rectangle(parseInt(this.icon.cropX), parseInt(this.icon.cropY), parseInt(this.icon.width), parseInt(this.icon.height));
 	this.icon_img.regX = this.icon.width / 2;
 	this.icon_img.regY = this.icon.height / 2;

@@ -42,14 +42,14 @@ var PrototypeWeaponSchema = new Schema({
 	range:Number,
 }, { versionKey: false });
 
-PrototypeWeaponSchema.methods.setMerchantItem = function(level){
+PrototypeWeaponSchema.methods.setMerchantItem = function(level, rating){
 	var weapon = this.toObject();
 	weapon._id = mongoose.Types.ObjectId();
 	weapon.level = level;
 	weapon.price = 0;
 	weapon.min_damage *= level;
 	weapon.max_damage *= level;
-	weapon.rating = Math.ceil(Math.random() * 3);
+	weapon.rating = (typeof rating === "undefined") ? (Math.ceil(Math.random() * 3)) : rating;
 
 	weapon.attributes = []
 	while(weapon.attributes.length < weapon.rating){

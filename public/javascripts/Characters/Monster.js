@@ -104,16 +104,32 @@ Monster.prototype.dropGold = function(attacker){
 
 Monster.prototype.dropItem = function(){
 	var foo = Math.random() * 100;
+	var rating;
 	if(foo <= 0.01 * this.drop_rate){
-		console.log("legendary");
+		rating = 5;
 	}else if(foo <= 0.1 * this.drop_rate){
-		console.log("epic");
+		rating = 4;
 	}else if(foo <= 1 * this.drop_rate){
-		console.log("rare");
+		rating = 3;
 	}else if(foo <= 5 * this.drop_rate){
-		console.log("uncommon");
+		rating = 2;
 	}else if(foo <= 10 * this.drop_rate){
-		console.log("common");
+		rating = 1;
+	}
+
+	if(rating){
+		$.post("dropitem", {rating:rating, level:this.hero_level}, function(res){
+			if(res){
+				if(res.type === "weapon"){
+					var item = new Weapon(res);
+				}else{
+					var item = new Armor(res);
+				}
+				item.icon_img.x = this.x;
+				item.icon_img.y = this.y;
+				this.unit_stage.dropItem(item);
+			}
+		}.bind(this));
 	}
 }
 

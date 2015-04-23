@@ -15,12 +15,12 @@ var PrototypeArmorSchema = new Schema({
 	},
 }, { versionKey: false });
 
-PrototypeArmorSchema.methods.setMerchantItem = function(level){
+PrototypeArmorSchema.methods.setMerchantItem = function(level, rating){
 	var armor = this.toObject();
 	armor._id = mongoose.Types.ObjectId();
 	armor.level = level;
 	armor.price = 0;
-	armor.rating = Math.ceil(Math.random() * 3);
+	armor.rating = (typeof rating === "undefined") ? (Math.ceil(Math.random() * 3)) : rating;
 
 	switch(armor.part){
 		case "shield":
