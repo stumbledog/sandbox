@@ -33,7 +33,7 @@ UnitController = {
 				skill.animation.jump.images = skill.animation.jump.images["[]"];
 				skill.animation.land.images = skill.animation.land.images["[]"];
 			}
-		})
+		});
 
 		unit.exp = 0;
 		UserModel.findById(user_id, function(err, user){

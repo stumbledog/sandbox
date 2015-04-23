@@ -339,7 +339,10 @@ Inventory.prototype.addItem = function(item){
 			throw "Not enough space";
 		}
 	}
-	this.stage.update();
+	this.saveInventory();
+	if(this.stage){
+		this.stage.update();
+	}
 }
 
 Inventory.prototype.updateQuantity = function(index){

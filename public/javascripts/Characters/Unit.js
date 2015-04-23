@@ -609,6 +609,18 @@ Unit.prototype.interactNPC = function(){
 	}
 }
 
+Unit.prototype.lootItem = function(){
+	if(this.getSquareDistance(this.order.item) <= 32*32){
+		this.velocity = new Vector(0,0);
+		this.user.inventory.addItem(this.order.item);
+		this.unit_stage.removeItem(this.order.item.icon_img);
+		this.order.action = "stop";
+		this.order.map = this.findPath({x:this.x,y:this.y});
+	}else{
+		this.procMove(this.order.map);
+	}	
+}
+
 Unit.prototype.castSpell = function(){
 	if(this.chain_lightning && this.order.action !== "move" && this.order.action !== "stop"){
 		var spell = this.active_skills["chain_lightning"];
@@ -668,6 +680,8 @@ Unit.prototype.tick = function(){
 		case "interact_npc":
 			this.interactNPC();
 			break;
+		case "loot_item":
+			this.lootItem();
 	}
 
 	if(this.filter === "uncache"){

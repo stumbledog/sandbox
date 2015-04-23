@@ -91,6 +91,14 @@ router.post('/dropitem', function(req, res){
 	});
 });
 
+router.post('/setgold', function(req, res){
+	var gold = req.body.gold;
+	var user_id = req.session.user_id;
+	UserModel.findByIdAndUpdate(user_id,{gold:gold}, function(err, user){
+		res.send(user.gold);
+	});
+});
+
 
 router.get('/game', function(req, res) {
 	res.render('game', { title: 'Express' });

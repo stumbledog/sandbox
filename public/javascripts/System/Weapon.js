@@ -33,7 +33,7 @@ Weapon.prototype.weapon_initialize = function(attributes){
 }
 
 Weapon.prototype.initBitmap = function(){
-	var bitmap = new createjs.Bitmap(this.loader.getResult(this.sprite.source));
+	var bitmap = new createjs.Bitmap(this.loader.getResult("icon"));
 	bitmap.sourceRect = new createjs.Rectangle(parseInt(this.sprite.cropX), parseInt(this.sprite.cropY), parseInt(this.sprite.width), parseInt(this.sprite.height));
 	bitmap.regX = this.sprite.regX;
 	bitmap.regY = this.sprite.regY;

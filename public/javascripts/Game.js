@@ -22,12 +22,12 @@ var Game = (function(){
 
 		manifest.push({src:user_builder.hero.sprite, id:user_builder.hero.sprite.split('/').pop()});
 		manifest.push({src:user_builder.hero.portrait, id:user_builder.hero.portrait.split('/').pop()});
-
+		/*
 		if(user_builder.inventory.slots){
 			user_builder.inventory.slots.forEach(function(item){
 				manifest.push({src:item.icon.source, id:item.icon.source.split('/').pop()});
 			});
-		}
+		}*/
 
 		/*
 		if(user_builder.hero.items){

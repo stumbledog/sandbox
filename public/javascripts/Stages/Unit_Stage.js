@@ -203,47 +203,44 @@ Unit_Stage.prototype.removeUnit = function(target){
 	this.unit_container.removeChild(target);
 }
 
-Unit_Stage.prototype.dropGold = function(gold, x, y){
-	if(gold < 100){
-		var coin = new createjs.Bitmap(this.loader.getResult("icon"));
-		coin.sourceRect = new createjs.Rectangle(246,55,12,12);
-		coin.regX = coin.regY = 6;
-		coin.scaleX = coin.scaleY = 0.5;
-		coin.x = x;
-		coin.y = y;
-	}
-	this.coin_container.addChild(coin);
-	createjs.Tween.get(coin).to({regY:40},300,createjs.Ease.circOut).to({regY:0},300,createjs.Ease.circIn).call(function(){
-		
-	}).bind(this);
-}
-
-Unit_Stage.prototype.dropItem = function(item, x, y){
+Unit_Stage.prototype.dropItem = function(item){
 	var drop_item = item;
-	var outline = drop_item.icon_img.clone();
-	outline.scaleX = outline.scaleY = 1.2;
-	outline.filters = [new createjs.ColorFilter(0,0,0,1,hexToRgb(drop_item.colors[drop_item.rating-1]).r,hexToRgb(drop_item.colors[drop_item.rating-1]).g,hexToRgb(item.colors[drop_item.rating-1]).b,0)];
-	outline.cache(-2,-2,20,20);
-	outline.visible = false;
-	this.item_container.addChild(outline, drop_item.icon_img);
+	var color = drop_item.colors[drop_item.rating-1];
+	var name = new OutlineText(item.name,"8px Arial",color,"#000",2);
+	item.icon_img.name = name;
+	name.textAlign("center");
+	name.x = item.icon_img.x;
+	name.y = item.icon_img.y - 10;
+	this.item_container.addChild(drop_item.icon_img);
 	var regY = drop_item.icon_img.regY;
 	createjs.Tween.get(drop_item.icon_img).to({regY:regY + 40},300,createjs.Ease.circOut).to({regY:regY},300,createjs.Ease.circIn).call(function(){
-		outline.visible = true;
-		drop_item.icon_img.addEventListener("rollover", function(){
-			console.log("rollover");
-			console.log(drop_item.rating);
-		});
-	});
-	//item.icon_img.scaleX = item.icon_img.scaleY = 0.5;
+		this.item_container.addChild(name);
 
-	function hexToRgb(hex) {
-		var result = /^#?([A-F\d]{2})([A-F\d]{2})([A-F\d]{2})$/i.exec(hex);
-		return result ? {
-			r: parseInt(result[1], 16),
-			g: parseInt(result[2], 16),
-			b: parseInt(result[3], 16)
-		} : null;
-	}
+		name.addEventListener("rollover", function(){
+			this.cursor = "pointer";
+		}.bind(this));
+
+		name.addEventListener("mousedown", function(){
+			this.hero.order.action = "loot_item";
+			this.hero.order.item = drop_item;
+			this.hero.order.map = this.stage.hero.findPath(drop_item.icon_img);
+		}.bind(this));
+
+		drop_item.icon_img.addEventListener("rollover", function(){
+			this.cursor = "pointer";
+		}.bind(this));
+
+		drop_item.icon_img.addEventListener("mousedown", function(){
+			this.hero.order.action = "loot_item";
+			this.hero.order.item = drop_item;
+			this.hero.order.map = this.stage.hero.findPath(drop_item.icon_img);
+		}.bind(this));
+	}.bind(this));
+}
+
+Unit_Stage.prototype.removeItem = function(item){
+	this.item_container.removeChild(item);
+	this.item_container.removeChild(item.name);
 }
 
 Unit_Stage.prototype.setCommand = function(type){

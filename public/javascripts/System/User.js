@@ -63,6 +63,9 @@ User.prototype.toggleInventory = function(){
 User.prototype.addGold = function(gold){
 	this.gold += gold;
 	this.inventory.updateGold(this.gold);
+	$.post("setgold", {gold:this.gold}, function(res){
+		console.log(res);
+	});
 }
 
 User.prototype.purchaseFollower = function(follower, gold){

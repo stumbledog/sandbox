@@ -125,8 +125,8 @@ Monster.prototype.dropItem = function(){
 				}else{
 					var item = new Armor(res);
 				}
-				item.icon_img.x = this.x;
-				item.icon_img.y = this.y;
+				item.x = item.icon_img.x = this.x;
+				item.y = item.icon_img.y = this.y;
 				this.unit_stage.dropItem(item);
 			}
 		}.bind(this));

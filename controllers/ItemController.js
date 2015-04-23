@@ -26,7 +26,7 @@ ItemController = {
 		});
 	},
 	dropItem:function(level, rating, callback){
-		if(Math.random() > 0.5){
+		if(Math.random() > 0.8){
 			PrototypeWeaponModel.find({}, function(err, prototype_weapons){
 				var prototype_weapon = prototype_weapons[Math.floor(Math.random() * prototype_weapons.length)];
 				callback(prototype_weapon.setMerchantItem(level, rating));
