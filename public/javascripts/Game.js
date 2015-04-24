@@ -18,8 +18,8 @@ var Game = (function(){
 		};
 
 		var manifest = [];
-
 		manifest.push({src:"assets/Graphics/System/Icons/IconSet.png", id:"icon"});
+//		manifest.push({src:"assets/Audio/BGM/14 Town of meeting.ogg", id:"town"});
 
 		manifest.push({src:user_builder.hero.sprite, id:user_builder.hero.sprite.split('/').pop()});
 		manifest.push({src:user_builder.hero.portrait, id:user_builder.hero.portrait.split('/').pop()});
@@ -155,6 +155,23 @@ var Game = (function(){
 			minimap_stage.initUnits(unit_stage.getUnits());
 
 			message_stage.displayMessage("left_to_right", map_builder.name, 60, "#FFF0A5", 10, "#000", 1000, 0, -60);
+
+			var queue = new createjs.LoadQueue();
+			createjs.Sound.alternateExtensions = ["ogg"];
+			queue.installPlugin(createjs.Sound);
+			queue.addEventListener("complete", function(){
+				var bgm = createjs.Sound.play("bgm");
+				bgm.setLoop(true);
+			});
+
+
+			if(map_builder.act === 0 && map_builder.chapter === 0){
+				queue.loadFile({id:"bgm", src:"assets/Audio/BGM/10 Pleasant travel.ogg"});
+			}else if(map_builder.act === 1 && map_builder.chapter === 1){
+				queue.loadFile({id:"bgm", src:"assets/Audio/BGM/01 First battle.ogg"});
+			}
+
+
 			if(map_builder.act !== 0){
 				var index = difficulty_level;
 				message_stage.displayMessage("left_to_right", Math.round(100 * Math.pow(2,index))+"% Health\n"+Math.round(100 * Math.pow(1.6,index))+"% Damage\n" + 100 * index + "% Extra Gold Bonus\n" + 100 * index + "% Extra XP Bonus\n" + 100 * index + "% Item Drop Bonus", 20, "#fff", 5, "#000", 1000, 0, 0);
