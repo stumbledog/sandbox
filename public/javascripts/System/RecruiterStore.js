@@ -150,8 +150,10 @@ RecruiterStore.prototype.rolloverStore = function(unit){
 }
 
 RecruiterStore.prototype.rolloutStore = function(unit){
-	this.stage.removeChild(unit.detail);
-	this.stage.update();
+	if(this.stage){
+		this.stage.removeChild(unit.detail);
+		this.stage.update();		
+	}
 }
 
 RecruiterStore.prototype.mousedownStoreItem = function(unit, event){

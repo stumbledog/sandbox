@@ -82,9 +82,10 @@ Monster.prototype.die = function(attacker){
 
 	var monsters = this.unit_stage.getAliveMonsters();
 	if(monsters.length === 0){
-		this.game.getMessageStage().displayMessage("left_to_right", "Victory", 60, "#B64926", 20, "#000", 2000, 0, -60);
+		this.game.getMessageStage().displayMessage("left_to_right", "Victory", 60, "#468966", 10, "#000", 1000, 0, -60);
 		var user = this.game.getUser();
 		user.saveStats();
+		this.unit_stage.topMenu.open();
 	}
 }
 

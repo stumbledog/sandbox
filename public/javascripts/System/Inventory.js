@@ -369,8 +369,10 @@ Inventory.prototype.initItemIcon = function(item, index){
 	}.bind(this));
 
 	container.addEventListener("rollout", function(event){
-		this.stage.removeChild(item.detail);
-		this.stage.update();
+		if(this.stage){
+			this.stage.removeChild(item.detail);
+			this.stage.update();			
+		}
 	}.bind(this));
 
 	var border = new createjs.Shape();

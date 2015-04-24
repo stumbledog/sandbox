@@ -22,7 +22,6 @@ router.post('/', function(req, res) {
 	}
 });
 
-
 router.post('/purchaseitem', function(req, res){
 	var item = req.body.item;
 	var user_id = req.session.user_id;
@@ -84,8 +83,6 @@ router.post('/savestats', function(req, res){
 router.post('/dropitem', function(req, res){
 	var level = req.body.level;
 	var rating = req.body.rating;
-	//var user_id = req.session.user_id;
-	console.log(rating, level);
 	ItemController.dropItem(level, rating, function(item){
 		res.send(item);
 	});
@@ -95,14 +92,12 @@ router.post('/setgold', function(req, res){
 	var gold = req.body.gold;
 	var user_id = req.session.user_id;
 	UserModel.findByIdAndUpdate(user_id,{gold:gold}, function(err, user){
-		res.send(user.gold);
+		res.send({gold:user.gold});
 	});
 });
-
 
 router.get('/game', function(req, res) {
 	res.render('game', { title: 'Express' });
 });
-
 
 module.exports = router;

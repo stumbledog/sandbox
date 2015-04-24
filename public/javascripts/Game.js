@@ -4,16 +4,17 @@ var Game = (function(){
 
 	function init(user_builder, map_builder, difficulty_level){
 		var user, loader, hero, blocks;
-		var minimap_stage, tooltip_stage, unit_stage, map_stage, ui_stage, left_stage, right_stage, effect, message_stage;
+		var minimap_stage, tooltip_stage, unit_stage, map_stage, ui_stage, left_stage, right_stage, top_stage, effect, message_stage;
 		var scale = 5;
 
 		window.onresize = function(){
-			map_stage.canvas.width = unit_stage.canvas.width = window.innerWidth;
-			map_stage.canvas.height = unit_stage.canvas.height = window.innerHeight;
+			message_stage.canvas.width = map_stage.canvas.width = unit_stage.canvas.width = window.innerWidth;
+			message_stage.canvas.height = map_stage.canvas.height = unit_stage.canvas.height = window.innerHeight;
 			map_stage.update();
 			unit_stage.update();
 			left_stage.update();
 			right_stage.update();
+			top_stage.update();
 		};
 
 		var manifest = [];
@@ -153,10 +154,10 @@ var Game = (function(){
 			minimap_stage.initUnits(unit_stage.getNPCUnits());
 			minimap_stage.initUnits(unit_stage.getUnits());
 
-			message_stage.displayMessage("left_to_right", map_builder.name, 60, "#B64926", 20, "#000", 2000, 0, -60);
+			message_stage.displayMessage("left_to_right", map_builder.name, 60, "#FFF0A5", 10, "#000", 1000, 0, -60);
 			if(map_builder.act !== 0){
 				var index = difficulty_level;
-				message_stage.displayMessage("left_to_right", Math.round(100 * Math.pow(2,index))+"% Health\n"+Math.round(100 * Math.pow(1.6,index))+"% Damage\n" + 100 * index + "% Extra Gold Bonus\n" + 100 * index + "% Extra XP Bonus\n" + 100 * index + "% Item Drop Bonus", 20, "#fff", 5, "#000", 2000, 0, 0);
+				message_stage.displayMessage("left_to_right", Math.round(100 * Math.pow(2,index))+"% Health\n"+Math.round(100 * Math.pow(1.6,index))+"% Damage\n" + 100 * index + "% Extra Gold Bonus\n" + 100 * index + "% Extra XP Bonus\n" + 100 * index + "% Item Drop Bonus", 20, "#fff", 5, "#000", 1000, 0, 0);
 			}
 		}
 
@@ -174,6 +175,7 @@ var Game = (function(){
 
 			left_stage = new MenuStage("left_menu", 310, window.innerHeight);
 			right_stage = new MenuStage("right_menu", 310, window.innerHeight);
+			top_stage = new MenuStage("menu", 200, 60);
 		}
 
 		function createHero(builder){
@@ -222,6 +224,15 @@ var Game = (function(){
 		}
 
 		return {
+			getDifficultyLevel:function(){
+				return difficulty_level;
+			},
+			getAct:function(){
+				return map_builder.act;
+			},
+			getChapter:function(){
+				return map_builder.chapter;
+			},
 			getUser:function(){
 				return user;
 			},
@@ -251,6 +262,9 @@ var Game = (function(){
 			},
 			getRighttMenuStage:function(){
 				return right_stage;
+			},
+			getTopMenuStage:function(){
+				return top_stage;
 			},
 			getMessageStage:function(){
 				return message_stage;

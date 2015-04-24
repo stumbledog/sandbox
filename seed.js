@@ -125,8 +125,8 @@ function savePrototypeUnit(){
 				radius:60,
 				angle:60,
 				damage:10,
-				cost:0,
-				cooldown:0,
+				cost:40,
+				cooldown:50,
 				icon_source:"assets/Graphics/icons/50x50/529.png",
 				animation:{
 					scale:0.5,
@@ -290,8 +290,8 @@ function saveMap(){
 								range:120,
 								radius:40,
 								damage:3,
-								cost:0,
-								cooldown:5,
+								cost:15,
+								cooldown:10,
 								icon_source:"assets/Graphics/icons/50x50/517.png",
 								animation:{
 									images:[
@@ -384,7 +384,7 @@ function saveMap(){
 								description:"Moves behind target and deals 600% damage to target and then hides for 5 sec",
 								key:"backstab",
 								target:true,
-								range:60,
+								range:100,
 								damage:6,
 								cost:15,
 								cooldown:20,
@@ -544,7 +544,7 @@ function saveMap(){
 			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:2,x:32*18,y:32*1,regY:9,radius:10,type:"melee",health:5,damage:0.5,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:1},
 			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:2,x:32*18,y:32*1,regY:9,radius:10,type:"melee",health:5,damage:0.5,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:1},
 
-			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:3,x:32*17,y:32*7,regY:9,radius:30,scale:3,type:"melee",health:50,damage:3,range:16,attack_speed:120,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:20},
+			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:3,x:32*17,y:32*7,regY:9,radius:30,scale:3,type:"melee",health:50,damage:3,range:16,attack_speed:120,movement_speed:1,skills:null,gold:30,xp:50,drop_rate:20},
 		],1, 1,"Ridgefield Park",false,false,640,320,20,10,[32,32]));
 
 	maps.push(initMap([],false,[],[],1, 2,"Palisade Park",false,false,320,320,10,10,[160,160]));
@@ -646,7 +646,7 @@ function saveItems(){
 		sprite:{cropX:175,cropY:125,width:13,height:16,regX:6,regY:8,scale:0.8},
 		icon:{cropX:175,cropY:125,width:13,height:16,regX:6,regY:8,scale:0.8},
 		projectile:{cropX:175,cropY:126,width:13,height:14,regX:6,regY:8,scale:0.8, spin:10},
-		min_damage:3,max_damage:6,range:80,attack_speed:75,
+		min_damage:3,max_damage:6,range:60,attack_speed:75,
 	}));
 
 	items.push(new PrototypeWeaponModel({primary_attribute:2, hand:2, type:"weapon", attack_type:"range", name:"Wand",

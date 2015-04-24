@@ -58,7 +58,7 @@ Unit_Stage.prototype.initialize = function(width, height){
 	createjs.Ticker.setFPS(60);
 
 	this.mouse_position = new Vector(0,0);
-
+	this.topMenu = new TopMenu();
 	this.initEvent();
 	this.initContainer();
 	this.effect = new Effect(this.effect_container, this.loader);
@@ -117,7 +117,11 @@ Unit_Stage.prototype.initEvent = function(){
 		switch(event.keyCode){
 			case 27://esc
 				this.setCommand("move");
-				this.user.close();
+				if(this.user.inventory.isOpen || this.user.store){
+					this.user.close();
+				}else{
+					this.topMenu.toggle();
+				}
 				break;
 			case 68://d
 				this.setCommand("assemble");

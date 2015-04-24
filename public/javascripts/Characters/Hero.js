@@ -101,7 +101,8 @@ Hero.prototype.tick = function(){
 
 Hero.prototype.die = function(){
 	Unit.prototype.die.call(this);
-	this.game.getMessageStage().displayMessage("left_to_right", "Defeat", 60, "#B64926", 20, "#000", 2000, 0, -60);
+	this.game.getMessageStage().displayMessage("left_to_right", "Defeat", 60, "#B64926", 10, "#000", 1000, 0, -60);
 	var user = this.game.getUser();
 	user.saveStats();
+	this.unit_stage.topMenu.open();
 }

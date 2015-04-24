@@ -57,6 +57,12 @@ canvas#minimap{
 	border: 1px solid #000;
 }
 
+canvas#menu{
+	left:50%;
+	top:25%;
+	margin-left: -100px;
+}
+
 canvas#menu,
 canvas#left_menu,
 canvas#right_menu,
@@ -68,6 +74,7 @@ canvas#message
 canvas#right_menu
 {
 	right: 0px;
+	margin-left: -150px;
 }
 
 canvas#message{
