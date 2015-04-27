@@ -547,8 +547,8 @@ function saveMap(){
 			{name:"slime",sprite:"assets/Graphics/Characters/29 - Monster.png",index:3,x:32*17,y:32*7,regY:9,radius:30,scale:3,type:"melee",health:50,damage:3,range:16,attack_speed:120,movement_speed:1,skills:null,gold:30,xp:50,drop_rate:20},
 		],1, 1,"Ridgefield Park",false,false,640,320,20,10,[32,32]));
 
-	maps.push(initMap([],false,[],[],1, 2,"Palisade Park",false,false,320,320,10,10,[160,160]));
 	/*
+	maps.push(initMap([],false,[],[],1, 2,"Palisade Park",false,false,320,320,10,10,[160,160]));
 	maps.push(initMap([],false,[],[],1, 3,"Leonia",false,false,320,320,10,10,[160,160]));
 	maps.push(initMap([],false,[],[],1, 4,"Fort Lee",false,false,320,320,10,10,[160,160]));
 	maps.push(initMap([],false,[],[],1, 5,"Edgewater",false,false,320,320,10,10,[160,160]));
