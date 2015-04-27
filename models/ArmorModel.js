@@ -1,9 +1,9 @@
-var PrototypeArmorSchema = new Schema({
+var ArmorSchema = new Schema({
 	primary_attribute:Number,	// 0:strength, 1:agility, 2:intelligence, 3:none
 	part:String,				// 0:head, 1:chest, 2:gloves, 3:boots, 4:belt, 5:cape, 6:ring, 7:necklace
 	name:String,
 	type:String,
-	icon:{
+	sprite:{
 		source:String,
 		cropX:Number,
 		cropY:Number,
@@ -15,7 +15,7 @@ var PrototypeArmorSchema = new Schema({
 	},
 }, { versionKey: false });
 
-PrototypeArmorSchema.methods.setMerchantItem = function(level, rating){
+ArmorSchema.methods.setMerchantItem = function(level, rating){
 	var armor = this.toObject();
 	armor._id = mongoose.Types.ObjectId();
 	armor.level = level;
@@ -124,4 +124,4 @@ PrototypeArmorSchema.methods.setMerchantItem = function(level, rating){
 	return armor;
 }
 
-PrototypeArmorModel = mongoose.model('PrototypeArmor', PrototypeArmorSchema);
+ArmorModel = mongoose.model('Armor', ArmorSchema);

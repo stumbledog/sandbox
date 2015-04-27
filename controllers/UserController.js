@@ -15,6 +15,7 @@ UserController = {
 		console.log("Create new user");
 		var user = new UserModel();
 		user.save(function(err, user){
+			console.log(user);
 			UnitController.createHero(user, function(hero){
 				this.loginById(user._id, req, res, callback);
 			}.bind(this));

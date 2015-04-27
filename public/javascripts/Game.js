@@ -19,7 +19,6 @@ var Game = (function(){
 
 		var manifest = [];
 		manifest.push({src:"assets/Graphics/System/Icons/IconSet.png", id:"icon"});
-//		manifest.push({src:"assets/Audio/BGM/14 Town of meeting.ogg", id:"town"});
 
 		manifest.push({src:user_builder.hero.sprite, id:user_builder.hero.sprite.split('/').pop()});
 		manifest.push({src:user_builder.hero.portrait, id:user_builder.hero.portrait.split('/').pop()});
@@ -80,6 +79,7 @@ var Game = (function(){
 		map_builder.npcs.forEach(function(npc){
 			manifest.push({src:npc.sprite, id:npc.sprite.split('/').pop()});
 		});
+
 		/*
 		if(map_builder.merchantable_items){
 			map_builder.merchantable_items.forEach(function(item){
@@ -149,7 +149,6 @@ var Game = (function(){
 				createEnemy(unit_builder);
 			});
 
-
 			ui_stage.initHeroUI(hero);
 			minimap_stage.initUnits(unit_stage.getNPCUnits());
 			minimap_stage.initUnits(unit_stage.getUnits());
@@ -160,8 +159,8 @@ var Game = (function(){
 			createjs.Sound.alternateExtensions = ["ogg"];
 			queue.installPlugin(createjs.Sound);
 			queue.addEventListener("complete", function(){
-				var bgm = createjs.Sound.play("bgm");
-				bgm.setLoop(true);
+				//var bgm = createjs.Sound.play("bgm");
+				//bgm.setLoop(true);
 			});
 
 
@@ -170,7 +169,6 @@ var Game = (function(){
 			}else if(map_builder.act === 1 && map_builder.chapter === 1){
 				queue.loadFile({id:"bgm", src:"assets/Audio/BGM/01 First battle.ogg"});
 			}
-
 
 			if(map_builder.act !== 0){
 				var index = difficulty_level;

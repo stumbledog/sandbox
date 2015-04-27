@@ -5,23 +5,29 @@ UnitController = {
 	},
 	loadRecruitableUnit:function(level, callback){
 		var units = [];
-		PrototypeFollowerModel.find().exec(function(err, prototype_followers){
-			prototype_followers.forEach(function(prototype_follower){
-				units.push(prototype_follower.setRecruitableFollower(level));
+		FollowerModel.find().exec(function(err, followers){
+			followers.forEach(function(follower){
+				units.push(follower.setRecruitableFollower(level));
 			});
 			callback(err, units);
 		});
 	},
 	createHero:function(user, callback){
 		console.log("Create Hero");
-		PrototypeHeroModel.findOne({name:"Albert"}, function(err, prototype_hero){
-			prototype_hero.initHero(function(hero){
-				console.log(hero);
-				user.hero = hero;
+		UnitModel.findOne({name:"Albert"}, function(err, hero){
+			user.hero.model = hero._id;
+			user.save(function(){
+				var foo = user.populate("hero.model").execPopulate();
+				console.log(foo);
+				callback(hero);
+			});
+			/*
+			hero.initHero(function(hero){
+				user.hero.model = hero._id;
 				user.save(function(){
 					callback(hero);
 				});
-			}.bind(this));
+			}.bind(this));*/
 		}.bind(this));
 	},
 	getRecruitableUnit:function(){

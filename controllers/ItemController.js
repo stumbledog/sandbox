@@ -1,19 +1,19 @@
 ItemController = {
 	loadMerchantItem:function(callback){
-		PrototypeWeaponModel.find({}, callback);
+		WeaponModel.find({}, callback);
 	},
 	generateMerchantItem:function(level, callback){
 		var items = [];
-		PrototypeWeaponModel.find().exec(function(err, prototype_weapons){
+		WeaponModel.find().exec(function(err, weapons){
 			for(var i = 0 ; i < 18 ; i++){
-				var prototype_weapon = prototype_weapons[Math.floor(Math.random() * prototype_weapons.length)];
-				items.push(prototype_weapon.setMerchantItem(level));
+				var weapon = weapons[Math.floor(Math.random() * weapons.length)];
+				items.push(weapon.setMerchantItem(level));
 			}
 		}).then(function(){
-			PrototypeArmorModel.find({}, function(err, prototype_armors){
+			ArmorModel.find({}, function(err, armors){
 				for(var i = 0 ; i < 18 ; i++){
-					var prototype_armor = prototype_armors[Math.floor(Math.random() * prototype_armors.length)];
-					items.push(prototype_armor.setMerchantItem(level));
+					var armor = armors[Math.floor(Math.random() * armors.length)];
+					items.push(armor.setMerchantItem(level));
 				}	
 			});
 		}).then(function(){
@@ -27,14 +27,14 @@ ItemController = {
 	},
 	dropItem:function(level, rating, callback){
 		if(Math.random() > 0.8){
-			PrototypeWeaponModel.find({}, function(err, prototype_weapons){
-				var prototype_weapon = prototype_weapons[Math.floor(Math.random() * prototype_weapons.length)];
-				callback(prototype_weapon.setMerchantItem(level, rating));
+			WeaponModel.find({}, function(err, weapons){
+				var weapon = weapons[Math.floor(Math.random() * weapons.length)];
+				callback(weapon.setMerchantItem(level, rating));
 			});
 		}else{
-			PrototypeArmorModel.find({}, function(err, prototype_armors){
-				var prototype_armor = prototype_armors[Math.floor(Math.random() * prototype_armors.length)];
-				callback(prototype_armor.setMerchantItem(level, rating));
+			ArmorModel.find({}, function(err, armors){
+				var armor = armors[Math.floor(Math.random() * armors.length)];
+				callback(armor.setMerchantItem(level, rating));
 			});
 		}
 	},

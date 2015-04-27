@@ -1,21 +1,15 @@
-var PrototypeWeaponSchema = new Schema({
+var WeaponSchema = new Schema({
 	primary_attribute:Number,	// 0:strength, 1:agility, 2:intelligence, 3:none
 	part:{type:String, default:"weapon"},
 	hand:Number,
 	type:String,	// weapon
 	attack_type:String,	// melee, range
 	name:String,
+	min_damage:Number,
+	max_damage:Number,
+	attack_speed:Number,
+	range:Number,
 	sprite:{
-		source:String,
-		cropX:Number,
-		cropY:Number,
-		width:Number,
-		height:Number,
-		regX:Number,
-		regY:Number,
-		scale:Number,
-	},
-	icon:{
 		source:String,
 		cropX:Number,
 		cropY:Number,
@@ -36,13 +30,9 @@ var PrototypeWeaponSchema = new Schema({
 		scale:Number,
 		spin:Number,
 	},
-	min_damage:Number,
-	max_damage:Number,
-	attack_speed:Number,
-	range:Number,
 }, { versionKey: false });
 
-PrototypeWeaponSchema.methods.setMerchantItem = function(level, rating){
+WeaponSchema.methods.setMerchantItem = function(level, rating){
 	var weapon = this.toObject();
 	weapon._id = mongoose.Types.ObjectId();
 	weapon.level = level;
@@ -119,4 +109,4 @@ PrototypeWeaponSchema.methods.setMerchantItem = function(level, rating){
 	return weapon;
 }
 
-PrototypeWeaponModel = mongoose.model('PrototypeWeapon', PrototypeWeaponSchema);
+WeaponModel = mongoose.model('Weapon', WeaponSchema);

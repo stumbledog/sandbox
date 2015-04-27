@@ -36,9 +36,25 @@ var FollowerSchema = new Schema({
 
 var UserSchema = new Schema({
 	name:String,
-	gold:{type:Number, default:10000},
+	gold:{type:Number, default:50},
 	hero:{
-		name:String,
+		model:{type:Schema.Types.ObjectId, ref:"Unit"},
+		level:{type:Number, default:1},
+		exp:{type:Number, default:0},
+		equipments:{
+			head:{type:Schema.Types.ObjectId, ref:"Item", default:null},
+			chest:{type:Schema.Types.ObjectId, ref:"Item", default:null},
+			gloves:{type:Schema.Types.ObjectId, ref:"Item", default:null},
+			boots:{type:Schema.Types.ObjectId, ref:"Item", default:null},
+			belt:{type:Schema.Types.ObjectId, ref:"Item", default:null},
+			cape:{type:Schema.Types.ObjectId, ref:"Item", default:null},
+			necklace:{type:Schema.Types.ObjectId, ref:"Item", default:null},
+			right_ring:{type:Schema.Types.ObjectId, ref:"Item", default:null},
+			left_ring:{type:Schema.Types.ObjectId, ref:"Item", default:null},
+			main_hand:{type:Schema.Types.ObjectId, ref:"Item", default:null},
+			off_hand:{type:Schema.Types.ObjectId, ref:"Item", default:null},
+		}
+/*		name:String,
 		primary_attribute:String,
 		strength:Number,
 		agility:Number,
@@ -72,6 +88,7 @@ var UserSchema = new Schema({
 			main_hand:Schema.Types.Mixed,
 			off_hand:Schema.Types.Mixed,
 		}
+*/
 	},
 	followers:[FollowerSchema],
 	inventory:{

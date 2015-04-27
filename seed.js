@@ -1,43 +1,204 @@
 mongoose = require('mongoose');
 Schema = mongoose.Schema;
 fs = require('fs');
-require('./models/PrototypeWeaponModel');
-require('./models/PrototypeArmorModel');
+require('./models/WeaponModel');
+require('./models/ArmorModel');
 require('./models/PrototypeConsumableItemModel');
-require('./models/PrototypeHeroModel');
+require('./models/UnitModel');
 require('./models/MapModel');
 require('./models/UserModel');
-
+require('./models/ActiveSkillModel');
+require('./models/PassiveSkillModel');
+require('./models/ItemModel');
+	
 mongoose.connect('mongodb://localhost/condottiere');
 
 var connection = mongoose.connection;
 connection.on("error", console.error.bind(console, 'connection error:'));
 connection.once("open", function(){
 	MapModel.remove().exec().then(function(count){
-		console.log(count + " maps are deleted");
 		return UserModel.remove().exec();
 	}).then(function(count){
-		console.log(count + " users are deleted");
-		return PrototypeWeaponModel.remove().exec();
+		return WeaponModel.remove().exec();
 	}).then(function(count){
-		console.log(count + " weapons are deleted");
-		return PrototypeArmorModel.remove().exec();
+		return ActiveSkillModel.remove().exec();
 	}).then(function(count){
-		console.log(count + " armors are deleted");
+		return PassiveSkillModel.remove().exec();
+	}).then(function(count){
+		return ArmorModel.remove().exec();
+	}).then(function(count){
 		return PrototypeConsumableItemModel.remove().exec();
 	}).then(function(count){
-		console.log(count + " consumable items are deleted");
-		return PrototypeHeroModel.remove().exec();
+		return ItemModel.remove().exec();
 	}).then(function(count){
-		console.log(count + " Heroes are deleted");
-		savePrototypeUnit();
+		return UnitModel.remove().exec();
+	}).then(function(count){
+		saveUnit();
 	});
 });
 
-function savePrototypeUnit(){
-	var units = [];
+function saveUnit(){
+	
+	var defend = new PassiveSkillModel({
+		name:"Defend",
+		description:"Allows to equip shields in off-hand",
+		key:"defend",
+	});
 
-	units.push(new PrototypeHeroModel({name:"Albert", primary_attribute:"strength", sprite:"assets/Graphics/Characters/01 - Hero.png", portrait:"assets/Graphics/Faces/ds_face01-02.png", index:0, resource_type:"fury", 
+	var endurance = new PassiveSkillModel({
+		name:"Endurance",
+		description:"Reduces incoming damage by 10%",
+		key:"endurance",		
+	});
+
+	var taunt = new PassiveSkillModel({
+		name:"Taunt",
+		description:"Normal attack taunts its target",
+		key:"taunt",
+	});
+
+	var charge = new ActiveSkillModel({
+		name:"Charge",
+		description:"Charges and deal 300% damage to enemies in its path.",
+		key:"q",
+		target:false,
+		range:120,
+		radius:30,
+		damage:3,
+		cost:15,
+		cooldown:10,
+		icon_source:"assets/Graphics/icons/50x50/518.png",
+	});
+
+	var shockwave = new ActiveSkillModel({
+		name:"Shockwave",
+		description:"Sends a wave that deals 200% damage to enemies up to 100 range in a cone.",
+		key:"w",
+		target:false,
+		radius:100,
+		angle:90,
+		damage:2,
+		cost:20,
+		cooldown:6,
+		icon_source:"assets/Graphics/icons/50x50/514.png",
+		animation:{
+			scale:0.5,
+			width:163,
+			height:167,
+			regX:81,
+			regY:167,
+			images:[
+				"assets/Graphics/effects/shooter_fx/lava_shot_impact1.png",
+				"assets/Graphics/effects/shooter_fx/lava_shot_impact2.png",
+				"assets/Graphics/effects/shooter_fx/lava_shot_impact3.png",
+				"assets/Graphics/effects/shooter_fx/lava_shot_impact4.png",
+			]
+		}
+	});
+
+	var last_defender = new ActiveSkillModel({
+		name:"Last Defender",
+		description:"Reduces damage taken by 20% for 12 sec and increases Health regeneration by 50%",
+		key:"e",
+		target:false,
+		cost:30,
+		cooldown:30,
+		duration:12000,
+		icon_source:"assets/Graphics/icons/50x50/525.png",
+		animation:{
+			scale:0.5,
+			rotate:-45,
+			width:84,
+			height:79,
+			regX:42,
+			regY:40,
+			images:[
+				"assets/Graphics/effects/shooter_fx/lava_ball_fx1.png",
+				"assets/Graphics/effects/shooter_fx/lava_ball_fx2.png",
+				"assets/Graphics/effects/shooter_fx/lava_ball_fx3.png",
+				"assets/Graphics/effects/shooter_fx/lava_ball_fx4.png",
+			]
+		}
+	});
+
+	var judgement = new ActiveSkillModel({
+		name:"Judgement",
+		description:"Sours up to the sky, deals 1000% damage to all enemies within 60 range, and knocks back them.",
+		key:"r",
+		range:120,
+		radius:60,
+		angle:60,
+		damage:10,
+		cost:40,
+		cooldown:50,
+		icon_source:"assets/Graphics/icons/50x50/529.png",
+		animation:{
+			scale:0.5,
+			width:232,
+			height:218,
+			regX:116,
+			regY:99,
+			images:[
+				"assets/Graphics/effects/explosion_0/Oexplosiona_0.png",
+				"assets/Graphics/effects/explosion_0/Oexplosiona_1.png",
+				"assets/Graphics/effects/explosion_0/Oexplosiona_2.png",
+				"assets/Graphics/effects/explosion_0/Oexplosiona_3.png",
+				"assets/Graphics/effects/explosion_0/Oexplosiona_4.png",
+				"assets/Graphics/effects/explosion_0/Oexplosiona_5.png",
+				"assets/Graphics/effects/explosion_0/Oexplosiona_6.png",
+				"assets/Graphics/effects/explosion_0/Oexplosiona_7.png",
+				"assets/Graphics/effects/explosion_0/Oexplosiona_8.png",
+				"assets/Graphics/effects/explosion_0/Oexplosiona_9.png",
+			]
+		}
+	});
+
+	defend.save();
+	endurance.save();
+	taunt.save();
+
+	var passive_skills = [];
+	passive_skills.push(defend._id);
+	passive_skills.push(endurance._id);
+	passive_skills.push(taunt._id);
+
+	charge.save();
+	shockwave.save();
+	last_defender.save();
+	judgement.save();
+
+	var active_skills = [];
+	active_skills.push(charge._id);
+	active_skills.push(shockwave._id);
+	active_skills.push(last_defender._id);
+	active_skills.push(judgement._id);
+
+	var hero = new UnitModel({
+		name:"Albert",
+		type:"hero",
+		primary_attribute:"strength",
+		strength:2,
+		agility:1,
+		intelligence:1,
+		stamina:2,
+		resource_type:"fury",
+		sprite:"assets/Graphics/Characters/01 - Hero.png", 
+		portrait:"assets/Graphics/Faces/ds_face01-02.png", 
+		cropX:0, 
+		cropY:0, 
+		width:23, 
+		height:32,
+		passive_skills:passive_skills,
+		active_skills:active_skills,
+	});
+
+	hero.save(function(){
+		saveMap();
+	});
+
+	/*
+	var units = [];
+	units.push(new HeroModel({name:"Albert", primary_attribute:"strength", sprite:"assets/Graphics/Characters/01 - Hero.png", portrait:"assets/Graphics/Faces/ds_face01-02.png", index:0, resource_type:"fury", 
 		passive_skills:[
 			{
 				name:"Defend",
@@ -181,11 +342,12 @@ function savePrototypeUnit(){
 		unit.save(function(){
 			count++;
 			if(count === units.length){
-				console.log(count + " prototype units are created");
+				console.log(count + " units are created");
 				saveMap();
 			}
 		});
 	});
+*/
 }
 
 function saveMap(){
@@ -595,175 +757,164 @@ function saveMap(){
 function saveItems(){
 	var items = [];
 
-	items.push(new PrototypeWeaponModel({primary_attribute:1, hand:1, type:"weapon", attack_type:"melee", name:"Dagger",
+	items.push(new WeaponModel({primary_attribute:1, hand:1, type:"weapon", attack_type:"melee", name:"Dagger",
+		min_damage:1.5,max_damage:3,range:16,attack_speed:60,
 		sprite:{cropX:245,cropY:102,width:13,height:14,regX:9,regY:9,scale:0.8},
-		icon:{cropX:245,cropY:102,width:13,height:14,regX:9,regY:9,scale:0.8},
-		min_damage:1.5,max_damage:3,range:16,attack_speed:60,
 	}));
 
-	items.push(new PrototypeWeaponModel({primary_attribute:0, hand:1, type:"weapon", attack_type:"melee", name:"Long\nSword",
+	items.push(new WeaponModel({primary_attribute:0, hand:1, type:"weapon", attack_type:"melee", name:"Long\nSword",
+		min_damage:2,max_damage:4,range:16,attack_speed:75,
 		sprite:{cropX:267,cropY:100,width:16,height:16,regX:12,regY:12,scale:0.8},
-		icon:{cropX:267,cropY:100,width:16,height:16,regX:12,regY:12,scale:0.8},
-		min_damage:2,max_damage:4,range:16,attack_speed:75,
 	}));
 
-	items.push(new PrototypeWeaponModel({primary_attribute:0, hand:2, type:"weapon", attack_type:"melee", name:"Great\nSword",
+	items.push(new WeaponModel({primary_attribute:0, hand:2, type:"weapon", attack_type:"melee", name:"Great\nSword",
+		min_damage:4,max_damage:8,range:32,attack_speed:90,
 		sprite:{cropX:292,cropY:100,width:16,height:16,regX:12,regY:12,scale:0.8},
-		icon:{cropX:292,cropY:100,width:16,height:16,regX:12,regY:12,scale:0.8},
-		min_damage:4,max_damage:8,range:32,attack_speed:90,
 	}));
 
-	items.push(new PrototypeWeaponModel({primary_attribute:0, hand:1, type:"weapon", attack_type:"melee", name:"Masamune",
-		sprite:{cropX:364,cropY:100,width:16,height:16,regX:12,regY:12,scale:0.8},
-		icon:{cropX:364,cropY:100,width:16,height:16,regX:12,regY:12,scale:0.8},
+	items.push(new WeaponModel({primary_attribute:0, hand:1, type:"weapon", attack_type:"melee", name:"Masamune",
 		min_damage:2,max_damage:4,range:16,attack_speed:75,
+		sprite:{cropX:364,cropY:100,width:16,height:16,regX:12,regY:12,scale:0.8},
 	}));
 
-	items.push(new PrototypeWeaponModel({primary_attribute:0, hand:2, type:"weapon", attack_type:"melee", name:"Spear",
-		sprite:{cropX:6,cropY:124,width:16,height:16,regX:12,regY:12,scale:0.8},
-		icon:{cropX:6,cropY:124,width:16,height:16,regX:12,regY:12,scale:0.8},
+	items.push(new WeaponModel({primary_attribute:0, hand:2, type:"weapon", attack_type:"melee", name:"Spear",
 		min_damage:4,max_damage:8,range:32,attack_speed:90,
+		sprite:{cropX:6,cropY:124,width:16,height:16,regX:12,regY:12,scale:0.8},
 	}));
 
-	items.push(new PrototypeWeaponModel({primary_attribute:0, hand:1, type:"weapon", attack_type:"melee", name:"Battle Axe",
+	items.push(new WeaponModel({primary_attribute:0, hand:1, type:"weapon", attack_type:"melee", name:"Battle Axe",
+		min_damage:3,max_damage:6,range:16,attack_speed:90,
 		sprite:{cropX:29,cropY:125,width:16,height:14,regX:12,regY:9,scale:0.8},
-		icon:{cropX:29,cropY:125,width:16,height:14,regX:12,regY:9,scale:0.8},
-		min_damage:3,max_damage:6,range:16,attack_speed:90,
 	}));
 
-	items.push(new PrototypeWeaponModel({primary_attribute:0, hand:1, type:"weapon", attack_type:"melee", name:"Hammer",
+	items.push(new WeaponModel({primary_attribute:0, hand:1, type:"weapon", attack_type:"melee", name:"Hammer",
+		min_damage:3,max_damage:6,range:16,attack_speed:90,
 		sprite:{cropX:51,cropY:124,width:16,height:16,regX:10,regY:10,scale:0.8},
-		icon:{cropX:51,cropY:124,width:16,height:16,regX:10,regY:10,scale:0.8},
-		min_damage:3,max_damage:6,range:16,attack_speed:90,
 	}));
 
-	items.push(new PrototypeWeaponModel({primary_attribute:1, hand:1, type:"weapon", attack_type:"melee", name:"Claw",
-		sprite:{cropX:77,cropY:124,width:15,height:15,regX:10,regY:10,scale:0.8},
-		icon:{cropX:77,cropY:124,width:15,height:15,regX:10,regY:10,scale:0.8},
+	items.push(new WeaponModel({primary_attribute:1, hand:1, type:"weapon", attack_type:"melee", name:"Claw",
 		min_damage:1.5,max_damage:3,range:16,attack_speed:60,
+		sprite:{cropX:77,cropY:124,width:15,height:15,regX:10,regY:10,scale:0.8},
 	}));
 
-	items.push(new PrototypeWeaponModel({primary_attribute:1, hand:2, type:"weapon", attack_type:"range", name:"boomerang",
-		sprite:{cropX:175,cropY:125,width:13,height:16,regX:6,regY:8,scale:0.8},
-		icon:{cropX:175,cropY:125,width:13,height:16,regX:6,regY:8,scale:0.8},
-		projectile:{cropX:175,cropY:126,width:13,height:14,regX:6,regY:8,scale:0.8, spin:10},
+	items.push(new WeaponModel({primary_attribute:1, hand:2, type:"weapon", attack_type:"range", name:"boomerang",
 		min_damage:3,max_damage:6,range:60,attack_speed:75,
+		sprite:{cropX:175,cropY:125,width:13,height:16,regX:6,regY:8,scale:0.8},
+		projectile:{cropX:175,cropY:126,width:13,height:14,regX:6,regY:8,scale:0.8, spin:10},
 	}));
 
-	items.push(new PrototypeWeaponModel({primary_attribute:2, hand:2, type:"weapon", attack_type:"range", name:"Wand",
-		sprite:{cropX:196,cropY:125,width:16,height:16,regX:4,regY:12,scale:0.8},
-		icon:{cropX:196,cropY:125,width:16,height:16,regX:4,regY:12,scale:0.8},
-		projectile:{cropX:245,cropY:79,width:14,height:14,regX:7,regY:7,scale:0.8, spin:0},
+	items.push(new WeaponModel({primary_attribute:2, hand:2, type:"weapon", attack_type:"range", name:"Wand",
 		min_damage:3,max_damage:6,range:80,attack_speed:75,
+		sprite:{cropX:196,cropY:125,width:16,height:16,regX:4,regY:12,scale:0.8},
+		projectile:{cropX:245,cropY:79,width:14,height:14,regX:7,regY:7,scale:0.8, spin:0},
 	}));
 
-	items.push(new PrototypeWeaponModel({primary_attribute:2, hand:2, type:"weapon", attack_type:"range", name:"Staff",
-		sprite:{cropX:244,cropY:125,width:16,height:16,regX:4,regY:12,scale:0.8},
-		icon:{cropX:244,cropY:125,width:16,height:16,regX:4,regY:12,scale:0.8},
-		projectile:{cropX:269,cropY:79,width:14,height:14,regX:7,regY:7,scale:0.8, spin:0},
+	items.push(new WeaponModel({primary_attribute:2, hand:2, type:"weapon", attack_type:"range", name:"Staff",
 		min_damage:4,max_damage:8,range:80,attack_speed:90,
+		sprite:{cropX:244,cropY:125,width:16,height:16,regX:4,regY:12,scale:0.8},
+		projectile:{cropX:269,cropY:79,width:14,height:14,regX:7,regY:7,scale:0.8, spin:0},
 	}));
 
-	items.push(new PrototypeArmorModel({primary_attribute:1, part:"head", type:"armor", name:"Leather\nHelm",
-		icon:{cropX:220,cropY:150,width:16,height:13,regX:10,regY:10,scale:0.8},
+	items.push(new ArmorModel({primary_attribute:1, part:"head", type:"armor", name:"Leather\nHelm",
+		sprite:{cropX:220,cropY:150,width:16,height:13,regX:10,regY:10,scale:0.8},
 	}));
 
-	items.push(new PrototypeArmorModel({primary_attribute:0, part:"head", type:"armor", name:"Iron Helm",
-		icon:{cropX:244,cropY:149,width:16,height:15,regX:10,regY:10,scale:0.8},
+	items.push(new ArmorModel({primary_attribute:0, part:"head", type:"armor", name:"Iron Helm",
+		sprite:{cropX:244,cropY:149,width:16,height:15,regX:10,regY:10,scale:0.8},
 	}));
 
-	items.push(new PrototypeArmorModel({primary_attribute:0, part:"head", type:"armor", name:"Plate Helm",
-		icon:{cropX:269,cropY:148,width:16,height:16,regX:10,regY:10,scale:0.8},
+	items.push(new ArmorModel({primary_attribute:0, part:"head", type:"armor", name:"Plate Helm",
+		sprite:{cropX:269,cropY:148,width:16,height:16,regX:10,regY:10,scale:0.8},
 	}));
 
-	items.push(new PrototypeArmorModel({primary_attribute:2, part:"head", type:"armor", name:"Hood",
-		icon:{cropX:292,cropY:149,width:16,height:15,regX:10,regY:10,scale:0.8},
+	items.push(new ArmorModel({primary_attribute:2, part:"head", type:"armor", name:"Hood",
+		sprite:{cropX:292,cropY:149,width:16,height:15,regX:10,regY:10,scale:0.8},
 	}));
 
-	items.push(new PrototypeArmorModel({primary_attribute:1, part:"chest", type:"armor", name:"Tunic",
-		icon:{cropX:292,cropY:125,width:16,height:16,regX:10,regY:10,scale:0.8},
+	items.push(new ArmorModel({primary_attribute:1, part:"chest", type:"armor", name:"Tunic",
+		sprite:{cropX:292,cropY:125,width:16,height:16,regX:10,regY:10,scale:0.8},
 	}));
 
-	items.push(new PrototypeArmorModel({primary_attribute:1, part:"chest", type:"armor", name:"Chestguard",
-		icon:{cropX:316,cropY:124,width:16,height:15,regX:10,regY:10,scale:0.8},
+	items.push(new ArmorModel({primary_attribute:1, part:"chest", type:"armor", name:"Chestguard",
+		sprite:{cropX:316,cropY:124,width:16,height:15,regX:10,regY:10,scale:0.8},
 	}));
 
-	items.push(new PrototypeArmorModel({primary_attribute:0, part:"chest", type:"armor", name:"Breastplate",
-		icon:{cropX:341,cropY:125,width:16,height:16,regX:10,regY:10,scale:0.8},
+	items.push(new ArmorModel({primary_attribute:0, part:"chest", type:"armor", name:"Breastplate",
+		sprite:{cropX:341,cropY:125,width:16,height:16,regX:10,regY:10,scale:0.8},
 	}));
 
-	items.push(new PrototypeArmorModel({primary_attribute:0, part:"chest", type:"armor", name:"Chestplate",
-		icon:{cropX:365,cropY:126,width:16,height:16,regX:10,regY:10,scale:0.8},
+	items.push(new ArmorModel({primary_attribute:0, part:"chest", type:"armor", name:"Chestplate",
+		sprite:{cropX:365,cropY:126,width:16,height:16,regX:10,regY:10,scale:0.8},
 	}));
 
-	items.push(new PrototypeArmorModel({primary_attribute:2, part:"chest", type:"armor", name:"Robe",
-		icon:{cropX:77,cropY:150,width:16,height:16,regX:10,regY:10,scale:0.8},
+	items.push(new ArmorModel({primary_attribute:2, part:"chest", type:"armor", name:"Robe",
+		sprite:{cropX:77,cropY:150,width:16,height:16,regX:10,regY:10,scale:0.8},
 	}));
 
-	items.push(new PrototypeArmorModel({primary_attribute:2, part:"chest", type:"armor", name:"Raiment",
-		icon:{cropX:123,cropY:149,width:16,height:16,regX:10,regY:10,scale:0.8},
+	items.push(new ArmorModel({primary_attribute:2, part:"chest", type:"armor", name:"Raiment",
+		sprite:{cropX:123,cropY:149,width:16,height:16,regX:10,regY:10,scale:0.8},
 	}));
 
-	items.push(new PrototypeArmorModel({primary_attribute:3, part:"gloves", type:"armor", name:"Groves",
-		icon:{cropX:125,cropY:126,width:14,height:16,regX:10,regY:10,scale:0.8},
+	items.push(new ArmorModel({primary_attribute:3, part:"gloves", type:"armor", name:"Groves",
+		sprite:{cropX:125,cropY:126,width:14,height:16,regX:10,regY:10,scale:0.8},
 	}));
 
-	items.push(new PrototypeArmorModel({primary_attribute:3, part:"gloves", type:"armor", name:"Gauntlets",
-		icon:{cropX:148,cropY:126,width:15,height:16,regX:10,regY:10,scale:0.8},
+	items.push(new ArmorModel({primary_attribute:3, part:"gloves", type:"armor", name:"Gauntlets",
+		sprite:{cropX:148,cropY:126,width:15,height:16,regX:10,regY:10,scale:0.8},
 	}));
 
-	items.push(new PrototypeArmorModel({primary_attribute:3, part:"boots", type:"armor", name:"Boots",
-		icon:{cropX:173,cropY:172,width:15,height:16,regX:10,regY:10,scale:0.8},
+	items.push(new ArmorModel({primary_attribute:3, part:"boots", type:"armor", name:"Boots",
+		sprite:{cropX:173,cropY:172,width:15,height:16,regX:10,regY:10,scale:0.8},
 	}));
 
-	items.push(new PrototypeArmorModel({primary_attribute:3, part:"boots", type:"armor", name:"Boots",
-		icon:{cropX:197,cropY:173,width:16,height:16,regX:10,regY:10,scale:0.8},
+	items.push(new ArmorModel({primary_attribute:3, part:"boots", type:"armor", name:"Boots",
+		sprite:{cropX:197,cropY:173,width:16,height:16,regX:10,regY:10,scale:0.8},
 	}));
 
-	items.push(new PrototypeArmorModel({primary_attribute:3, part:"belt", type:"armor", name:"Belt",
-		icon:{cropX:340,cropY:149,width:16,height:15,regX:10,regY:10,scale:0.8},
+	items.push(new ArmorModel({primary_attribute:3, part:"belt", type:"armor", name:"Belt",
+		sprite:{cropX:340,cropY:149,width:16,height:15,regX:10,regY:10,scale:0.8},
 	}));
 
-	items.push(new PrototypeArmorModel({primary_attribute:3, part:"cape", type:"armor", name:"Cape",
-		icon:{cropX:4,cropY:173,width:16,height:16,regX:10,regY:10,scale:0.8},
+	items.push(new ArmorModel({primary_attribute:3, part:"cape", type:"armor", name:"Cape",
+		sprite:{cropX:4,cropY:173,width:16,height:16,regX:10,regY:10,scale:0.8},
 	}));
 
-	items.push(new PrototypeArmorModel({primary_attribute:3, part:"cape", type:"armor", name:"Cape",
-		icon:{cropX:28,cropY:173,width:16,height:16,regX:10,regY:10,scale:0.8},
+	items.push(new ArmorModel({primary_attribute:3, part:"cape", type:"armor", name:"Cape",
+		sprite:{cropX:28,cropY:173,width:16,height:16,regX:10,regY:10,scale:0.8},
 	}));
 
-	items.push(new PrototypeArmorModel({primary_attribute:3, part:"cape", type:"armor", name:"Cape",
-		icon:{cropX:52,cropY:173,width:16,height:16,regX:10,regY:10,scale:0.8},
+	items.push(new ArmorModel({primary_attribute:3, part:"cape", type:"armor", name:"Cape",
+		sprite:{cropX:52,cropY:173,width:16,height:16,regX:10,regY:10,scale:0.8},
 	}));
 
-	items.push(new PrototypeArmorModel({primary_attribute:0, part:"shield", type:"armor", name:"Shield",
-		icon:{cropX:149,cropY:148,width:14,height:16,regX:10,regY:10,scale:0.8},
+	items.push(new ArmorModel({primary_attribute:0, part:"shield", type:"armor", name:"Shield",
+		sprite:{cropX:149,cropY:148,width:14,height:16,regX:10,regY:10,scale:0.8},
 	}));
 
-	items.push(new PrototypeArmorModel({primary_attribute:2, part:"shield", type:"armor", name:"Shield",
-		icon:{cropX:173,cropY:148,width:14,height:16,regX:10,regY:10,scale:0.8},
+	items.push(new ArmorModel({primary_attribute:2, part:"shield", type:"armor", name:"Shield",
+		sprite:{cropX:173,cropY:148,width:14,height:16,regX:10,regY:10,scale:0.8},
 	}));
 
-	items.push(new PrototypeArmorModel({primary_attribute:0, part:"shield", type:"armor", name:"Shield",
-		icon:{cropX:198,cropY:148,width:13,height:16,regX:10,regY:10,scale:0.8},
+	items.push(new ArmorModel({primary_attribute:0, part:"shield", type:"armor", name:"Shield",
+		sprite:{cropX:198,cropY:148,width:13,height:16,regX:10,regY:10,scale:0.8},
 	}));
 
-	items.push(new PrototypeArmorModel({primary_attribute:3, part:"necklace", type:"armor", name:"Necklace",
-		icon:{cropX:148,cropY:172,width:16,height:15,regX:10,regY:10,scale:0.8},
+	items.push(new ArmorModel({primary_attribute:3, part:"necklace", type:"armor", name:"Necklace",
+		sprite:{cropX:148,cropY:172,width:16,height:15,regX:10,regY:10,scale:0.8},
 	}));
 
-	items.push(new PrototypeArmorModel({primary_attribute:3, part:"ring", type:"armor", name:"Ring",
-		icon:{cropX:78,cropY:175,width:12,height:12,regX:10,regY:10,scale:0.8},
+	items.push(new ArmorModel({primary_attribute:3, part:"ring", type:"armor", name:"Ring",
+		sprite:{cropX:78,cropY:175,width:12,height:12,regX:10,regY:10,scale:0.8},
 	}));
 
-	items.push(new PrototypeArmorModel({primary_attribute:3, part:"ring", type:"armor", name:"Ring",
-		icon:{cropX:103,cropY:174,width:11,height:10,regX:10,regY:10,scale:0.8},
+	items.push(new ArmorModel({primary_attribute:3, part:"ring", type:"armor", name:"Ring",
+		sprite:{cropX:103,cropY:174,width:11,height:10,regX:10,regY:10,scale:0.8},
 	}));
-
+	/*
 	items.push(new PrototypeConsumableItemModel({type:"consumable", name:"Health\nPotion", rating:1, health:50, cooldown:10,
 		icon:{cropX:220,cropY:173,width:13,height:16,regX:10,regY:10,scale:0.8},
 	}));
-
+	*/
 	var count = 0;
 	items.forEach(function(item){
 		item.save(function(){
@@ -776,13 +927,13 @@ function saveItems(){
 	});
 }
 
-function initPrototypeUnit(id, name, strength, dexterity, intelligence, vitality,
+function initUnit(id, name, strength, dexterity, intelligence, vitality,
 	sprite, portrait, index, level, exp, resource_type, resource,
 	max_resource, health, damage, attack_speed, armor,
 	movement_speed, critical_rate, critical_damage, radius, aggro_radius,
 	range, type, team, health_color, damage_color,
 	regX, regY, recruitable){
-	return new PrototypeUnitModel({
+	return new UnitModel({
 		_id:id,
 		name:name,
 		sprite:sprite,
