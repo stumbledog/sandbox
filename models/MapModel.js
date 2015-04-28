@@ -23,8 +23,10 @@ var RecrutableUnitSchema = new Schema({
 
 var NPCSchema = new Schema({
 	name:String,
-	sprite:String,
-	index:Number,
+	model:{
+		sprite:String,
+		index:Number,
+	},
 	type:String,
 	x:Number,
 	y:Number,

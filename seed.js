@@ -1,8 +1,8 @@
 mongoose = require('mongoose');
 Schema = mongoose.Schema;
 fs = require('fs');
-require('./models/WeaponModel');
-require('./models/ArmorModel');
+require('./models/MerchantWeaponModel');
+require('./models/MerchantArmorModel');
 require('./models/PrototypeConsumableItemModel');
 require('./models/UnitModel');
 require('./models/MapModel');
@@ -19,13 +19,13 @@ connection.once("open", function(){
 	MapModel.remove().exec().then(function(count){
 		return UserModel.remove().exec();
 	}).then(function(count){
-		return WeaponModel.remove().exec();
+		return MerchantWeaponModel.remove().exec();
 	}).then(function(count){
 		return ActiveSkillModel.remove().exec();
 	}).then(function(count){
 		return PassiveSkillModel.remove().exec();
 	}).then(function(count){
-		return ArmorModel.remove().exec();
+		return MerchantArmorModel.remove().exec();
 	}).then(function(count){
 		return PrototypeConsumableItemModel.remove().exec();
 	}).then(function(count){
@@ -182,12 +182,9 @@ function saveUnit(){
 		intelligence:1,
 		stamina:2,
 		resource_type:"fury",
-		sprite:"assets/Graphics/Characters/01 - Hero.png", 
-		portrait:"assets/Graphics/Faces/ds_face01-02.png", 
-		cropX:0, 
-		cropY:0, 
-		width:23, 
-		height:32,
+		sprite:"hero", 
+		portrait:"portrait1", 
+		index:0,
 		passive_skills:passive_skills,
 		active_skills:active_skills,
 	});
@@ -405,8 +402,8 @@ function saveMap(){
 		],
 		true,
 		[
-			{name:"Merchant",		sprite:"assets/Graphics/Characters/12 - Merchant.png",	index:0, type:"merchant", x:32*4, y:32*4},
-			{name:"Recruiter",		sprite:"assets/Graphics/Characters/12 - Merchant.png",	index:1, type:"recruiter", x:32*6, y:32*4, 
+			{name:"Merchant",	model:{sprite:"merchant", index:0}, type:"merchant", x:32*4, y:32*4},
+			{name:"Recruiter",	model:{sprite:"merchant", index:1}, type:"recruiter", x:32*6, y:32*4, 
 				recruitable_units:[
 					{
 						character_class:"Fighter",
@@ -627,7 +624,7 @@ function saveMap(){
 				]
 			},
 			//{name:"Blacksmith",		sprite:"assets/Graphics/Characters/12 - Merchant.png",	index:2, type:"blacksmith", x:32*7, y:32*7},
-			{name:"Battlemaster",	sprite:"assets/Graphics/Characters/23 - Soldier.png",	index:0, type:"battlemaster", x:32*3, y:32*7},
+			{name:"Battlemaster", model:{sprite:"soldier", index:0}, type:"battlemaster", x:32*3, y:32*7},
 		],
 		[],0,0,"Basecamp",true,true,320,320,10,10,[160,160]
 	));
@@ -757,157 +754,157 @@ function saveMap(){
 function saveItems(){
 	var items = [];
 
-	items.push(new WeaponModel({primary_attribute:1, hand:1, type:"weapon", attack_type:"melee", name:"Dagger",
+	items.push(new MerchantWeaponModel({primary_attribute:1, hand:1, type:"weapon", attack_type:"melee", name:"Dagger",
 		min_damage:1.5,max_damage:3,range:16,attack_speed:60,
 		sprite:{cropX:245,cropY:102,width:13,height:14,regX:9,regY:9,scale:0.8},
 	}));
 
-	items.push(new WeaponModel({primary_attribute:0, hand:1, type:"weapon", attack_type:"melee", name:"Long\nSword",
+	items.push(new MerchantWeaponModel({primary_attribute:0, hand:1, type:"weapon", attack_type:"melee", name:"Long\nSword",
 		min_damage:2,max_damage:4,range:16,attack_speed:75,
 		sprite:{cropX:267,cropY:100,width:16,height:16,regX:12,regY:12,scale:0.8},
 	}));
 
-	items.push(new WeaponModel({primary_attribute:0, hand:2, type:"weapon", attack_type:"melee", name:"Great\nSword",
+	items.push(new MerchantWeaponModel({primary_attribute:0, hand:2, type:"weapon", attack_type:"melee", name:"Great\nSword",
 		min_damage:4,max_damage:8,range:32,attack_speed:90,
 		sprite:{cropX:292,cropY:100,width:16,height:16,regX:12,regY:12,scale:0.8},
 	}));
 
-	items.push(new WeaponModel({primary_attribute:0, hand:1, type:"weapon", attack_type:"melee", name:"Masamune",
+	items.push(new MerchantWeaponModel({primary_attribute:0, hand:1, type:"weapon", attack_type:"melee", name:"Masamune",
 		min_damage:2,max_damage:4,range:16,attack_speed:75,
 		sprite:{cropX:364,cropY:100,width:16,height:16,regX:12,regY:12,scale:0.8},
 	}));
 
-	items.push(new WeaponModel({primary_attribute:0, hand:2, type:"weapon", attack_type:"melee", name:"Spear",
+	items.push(new MerchantWeaponModel({primary_attribute:0, hand:2, type:"weapon", attack_type:"melee", name:"Spear",
 		min_damage:4,max_damage:8,range:32,attack_speed:90,
 		sprite:{cropX:6,cropY:124,width:16,height:16,regX:12,regY:12,scale:0.8},
 	}));
 
-	items.push(new WeaponModel({primary_attribute:0, hand:1, type:"weapon", attack_type:"melee", name:"Battle Axe",
+	items.push(new MerchantWeaponModel({primary_attribute:0, hand:1, type:"weapon", attack_type:"melee", name:"Battle Axe",
 		min_damage:3,max_damage:6,range:16,attack_speed:90,
 		sprite:{cropX:29,cropY:125,width:16,height:14,regX:12,regY:9,scale:0.8},
 	}));
 
-	items.push(new WeaponModel({primary_attribute:0, hand:1, type:"weapon", attack_type:"melee", name:"Hammer",
+	items.push(new MerchantWeaponModel({primary_attribute:0, hand:1, type:"weapon", attack_type:"melee", name:"Hammer",
 		min_damage:3,max_damage:6,range:16,attack_speed:90,
 		sprite:{cropX:51,cropY:124,width:16,height:16,regX:10,regY:10,scale:0.8},
 	}));
 
-	items.push(new WeaponModel({primary_attribute:1, hand:1, type:"weapon", attack_type:"melee", name:"Claw",
+	items.push(new MerchantWeaponModel({primary_attribute:1, hand:1, type:"weapon", attack_type:"melee", name:"Claw",
 		min_damage:1.5,max_damage:3,range:16,attack_speed:60,
 		sprite:{cropX:77,cropY:124,width:15,height:15,regX:10,regY:10,scale:0.8},
 	}));
 
-	items.push(new WeaponModel({primary_attribute:1, hand:2, type:"weapon", attack_type:"range", name:"boomerang",
+	items.push(new MerchantWeaponModel({primary_attribute:1, hand:2, type:"weapon", attack_type:"range", name:"boomerang",
 		min_damage:3,max_damage:6,range:60,attack_speed:75,
 		sprite:{cropX:175,cropY:125,width:13,height:16,regX:6,regY:8,scale:0.8},
 		projectile:{cropX:175,cropY:126,width:13,height:14,regX:6,regY:8,scale:0.8, spin:10},
 	}));
 
-	items.push(new WeaponModel({primary_attribute:2, hand:2, type:"weapon", attack_type:"range", name:"Wand",
+	items.push(new MerchantWeaponModel({primary_attribute:2, hand:2, type:"weapon", attack_type:"range", name:"Wand",
 		min_damage:3,max_damage:6,range:80,attack_speed:75,
 		sprite:{cropX:196,cropY:125,width:16,height:16,regX:4,regY:12,scale:0.8},
 		projectile:{cropX:245,cropY:79,width:14,height:14,regX:7,regY:7,scale:0.8, spin:0},
 	}));
 
-	items.push(new WeaponModel({primary_attribute:2, hand:2, type:"weapon", attack_type:"range", name:"Staff",
+	items.push(new MerchantWeaponModel({primary_attribute:2, hand:2, type:"weapon", attack_type:"range", name:"Staff",
 		min_damage:4,max_damage:8,range:80,attack_speed:90,
 		sprite:{cropX:244,cropY:125,width:16,height:16,regX:4,regY:12,scale:0.8},
 		projectile:{cropX:269,cropY:79,width:14,height:14,regX:7,regY:7,scale:0.8, spin:0},
 	}));
 
-	items.push(new ArmorModel({primary_attribute:1, part:"head", type:"armor", name:"Leather\nHelm",
+	items.push(new MerchantArmorModel({primary_attribute:1, part:"head", type:"armor", name:"Leather\nHelm",
 		sprite:{cropX:220,cropY:150,width:16,height:13,regX:10,regY:10,scale:0.8},
 	}));
 
-	items.push(new ArmorModel({primary_attribute:0, part:"head", type:"armor", name:"Iron Helm",
+	items.push(new MerchantArmorModel({primary_attribute:0, part:"head", type:"armor", name:"Iron Helm",
 		sprite:{cropX:244,cropY:149,width:16,height:15,regX:10,regY:10,scale:0.8},
 	}));
 
-	items.push(new ArmorModel({primary_attribute:0, part:"head", type:"armor", name:"Plate Helm",
+	items.push(new MerchantArmorModel({primary_attribute:0, part:"head", type:"armor", name:"Plate Helm",
 		sprite:{cropX:269,cropY:148,width:16,height:16,regX:10,regY:10,scale:0.8},
 	}));
 
-	items.push(new ArmorModel({primary_attribute:2, part:"head", type:"armor", name:"Hood",
+	items.push(new MerchantArmorModel({primary_attribute:2, part:"head", type:"armor", name:"Hood",
 		sprite:{cropX:292,cropY:149,width:16,height:15,regX:10,regY:10,scale:0.8},
 	}));
 
-	items.push(new ArmorModel({primary_attribute:1, part:"chest", type:"armor", name:"Tunic",
+	items.push(new MerchantArmorModel({primary_attribute:1, part:"chest", type:"armor", name:"Tunic",
 		sprite:{cropX:292,cropY:125,width:16,height:16,regX:10,regY:10,scale:0.8},
 	}));
 
-	items.push(new ArmorModel({primary_attribute:1, part:"chest", type:"armor", name:"Chestguard",
+	items.push(new MerchantArmorModel({primary_attribute:1, part:"chest", type:"armor", name:"Chestguard",
 		sprite:{cropX:316,cropY:124,width:16,height:15,regX:10,regY:10,scale:0.8},
 	}));
 
-	items.push(new ArmorModel({primary_attribute:0, part:"chest", type:"armor", name:"Breastplate",
+	items.push(new MerchantArmorModel({primary_attribute:0, part:"chest", type:"armor", name:"Breastplate",
 		sprite:{cropX:341,cropY:125,width:16,height:16,regX:10,regY:10,scale:0.8},
 	}));
 
-	items.push(new ArmorModel({primary_attribute:0, part:"chest", type:"armor", name:"Chestplate",
+	items.push(new MerchantArmorModel({primary_attribute:0, part:"chest", type:"armor", name:"Chestplate",
 		sprite:{cropX:365,cropY:126,width:16,height:16,regX:10,regY:10,scale:0.8},
 	}));
 
-	items.push(new ArmorModel({primary_attribute:2, part:"chest", type:"armor", name:"Robe",
+	items.push(new MerchantArmorModel({primary_attribute:2, part:"chest", type:"armor", name:"Robe",
 		sprite:{cropX:77,cropY:150,width:16,height:16,regX:10,regY:10,scale:0.8},
 	}));
 
-	items.push(new ArmorModel({primary_attribute:2, part:"chest", type:"armor", name:"Raiment",
+	items.push(new MerchantArmorModel({primary_attribute:2, part:"chest", type:"armor", name:"Raiment",
 		sprite:{cropX:123,cropY:149,width:16,height:16,regX:10,regY:10,scale:0.8},
 	}));
 
-	items.push(new ArmorModel({primary_attribute:3, part:"gloves", type:"armor", name:"Groves",
+	items.push(new MerchantArmorModel({primary_attribute:3, part:"gloves", type:"armor", name:"Groves",
 		sprite:{cropX:125,cropY:126,width:14,height:16,regX:10,regY:10,scale:0.8},
 	}));
 
-	items.push(new ArmorModel({primary_attribute:3, part:"gloves", type:"armor", name:"Gauntlets",
+	items.push(new MerchantArmorModel({primary_attribute:3, part:"gloves", type:"armor", name:"Gauntlets",
 		sprite:{cropX:148,cropY:126,width:15,height:16,regX:10,regY:10,scale:0.8},
 	}));
 
-	items.push(new ArmorModel({primary_attribute:3, part:"boots", type:"armor", name:"Boots",
+	items.push(new MerchantArmorModel({primary_attribute:3, part:"boots", type:"armor", name:"Boots",
 		sprite:{cropX:173,cropY:172,width:15,height:16,regX:10,regY:10,scale:0.8},
 	}));
 
-	items.push(new ArmorModel({primary_attribute:3, part:"boots", type:"armor", name:"Boots",
+	items.push(new MerchantArmorModel({primary_attribute:3, part:"boots", type:"armor", name:"Boots",
 		sprite:{cropX:197,cropY:173,width:16,height:16,regX:10,regY:10,scale:0.8},
 	}));
 
-	items.push(new ArmorModel({primary_attribute:3, part:"belt", type:"armor", name:"Belt",
+	items.push(new MerchantArmorModel({primary_attribute:3, part:"belt", type:"armor", name:"Belt",
 		sprite:{cropX:340,cropY:149,width:16,height:15,regX:10,regY:10,scale:0.8},
 	}));
 
-	items.push(new ArmorModel({primary_attribute:3, part:"cape", type:"armor", name:"Cape",
+	items.push(new MerchantArmorModel({primary_attribute:3, part:"cape", type:"armor", name:"Cape",
 		sprite:{cropX:4,cropY:173,width:16,height:16,regX:10,regY:10,scale:0.8},
 	}));
 
-	items.push(new ArmorModel({primary_attribute:3, part:"cape", type:"armor", name:"Cape",
+	items.push(new MerchantArmorModel({primary_attribute:3, part:"cape", type:"armor", name:"Cape",
 		sprite:{cropX:28,cropY:173,width:16,height:16,regX:10,regY:10,scale:0.8},
 	}));
 
-	items.push(new ArmorModel({primary_attribute:3, part:"cape", type:"armor", name:"Cape",
+	items.push(new MerchantArmorModel({primary_attribute:3, part:"cape", type:"armor", name:"Cape",
 		sprite:{cropX:52,cropY:173,width:16,height:16,regX:10,regY:10,scale:0.8},
 	}));
 
-	items.push(new ArmorModel({primary_attribute:0, part:"shield", type:"armor", name:"Shield",
+	items.push(new MerchantArmorModel({primary_attribute:0, part:"shield", type:"armor", name:"Shield",
 		sprite:{cropX:149,cropY:148,width:14,height:16,regX:10,regY:10,scale:0.8},
 	}));
 
-	items.push(new ArmorModel({primary_attribute:2, part:"shield", type:"armor", name:"Shield",
+	items.push(new MerchantArmorModel({primary_attribute:2, part:"shield", type:"armor", name:"Shield",
 		sprite:{cropX:173,cropY:148,width:14,height:16,regX:10,regY:10,scale:0.8},
 	}));
 
-	items.push(new ArmorModel({primary_attribute:0, part:"shield", type:"armor", name:"Shield",
+	items.push(new MerchantArmorModel({primary_attribute:0, part:"shield", type:"armor", name:"Shield",
 		sprite:{cropX:198,cropY:148,width:13,height:16,regX:10,regY:10,scale:0.8},
 	}));
 
-	items.push(new ArmorModel({primary_attribute:3, part:"necklace", type:"armor", name:"Necklace",
+	items.push(new MerchantArmorModel({primary_attribute:3, part:"necklace", type:"armor", name:"Necklace",
 		sprite:{cropX:148,cropY:172,width:16,height:15,regX:10,regY:10,scale:0.8},
 	}));
 
-	items.push(new ArmorModel({primary_attribute:3, part:"ring", type:"armor", name:"Ring",
+	items.push(new MerchantArmorModel({primary_attribute:3, part:"ring", type:"armor", name:"Ring",
 		sprite:{cropX:78,cropY:175,width:12,height:12,regX:10,regY:10,scale:0.8},
 	}));
 
-	items.push(new ArmorModel({primary_attribute:3, part:"ring", type:"armor", name:"Ring",
+	items.push(new MerchantArmorModel({primary_attribute:3, part:"ring", type:"armor", name:"Ring",
 		sprite:{cropX:103,cropY:174,width:11,height:10,regX:10,regY:10,scale:0.8},
 	}));
 	/*

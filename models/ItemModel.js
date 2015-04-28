@@ -1,12 +1,13 @@
 var ItemSchema = new Schema({
+	primary_attribute:Number,
 	part:String,
 	name:String,
 	type:String,
 	rating:Number,
 	level:Number,
 	price:Number,
+	repurchase:Boolean,
 	icon:{
-		source:String,
 		cropX:Number,
 		cropY:Number,
 		width:Number,
@@ -16,7 +17,13 @@ var ItemSchema = new Schema({
 		scale:Number,
 	},
 	projectile:{
-
+		cropX:Number,
+		cropY:Number,
+		width:Number,
+		height:Number,
+		regX:Number,
+		regY:Number,
+		scale:Number,
 	},
 	attributes:Schema.Types.Mixed,
 });

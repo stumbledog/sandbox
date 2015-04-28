@@ -11,7 +11,7 @@ router.get('/', function(req, res) {
 */
 router.get('/', function(req, res) {
 	UserController.authenticate(req, res, function(user, map){
-		
+		res.render('game', { title: 'Express', user:user, map:map, difficulty_level:0});
 	});
 });
 
@@ -31,8 +31,11 @@ router.post('/', function(req, res) {
 
 router.post('/purchaseitem', function(req, res){
 	var item = req.body.item;
+	var slot_index = req.body.slot_index;
 	var user_id = req.session.user_id;
-	ItemController.purchase(item, user_id, function(err){
+	console.log(item);
+	console.log(slot_index);
+	ItemController.purchase(item, slot_index, user_id, function(err){
 		if(err){
 			res.send(err);
 		}else{

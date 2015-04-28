@@ -15,7 +15,7 @@ Hero.prototype.hero_initialize = function(builder){
 	this.damage_color = "#FFE11A";
 
 	this.initHealthBar();
-	this.renderPortrait(builder.portrait.split('/').pop(), builder.index);
+	this.renderPortrait(builder.model.portrait, builder.model.index);
 	this.order = {action:"stop", map:this.findPath({x:this.x,y:this.y})};
 	this.renderRange();
 	this.rotate(0,1);

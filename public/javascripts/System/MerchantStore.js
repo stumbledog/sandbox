@@ -113,17 +113,18 @@ MerchantStore.prototype.rolloutStore = function(item){
 MerchantStore.prototype.mousedownStoreItem = function(item, event){
 	if(event.nativeEvent.button === 2){
 		var total_price = item.repurchase ? item.sell_price * item.qty : item.price * item.qty;
+		var slot_index = this.user.inventory.getEmptySlot();
 
-		if(this.user.gold < total_price){
-			alert("Not enough money!");
-		}else if(!this.user.inventory.haveAvailableSpace(item)){
+		if(slot_index < 0){
 			alert("Not enough space!");
+		}else if(this.user.gold < total_price){
+			alert("Not enough money!");
 		}else{
-			this.removeItem(item);
 			var purchased_item = this.user.purchase(item);
-			$.post("purchaseitem", {item:purchased_item.toObject()}, function(res){
+			$.post("purchaseitem", {item:purchased_item.toObject(), slot_index:slot_index}, function(res){
+				this.removeItem(item);
 				console.log(res);
-			});
+			}.bind(this));
 		}
 	}
 }

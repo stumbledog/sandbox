@@ -38,7 +38,6 @@ Unit.prototype.initialize = function(builder){
 	this.aggro_radius = 80;
 
 	this.stats = {};
-	this.items = [];
 
 	this.max_force = 0.3;
 	this.status = "alive";
@@ -48,7 +47,7 @@ Unit.prototype.initialize = function(builder){
 	this.velocity = new Vector(0,0);
 
 	this.shadow = new createjs.Shadow("#333",3,3,10);
-	this.renderUnit(builder.sprite.split('/').pop(), builder.index, builder.regX, builder.regY);
+	this.renderUnit(builder.model.sprite, builder.model.index, builder.regX, builder.regY);
 }
 
 Unit.prototype.getDamage = function(type, multiplier){
@@ -442,39 +441,6 @@ Unit.prototype.regenerate_resource = function(regen){
 	regen = this.resource_type === "fury" ? regen - 3 : regen;
 	this.resource = this.resource + regen > this.max_resource ? this.max_resource : this.resource + regen < 0 ? 0 : this.resource + regen;
 
-}
-
-Unit.prototype.gainXP = function(exp){
-	this.exp += exp;
-	var exp_text = new OutlineText("+" + Math.round(exp)+" exp","bold 8px Arial","#fff","#000",2);
-	exp_text.x = -exp_text.getMeasuredWidth()/2;
-	this.addChild(exp_text);
-
-	createjs.Tween.get(exp_text).to({y:-28},1000, createjs.Ease.cubicOut).wait(500).call(function(item){
-		this.removeChild(exp_text);
-	},[],this);
-
-	while(this.exp >= this.level * 100){
-		this.exp -= this.level * 100;
-		this.levelUp();
-	}
-}
-
-Unit.prototype.levelUp = function(){
-	this.level++;
-	this.heal(this.max_health/10);
-	this.char_strength += parseInt(this.level_up_bonus.strength);
-	this.char_agility += parseInt(this.level_up_bonus.agility);
-	this.char_intelligence += parseInt(this.level_up_bonus.intelligence);
-	this.char_stamina += parseInt(this.level_up_bonus.stamina);
-	this.updateStats();
-
-	var levelup_text = new OutlineText("Level Up","bold 10px Arial","#E9A119","#000",2);
-	levelup_text.x = -levelup_text.getMeasuredWidth()/2;
-	this.addChild(levelup_text);
-	createjs.Tween.get(levelup_text).to({y:-42},1000, createjs.Ease.cubicOut).wait(500).call(function(item){
-		this.removeChild(levelup_text);
-	},[],this);
 }
 
 Unit.prototype.die = function(attacker){

@@ -20,8 +20,64 @@ var Game = (function(){
 		var manifest = [];
 		manifest.push({src:"assets/Graphics/System/Icons/IconSet.png", id:"icon"});
 
-		manifest.push({src:user_builder.hero.sprite, id:user_builder.hero.sprite.split('/').pop()});
-		manifest.push({src:user_builder.hero.portrait, id:user_builder.hero.portrait.split('/').pop()});
+		manifest.push({src:"assets/Graphics/Characters/01 - Hero.png",		id:"hero"});
+		manifest.push({src:"assets/Graphics/Characters/02 - Warrior.png",	id:"warrior"});
+		manifest.push({src:"assets/Graphics/Characters/03 - Cleric.png",	id:"cleric"});
+		manifest.push({src:"assets/Graphics/Characters/04 - Mage.png",		id:"mage"});
+		manifest.push({src:"assets/Graphics/Characters/05 - Fighter.png",	id:"fighter"});
+		manifest.push({src:"assets/Graphics/Characters/06 - Thief.png",		id:"thief"});
+		manifest.push({src:"assets/Graphics/Characters/07 - Child.png",		id:"child"});
+		manifest.push({src:"assets/Graphics/Characters/08 - Young.png",		id:"young"});
+		manifest.push({src:"assets/Graphics/Characters/09 - Adult.png",		id:"adult"});
+		manifest.push({src:"assets/Graphics/Characters/10 - Old.png",		id:"old"});
+		manifest.push({src:"assets/Graphics/Characters/11 - Employee.png",	id:"employee"});
+		manifest.push({src:"assets/Graphics/Characters/12 - Merchant.png",	id:"merchant"});
+		manifest.push({src:"assets/Graphics/Characters/13 - Church.png",	id:"church"});
+		manifest.push({src:"assets/Graphics/Characters/14 - Seer.png",		id:"seer"});
+		manifest.push({src:"assets/Graphics/Characters/15 - Pirate.png",	id:"pirate"});
+		manifest.push({src:"assets/Graphics/Characters/16 - BunnyGirl.png",	id:"bunny_girl"});
+		manifest.push({src:"assets/Graphics/Characters/17 - Elve.png",		id:"elve"});
+		manifest.push({src:"assets/Graphics/Characters/18 - Neko Girl.png",	id:"neko_girl"});
+		manifest.push({src:"assets/Graphics/Characters/19 - Cook.png",		id:"cook"});
+		manifest.push({src:"assets/Graphics/Characters/20 - Fairy.png",		id:"fairy"});
+		manifest.push({src:"assets/Graphics/Characters/21 - Royal.png",		id:"royal"});
+		manifest.push({src:"assets/Graphics/Characters/22 - Royal.png",		id:"royal2"});
+		manifest.push({src:"assets/Graphics/Characters/23 - Soldier.png",	id:"soldier"});
+		manifest.push({src:"assets/Graphics/Characters/26 - Animal.png",	id:"animal"});
+		manifest.push({src:"assets/Graphics/Characters/27 - Animal.png",	id:"animal2"});
+		manifest.push({src:"assets/Graphics/Characters/28 - Flame.png",		id:"flame"});
+		manifest.push({src:"assets/Graphics/Characters/29 - Monster.png",	id:"monster"});
+		manifest.push({src:"assets/Graphics/Characters/30 - Monster.png",	id:"monster2"});
+		manifest.push({src:"assets/Graphics/Characters/31 - Monster.png",	id:"monster3"});
+		manifest.push({src:"assets/Graphics/Characters/32 - Dragon.png",	id:"dragon"});
+		manifest.push({src:"assets/Graphics/Characters/33 - Boss.png",		id:"boss"});
+		manifest.push({src:"assets/Graphics/Characters/34 - Boss.png",		id:"boss2"});
+		
+		manifest.push({src:"assets/Graphics/Faces/ds_face01-02.png", id:"portrait1"});
+		manifest.push({src:"assets/Graphics/Faces/ds_face03-04.png", id:"portrait2"});
+		manifest.push({src:"assets/Graphics/Faces/ds_face05-06.png", id:"portrait3"});
+		manifest.push({src:"assets/Graphics/Faces/ds_face07-08.png", id:"portrait4"});
+		manifest.push({src:"assets/Graphics/Faces/ds_face09-10.png", id:"portrait5"});
+		manifest.push({src:"assets/Graphics/Faces/ds_face11-12.png", id:"portrait6"});
+		manifest.push({src:"assets/Graphics/Faces/ds_face13-14.png", id:"portrait7"});
+		manifest.push({src:"assets/Graphics/Faces/ds_face15-16.png", id:"portrait8"});
+		manifest.push({src:"assets/Graphics/Faces/ds_face17-18.png", id:"portrait9"});
+		manifest.push({src:"assets/Graphics/Faces/ds_face19-20.png", id:"portrait10"});
+		manifest.push({src:"assets/Graphics/Faces/ds_face21-22.png", id:"portrait11"});
+		manifest.push({src:"assets/Graphics/Faces/ds_face23-24.png", id:"portrait12"});
+		manifest.push({src:"assets/Graphics/Faces/ds_face25-26.png", id:"portrait13"});
+		manifest.push({src:"assets/Graphics/Faces/ds_face27-28.png", id:"portrait14"});
+		manifest.push({src:"assets/Graphics/Faces/ds_face29-30.png", id:"portrait15"});
+		manifest.push({src:"assets/Graphics/Faces/ds_face31-32.png", id:"portrait16"});
+		manifest.push({src:"assets/Graphics/Faces/ds_face33-34.png", id:"portrait17"});
+		manifest.push({src:"assets/Graphics/Faces/ds_face35-36.png", id:"portrait18"});
+		manifest.push({src:"assets/Graphics/Faces/ds_face37-38.png", id:"portrait19"});
+		manifest.push({src:"assets/Graphics/Faces/ds_face39-40.png", id:"portrait20"});
+
+
+
+//		manifest.push({src:user_builder.hero.sprite, id:user_builder.hero.sprite.split('/').pop()});
+//		manifest.push({src:user_builder.hero.portrait, id:user_builder.hero.portrait.split('/').pop()});
 		/*
 		if(user_builder.inventory.slots){
 			user_builder.inventory.slots.forEach(function(item){
@@ -56,8 +112,8 @@ var Game = (function(){
 			if(unit_builder.portrait){
 				manifest.push({src:unit_builder.portrait, id:unit_builder.portrait.split('/').pop()});
 			}
-			if(unit_builder.active_skills){
-				unit_builder.active_skills.forEach(function(skill){
+			if(unit_builder.model.active_skills){
+				unit_builder.model.active_skills.forEach(function(skill){
 					if(skill.icon_source){
 						manifest.push({src:skill.icon_source,id:skill.icon_source.split('/').pop()});
 					}
@@ -75,11 +131,11 @@ var Game = (function(){
 		map_builder.maps.forEach(function(map){
 			manifest.push({src:map.src, id:map.src.split('/').pop()});
 		});
-
+		/*
 		map_builder.npcs.forEach(function(npc){
 			manifest.push({src:npc.sprite, id:npc.sprite.split('/').pop()});
 		});
-
+		*/
 		/*
 		if(map_builder.merchantable_items){
 			map_builder.merchantable_items.forEach(function(item){
@@ -115,8 +171,8 @@ var Game = (function(){
 			});
 		}
 
-		if(user_builder.hero.active_skills){
-			user_builder.hero.active_skills.forEach(function(skill){
+		if(user_builder.hero.model.active_skills){
+			user_builder.hero.model.active_skills.forEach(function(skill){
 				if(skill.icon_source){
 					manifest.push({src:skill.icon_source,id:skill.icon_source.split('/').pop()});
 				}

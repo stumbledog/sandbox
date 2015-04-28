@@ -15,7 +15,6 @@ UserController = {
 		console.log("Create new user");
 		var user = new UserModel();
 		user.save(function(err, user){
-			console.log(user);
 			UnitController.createHero(user, function(hero){
 				this.loginById(user._id, req, res, callback);
 			}.bind(this));
@@ -26,13 +25,34 @@ UserController = {
 			if(user){
 				console.log("Found matching user in db");
 				user.last_logged_in = new Date();
-				user.save(function(err, user){
+				user.populate("hero.model hero.").execPopulate().then(function(user){
+					return user
+						.populate({path:"hero.model.active_skills",model:"ActiveSkill"})
+						.populate({path:"hero.model.passive_skills",model:"PassiveSkill"})
+						.execPopulate();
+				}).then(function(user){
 					req.session.user_id = user._id;
 					res.cookie('user_id', user._id, {maxAge: 10 * 365 * 24 * 60 * 60 * 1000, httpOnly: true });
 					MapController.loadBasecamp(user.hero.level, function(map){
 						callback(user, map);
 					});
 				});
+				/*
+				user.save(function(err, user){
+					//return user.populate({path:"hero.model", model:"Unit"}).execPopulate();
+					return UserModel.populate(user, {path:"hero.model", model:"Unit"});
+				}).then(function(model){
+					console.log(model);
+					return model.populate("hero.model.passive_skills").populate("hero.model.active_skills").execPopulate();
+				}).then(function(foo){
+					console.log(foo);
+					user.hero.model = model;
+					req.session.user_id = user._id;
+					res.cookie('user_id', user._id, {maxAge: 10 * 365 * 24 * 60 * 60 * 1000, httpOnly: true });
+					MapController.loadBasecamp(user.hero.level, function(map){
+						callback(user, map);
+					});
+				});*/
 			}else{
 				console.log("No matching data found in db");
 				this.createUser(req, res, callback);

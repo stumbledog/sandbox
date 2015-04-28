@@ -4,13 +4,13 @@ ItemController = {
 	},
 	generateMerchantItem:function(level, callback){
 		var items = [];
-		WeaponModel.find().exec(function(err, weapons){
+		MerchantWeaponModel.find().exec(function(err, weapons){
 			for(var i = 0 ; i < 18 ; i++){
 				var weapon = weapons[Math.floor(Math.random() * weapons.length)];
 				items.push(weapon.setMerchantItem(level));
 			}
 		}).then(function(){
-			ArmorModel.find({}, function(err, armors){
+			MerchantArmorModel.find({}, function(err, armors){
 				for(var i = 0 ; i < 18 ; i++){
 					var armor = armors[Math.floor(Math.random() * armors.length)];
 					items.push(armor.setMerchantItem(level));
@@ -27,37 +27,40 @@ ItemController = {
 	},
 	dropItem:function(level, rating, callback){
 		if(Math.random() > 0.8){
-			WeaponModel.find({}, function(err, weapons){
+			MerchantWeaponModel.find({}, function(err, weapons){
 				var weapon = weapons[Math.floor(Math.random() * weapons.length)];
 				callback(weapon.setMerchantItem(level, rating));
 			});
 		}else{
-			ArmorModel.find({}, function(err, armors){
+			MerchantArmorModel.find({}, function(err, armors){
 				var armor = armors[Math.floor(Math.random() * armors.length)];
 				callback(armor.setMerchantItem(level, rating));
 			});
 		}
 	},
-	purchase:function(item, user_id, callback){
-		console.log(item);
-		var price = item.repurchase === "true" ? parseInt(item.sell_price) : parseInt(item.price);
-		var total_price = price * parseInt(item.qty);
+	purchase:function(item_builder, slot_index, user_id, callback){
+		console.log(item_builder);
+		console.log(slot_index);
+		var price = item_builder.repurchase === "true" ? parseInt(item_builder.sell_price) : parseInt(item_builder.price);
+		var total_price = price * parseInt(item_builder.qty);
 		UserModel.findById(user_id, function(err, user){
 			if(user.gold >= total_price){
-				if(item.type === "consumable"){
+				if(item_builder.type === "consumable"){
 					var find = false;
 					user.inventory.slots.forEach(function(slot_item){
-						if(slot_item.name === item.name){
-							slot_item.qty += parseInt(item.qty);
+						if(slot_item.name === item_builder.name){
+							slot_item.qty += parseInt(item_builder.qty);
 							find = true;
 							return false;
 						}
 					});
 					if(!find){
-						user.inventory.slots.push(item);
+						user.inventory.slots.push(item_builder);
 					}
 				}else{
-					user.inventory.slots.push(item);
+					var item = new ItemModel(item_builder);
+					item.save();
+					user.inventory.slots.push({index:slot_index, item:item._id});
 				}
 				UserModel.findOneAndUpdate({_id:user._id}, {gold:user.gold - total_price, inventory:user.inventory}, function(err, user){
 					callback({gold:user.gold});

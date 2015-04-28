@@ -30,7 +30,7 @@ Map_Stage.prototype.initialize = function(){
 
 	this.loader = this.game.getLoader();
 
-	console.log(this);
+	//console.log(this);
 
 	for(i = 0 ; i < this.cols ; i++){
 		for(j = 0 ; j < this.rows ; j++){

@@ -10,16 +10,18 @@ EquippedUnit.prototype.equipped_unit_initialize = function(builder){
 	this.unit_initialize(builder);
 
 	this.character_class = builder.character_class;
-	this.primary_attribute = parseInt(builder.primary_attribute);
-	this.char_strength = parseInt(builder.strength);
-	this.char_agility = parseInt(builder.agility);
-	this.char_intelligence = parseInt(builder.intelligence);
-	this.char_stamina = parseInt(builder.stamina);
+	console.log(builder);
+	this.primary_attribute = builder.model.primary_attribute;
+	this.char_strength = builder.model.strength * builder.level;
+	this.char_agility = builder.model.agility * builder.level;
+	this.char_intelligence = builder.model.intelligence * builder.level;
+	this.char_stamina = builder.model.stamina * builder.level;
 	this.char_movement_speed = 1;
 
 	this.level = builder.level;
 	this.exp = builder.exp;
-	this.resource_type = builder.resource_type;
+
+	this.resource_type = builder.model.resource_type;
 	this.level_up_bonus = builder.level_up_bonus;
 
 	this.max_health = this.health = 100;
@@ -34,12 +36,12 @@ EquippedUnit.prototype.equipped_unit_initialize = function(builder){
 	this.passive_skills = [];
 	this.active_skills = {};
 
-	builder.passive_skills.forEach(function(skill){
+	builder.model.passive_skills.forEach(function(skill){
 		this.passive_skills.push(new PassiveSkill(skill, this));
 	}, this);
 
 
-	builder.active_skills.forEach(function(skill){
+	builder.model.active_skills.forEach(function(skill){
 		this.active_skills[skill.key] = new ActiveSkill(skill, this);
 	}, this);
 
@@ -189,19 +191,19 @@ EquippedUnit.prototype.updateStats = function(){
 	this.movement_speed = (Math.round(this.char_movement_speed * (1 + (movement_speed_bonus + (this.swift_runner ? 15 : 0) )/100) * 10))/10;
 
 	switch(this.primary_attribute){
-		case 0:
+		case "strength":
 			this.right_min_damage = Math.round(this.right_min_damage * (1 + this.strength/100));
 			this.right_max_damage = Math.round(this.right_max_damage * (1 + this.strength/100));
 			this.left_min_damage = this.left_min_damage ? Math.round(this.left_min_damage * (1 + this.strength/100)) : 0;
 			this.left_max_damage = this.left_max_damage ? Math.round(this.left_max_damage * (1 + this.strength/100)) : 0;
 			break;
-		case 1:
+		case "agility":
 			this.right_min_damage = Math.round(this.right_min_damage * (1 + this.agility/100));
 			this.right_max_damage = Math.round(this.right_max_damage * (1 + this.agility/100));
 			this.left_min_damage = this.left_min_damage ? Math.round(this.left_min_damage * (1 + this.agility/100)) : 0;
 			this.left_max_damage = this.left_max_damage ? Math.round(this.left_max_damage * (1 + this.agility/100)) : 0;
 			break;
-		case 2:
+		case "intelligence":
 			this.right_min_damage = Math.round(this.right_min_damage * (1 + this.intelligence/100));
 			this.right_max_damage = Math.round(this.right_max_damage * (1 + this.intelligence/100));
 			this.left_min_damage = this.left_min_damage ? Math.round(this.left_min_damage * (1 + this.intelligence/100)) : 0;
@@ -304,4 +306,39 @@ EquippedUnit.prototype.equipItem = function(item){
 		this.user.saveEquipItems();
 		alert("Not enough unit level to equip this item");
 	}
+}
+
+
+EquippedUnit.prototype.gainXP = function(exp){
+	this.exp += exp;
+	var exp_text = new OutlineText("+" + Math.round(exp)+" exp","bold 8px Arial","#fff","#000",2);
+	exp_text.x = -exp_text.getMeasuredWidth()/2;
+	this.addChild(exp_text);
+
+	createjs.Tween.get(exp_text).to({y:-28},1000, createjs.Ease.cubicOut).wait(500).call(function(item){
+		this.removeChild(exp_text);
+	},[],this);
+
+	while(this.exp >= this.level * 100){
+		this.exp -= this.level * 100;
+		this.levelUp();
+	}
+}
+
+EquippedUnit.prototype.levelUp = function(){
+	this.level++;
+	this.heal(this.max_health/10);
+	this.char_strength = builder.model.strength * builder.level;
+	this.char_agility = builder.model.agility * builder.level;
+	this.char_intelligence = builder.model.intelligence * builder.level;
+	this.char_stamina = builder.model.stamina * builder.level;
+
+	this.updateStats();
+
+	var levelup_text = new OutlineText("Level Up","bold 10px Arial","#E9A119","#000",2);
+	levelup_text.x = -levelup_text.getMeasuredWidth()/2;
+	this.addChild(levelup_text);
+	createjs.Tween.get(levelup_text).to({y:-42},1000, createjs.Ease.cubicOut).wait(500).call(function(item){
+		this.removeChild(levelup_text);
+	},[],this);
 }

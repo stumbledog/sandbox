@@ -2,24 +2,23 @@ function Item(){
 
 }
 
-Item.prototype.initialize = function(attributes){
+Item.prototype.initialize = function(builder){
 	this.game = Game.getInstance();
 	this.user = this.game.getUser();
 	this.loader = this.game.getLoader();
 
 	this.container = new createjs.Container();
 
-	this._id = attributes._id;
-	this.type = attributes.type;
+	this._id = builder._id;
+	this.type = builder.type;
 	this.index = -1;
-	this.name = attributes.name;
+	this.name = builder.name;
 
-	this.icon = attributes.icon;
-	this.sprite = attributes.sprite;
+	this.sprite = builder.sprite;
 
-	this.rating = parseInt(attributes.rating);
-	this.price = parseInt(attributes.price);
-	this.sell_price = Math.ceil(attributes.price / 2);
+	this.rating = builder.rating;
+	this.price = builder.price;
+	this.sell_price = Math.ceil(builder.price / 2);
 	this.colors = ["#CCCCCC","#79BD8F","#FFD34E","#644D52","#F77A52"];
 	this.repurchase = false;
 
@@ -29,9 +28,9 @@ Item.prototype.initialize = function(attributes){
 
 Item.prototype.initIcon = function(){
 	this.icon_img = new createjs.Bitmap(this.loader.getResult("icon"));
-	this.icon_img.sourceRect = new createjs.Rectangle(parseInt(this.icon.cropX), parseInt(this.icon.cropY), parseInt(this.icon.width), parseInt(this.icon.height));
-	this.icon_img.regX = this.icon.width / 2;
-	this.icon_img.regY = this.icon.height / 2;
+	this.icon_img.sourceRect = new createjs.Rectangle(parseInt(this.sprite.cropX), parseInt(this.sprite.cropY), parseInt(this.sprite.width), parseInt(this.sprite.height));
+	this.icon_img.regX = this.sprite.width / 2;
+	this.icon_img.regY = this.sprite.height / 2;
 
 	this.coin = new createjs.Bitmap(this.loader.getResult("icon"));
 	this.coin.sourceRect = new createjs.Rectangle(246, 55, 12, 12);
@@ -58,5 +57,5 @@ Item.prototype.toObject = function(){
 			obj[key] = this[key];
 		}
 	}
-	return obj;
+	return this.builder;
 }

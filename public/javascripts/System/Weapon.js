@@ -1,18 +1,23 @@
-function Weapon(attributes){
-	this.weapon_initialize(attributes);
+function Weapon(builder){
+	this.weapon_initialize(builder);
 }
 
 Weapon.prototype = new Item();
 Weapon.prototype.constructor = Weapon;
 
-Weapon.prototype.weapon_initialize = function(attributes){
-	this._id = attributes._id;
-	this.attack_type = attributes.attack_type;
-	this.projectile = attributes.projectile;
-	this.hand = parseInt(attributes.hand);
-	this.level = parseInt(attributes.level);
-	this.part = attributes.part;
+Weapon.prototype.weapon_initialize = function(builder){
+	this._id = builder._id;
+	this.attack_type = builder.attack_type;
+	this.projectile = builder.projectile;
+	this.hand = builder.hand;
+	this.level = builder.level;
+	this.part = builder.part;
 	this.qty = 1;
+	this.min_damage = builder.min_damage;
+	this.max_damage = builder.max_damage;
+	this.attack_speed = builder.attack_speed;
+	this.range = builder.range;
+	/*
 	this.min_damage = parseFloat(attributes.min_damage);
 	this.max_damage = parseFloat(attributes.max_damage);
 	this.attack_speed = parseInt(attributes.attack_speed);
@@ -25,10 +30,12 @@ Weapon.prototype.weapon_initialize = function(attributes){
 	this.intelligence = parseInt(attributes.intelligence);
 	this.critical_rate = parseInt(attributes.critical_rate);
 	this.critical_damage = parseInt(attributes.critical_damage);
-	this.life_steal = parseInt(attributes.life_steal);
-	this.attributes = attributes.attributes;
+	this.life_steal = parseInt(attributes.life_steal);*/
+	this.attributes = builder.attributes;
+	this.attributes_index = builder.attributes_index;
+	this.builder = builder;
 
-	this.initialize(attributes);
+	this.initialize(builder);
 	this.initBitmap();
 }
 
@@ -70,16 +77,16 @@ Weapon.prototype.initDetail = function(){
 	var min_damage = this.min_damage;
 	var max_damage = this.max_damage;
 
-	if(this.min_damage_bonus && this.max_damage_bonus){
-		min_damage += this.min_damage_bonus;
-		max_damage += this.max_damage_bonus;
+	if(this.attributes.min_damage_bonus && this.attributes.max_damage_bonus){
+		min_damage += this.attributes.min_damage_bonus;
+		max_damage += this.attributes.max_damage_bonus;
 	}
 
 	damage_amount_text.text = min_damage + " ~ " + max_damage;
 	damage_text.x = damage_amount_text.getMeasuredWidth() + 4;
 
-	if(this.attack_speed_bonus){
-		var attack_speed = (60 / (this.attack_speed * (100 - this.attack_speed_bonus) / 100)).toFixed(1);
+	if(this.attributes.attack_speed_bonus){
+		var attack_speed = (60 / (this.attack_speed * (100 - this.attributes.attack_speed_bonus) / 100)).toFixed(1);
 	}else{
 		var attack_speed = (60 / this.attack_speed).toFixed(1);
 	}
@@ -93,32 +100,32 @@ Weapon.prototype.initDetail = function(){
 	var bg = new createjs.Shape();
 	bg.graphics.s("#000").ss(1).f("#fff").dr(0, 0, 140, this.summary_height);
 	this.detail.addChild(bg, rating_text, name_text, hand_text, damage_amount_text, damage_text, attack_speed_text, dps_text, level_text, this.sell_price_text, this.sell_price_coin);
-	this.attributes.forEach(function(attribute, index){
+	this.attributes_index.forEach(function(attribute, index){
 		var attr_text = new createjs.Text("","10px Arial","#B64926");
 		switch(parseInt(attribute)){
 			case 0:
-				attr_text.text = "+" + this.min_damage_bonus + " ~ " + this.max_damage_bonus + " Damage";
+				attr_text.text = "+" + this.attributes.min_damage_bonus + " ~ " + this.attributes.max_damage_bonus + " Damage";
 			break;
 			case 1:
-				if(this.strength){
-					attr_text.text = "+" + this.strength + " Strength";
-				}else if(this.agility){
-					attr_text.text = "+" + this.agility + " Agility";
+				if(this.attributes.strength){
+					attr_text.text = "+" + this.attributes.strength + " Strength";
+				}else if(this.attributes.agility){
+					attr_text.text = "+" + this.attributes.agility + " Agility";
 				}else{
-					attr_text.text = "+" + this.intelligence + " Intelligence";
+					attr_text.text = "+" + this.attributes.intelligence + " Intelligence";
 				}
 			break;
 			case 2:
-				attr_text.text = "+" + this.attack_speed_bonus + "% Attack speed";
+				attr_text.text = "+" + this.attributes.attack_speed_bonus + "% Attack speed";
 			break;
 			case 3:
-				attr_text.text = "+" + this.critical_rate + "% Critical rate";
+				attr_text.text = "+" + this.attributes.critical_rate + "% Critical rate";
 			break;
 			case 4:
-				attr_text.text = "+" + this.critical_damage + "% Critical damage";
+				attr_text.text = "+" + this.attributes.critical_damage + "% Critical damage";
 			break;
 			case 5:
-				attr_text.text = "+" + this.life_steal + "% Life Steal";
+				attr_text.text = "+" + this.attributes.life_steal + "% Life Steal";
 			break;
 		}
 		attr_text.x = 2;

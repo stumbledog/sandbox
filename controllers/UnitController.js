@@ -14,21 +14,20 @@ UnitController = {
 	},
 	createHero:function(user, callback){
 		console.log("Create Hero");
-		UnitModel.findOne({name:"Albert"}, function(err, hero){
-			user.hero.model = hero._id;
-			user.save(function(){
-				var foo = user.populate("hero.model").execPopulate();
-				console.log(foo);
-				callback(hero);
+		UnitModel.findOne({name:"Albert"}).exec(function(err, unit){
+			user.hero.model = unit._id;
+			return user.save(function(){
+				callback(user);	
 			});
+		});
 			/*
-			hero.initHero(function(hero){
-				user.hero.model = hero._id;
-				user.save(function(){
-					callback(hero);
-				});
-			}.bind(this));*/
-		}.bind(this));
+			return user.populate("hero.model").execPopulate();
+		}).then(function(model){
+			return model.populate("passive_skills").populate("active_skills").execPopulate();
+		}).then(function(model){
+			user.hero.model = model;
+			callback(user.hero);
+		});*/
 	},
 	getRecruitableUnit:function(){
 
