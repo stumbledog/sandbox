@@ -12,11 +12,11 @@ var UnitSchema = new Schema({
 	index:Number,
 	passive_skills:[{
 		type:Schema.Types.ObjectId,
-		ref:"PassiveSkill",
+		ref:"Skill",
 	}],
 	active_skills:[{
 		type:Schema.Types.ObjectId,
-		ref:"ActiveSkill",
+		ref:"Skill",
 	}],
 });
 

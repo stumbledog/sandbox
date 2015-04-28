@@ -1,4 +1,4 @@
-var ActiveSkillSchema = new Schema({
+var SkillSchema = new Schema({
 	name:String,
 	description:String,
 	key:String,
@@ -12,4 +12,4 @@ var ActiveSkillSchema = new Schema({
 	animation:Schema.Types.Mixed,
 });
 
-ActiveSkillModel = mongoose.model('ActiveSkill', ActiveSkillSchema);
+SkillModel = mongoose.model('Skill', SkillSchema);

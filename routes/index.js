@@ -11,7 +11,10 @@ router.get('/', function(req, res) {
 */
 router.get('/', function(req, res) {
 	UserController.authenticate(req, res, function(user, map){
-		res.render('game', { title: 'Express', user:user, map:map, difficulty_level:0});
+		UnitController.getRecruitableUnits(function(recruitable_units){
+			map.recruitable_units = recruitable_units;
+			res.render('game', { title: 'Condottiere', user:user, map:map, difficulty_level:0});
+		});
 	});
 });
 
@@ -24,7 +27,7 @@ router.post('/', function(req, res) {
 		var chapter = req.body.chapter;
 		var difficulty_level = req.body.difficulty_level;
 		UserController.loadStage(user_id, act, chapter, res, function(user, map){
-			res.render('game', { title: 'Express', user:user, map:map, difficulty_level:difficulty_level});
+			res.render('game', { title: 'Condottiere', user:user, map:map, difficulty_level:difficulty_level});
 		});
 	}
 });
@@ -32,15 +35,23 @@ router.post('/', function(req, res) {
 router.post('/purchaseitem', function(req, res){
 	var item = req.body.item;
 	var slot_index = req.body.slot_index;
+	var repurchase = (req.body.repurchase === "true");
 	var user_id = req.session.user_id;
-	console.log(item);
-	console.log(slot_index);
-	ItemController.purchase(item, slot_index, user_id, function(err){
+	ItemController.purchase(item, slot_index, repurchase, user_id, function(err){
 		if(err){
 			res.send(err);
 		}else{
 			res.send("Purchased item successfully.");
 		}
+	});
+});
+
+router.post('/moveitem', function(req, res){
+	var from = parseInt(req.body.from);
+	var to = parseInt(req.body.to);
+	var user_id = req.session.user_id;
+	ItemController.moveItem(from, to, user_id, function(inventory){
+		res.send(inventory);
 	});
 });
 
@@ -53,22 +64,20 @@ router.post('/saveinventory', function(req, res){
 });
 
 router.post('/sellitem', function(req, res){
-	var gold = req.body.sell_price;
+	var slot_index = parseInt(req.body.slot_index);
+	var price = parseInt(req.body.price);
 	var user_id = req.session.user_id;
-	ItemController.addGold(gold, user_id, function(ret){
-		res.send(ret);
+	ItemController.sellItem(slot_index, price,user_id, function(err, result){
+		res.send({err:err, result:result});
 	});
 });
 
 router.post('/purchasefollower', function(req, res){
-	var unit = req.body.unit;
+	var unit_id = req.body.unit_id;
+	var price = parseInt(req.body.price);
 	var user_id = req.session.user_id;
-	UnitController.purchaseFollower(unit, user_id, function(err, user){
-		if(err){
-
-		}else{
-			res.send("Purchased unit successfully.");
-		}
+	UnitController.purchaseFollower(unit_id, price, user_id, function(err, result, follower){
+		res.send({err:err, result:result, follower:follower});
 	})
 });
 

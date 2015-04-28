@@ -256,20 +256,25 @@ Inventory.prototype.initItemContainers = function(){
 		container.addEventListener("mousedown", function(event){
 			if(event.nativeEvent.button === 0){
 				if(this.drag_item){
-					if(event.currentTarget.children.length > 1){
-						event.currentTarget.children[1].item.index = this.drag_item.parent.index;
-						var swap_item = event.currentTarget.children[1];
-						swap_item.item.index = this.drag_item.parent.index;
-						this.drag_item.parent.addChild(swap_item);
-						this.drag_item.item.index = event.currentTarget.index;
-						event.currentTarget.addChild(this.drag_item);
-						this.drag_item = null;
-					}else{
-						this.drag_item.item.index = event.currentTarget.index;
-						event.currentTarget.addChild(this.drag_item);
-						this.drag_item = null;
-					}
-					this.saveInventory();
+					$.post("moveitem", {from:this.drag_item.item.index, to:event.currentTarget.index}, function(res){
+						if(res.err){
+							console.log(res.err);
+						}
+						if(event.currentTarget.children.length > 1){
+							event.currentTarget.children[1].item.index = this.drag_item.parent.index;
+							var swap_item = event.currentTarget.children[1];
+							swap_item.item.index = this.drag_item.parent.index;
+							this.drag_item.parent.addChild(swap_item);
+							this.drag_item.item.index = event.currentTarget.index;
+							event.currentTarget.addChild(this.drag_item);
+							this.drag_item = null;
+						}else{
+							
+							this.drag_item.item.index = event.currentTarget.index;
+							event.currentTarget.addChild(this.drag_item);
+							this.drag_item = null;
+						}
+					}.bind(this));
 				}else{
 					if(event.currentTarget.children.length > 1){
 						this.drag_item = event.currentTarget.children[1];
@@ -278,9 +283,12 @@ Inventory.prototype.initItemContainers = function(){
 			}else if(event.nativeEvent.button === 2){
 				if(event.currentTarget.children.length > 1){
 					if(this.user.store && this.user.store.constructor.name === "MerchantStore"){
-						this.sellItem(event.currentTarget.children[1].item);
-						event.currentTarget.removeChildAt(1);
-						this.saveInventory();
+						var item = event.currentTarget.children[1].item;
+						$.post("sellitem", {slot_index:event.currentTarget.index, price:item.sell_price}, function(res){
+							console.log(res);
+							this.sellItem(item);
+							event.currentTarget.removeChildAt(1);
+						}.bind(this));
 					}else{
 						if(this.selectedCharacter){
 							var item = event.currentTarget.children[1].item;
@@ -299,6 +307,14 @@ Inventory.prototype.initItemContainers = function(){
 Inventory.prototype.initInventoryItem = function(items){
 	items.forEach(function(item){
 		item.index = parseInt(item.index);
+		if(item.weapon){
+			var weapon = new Weapon(item.weapon);
+			this.containers[item.index].addChild(this.initItemIcon(weapon, item.index));
+		}else if(item.armor){
+			var armor = new Armor(item.armor);
+			this.containers[item.index].addChild(this.initItemIcon(armor, item.index));
+		}
+		/*
 		switch(item.type){
 			case "weapon":
 				var weapon = new Weapon(item);
@@ -312,7 +328,7 @@ Inventory.prototype.initInventoryItem = function(items){
 				var consumable = new Consumable(item);
 				this.containers[item.index].addChild(this.initItemIcon(consumable, item.index));
 			break;
-		}
+		}*/
 	}, this);
 }
 
@@ -466,10 +482,10 @@ Inventory.prototype.renderUnitDetail = function(unit){
 
 Inventory.prototype.sellItem = function(item){
 	this.user.store.sellItem(item);
-	this.user.addGold(item.sell_price * item.qty);
+/*	this.user.addGold(item.sell_price * item.qty);
 	$.post("sellitem", {sell_price:item.sell_price * item.qty}, function(res){
 		console.log(res);
-	});
+	});*/
 	this.stage.update();
 }
 
@@ -524,10 +540,10 @@ Inventory.prototype.saveInventory = function(){
 			items.push(container.children[1].item.toObject());
 		}
 	});
-
+	/*
 	$.post("saveinventory", {items:items}, function(res){
 		console.log(res);
-	});
+	});*/
 }
 
 Inventory.prototype.updateGold = function(gold){

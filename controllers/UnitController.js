@@ -1,38 +1,31 @@
 UnitController = {
-	getUnitsByUserId:function(user_id, callback){
-		console.log("Load units by user id");
-		UnitModel.find({_user:user_id}, callback);
-	},
-	loadRecruitableUnit:function(level, callback){
-		var units = [];
-		FollowerModel.find().exec(function(err, followers){
-			followers.forEach(function(follower){
-				units.push(follower.setRecruitableFollower(level));
-			});
-			callback(err, units);
-		});
-	},
 	createHero:function(user, callback){
 		console.log("Create Hero");
 		UnitModel.findOne({name:"Albert"}).exec(function(err, unit){
-			user.hero.model = unit._id;
-			return user.save(function(){
-				callback(user);	
+			var hero = new UserUnitModel();
+			hero.model = unit._id;
+			user.hero = hero._id;
+			hero.save().then(function(){
+				user.save(callback);
 			});
 		});
-			/*
-			return user.populate("hero.model").execPopulate();
-		}).then(function(model){
-			return model.populate("passive_skills").populate("active_skills").execPopulate();
-		}).then(function(model){
-			user.hero.model = model;
-			callback(user.hero);
-		});*/
 	},
-	getRecruitableUnit:function(){
-
+	getRecruitableUnits:function(callback){
+		UnitModel.find({type:"follower"}).populate('active_skills passive_skills').then(callback);
 	},
-	purchaseFollower:function(unit, user_id, callback){
+	purchaseFollower:function(unit_id, price, user_id, callback){
+		UserModel.findById(user_id, "followers gold", function(err, user){
+			var follower = new UserUnitModel({model:unit_id});
+			follower.save(function(){
+				follower.populate('model', function(err, follower){
+					console.log(follower);
+					UserModel.update({_id:user_id},{$inc:{gold: -price}, $push:{'followers': follower._id}}, function(err, result){
+						callback(err, result, follower);
+					});
+				});
+			});
+		})
+		/*
 		unit.active_skills.forEach(function(skill){
 			if(skill.name === "Leap Attack"){
 				skill.animation.jump.images = skill.animation.jump.images["[]"];
@@ -46,6 +39,6 @@ UnitController = {
 			user.gold -= unit.price;
 			user.markModified('followers');
 			user.save(callback);
-		});
+		});*/
 	}
 }

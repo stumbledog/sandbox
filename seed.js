@@ -1,15 +1,15 @@
 mongoose = require('mongoose');
 Schema = mongoose.Schema;
 fs = require('fs');
+
 require('./models/MerchantWeaponModel');
 require('./models/MerchantArmorModel');
-require('./models/PrototypeConsumableItemModel');
+require('./models/WeaponModel');
+require('./models/ArmorModel');
 require('./models/UnitModel');
+require('./models/SkillModel');
 require('./models/MapModel');
 require('./models/UserModel');
-require('./models/ActiveSkillModel');
-require('./models/PassiveSkillModel');
-require('./models/ItemModel');
 	
 mongoose.connect('mongodb://localhost/condottiere');
 
@@ -19,19 +19,19 @@ connection.once("open", function(){
 	MapModel.remove().exec().then(function(count){
 		return UserModel.remove().exec();
 	}).then(function(count){
+		return WeaponModel.remove().exec();
+	}).then(function(count){
+		return ArmorModel.remove().exec();
+	}).then(function(count){
 		return MerchantWeaponModel.remove().exec();
 	}).then(function(count){
-		return ActiveSkillModel.remove().exec();
-	}).then(function(count){
-		return PassiveSkillModel.remove().exec();
+		return SkillModel.remove().exec();
 	}).then(function(count){
 		return MerchantArmorModel.remove().exec();
 	}).then(function(count){
-		return PrototypeConsumableItemModel.remove().exec();
-	}).then(function(count){
-		return ItemModel.remove().exec();
-	}).then(function(count){
 		return UnitModel.remove().exec();
+	}).then(function(count){
+		return UserUnitModel.remove().exec();
 	}).then(function(count){
 		saveUnit();
 	});
@@ -39,25 +39,37 @@ connection.once("open", function(){
 
 function saveUnit(){
 	
-	var defend = new PassiveSkillModel({
+	var defend = new SkillModel({
 		name:"Defend",
 		description:"Allows to equip shields in off-hand",
 		key:"defend",
 	});
 
-	var endurance = new PassiveSkillModel({
+	var endurance = new SkillModel({
 		name:"Endurance",
 		description:"Reduces incoming damage by 10%",
 		key:"endurance",		
 	});
 
-	var taunt = new PassiveSkillModel({
+	var taunt = new SkillModel({
 		name:"Taunt",
 		description:"Normal attack taunts its target",
 		key:"taunt",
 	});
 
-	var charge = new ActiveSkillModel({
+	var dual_wield = new SkillModel({
+		name:"Dual Wield",
+		description:"Allows to equip one-hand weapons in off-hand",
+		key:"dual_wield",
+	});
+
+	var swift_runner = new SkillModel({
+		name:"Swift Runner",
+		description:"Increses movement speed by 15%",
+		key:"swift_runner",
+	})
+
+	var charge = new SkillModel({
 		name:"Charge",
 		description:"Charges and deal 300% damage to enemies in its path.",
 		key:"q",
@@ -70,7 +82,7 @@ function saveUnit(){
 		icon_source:"assets/Graphics/icons/50x50/518.png",
 	});
 
-	var shockwave = new ActiveSkillModel({
+	var shockwave = new SkillModel({
 		name:"Shockwave",
 		description:"Sends a wave that deals 200% damage to enemies up to 100 range in a cone.",
 		key:"w",
@@ -96,7 +108,7 @@ function saveUnit(){
 		}
 	});
 
-	var last_defender = new ActiveSkillModel({
+	var last_defender = new SkillModel({
 		name:"Last Defender",
 		description:"Reduces damage taken by 20% for 12 sec and increases Health regeneration by 50%",
 		key:"e",
@@ -121,7 +133,7 @@ function saveUnit(){
 		}
 	});
 
-	var judgement = new ActiveSkillModel({
+	var judgement = new SkillModel({
 		name:"Judgement",
 		description:"Sours up to the sky, deals 1000% damage to all enemies within 60 range, and knocks back them.",
 		key:"r",
@@ -153,19 +165,153 @@ function saveUnit(){
 		}
 	});
 
+	var leap_attack = new SkillModel({
+		name:"Leap Attack",
+		description:"Jump in to the air and then deal 300% damage to enemies with in 40 range",
+		key:"leap_attack",
+		target:false,
+		range:120,
+		radius:40,
+		damage:3,
+		cost:15,
+		cooldown:10,
+		icon_source:"assets/Graphics/icons/50x50/517.png",
+		animation:{
+			images:[
+				"assets/Graphics/effects/impacts/Dustring0.png",
+				"assets/Graphics/effects/impacts/Dustring1.png",
+				"assets/Graphics/effects/impacts/Dustring2.png",
+				"assets/Graphics/effects/impacts/Dustring3.png",
+				"assets/Graphics/effects/impacts/Dustring4.png",
+				"assets/Graphics/effects/explosion_0/Oexplosiona_0.png",
+				"assets/Graphics/effects/explosion_0/Oexplosiona_1.png",
+				"assets/Graphics/effects/explosion_0/Oexplosiona_2.png",
+				"assets/Graphics/effects/explosion_0/Oexplosiona_3.png",
+				"assets/Graphics/effects/explosion_0/Oexplosiona_4.png",
+				"assets/Graphics/effects/explosion_0/Oexplosiona_5.png",
+				"assets/Graphics/effects/explosion_0/Oexplosiona_6.png",
+				"assets/Graphics/effects/explosion_0/Oexplosiona_7.png",
+				"assets/Graphics/effects/explosion_0/Oexplosiona_8.png",
+				"assets/Graphics/effects/explosion_0/Oexplosiona_9.png",
+			],
+			jump:{
+				scale:0.25,
+				width:212,
+				height:79,
+				regX:106,
+				regY:40,
+				images:[
+					"assets/Graphics/effects/impacts/Dustring0.png",
+					"assets/Graphics/effects/impacts/Dustring1.png",
+					"assets/Graphics/effects/impacts/Dustring2.png",
+					"assets/Graphics/effects/impacts/Dustring3.png",
+					"assets/Graphics/effects/impacts/Dustring4.png",
+				]						
+			},
+			land:{
+				scale:0.25,
+				width:232,
+				height:218,
+				regX:116,
+				regY:99,
+				images:[
+					"assets/Graphics/effects/explosion_0/Oexplosiona_0.png",
+					"assets/Graphics/effects/explosion_0/Oexplosiona_1.png",
+					"assets/Graphics/effects/explosion_0/Oexplosiona_2.png",
+					"assets/Graphics/effects/explosion_0/Oexplosiona_3.png",
+					"assets/Graphics/effects/explosion_0/Oexplosiona_4.png",
+					"assets/Graphics/effects/explosion_0/Oexplosiona_5.png",
+					"assets/Graphics/effects/explosion_0/Oexplosiona_6.png",
+					"assets/Graphics/effects/explosion_0/Oexplosiona_7.png",
+					"assets/Graphics/effects/explosion_0/Oexplosiona_8.png",
+					"assets/Graphics/effects/explosion_0/Oexplosiona_9.png",
+				]
+			}
+		}
+	});
+
+	var backstab = new SkillModel({
+		name:"Backstab",
+		description:"Moves behind target and deals 600% damage to target and then hides for 5 sec",
+		key:"backstab",
+		target:true,
+		range:100,
+		damage:6,
+		cost:15,
+		cooldown:20,
+		duration:5000,
+		icon_source:"assets/Graphics/icons/50x50/400.png",
+		animation:{
+			scale:0.5,
+			width:90,
+			height:73,
+			regX:0,
+			regY:73,
+			images:[
+				"assets/Graphics/effects/splatters/blood_squirt_0.png",
+				"assets/Graphics/effects/splatters/blood_squirt_1.png",
+				"assets/Graphics/effects/splatters/blood_squirt_2.png",
+				"assets/Graphics/effects/splatters/blood_squirt_3.png",
+				"assets/Graphics/effects/splatters/blood_squirt_4.png",
+			]
+		}
+	});
+
+	var wand_specialization = new SkillModel({
+		name:"Wand Specialization",
+		description:"Allows to equip wand weapons",
+		key:"wand",
+	});
+
+	var critical_magic = new SkillModel({
+		name:"Critical Magic",
+		description:"Increases critical rate by 5%",
+		key:"critical_magic",
+	});
+
+	var chain_lightning = new SkillModel({
+		name:"Chain Lightning",
+		description:"Deals 200% damage to target and then jumps to nearby enemies. Affects 5 total targets.",
+		key:"chain_lightning",
+		target:true,
+		range:120,
+		damage:2,
+		cost:20,
+		cooldown:15,
+		icon_source:"assets/Graphics/icons/50x50/624.png",
+		animation:{
+			scale:0.25,
+			width:96,
+			height:640,
+			regX:48,
+			regY:0,
+			images:[
+				"assets/Graphics/effects/electricity/Lightning_0.png",
+				"assets/Graphics/effects/electricity/Lightning_1.png",
+			]
+		}
+	});
+
 	defend.save();
 	endurance.save();
 	taunt.save();
-
-	var passive_skills = [];
-	passive_skills.push(defend._id);
-	passive_skills.push(endurance._id);
-	passive_skills.push(taunt._id);
+	dual_wield.save();
+	swift_runner.save();
+	wand_specialization.save();
+	critical_magic.save();
 
 	charge.save();
 	shockwave.save();
 	last_defender.save();
 	judgement.save();
+	leap_attack.save();
+	backstab.save();
+	chain_lightning.save();
+
+	var passive_skills = [];
+	passive_skills.push(defend._id);
+	passive_skills.push(endurance._id);
+	passive_skills.push(taunt._id);
 
 	var active_skills = [];
 	active_skills.push(charge._id);
@@ -177,10 +323,10 @@ function saveUnit(){
 		name:"Albert",
 		type:"hero",
 		primary_attribute:"strength",
-		strength:2,
-		agility:1,
-		intelligence:1,
-		stamina:2,
+		strength:3,
+		agility:2,
+		intelligence:2,
+		stamina:3,
 		resource_type:"fury",
 		sprite:"hero", 
 		portrait:"portrait1", 
@@ -189,162 +335,85 @@ function saveUnit(){
 		active_skills:active_skills,
 	});
 
-	hero.save(function(){
+	var fighter_passive_skills = [];
+	fighter_passive_skills.push(defend._id);
+	fighter_passive_skills.push(endurance._id);
+	fighter_passive_skills.push(taunt._id);
+
+	var fighter_active_skills = [];
+	fighter_active_skills.push(leap_attack._id);
+
+	var fighter = new UnitModel({
+		name:"Fighter",
+		type:"follower",
+		primary_attribute:"strength",
+		strength:2,
+		agility:1,
+		intelligence:1,
+		stamina:2,
+		resource_type:"fury",
+		sprite:"fighter", 
+		portrait:"portrait5", 
+		index:0,
+		passive_skills:fighter_passive_skills,
+		active_skills:fighter_active_skills,
+	});
+
+	var thief_passive_skills = [];
+	thief_passive_skills.push(dual_wield._id);
+	thief_passive_skills.push(swift_runner._id);
+
+	var thief_active_skills = [];
+	thief_active_skills.push(backstab._id);
+
+	var thief = new UnitModel({
+		name:"Thief",
+		type:"follower",
+		primary_attribute:"agility",
+		strength:1,
+		agility:2,
+		intelligence:1,
+		stamina:2,
+		resource_type:"mana",
+		sprite:"thief", 
+		portrait:"portrait6", 
+		index:0,
+		passive_skills:thief_passive_skills,
+		active_skills:thief_active_skills,
+	});
+
+	var mage_passive_skills = [];
+	mage_passive_skills.push(wand_specialization._id);
+	mage_passive_skills.push(critical_magic._id);
+
+	var mage_active_skills = [];
+	mage_active_skills.push(chain_lightning._id);
+
+	var mage = new UnitModel({
+		name:"Mage",
+		type:"follower",
+		primary_attribute:"intelligence",
+		strength:1,
+		agility:1,
+		intelligence:2,
+		stamina:2,
+		resource_type:"mana",
+		sprite:"mage", 
+		portrait:"portrait4", 
+		index:0,
+		passive_skills:mage_passive_skills,
+		active_skills:mage_active_skills,
+	});
+
+	hero.save().then(function(){
+		return fighter.save();
+	}).then(function(){
+		return thief.save();
+	}).then(function(){
+		return mage.save();
+	}).then(function(){
 		saveMap();
 	});
-
-	/*
-	var units = [];
-	units.push(new HeroModel({name:"Albert", primary_attribute:"strength", sprite:"assets/Graphics/Characters/01 - Hero.png", portrait:"assets/Graphics/Faces/ds_face01-02.png", index:0, resource_type:"fury", 
-		passive_skills:[
-			{
-				name:"Defend",
-				description:"Allows to equip shields in off-hand",
-				key:"defend",
-			},
-			{
-				name:"Endurance",
-				description:"Reduces incoming damage by 10%",
-				key:"endurance",
-			},
-			{
-				name:"Taunt",
-				description:"Normal attack taunts its target",
-				key:"taunt",
-			}
-		],
-		active_skills:[
-			{
-				name:"Charge",
-				description:"Charges and deal 300% damage to enemies in its path.",
-				key:"q",
-				target:false,
-				range:120,
-				radius:30,
-				damage:3,
-				cost:15,
-				cooldown:10,
-				icon_source:"assets/Graphics/icons/50x50/518.png",
-			},
-			{
-				name:"Shockwave",
-				description:"Sends a wave that deals 200% damage to enemies up to 100 range in a cone.",
-				key:"w",
-				target:false,
-				radius:100,
-				angle:90,
-				damage:2,
-				cost:20,
-				cooldown:6,
-				icon_source:"assets/Graphics/icons/50x50/514.png",
-				animation:{
-					scale:0.5,
-					width:163,
-					height:167,
-					regX:81,
-					regY:167,
-					images:[
-						"assets/Graphics/effects/shooter_fx/lava_shot_impact1.png",
-						"assets/Graphics/effects/shooter_fx/lava_shot_impact2.png",
-						"assets/Graphics/effects/shooter_fx/lava_shot_impact3.png",
-						"assets/Graphics/effects/shooter_fx/lava_shot_impact4.png",
-					]
-				}
-			},
-			{
-				name:"Last Defender",
-				description:"Reduces damage taken by 20% for 12 sec and increases Health regeneration by 50%",
-				key:"e",
-				target:false,
-				cost:30,
-				cooldown:30,
-				duration:12000,
-				icon_source:"assets/Graphics/icons/50x50/525.png",
-				animation:{
-					scale:0.5,
-					rotate:-45,
-					width:84,
-					height:79,
-					regX:42,
-					regY:40,
-					images:[
-						"assets/Graphics/effects/shooter_fx/lava_ball_fx1.png",
-						"assets/Graphics/effects/shooter_fx/lava_ball_fx2.png",
-						"assets/Graphics/effects/shooter_fx/lava_ball_fx3.png",
-						"assets/Graphics/effects/shooter_fx/lava_ball_fx4.png",
-					]
-				}
-			},
-			{
-				name:"Judgement",
-				description:"Sours up to the sky, deals 1000% damage to all enemies within 60 range, and knocks back them.",
-				key:"r",
-				range:120,
-				radius:60,
-				angle:60,
-				damage:10,
-				cost:40,
-				cooldown:50,
-				icon_source:"assets/Graphics/icons/50x50/529.png",
-				animation:{
-					scale:0.5,
-					width:232,
-					height:218,
-					regX:116,
-					regY:99,
-					images:[
-						"assets/Graphics/effects/explosion_0/Oexplosiona_0.png",
-						"assets/Graphics/effects/explosion_0/Oexplosiona_1.png",
-						"assets/Graphics/effects/explosion_0/Oexplosiona_2.png",
-						"assets/Graphics/effects/explosion_0/Oexplosiona_3.png",
-						"assets/Graphics/effects/explosion_0/Oexplosiona_4.png",
-						"assets/Graphics/effects/explosion_0/Oexplosiona_5.png",
-						"assets/Graphics/effects/explosion_0/Oexplosiona_6.png",
-						"assets/Graphics/effects/explosion_0/Oexplosiona_7.png",
-						"assets/Graphics/effects/explosion_0/Oexplosiona_8.png",
-						"assets/Graphics/effects/explosion_0/Oexplosiona_9.png",
-					]
-				}
-			},
-			{
-				name:"Shockwave",
-				description:"Send a wave that deals 200% dps to enemies up to 10 yards in a cone.",
-				key:"t",
-				radius:160,
-				angle:60,
-				type:"cone",
-				damage:200,
-				cost:15,
-				cooldown:10,
-				icon_source:"assets/Graphics/icons/50x50/129.png",
-				animation:{
-					scale:0.2,
-					width:232,
-					height:218,
-					regX:0,
-					regY:0,
-					images:[
-						"assets/Graphics/effects/shooter_fx/lava_shot_impact1.png",
-						"assets/Graphics/effects/shooter_fx/lava_shot_impact2.png",
-						"assets/Graphics/effects/shooter_fx/lava_shot_impact3.png",
-						"assets/Graphics/effects/shooter_fx/lava_shot_impact4.png",
-					]
-				}
-			}
-		]
-	}));
-
-	var count = 0;
-	units.forEach(function(unit){
-		unit.save(function(){
-			count++;
-			if(count === units.length){
-				console.log(count + " units are created");
-				saveMap();
-			}
-		});
-	});
-*/
 }
 
 function saveMap(){
@@ -403,227 +472,8 @@ function saveMap(){
 		true,
 		[
 			{name:"Merchant",	model:{sprite:"merchant", index:0}, type:"merchant", x:32*4, y:32*4},
-			{name:"Recruiter",	model:{sprite:"merchant", index:1}, type:"recruiter", x:32*6, y:32*4, 
-				recruitable_units:[
-					{
-						character_class:"Fighter",
-						primary_attribute:0,
-						level:1,
-						strength:2,
-						agility:1,
-						intelligence:1,
-						stamina:2,
-						price:100,
-						sprite:"assets/Graphics/Characters/05 - Fighter.png",
-						portrait:"assets/Graphics/Faces/ds_face09-10.png",
-						index:0,
-						level_up_bonus:{
-							strength:2,
-							agility:1,
-							intelligence:1,
-							stamina:2,
-						},
-						passive_skills:[
-							{
-								name:"Defend",
-								description:"Allows to equip shields in off-hand",
-								key:"defend",
-							},
-							{
-								name:"Endurance",
-								description:"Reduces incoming damage by 10%",
-								key:"endurance",
-							},
-							{
-								name:"Taunt",
-								description:"Normal attack taunts its target",
-								key:"taunt",
-							}
-						],
-						active_skills:[
-							{
-								name:"Leap Attack",
-								description:"Jump in to the air and then deal 300% damage to enemies with in 40 range",
-								key:"leap_attack",
-								target:false,
-								range:120,
-								radius:40,
-								damage:3,
-								cost:15,
-								cooldown:10,
-								icon_source:"assets/Graphics/icons/50x50/517.png",
-								animation:{
-									images:[
-										"assets/Graphics/effects/impacts/Dustring0.png",
-										"assets/Graphics/effects/impacts/Dustring1.png",
-										"assets/Graphics/effects/impacts/Dustring2.png",
-										"assets/Graphics/effects/impacts/Dustring3.png",
-										"assets/Graphics/effects/impacts/Dustring4.png",
-										"assets/Graphics/effects/explosion_0/Oexplosiona_0.png",
-										"assets/Graphics/effects/explosion_0/Oexplosiona_1.png",
-										"assets/Graphics/effects/explosion_0/Oexplosiona_2.png",
-										"assets/Graphics/effects/explosion_0/Oexplosiona_3.png",
-										"assets/Graphics/effects/explosion_0/Oexplosiona_4.png",
-										"assets/Graphics/effects/explosion_0/Oexplosiona_5.png",
-										"assets/Graphics/effects/explosion_0/Oexplosiona_6.png",
-										"assets/Graphics/effects/explosion_0/Oexplosiona_7.png",
-										"assets/Graphics/effects/explosion_0/Oexplosiona_8.png",
-										"assets/Graphics/effects/explosion_0/Oexplosiona_9.png",
-									],
-									jump:{
-										scale:0.25,
-										width:212,
-										height:79,
-										regX:106,
-										regY:40,
-										images:[
-											"assets/Graphics/effects/impacts/Dustring0.png",
-											"assets/Graphics/effects/impacts/Dustring1.png",
-											"assets/Graphics/effects/impacts/Dustring2.png",
-											"assets/Graphics/effects/impacts/Dustring3.png",
-											"assets/Graphics/effects/impacts/Dustring4.png",
-										]						
-									},
-									land:{
-										scale:0.25,
-										width:232,
-										height:218,
-										regX:116,
-										regY:99,
-										images:[
-											"assets/Graphics/effects/explosion_0/Oexplosiona_0.png",
-											"assets/Graphics/effects/explosion_0/Oexplosiona_1.png",
-											"assets/Graphics/effects/explosion_0/Oexplosiona_2.png",
-											"assets/Graphics/effects/explosion_0/Oexplosiona_3.png",
-											"assets/Graphics/effects/explosion_0/Oexplosiona_4.png",
-											"assets/Graphics/effects/explosion_0/Oexplosiona_5.png",
-											"assets/Graphics/effects/explosion_0/Oexplosiona_6.png",
-											"assets/Graphics/effects/explosion_0/Oexplosiona_7.png",
-											"assets/Graphics/effects/explosion_0/Oexplosiona_8.png",
-											"assets/Graphics/effects/explosion_0/Oexplosiona_9.png",
-										]
-									}
-								}
-							},
-						]
-					},
-					{
-						character_class:"Thief",
-						primary_attribute:1,
-						level:1,
-						strength:1,
-						agility:2,
-						intelligence:1,
-						stamina:2,
-						price:100,
-						sprite:"assets/Graphics/Characters/06 - Thief.png",
-						portrait:"assets/Graphics/Faces/ds_face11-12.png",
-						index:0,
-						level_up_bonus:{
-							strength:1,
-							agility:2,
-							intelligence:1,
-							stamina:2,
-						},
-						passive_skills:[
-							{
-								name:"Dual Wield",
-								description:"Allows to equip one-hand weapons in off-hand",
-								key:"dual_wield",
-							},
-							{
-								name:"Swift Runner",
-								description:"Increses movement speed by 15%",
-								key:"swift_runner",
-							},
-						],
-						active_skills:[
-							{
-								name:"Backstab",
-								description:"Moves behind target and deals 600% damage to target and then hides for 5 sec",
-								key:"backstab",
-								target:true,
-								range:100,
-								damage:6,
-								cost:15,
-								cooldown:20,
-								duration:5000,
-								icon_source:"assets/Graphics/icons/50x50/400.png",
-								animation:{
-									scale:0.5,
-									width:90,
-									height:73,
-									regX:0,
-									regY:73,
-									images:[
-										"assets/Graphics/effects/splatters/blood_squirt_0.png",
-										"assets/Graphics/effects/splatters/blood_squirt_1.png",
-										"assets/Graphics/effects/splatters/blood_squirt_2.png",
-										"assets/Graphics/effects/splatters/blood_squirt_3.png",
-										"assets/Graphics/effects/splatters/blood_squirt_4.png",
-									]
-								}
-							},
-						]
-					},
-					{
-						character_class:"Mage",
-						primary_attribute:2,
-						level:1,
-						strength:1,
-						agility:1,
-						intelligence:2,
-						stamina:2,
-						price:100,
-						sprite:"assets/Graphics/Characters/04 - Mage.png",
-						portrait:"assets/Graphics/Faces/ds_face07-08.png",
-						index:0,
-						level_up_bonus:{
-							strength:1,
-							agility:1,
-							intelligence:2,
-							stamina:2,
-						},
-						passive_skills:[
-							{
-								name:"Wand Specialization",
-								description:"Allows to equip wand weapons",
-								key:"wand",
-							},
-							{
-								name:"Critical Magic",
-								description:"Increases critical rate by 5%",
-								key:"critical_magic",
-							},
-						],
-						active_skills:[
-							{
-								name:"Chain Lightning",
-								description:"Deals 200% damage to target and then jumps to nearby enemies. Affects 5 total targets.",
-								key:"chain_lightning",
-								target:true,
-								range:120,
-								damage:2,
-								cost:20,
-								cooldown:15,
-								icon_source:"assets/Graphics/icons/50x50/624.png",
-								animation:{
-									scale:0.25,
-									width:96,
-									height:640,
-									regX:48,
-									regY:0,
-									images:[
-										"assets/Graphics/effects/electricity/Lightning_0.png",
-										"assets/Graphics/effects/electricity/Lightning_1.png",
-									]
-								}
-							},
-						]
-					},
-				]
-			},
-			//{name:"Blacksmith",		sprite:"assets/Graphics/Characters/12 - Merchant.png",	index:2, type:"blacksmith", x:32*7, y:32*7},
+			{name:"Recruiter",	model:{sprite:"merchant", index:1}, type:"recruiter", x:32*6, y:32*4},
+		//	{name:"Blacksmith",	model:{sprite:"merchant", index:2}, type:"blacksmith", x:32*7, y:32*7},
 			{name:"Battlemaster", model:{sprite:"soldier", index:0}, type:"battlemaster", x:32*3, y:32*7},
 		],
 		[],0,0,"Basecamp",true,true,320,320,10,10,[160,160]
@@ -921,46 +771,6 @@ function saveItems(){
 				process.exit(0);
 			}
 		});
-	});
-}
-
-function initUnit(id, name, strength, dexterity, intelligence, vitality,
-	sprite, portrait, index, level, exp, resource_type, resource,
-	max_resource, health, damage, attack_speed, armor,
-	movement_speed, critical_rate, critical_damage, radius, aggro_radius,
-	range, type, team, health_color, damage_color,
-	regX, regY, recruitable){
-	return new UnitModel({
-		_id:id,
-		name:name,
-		sprite:sprite,
-		portrait:portrait,
-		index:index,
-		level:level,
-		exp:exp,
-		resource_type:resource_type,
-		resource:resource,
-		max_resource:max_resource,
-		health:health,
-		strength:strength,
-		dexterity:dexterity,
-		intelligence:intelligence,
-		vitality:vitality,
-		attack_speed:attack_speed,
-		armor:armor,
-		movement_speed:movement_speed,
-		critical_rate:critical_rate,
-		critical_damage:critical_damage,
-		radius:radius,
-		aggro_radius:aggro_radius,
-		range:range,
-		type:type,
-		team:team,
-		health_color:health_color,
-		damage_color:damage_color,
-		regX:regX,
-		regY:regY,
-		recruitable:recruitable,
 	});
 }
 

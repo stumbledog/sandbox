@@ -14,7 +14,6 @@ User.prototype.setHero = function(hero){
 	this.hero = hero;
 }
 
-
 User.prototype.addFollower = function(follower){
 	this.followers.push(follower);
 }

@@ -29,6 +29,7 @@ Armor.prototype.armor_initialize = function(builder){
 	this.armor = builder.armor;
 	this.attributes = builder.attributes;
 	this.attributes_index = builder.attributes_index;
+	this.builder = builder;
 
 	this.initialize(builder);
 }
@@ -61,7 +62,6 @@ Armor.prototype.initDetail = function(){
 
 	armor_amount_text.text = armor;
 	armor_text.x = armor_amount_text.getMeasuredWidth() + 4;
-	console.log(this.rating);
 	this.summary_height = 62 + 14 * this.rating - offsetY;
 	var bg = new createjs.Shape();
 	bg.graphics.s("#000").ss(1).f("#fff").dr(0, 0, 140, this.summary_height);

@@ -121,7 +121,7 @@ MerchantStore.prototype.mousedownStoreItem = function(item, event){
 			alert("Not enough money!");
 		}else{
 			var purchased_item = this.user.purchase(item);
-			$.post("purchaseitem", {item:purchased_item.toObject(), slot_index:slot_index}, function(res){
+			$.post("purchaseitem", {item:purchased_item.toObject(), slot_index:slot_index, repurchase:item.repurchase}, function(res){
 				this.removeItem(item);
 				console.log(res);
 			}.bind(this));

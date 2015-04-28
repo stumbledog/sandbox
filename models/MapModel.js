@@ -1,26 +1,3 @@
-var RecrutableUnitSchema = new Schema({
-	character_class:String,
-	primary_attribute:Number,
-	level:Number,
-	strength:Number,
-	agility:Number,
-	intelligence:Number,
-	stamina:Number,
-	sprite:String,
-	price:Number,
-	portrait:String,
-	index:Number,
-	resource_type:String,
-	level_up_bonus:{
-		strength:Number,
-		agility:Number,
-		intelligence:Number,
-		stamina:Number,
-	},
-	passive_skills:Schema.Types.Mixed,
-	active_skills:Schema.Types.Mixed,
-});
-
 var NPCSchema = new Schema({
 	name:String,
 	model:{
@@ -30,7 +7,6 @@ var NPCSchema = new Schema({
 	type:String,
 	x:Number,
 	y:Number,
-	recruitable_units:[RecrutableUnitSchema],
 });
 
 var MapSchema = new Schema({

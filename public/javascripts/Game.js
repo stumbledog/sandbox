@@ -74,50 +74,20 @@ var Game = (function(){
 		manifest.push({src:"assets/Graphics/Faces/ds_face37-38.png", id:"portrait19"});
 		manifest.push({src:"assets/Graphics/Faces/ds_face39-40.png", id:"portrait20"});
 
-
-
-//		manifest.push({src:user_builder.hero.sprite, id:user_builder.hero.sprite.split('/').pop()});
-//		manifest.push({src:user_builder.hero.portrait, id:user_builder.hero.portrait.split('/').pop()});
-		/*
-		if(user_builder.inventory.slots){
-			user_builder.inventory.slots.forEach(function(item){
-				manifest.push({src:item.icon.source, id:item.icon.source.split('/').pop()});
-			});
-		}*/
-
-		/*
-		if(user_builder.hero.items){
-			for(key in user_builder.hero.items){
-				if(user_builder.hero.items[key]){
-					if(user_builder.hero.items[key].icon){
-						manifest.push({src:user_builder.hero.items[key].icon.source, id:user_builder.hero.items[key].icon.source.split('/').pop()});
-					}
-				}
-			}
-		}
-		*/
-
-		user_builder.followers.forEach(function(unit_builder){
-			/*
-			if(unit_builder.items){
-				for(key in unit_builder.items){
-					if(unit_builder.items[key]){
-						if(unit_builder.items[key].icon){
-							manifest.push({src:unit_builder.items[key].icon.source, id:unit_builder.items[key].icon.source.split('/').pop()});
-						}
-					}
-				}
-			}*/
-			manifest.push({src:unit_builder.sprite, id:unit_builder.sprite.split('/').pop()});
-			if(unit_builder.portrait){
-				manifest.push({src:unit_builder.portrait, id:unit_builder.portrait.split('/').pop()});
-			}
-			if(unit_builder.model.active_skills){
-				unit_builder.model.active_skills.forEach(function(skill){
+		user_builder.followers.forEach(function(follower){
+			if(follower.model.active_skills){
+				follower.model.active_skills.forEach(function(skill){
 					if(skill.icon_source){
 						manifest.push({src:skill.icon_source,id:skill.icon_source.split('/').pop()});
 					}
-					if(skill.animation){
+					if(skill.name === "Leap Attack"){
+						skill.animation.land.images.forEach(function(image){
+							manifest.push({src:image,id:image.split('/').pop()});
+						});
+						skill.animation.jump.images.forEach(function(image){
+							manifest.push({src:image,id:image.split('/').pop()});
+						});
+					}else if(skill.animation){
 						skill.animation.images.forEach(function(image){
 							manifest.push({src:image,id:image.split('/').pop()});
 						});
@@ -127,6 +97,7 @@ var Game = (function(){
 		});
 
 		manifest.push({src:"assets/Graphics/effects/magic_0/round_shot.png",id:"round_shot"});
+
 
 		map_builder.maps.forEach(function(map){
 			manifest.push({src:map.src, id:map.src.split('/').pop()});
@@ -144,6 +115,23 @@ var Game = (function(){
 		}
 		*/
 
+		if(map_builder.recruitable_units){
+			map_builder.recruitable_units.forEach(function(recruitable_unit){
+				if(recruitable_unit.active_skills){
+					recruitable_unit.active_skills.forEach(function(skill){
+						if(skill.icon_source){
+							manifest.push({src:skill.icon_source,id:skill.icon_source.split('/').pop()});
+						}
+						if(skill.animation){
+							skill.animation.images.forEach(function(image){
+								manifest.push({src:image,id:image.split('/').pop()});
+							});
+						}
+					});
+				}
+			});
+		}
+		/*
 		if(map_builder.npcs){
 			map_builder.npcs.forEach(function(npc){
 				npc.recruitable_units.forEach(function(recruitable_unit){
@@ -163,7 +151,7 @@ var Game = (function(){
 					}
 				});
 			});
-		}
+		}*/
 
 		if(map_builder.monsters){
 			map_builder.monsters.forEach(function(monster){
@@ -281,7 +269,7 @@ var Game = (function(){
 					unit_stage.addUnit(new Merchant(builder));
 					break;
 				case "recruiter":
-					unit_stage.addUnit(new Recruiter(builder));
+					unit_stage.addUnit(new Recruiter(builder, map_builder.recruitable_units));
 					break;
 				case "blacksmith":
 					unit_stage.addUnit(new Blacksmith(builder));

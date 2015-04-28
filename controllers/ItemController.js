@@ -38,36 +38,56 @@ ItemController = {
 			});
 		}
 	},
-	purchase:function(item_builder, slot_index, user_id, callback){
-		console.log(item_builder);
-		console.log(slot_index);
-		var price = item_builder.repurchase === "true" ? parseInt(item_builder.sell_price) : parseInt(item_builder.price);
-		var total_price = price * parseInt(item_builder.qty);
+	purchase:function(item_builder, slot_index, repurchase, user_id, callback){
+		console.log(repurchase);
+		if(item_builder.type === "weapon"){
+			var item = new WeaponModel(item_builder);
+		}else{
+			var item = new ArmorModel(item_builder);
+		}
+
 		UserModel.findById(user_id, function(err, user){
-			if(user.gold >= total_price){
-				if(item_builder.type === "consumable"){
-					var find = false;
-					user.inventory.slots.forEach(function(slot_item){
-						if(slot_item.name === item_builder.name){
-							slot_item.qty += parseInt(item_builder.qty);
-							find = true;
-							return false;
-						}
-					});
-					if(!find){
-						user.inventory.slots.push(item_builder);
-					}
+			var price = Math.ceil(item.price / (repurchase ? 2 : 1));
+			if(user.gold >= price){
+				item.save();
+				user.gold -= price;
+				if(item_builder.type === "weapon"){
+					user.inventory.slots.push({index:slot_index, weapon:item._id});
 				}else{
-					var item = new ItemModel(item_builder);
-					item.save();
-					user.inventory.slots.push({index:slot_index, item:item._id});
+					user.inventory.slots.push({index:slot_index, armor:item._id});
 				}
-				UserModel.findOneAndUpdate({_id:user._id}, {gold:user.gold - total_price, inventory:user.inventory}, function(err, user){
+				user.markModified('inventory.slots');
+				user.save(function(){
 					callback({gold:user.gold});
-				});
+				})
 			}else{
 				callback({err:true, err_msg:"Not enough gold"});
 			}
+		});
+	},
+	moveItem:function(from, to, user_id, callback){
+		var source_item, target_item;
+		UserModel.findById(user_id, 'inventory', function(err, user){
+			var source_item = user.inventory.slots.filter(function(slot){
+				return slot.index === from;
+			});
+
+			var target_item = user.inventory.slots.filter(function(slot){
+				return slot.index === to;
+			});
+
+			if(target_item.length){
+				target_item[0].index = -1;
+				source_item[0].index = to;
+				target_item[0].index = from;
+			}else{
+				source_item[0].index = to;
+			}
+
+			user.markModified('inventory.slots');
+			user.save(function(err, user){
+				callback({inventory:user.inventory.slots});
+			})			
 		});
 	},
 	saveInventory:function(items, user_id, callback){
@@ -83,16 +103,9 @@ ItemController = {
 			callback(null);
 		});
 	},
-	sellItem:function(item_id, user_id, callback){
-		UserModel.findById(user_id, function(err, user){
-			var item = user.inventory.slots.id(item_id);
-			console.log(item.sell_price, item.qty);
-			user.gold += item.sell_price * item.qty;
-			item.remove();
-			user.markModified('inventory.slots');
-			user.save(function(err, user){
-				callback({gold:user.gold});
-			});
+	sellItem:function(slot_index, price, user_id, callback){
+		UserModel.findById(user_id, 'inventory gold', function(err, user){
+			UserModel.update({_id:user_id},{$inc:{gold:price}, $pull:{'inventory.slots':{index:slot_index}}}, callback);
 		});
 	}
 }

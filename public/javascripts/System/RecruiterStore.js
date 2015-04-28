@@ -24,6 +24,8 @@ RecruiterStore.prototype.initUnits = function(){
 	this.unit_container.y = 50;
 
 	this.items.forEach(function(unit, index){
+		unit.level = this.user.hero.level;
+		unit.price = unit.level * 100;
 		this.unitSummary(unit, index % 3 * 100, parseInt(index / 3) * 60);
 		this.unitDetail(unit);
 		this.unit_container.addChild(unit.store_summary);
@@ -32,7 +34,7 @@ RecruiterStore.prototype.initUnits = function(){
 
 RecruiterStore.prototype.unitSummary = function(unit, x, y){
 	var frame = new createjs.Shape();
-	frame.graphics.s("#000").ss(1).f("#fff").dr(0,0,100,60).dr(0,0,30,60).dr(30,45,70,15).f(this.color[unit.character_class]).dr(0,0,30,60);
+	frame.graphics.s("#000").ss(1).f("#fff").dr(0,0,100,60).dr(0,0,30,60).dr(30,45,70,15).f(this.color[unit.name]).dr(0,0,30,60);
 
 	var frames = [];
 	for(var i=0 ;i < 3; i++){
@@ -58,9 +60,9 @@ RecruiterStore.prototype.unitSummary = function(unit, x, y){
 	level.x = 32;
 	level.y = 2;
 
-	var character_class = new createjs.Text(unit.character_class, "12px Arial","#000");
-	character_class.x = 32;
-	character_class.y = 16;
+	var name = new createjs.Text(unit.name, "12px Arial","#000");
+	name.x = 32;
+	name.y = 16;
 
 	var price_text = unit.price;
 	var price = new createjs.Text(price_text, "12px Arial","#000");
@@ -77,7 +79,7 @@ RecruiterStore.prototype.unitSummary = function(unit, x, y){
 	unit.store_summary.x = x;
 	unit.store_summary.y = y;
 
-	unit.store_summary.addChild(frame, sprite, level, character_class, price, coin);
+	unit.store_summary.addChild(frame, sprite, level, name, price, coin);
 	unit.store_summary.cursor = "pointer";
 
 	unit.store_summary.addEventListener("mousedown", this.mousedownStoreItem.bind(this, unit));
@@ -86,16 +88,14 @@ RecruiterStore.prototype.unitSummary = function(unit, x, y){
 }
 
 RecruiterStore.prototype.unitDetail = function(unit){
-	var primary_attribute_text = ["Strength", "Agility", "Intelligence"];
-
 	var frame = new createjs.Shape();
 	frame.graphics.s("#000").ss(1).f("#fff").dr(0,0,140,120);
 
-	var level = new OutlineText("Level " + unit.level + " " + unit.character_class, "10px Arial", this.color[unit.character_class], "#333", 3);
+	var level = new OutlineText("Level " + unit.level + " " + unit.name, "10px Arial", this.color[unit.name], "#333", 3);
 	level.x = 3;
 	level.y = 2;
 
-	var primary_attribute = new createjs.Text("Primary Attribute: " + primary_attribute_text[unit.primary_attribute], "10px Arial","#000");
+	var primary_attribute = new createjs.Text("Primary Attribute: " + unit.primary_attribute, "10px Arial","#000");
 	primary_attribute.x = 2;
 	primary_attribute.y = 16;
 
@@ -161,14 +161,16 @@ RecruiterStore.prototype.mousedownStoreItem = function(unit, event){
 		if(this.user.gold < unit.price){
 			alert("Not enough money!");
 		}else{
-			unit.x = 160;
-			unit.y = 160;
-			unit.items = [];
-			var follower = new Follower(unit);
-			this.user.purchaseFollower(follower, unit.price);
-			$.post("purchasefollower", {unit:this.unitToObject(unit)}, function(res){
+			console.log(unit);
+			$.post("purchasefollower", {unit_id:unit._id, price:unit.price}, function(res){
 				console.log(res);
-			});
+				if(res.err){
+					console.log(res.err);
+				}else{
+					var follower = new Follower(res.follower);
+					this.user.purchaseFollower(follower, unit.price);
+				}
+			}.bind(this));
 		}
 	}
 }

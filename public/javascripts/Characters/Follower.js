@@ -10,13 +10,17 @@ Follower.prototype.unit_initialize = Follower.prototype.initialize;
 Follower.prototype.follower_initialize = function(builder){
 	this.equipped_unit_initialize(builder);	
 
+	this.name = builder.model.name
 	this.team = "Player";
 	this.health_color = "#468966";
 	this.damage_color = "#FFF0A5";
 
 	this.initHealthBar();
-	this.renderPortrait(builder.portrait.split('/').pop(), builder.index);
-	this.order = {action:"stop", map:this.findPath({x:this.x,y:this.y})};
+	this.renderPortrait(builder.model.portrait, builder.model.index);
+	if(this.x && this.y){
+		this.order = {action:"stop", map:this.findPath({x:this.x,y:this.y})};
+	}
+
 }
 
 Follower.prototype.getClassColor = function(){
@@ -25,7 +29,7 @@ Follower.prototype.getClassColor = function(){
 		Thief:"#7E8AA2",
 		Mage:"#91AA9D",
 	};
-	return color[this.character_class];
+	return color[this.name];
 }
 
 Follower.prototype.tick = function(){

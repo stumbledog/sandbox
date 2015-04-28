@@ -66,7 +66,7 @@ MerchantWeaponSchema.methods.setMerchantItem = function(level, rating){
 				weapon.attributes.max_damage_bonus *= (weapon.hand === 2 ? 1.5 : 1) * weapon.attack_speed / 60;
 				weapon.attributes.min_damage_bonus = Math.round(weapon.attributes.min_damage_bonus * 10) / 10;
 				weapon.attributes.max_damage_bonus = Math.round(weapon.attributes.max_damage_bonus * 10) / 10;
-				weapon.price += (weapon.min_damage_bonus + weapon.max_damage_bonus) * 2;
+				weapon.price += (weapon.attributes.min_damage_bonus + weapon.attributes.max_damage_bonus) * 2;
 			break;
 			case 1:
 				var value = Math.ceil(level * (weapon.rating) * (Math.random() / 4 + 0.75));

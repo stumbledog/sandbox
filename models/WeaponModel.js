@@ -9,6 +9,9 @@ var WeaponSchema = new Schema({
 	max_damage:Number,
 	attack_speed:Number,
 	range:Number,
+	price:Number,
+	level:Number,
+	rating:Number,
 	sprite:{
 		source:String,
 		cropX:Number,
@@ -30,6 +33,7 @@ var WeaponSchema = new Schema({
 		scale:Number,
 		spin:Number,
 	},
+	attributes_index:[Number],
 	attributes:Schema.Types.Mixed,
 }, { versionKey: false });
 

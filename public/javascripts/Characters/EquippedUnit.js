@@ -10,7 +10,6 @@ EquippedUnit.prototype.equipped_unit_initialize = function(builder){
 	this.unit_initialize(builder);
 
 	this.character_class = builder.character_class;
-	console.log(builder);
 	this.primary_attribute = builder.model.primary_attribute;
 	this.char_strength = builder.model.strength * builder.level;
 	this.char_agility = builder.model.agility * builder.level;
@@ -298,12 +297,13 @@ EquippedUnit.prototype.equipItem = function(item){
 			break;
 		}
 		this.user.inventory.displayEquipItems(this);
-		this.user.saveEquipItems();
+
+		//this.user.saveEquipItems();
 		this.updateStats();
 	}else{
 		this.user.inventory.addItem(item);
 		//this.user.inventory.displayEquipItems(this);
-		this.user.saveEquipItems();
+		//this.user.saveEquipItems();
 		alert("Not enough unit level to equip this item");
 	}
 }
