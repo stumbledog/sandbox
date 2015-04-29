@@ -152,13 +152,13 @@ var Game = (function(){
 				});
 			});
 		}*/
-
+/*
 		if(map_builder.monsters){
 			map_builder.monsters.forEach(function(monster){
 				manifest.push({src:monster.sprite, id:monster.sprite.split('/').pop()});
 			});
 		}
-
+*/
 		if(user_builder.hero.model.active_skills){
 			user_builder.hero.model.active_skills.forEach(function(skill){
 				if(skill.icon_source){

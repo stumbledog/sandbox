@@ -58,8 +58,16 @@ router.post('/moveitem', function(req, res){
 router.post('/saveinventory', function(req, res){
 	var items = typeof req.body.items !== 'undefined' ? req.body.items : [];
 	var user_id = req.session.user_id;
-	ItemController.saveInventory(items, user_id, function(ret){
-		res.send(ret);
+	ItemController.saveInventory(items, user_id, function(err, result){
+		res.send({err:err, result:result});
+	});
+});
+
+router.post('/saveunititem', function(req, res){
+	var items = typeof req.body.items !== 'undefined' ? req.body.items : [];
+	var unit_id = req.body.unit_id;
+	UserUnitModel.update({_id:unit_id},{equipments:items}, function(err, result){
+		res.send({err:err, result:result});
 	});
 });
 
@@ -81,21 +89,11 @@ router.post('/purchasefollower', function(req, res){
 	})
 });
 
-router.post('/saveequipitem', function(req, res){
-	var hero_items = typeof req.body.hero_items !== 'undefined' ? req.body.hero_items : [];
-	var follower_items = typeof req.body.follower_items !== 'undefined' ? req.body.follower_items : [];
-	var user_id = req.session.user_id;
-	UserController.saveItems(hero_items, follower_items, user_id, function(err, user){
-		res.send(user);
-	});
-});
-
 router.post('/savestats', function(req, res){
-	var hero = req.body.hero;
-	var followers = typeof req.body.followers !== 'undefined' ? req.body.followers : [];
+	var units = req.body.units;
 	var user_id = req.session.user_id;
-	UserController.saveStats(hero, followers, user_id, function(err, user){
-		res.send(user);
+	UserController.saveStats(units, user_id, function(errs, results){
+		res.send({errs:errs, results:results});
 	});
 });
 
@@ -104,6 +102,14 @@ router.post('/dropitem', function(req, res){
 	var rating = req.body.rating;
 	ItemController.dropItem(level, rating, function(item){
 		res.send(item);
+	});
+});
+
+router.post('/lootitem', function(req, res){
+	var item = req.body.item;
+	console.log(item);
+	ItemController.lootItem(item, function(err, item_model){
+		res.send({err:err, item_model:item_model});
 	});
 });
 

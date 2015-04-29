@@ -22,7 +22,6 @@ Monster.prototype.initialize = function(builder){
 	this.gold = builder.gold * (1 + this.difficulty_level) * (1 + (this.hero_level - 1) / 5);
 	this.xp = builder.xp * (1 + this.difficulty_level) * (1 + (this.hero_level - 1) / 5);
 	this.drop_rate = builder.drop_rate * (1 + this.difficulty_level);
-	console.log(this.drop_rate);
 	this.scaleX = this.scaleY = builder.scale ? builder.scale : 1;
 
 	this.right_weapon_tick = 0;

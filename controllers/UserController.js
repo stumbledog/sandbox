@@ -58,48 +58,38 @@ UserController = {
 		}.bind(this));
 	},
 	populateUserModel:function(user, callback){
-		user.populate("hero followers inventory.slots.weapon inventory.slots.armor").execPopulate().then(function(user){
+		user.populate("hero followers").execPopulate().then(function(user){
 			return user
 			.populate({path:"hero.model followers.model",model:"Unit"})
-			.populate({path:"hero.equipments.weapon followers.equipments.weapon",model:"Weapon"})
-			.populate({path:"hero.equipments.armor followers.equipments.armor",model:"Armor"})
+			.populate({path:"inventory.slots.weapon hero.equipments.weapon followers.equipments.weapon",model:"Weapon"})
+			.populate({path:"inventory.slots.armor hero.equipments.armor followers.equipments.armor",model:"Armor"})
 			.execPopulate();
 		}).then(function(user){
 			return user
 			.populate({path:"hero.model.passive_skills hero.model.active_skills",model:"Skill"})
+			.populate({path:"followers.model.passive_skills followers.model.active_skills",model:"Skill"})
 			.execPopulate();
 		}).then(function(user){
 			callback(user);
 		});
 	},
-	saveItems:function(hero_items, follower_items, user_id, callback){
-		UserModel.findById(user_id, function(err, user){
-			user.hero.items = hero_items;
-
-			if(follower_items.length === 0){
-				user.followers.forEach(function(follower){
-					follower.items = [];
-				});
-			}else{
-				follower_items.forEach(function(items, follower_index){
-					user.followers[follower_index].items = items;
-				});
-			}
-
-			user.markModified('hero.items');
-			user.markModified('followers');
-			user.save(callback);
+	saveStats:function(units, user_id, callback){
+		var count = 0;
+		var errs = [];
+		var results = []
+		units.forEach(function(unit){
+			UserUnitModel.update({_id:unit._id},{level:unit.level,exp:unit.exp}, function(err, result){
+				errs.push(err);
+				results.push(result);
+				count++;
+				if(count == units.length){
+					callback(errs, results)
+				}
+			})
 		});
-	},
-	saveStats:function(hero, followers, user_id, callback){
-		UserModel.findById(user_id, function(err, user){
+/*
 			user.hero.level = hero.level;
 			user.hero.exp = hero.exp;
-			user.hero.strength = user.hero.level_up_bonus.strength * hero.level;
-			user.hero.agility = user.hero.level_up_bonus.agility * hero.level;
-			user.hero.intelligence = user.hero.level_up_bonus.intelligence * hero.level;
-			user.hero.stamina = user.hero.level_up_bonus.stamina * hero.level;
-
 			followers.forEach(function(follower, follower_index){
 				user.followers[follower_index].level = follower.level;
 				user.followers[follower_index].exp = follower.exp;
@@ -109,15 +99,10 @@ UserController = {
 				user.followers[follower_index].stamina = user.followers[follower_index].level_up_bonus.stamina * follower.level;
 			});
 
-			user.markModified('hero.level');
-			user.markModified('hero.exp');
-			user.markModified('hero.strength');
-			user.markModified('hero.agility');
-			user.markModified('hero.intelligence');
-			user.markModified('hero.stamina');
+			user.markModified('hero');
 			user.markModified('followers');
 
 			user.save(callback);
-		})
+		})*/
 	}
 };

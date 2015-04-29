@@ -91,9 +91,7 @@ ItemController = {
 		});
 	},
 	saveInventory:function(items, user_id, callback){
-		UserModel.findOneAndUpdate({_id:user_id}, {"inventory.slots":items}, function(){
-			callback(null);
-		});
+		UserModel.update({_id:user_id},{"inventory.slots":items}, callback);
 	},
 	addGold:function(gold, user_id, callback){
 		console.log(gold);
@@ -107,5 +105,15 @@ ItemController = {
 		UserModel.findById(user_id, 'inventory gold', function(err, user){
 			UserModel.update({_id:user_id},{$inc:{gold:price}, $pull:{'inventory.slots':{index:slot_index}}}, callback);
 		});
+	},
+	lootItem:function(loot_item, callback){
+		console.log(loot_item._id);
+		delete loot_item._id;
+		if(loot_item.type === "weapon"){
+			var item = new WeaponModel(loot_item);
+		}else{
+			var item = new ArmorModel(loot_item);
+		}
+		item.save(callback);
 	}
 }

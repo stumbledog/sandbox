@@ -16,6 +16,7 @@ Unit.prototype.initialize = function(builder){
 	this.blocks = this.game.getMapStage().getBlock();
 	this.ticks = 0;
 
+	this._id = builder._id;
 	this.x = builder.x;
 	this.y = builder.y;
 	this.name = builder.name;
@@ -578,7 +579,14 @@ Unit.prototype.interactNPC = function(){
 Unit.prototype.lootItem = function(){
 	if(this.getSquareDistance(this.order.item) <= 32*32){
 		this.velocity = new Vector(0,0);
-		this.user.inventory.addItem(this.order.item);
+		$.post("lootitem",{item:this.order.item.toObject()}, function(res){
+			if(res.item_model.type==="weapon"){
+				var item = new Weapon(res.item_model);
+			}else{
+				var item = new Armor(res.item_model);
+			}
+			this.user.inventory.addItem(item);
+		}.bind(this));
 		this.unit_stage.removeItem(this.order.item.icon_img);
 		this.order.action = "stop";
 		this.order.map = this.findPath({x:this.x,y:this.y});
@@ -667,7 +675,9 @@ Unit.prototype.tick = function(){
 		this.regenerate_resource(this.resource_regen);
 	}
 
-	this.castSpell();
+	if(this.ticks % 60 === 0){
+		this.castSpell();
+	}
 
 	this.ticks++;
 	this.right_weapon_tick++;

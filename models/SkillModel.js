@@ -5,6 +5,7 @@ var SkillSchema = new Schema({
 	target:Boolean,
 	range:Number,
 	radius:Number,
+	angle:Number,
 	damage:Number,
 	cost:Number,
 	cooldown:Number,

@@ -198,7 +198,7 @@ ActiveSkill.prototype.shockwave = function(mouse_position){
 	var current_position = new Vector(this.unit.x, this.unit.y);
 	var mouse_vector = Vector.sub(mouse_position, current_position);
 	mouse_vector.normalize();
-	mouse_vector.mult(this.radius);
+	//mouse_vector.mult(this.radius);
 	var degree = mouse_vector.getDegree();
 	this.effect.play(this.animation, this.unit.x, this.unit.y, degree + 90);
 	this.enemies.forEach(function(enemy){

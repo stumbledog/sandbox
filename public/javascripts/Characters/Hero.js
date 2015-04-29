@@ -71,7 +71,7 @@ Hero.prototype.hit = function(attacker, damage){
 }
 
 Hero.prototype.gainXP = function(exp){
-	Unit.prototype.gainXP.call(this, exp);
+	EquippedUnit.prototype.gainXP.call(this, exp);
 	this.game.getUIStage().refreshExpBar();
 }
 

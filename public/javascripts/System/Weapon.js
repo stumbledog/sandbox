@@ -17,20 +17,6 @@ Weapon.prototype.weapon_initialize = function(builder){
 	this.max_damage = builder.max_damage;
 	this.attack_speed = builder.attack_speed;
 	this.range = builder.range;
-	/*
-	this.min_damage = parseFloat(attributes.min_damage);
-	this.max_damage = parseFloat(attributes.max_damage);
-	this.attack_speed = parseInt(attributes.attack_speed);
-	this.range = parseInt(attributes.range);
-	this.min_damage_bonus = parseFloat(attributes.min_damage_bonus);
-	this.max_damage_bonus = parseFloat(attributes.max_damage_bonus);
-	this.attack_speed_bonus = parseInt(attributes.attack_speed_bonus);
-	this.strength = parseInt(attributes.strength);
-	this.agility = parseInt(attributes.agility);
-	this.intelligence = parseInt(attributes.intelligence);
-	this.critical_rate = parseInt(attributes.critical_rate);
-	this.critical_damage = parseInt(attributes.critical_damage);
-	this.life_steal = parseInt(attributes.life_steal);*/
 	this.attributes = builder.attributes;
 	this.attributes_index = builder.attributes_index;
 	this.builder = builder;
@@ -78,21 +64,20 @@ Weapon.prototype.initDetail = function(){
 	var max_damage = this.max_damage;
 
 	if(this.attributes.min_damage_bonus && this.attributes.max_damage_bonus){
-		min_damage += this.attributes.min_damage_bonus;
-		max_damage += this.attributes.max_damage_bonus;
+		min_damage += parseFloat(this.attributes.min_damage_bonus);
+		max_damage += parseFloat(this.attributes.max_damage_bonus);
 	}
 
 	damage_amount_text.text = min_damage + " ~ " + max_damage;
 	damage_text.x = damage_amount_text.getMeasuredWidth() + 4;
 
 	if(this.attributes.attack_speed_bonus){
-		var attack_speed = (60 / (this.attack_speed * (100 - this.attributes.attack_speed_bonus) / 100)).toFixed(1);
+		var attack_speed = 60 / (this.attack_speed * (100 - parseFloat(this.attributes.attack_speed_bonus)) / 100);
 	}else{
-		var attack_speed = (60 / this.attack_speed).toFixed(1);
+		var attack_speed = 60 / this.attack_speed;
 	}
 
-	attack_speed_text.text = attack_speed + " Attacks Per Sec";
-
+	attack_speed_text.text = attack_speed.toFixed(1) + " Attacks Per Sec";
 	var dps = ((min_damage + max_damage) * attack_speed / 2).toFixed(1);
 	dps_text.text = dps + " DPS";
 

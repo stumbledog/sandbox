@@ -195,7 +195,8 @@ Inventory.prototype.displayEquipItems = function(unit){
 					this.addItem(item);
 					unit.equipments[key] = null;
 					container.removeAllChildren();
-					this.user.saveEquipItems();
+					this.selectedCharacter.saveItems();
+					//this.user.saveEquipItems();
 					unit.updateStats();
 					this.displayStats(unit);
 				}
@@ -256,25 +257,20 @@ Inventory.prototype.initItemContainers = function(){
 		container.addEventListener("mousedown", function(event){
 			if(event.nativeEvent.button === 0){
 				if(this.drag_item){
-					$.post("moveitem", {from:this.drag_item.item.index, to:event.currentTarget.index}, function(res){
-						if(res.err){
-							console.log(res.err);
-						}
-						if(event.currentTarget.children.length > 1){
-							event.currentTarget.children[1].item.index = this.drag_item.parent.index;
-							var swap_item = event.currentTarget.children[1];
-							swap_item.item.index = this.drag_item.parent.index;
-							this.drag_item.parent.addChild(swap_item);
-							this.drag_item.item.index = event.currentTarget.index;
-							event.currentTarget.addChild(this.drag_item);
-							this.drag_item = null;
-						}else{
-							
-							this.drag_item.item.index = event.currentTarget.index;
-							event.currentTarget.addChild(this.drag_item);
-							this.drag_item = null;
-						}
-					}.bind(this));
+					if(event.currentTarget.children.length > 1){
+						event.currentTarget.children[1].item.index = this.drag_item.parent.index;
+						var swap_item = event.currentTarget.children[1];
+						swap_item.item.index = this.drag_item.parent.index;
+						this.drag_item.parent.addChild(swap_item);
+						this.drag_item.item.index = event.currentTarget.index;
+						event.currentTarget.addChild(this.drag_item);
+						this.drag_item = null;
+					}else{
+						this.drag_item.item.index = event.currentTarget.index;
+						event.currentTarget.addChild(this.drag_item);
+						this.drag_item = null;
+					}
+					this.saveInventory();
 				}else{
 					if(event.currentTarget.children.length > 1){
 						this.drag_item = event.currentTarget.children[1];
@@ -537,13 +533,22 @@ Inventory.prototype.saveInventory = function(){
 
 	this.containers.forEach(function(container){
 		if(container.children.length > 1){
-			items.push(container.children[1].item.toObject());
+			var item = container.children[1].item;
+			if(container.children[1].item.type === "weapon"){
+				items.push({index:container.index, weapon:item._id});
+			}else{
+				items.push({index:container.index, armor:item._id});
+			}
 		}
 	});
-	/*
+	console.log(items);
 	$.post("saveinventory", {items:items}, function(res){
-		console.log(res);
-	});*/
+		if(res.err){
+			console.log(res.err);
+		}else{
+			console.log(res);
+		}
+	});
 }
 
 Inventory.prototype.updateGold = function(gold){

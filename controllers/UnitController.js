@@ -18,27 +18,13 @@ UnitController = {
 			var follower = new UserUnitModel({model:unit_id});
 			follower.save(function(){
 				follower.populate('model', function(err, follower){
-					console.log(follower);
-					UserModel.update({_id:user_id},{$inc:{gold: -price}, $push:{'followers': follower._id}}, function(err, result){
-						callback(err, result, follower);
+					follower.populate({path:'model.active_skills model.passive_skills', model:"Skill"}, function(err, follower){
+						UserModel.update({_id:user_id},{$inc:{gold: -price}, $push:{'followers': follower._id}}, function(err, result){
+							callback(err, result, follower);
+						});
 					});
 				});
 			});
-		})
-		/*
-		unit.active_skills.forEach(function(skill){
-			if(skill.name === "Leap Attack"){
-				skill.animation.jump.images = skill.animation.jump.images["[]"];
-				skill.animation.land.images = skill.animation.land.images["[]"];
-			}
 		});
-
-		unit.exp = 0;
-		UserModel.findById(user_id, function(err, user){
-			user.followers.push(unit);
-			user.gold -= unit.price;
-			user.markModified('followers');
-			user.save(callback);
-		});*/
 	}
 }

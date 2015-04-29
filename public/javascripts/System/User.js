@@ -105,20 +105,16 @@ User.prototype.saveEquipItems = function(){
 }
 
 User.prototype.saveStats = function(){
-	var followers = [];
-	var hero = {
-		level:this.hero.level,
-		exp:this.hero.exp,
-	};
-
-	this.followers.forEach(function(follower, follower_index){
-		followers[follower_index] = {
-			level:follower.level,
-			exp:follower.exp,
-		};
+	console.log("stat");
+	var units = [];
+	units.push({_id:this.hero._id, level:this.hero.level, exp:this.hero.exp});
+	this.followers.forEach(function(follower){
+		units.push({_id:follower._id, level:follower.level, exp:follower.exp});
 	});
 
-	$.post("savestats",{hero:hero, followers:followers}, function(res){
+	console.log(units);
+
+	$.post("savestats", {units:units}, function(res){
 		console.log(res);
 	});
 }
