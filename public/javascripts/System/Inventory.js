@@ -282,8 +282,11 @@ Inventory.prototype.initItemContainers = function(){
 						var item = event.currentTarget.children[1].item;
 						$.post("sellitem", {slot_index:event.currentTarget.index, price:item.sell_price}, function(res){
 							console.log(res);
-							this.sellItem(item);
+							//this.sellItem(item);
+							this.user.store.sellItem(item);
+							this.user.addGold(Math.ceil(item.price/2));
 							event.currentTarget.removeChildAt(1);
+							this.stage.update();
 						}.bind(this));
 					}else{
 						if(this.selectedCharacter){
@@ -476,14 +479,14 @@ Inventory.prototype.renderUnitDetail = function(unit){
 	this.stage.update();
 }
 
-Inventory.prototype.sellItem = function(item){
-	this.user.store.sellItem(item);
-/*	this.user.addGold(item.sell_price * item.qty);
-	$.post("sellitem", {sell_price:item.sell_price * item.qty}, function(res){
-		console.log(res);
-	});*/
-	this.stage.update();
-}
+// Inventory.prototype.sellItem = function(item){
+// 	this.user.store.sellItem(item);
+// 	this.user.addGold(item.sell_price * item.qty);
+// 	$.post("sellitem", {sell_price:item.sell_price * item.qty}, function(res){
+// 		console.log(res);
+// 	});
+// 	this.stage.update();
+// }
 
 Inventory.prototype.getEmptySlot = function(){
 	var index = -1;

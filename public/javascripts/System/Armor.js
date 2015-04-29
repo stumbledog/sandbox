@@ -57,7 +57,7 @@ Armor.prototype.initDetail = function(){
 	var armor = this.armor;
 
 	if(this.attributes.armor_bonus){
-		armor += this.attributes.armor_bonus;
+		armor += parseFloat(this.attributes.armor_bonus);
 	}
 
 	armor_amount_text.text = armor;
