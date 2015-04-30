@@ -102,18 +102,6 @@ var Game = (function(){
 		map_builder.maps.forEach(function(map){
 			manifest.push({src:map.src, id:map.src.split('/').pop()});
 		});
-		/*
-		map_builder.npcs.forEach(function(npc){
-			manifest.push({src:npc.sprite, id:npc.sprite.split('/').pop()});
-		});
-		*/
-		/*
-		if(map_builder.merchantable_items){
-			map_builder.merchantable_items.forEach(function(item){
-				manifest.push({src:item.icon.source, id:item.icon.source.split('/').pop()});
-			});
-		}
-		*/
 
 		if(map_builder.recruitable_units){
 			map_builder.recruitable_units.forEach(function(recruitable_unit){
@@ -131,34 +119,7 @@ var Game = (function(){
 				}
 			});
 		}
-		/*
-		if(map_builder.npcs){
-			map_builder.npcs.forEach(function(npc){
-				npc.recruitable_units.forEach(function(recruitable_unit){
-					manifest.push({src:recruitable_unit.sprite, id:recruitable_unit.sprite.split('/').pop()});
-					manifest.push({src:recruitable_unit.portrait, id:recruitable_unit.portrait.split('/').pop()});
-					if(recruitable_unit.active_skills){
-						recruitable_unit.active_skills.forEach(function(skill){
-							if(skill.icon_source){
-								manifest.push({src:skill.icon_source,id:skill.icon_source.split('/').pop()});
-							}
-							if(skill.animation){
-								skill.animation.images.forEach(function(image){
-									manifest.push({src:image,id:image.split('/').pop()});
-								});
-							}
-						});
-					}
-				});
-			});
-		}*/
-/*
-		if(map_builder.monsters){
-			map_builder.monsters.forEach(function(monster){
-				manifest.push({src:monster.sprite, id:monster.sprite.split('/').pop()});
-			});
-		}
-*/
+
 		if(user_builder.hero.model.active_skills){
 			user_builder.hero.model.active_skills.forEach(function(skill){
 				if(skill.icon_source){
@@ -283,6 +244,9 @@ var Game = (function(){
 		}
 
 		return {
+			getMapName:function(){
+				return map_builder.name;
+			},
 			getDifficultyLevel:function(){
 				return difficulty_level;
 			},

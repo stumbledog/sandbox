@@ -36,12 +36,11 @@ ActiveSkill.prototype.active_skill_initialize = function(skill, unit){
 
 ActiveSkill.prototype.use = function(mouse_position){
 	if(this.unit.resource < this.cost){
-		//alert("Not enough resource.");
-		console.log("Not enough resource.");
+		this.unit.speak("Not enough resource", "warning");
 	}else if(this.remain_cooldown > 0){
-		//alert("This spell is not ready yet.");
-		console.log("This spell is not ready yet.");
+		this.unit.speak("This spell is not ready yet", "warning");
 	}else{
+		this.unit.speak(this.name+"!", "skill");
 		this.unit.resource -= this.cost;
 		this.remain_cooldown = this.cooldown * (100 - this.unit.cooldown_reduction)/100;
 		this.enemies = this.unit.unit_stage.getEnemies(this.unit);
@@ -88,7 +87,7 @@ ActiveSkill.prototype.useOnTarget = function(target){
 		this.unit.resource -= this.cost;
 		this.remain_cooldown = this.cooldown * (100 - this.unit.cooldown_reduction)/100;
 		this.enemies = this.unit.unit_stage.getEnemies(this.unit);
-
+		this.unit.speak(this.name+"!", "skill");
 		switch(this.name){
 			case "Chain Lightning":
 				this.chainLightning(target);

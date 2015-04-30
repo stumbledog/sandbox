@@ -187,8 +187,10 @@ Inventory.prototype.displayEquipItems = function(unit){
 				this.stage.update();
 			}.bind(this, equip_container, item));
 			container.addEventListener("rollout", function(item, event){
-				this.stage.removeChild(item.detail);
-				this.stage.update();
+				if(this.stage){
+					this.stage.removeChild(item.detail);
+					this.stage.update();
+				}
 			}.bind(this, item));
 			container.addEventListener("mousedown", function(item, key, container, event){
 				if(event.nativeEvent.button === 2){

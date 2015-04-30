@@ -389,6 +389,10 @@ Unit.prototype.hit = function(attacker, damage_object){
 		this.target = attacker;
 	}
 
+	if(attacker.life_steal && attacker.life_steal > 0){
+		attacker.heal(damage_object.damage * attacker.life_steal / 100);
+	}
+
 	if(this.resource_type === "fury"){
 		this.resource += 1;
 		this.resource = this.resource > this.max_resource ? this.max_resource : this.resource;
@@ -426,7 +430,12 @@ Unit.prototype.hit = function(attacker, damage_object){
 
 Unit.prototype.heal = function(heal){
 	this.health = this.health + heal > this.max_health ? this.max_health : this.health + heal;
-	var health_text = new OutlineText(Math.floor(heal), "bold 10px Arial", this.health_color, "#000", 2);
+	if(heal < 1){
+		var health_text = new OutlineText(heal.toFixed(1), "bold 10px Arial", this.health_color, "#000", 2);
+	}else{
+		var health_text = new OutlineText(Math.floor(heal), "bold 10px Arial", this.health_color, "#000", 2);
+	}
+
 	health_text.x = this.x;
 	health_text.y = this.y;
 	this.getStage().addChild(health_text);
@@ -469,6 +478,31 @@ Unit.prototype.die = function(attacker){
 		unit.sprite.filters = [filter];
 		unit.sprite.cache(-12,-16,24,32);
 	}
+}
+
+Unit.prototype.speak = function(message, type){
+	var color, font_size;
+	switch(type){
+		case "skill":
+			font_size = 7;
+			color = "#468966";
+			break;
+		case "info":
+			font_size = 5;
+			color = "#91AA9D";
+			break;
+		case "warning":
+			font_size = 5;
+			color = "#FFB03B";
+			break;
+	}
+
+	var text = new OutlineText(message, "bold "+font_size+"px Arial", color, "#000", 1);
+	text.x = -text.getMeasuredWidth() / 2;
+	this.addChild(text);
+	createjs.Tween.get(text).to({y:-20},1000, createjs.Ease.cubicOut).wait(500).call(function(item){
+		this.removeChild(text);
+	},[],this);
 }
 
 Unit.prototype.findClosestAlly = function(range){
@@ -599,7 +633,7 @@ Unit.prototype.castSpell = function(){
 	if(this.chain_lightning && this.order.action !== "move" && this.order.action !== "stop"){
 		var spell = this.active_skills["chain_lightning"];
 		var target = this.findClosestEnemy(spell.distance);
-		if(target && spell.remain_cooldown === 0){
+		if(target && spell.remain_cooldown === 0 && this.resource >= spell.cost){
 			this.active_skills["chain_lightning"].useOnTarget(target);
 		}
 	}
@@ -607,7 +641,7 @@ Unit.prototype.castSpell = function(){
 	if(this.backstab && this.order.action !== "move" && this.order.action !== "stop"){
 		var spell = this.active_skills["backstab"];
 		var target = this.findClosestEnemy(spell.range);
-		if(target && spell.remain_cooldown === 0){
+		if(target && spell.remain_cooldown === 0 && this.resource >= spell.cost){
 			this.active_skills["backstab"].useOnTarget(target);
 		}
 	}
@@ -615,7 +649,7 @@ Unit.prototype.castSpell = function(){
 	if(this.leap_attack && this.order.action !== "move" && this.order.action !== "stop"){
 		var spell = this.active_skills["leap_attack"];
 		var target = this.findClosestEnemy(spell.range);
-		if(target && spell.remain_cooldown === 0){
+		if(target && spell.remain_cooldown === 0 && this.resource >= spell.cost){
 			this.active_skills["leap_attack"].use({x:target.x, y:target.y});
 		}
 	}

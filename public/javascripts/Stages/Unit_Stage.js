@@ -115,7 +115,7 @@ Unit_Stage.prototype.initEvent = function(){
 	document.onkeydown = function(event){
 		console.log(event.keyCode);
 		switch(event.keyCode){
-			case 27://esc
+			case 27:
 				this.setCommand("move");
 				if(this.user.inventory.isOpen || this.user.store){
 					this.user.close();
@@ -167,9 +167,8 @@ Unit_Stage.prototype.initEvent = function(){
 Unit_Stage.prototype.initContainer = function(){
 	this.item_container = new createjs.Container();
 	this.unit_container = new createjs.Container();
-	this.ui_container = new createjs.Container();
 	this.effect_container = new createjs.Container();
-	this.addChild(this.item_container, this.unit_container, this.ui_container, this.effect_container);
+	this.addChild(this.unit_container, this.item_container, this.effect_container);
 }
 
 Unit_Stage.prototype.toggleFollowerShipType = function(){

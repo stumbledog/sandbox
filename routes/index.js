@@ -121,8 +121,4 @@ router.post('/setgold', function(req, res){
 	});
 });
 
-router.get('/game', function(req, res) {
-	res.render('game', { title: 'Express' });
-});
-
 module.exports = router;
