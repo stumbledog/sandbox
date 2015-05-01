@@ -116,9 +116,9 @@ MerchantStore.prototype.mousedownStoreItem = function(item, event){
 		var slot_index = this.user.inventory.getEmptySlot();
 
 		if(slot_index < 0){
-			alert("Not enough space!");
+			this.user.hero.speak("Not enough space","warning")
 		}else if(this.user.gold < total_price){
-			alert("Not enough money!");
+			this.user.hero.speak("Not enough money","warning")
 		}else{
 			var purchased_item = this.user.purchase(item);
 			$.post("purchaseitem", {item:purchased_item.toObject(), slot_index:slot_index, repurchase:item.repurchase}, function(res){

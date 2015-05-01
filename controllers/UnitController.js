@@ -13,9 +13,9 @@ UnitController = {
 	getRecruitableUnits:function(callback){
 		UnitModel.find({type:"follower"}).populate('active_skills passive_skills').then(callback);
 	},
-	purchaseFollower:function(unit_id, price, user_id, callback){
+	purchaseFollower:function(unit_id, level, price, user_id, callback){
 		UserModel.findById(user_id, "followers gold", function(err, user){
-			var follower = new UserUnitModel({model:unit_id});
+			var follower = new UserUnitModel({model:unit_id, level:level});
 			follower.save(function(){
 				follower.populate('model', function(err, follower){
 					follower.populate({path:'model.active_skills model.passive_skills', model:"Skill"}, function(err, follower){

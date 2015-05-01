@@ -131,7 +131,7 @@ RecruiterStore.prototype.renderUnits = function(){
 	this.stage.update();
 }
 
-RecruiterStore.prototype.rolloverStore = function(unit){	
+RecruiterStore.prototype.rolloverStore = function(unit){
 	if(unit.store_summary.x !== 200){
 		var x = unit.store_summary.x + 5;
 	}else{
@@ -159,11 +159,9 @@ RecruiterStore.prototype.rolloutStore = function(unit){
 RecruiterStore.prototype.mousedownStoreItem = function(unit, event){
 	if(event.nativeEvent.button === 2){
 		if(this.user.gold < unit.price){
-			alert("Not enough money!");
+			this.user.hero.speak("Not enough money","warning")
 		}else{
-			console.log(unit);
-			$.post("purchasefollower", {unit_id:unit._id, price:unit.price}, function(res){
-				console.log(res);
+			$.post("purchasefollower", {unit_id:unit._id, level:unit.level, price:unit.price}, function(res){
 				if(res.err){
 					console.log(res.err);
 				}else{

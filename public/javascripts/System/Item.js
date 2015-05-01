@@ -19,7 +19,7 @@ Item.prototype.initialize = function(builder){
 	this.rating = builder.rating;
 	this.price = builder.price;
 	this.sell_price = Math.ceil(builder.price / 2);
-	this.colors = ["#CCCCCC","#79BD8F","#FFD34E","#644D52","#F77A52"];
+	this.colors = ["#CCCCCC","#79BD8F","#FFD34E","#FFAFAF","#3E59CC"];
 	this.repurchase = false;
 
 	this.initIcon();

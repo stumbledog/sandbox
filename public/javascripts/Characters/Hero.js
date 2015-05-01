@@ -30,9 +30,17 @@ Hero.prototype.getClassColor = function(){
 }
 
 Hero.prototype.renderRange = function(){
-	this.range_shape = new createjs.Shape();
-	this.range_shape.graphics.s("#F00").ss(2).dc(0, 0, this.radius + this.range);
-	this.range_shape.alpha = 0.5;
+	if(!this.range_shape){
+		this.range_shape = new createjs.Shape();
+		this.range_shape.alpha = 0.5;
+	}
+
+	this.range_shape.graphics.c().s("#F00").ss(2).dc(0, 0, this.radius + this.range);	
+}
+
+Hero.prototype.updateStats = function(){
+	EquippedUnit.prototype.updateStats.call(this);
+	this.renderRange();
 }
 
 Hero.prototype.move = function(x, y){

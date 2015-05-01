@@ -83,8 +83,9 @@ router.post('/sellitem', function(req, res){
 router.post('/purchasefollower', function(req, res){
 	var unit_id = req.body.unit_id;
 	var price = parseInt(req.body.price);
+	var level = parseInt(req.body.level);
 	var user_id = req.session.user_id;
-	UnitController.purchaseFollower(unit_id, price, user_id, function(err, result, follower){
+	UnitController.purchaseFollower(unit_id, level, price, user_id, function(err, result, follower){
 		res.send({err:err, result:result, follower:follower});
 	})
 });

@@ -233,7 +233,7 @@ EquippedUnit.prototype.equipItem = function(item){
 					case 2:
 						if((item.name === "Wand" || item.name === "Staff") && !this.wand){
 							this.user.inventory.addItem(item);
-							alert("This unit can't equip staff or wand weapons");
+							this.speak("I can't equip staff or wand weapons", "info");
 							return;
 						}
 						var count = 0;
@@ -247,7 +247,8 @@ EquippedUnit.prototype.equipItem = function(item){
 							this.equipments.off_hand = null;
 						}else{
 							this.user.inventory.addItem(item);
-							alert("Not enough space.");
+							this.speak("Not enough space", "info");
+							//alert("Not enough space.");
 							return;
 						}
 					break;
@@ -267,7 +268,8 @@ EquippedUnit.prototype.equipItem = function(item){
 					}
 				}else{
 					this.user.inventory.addItem(item);
-					alert("This unit can't equip shields");
+					this.speak("I can't equip shields", "info");
+					//alert("This unit can't equip shields");
 					return;
 				}
 			break;

@@ -36,7 +36,7 @@ Unit.prototype.initialize = function(builder){
 	this.cooldown_reduction = 0;
 	this.movement_speed = 0;
 
-	this.aggro_radius = 80;
+	this.aggro_radius = 100;
 
 	this.stats = {};
 
@@ -430,20 +430,18 @@ Unit.prototype.hit = function(attacker, damage_object){
 
 Unit.prototype.heal = function(heal){
 	this.health = this.health + heal > this.max_health ? this.max_health : this.health + heal;
-	if(heal < 1){
-		var health_text = new OutlineText(heal.toFixed(1), "bold 10px Arial", this.health_color, "#000", 2);
-	}else{
+	if(heal >= 1){
 		var health_text = new OutlineText(Math.floor(heal), "bold 10px Arial", this.health_color, "#000", 2);
+		health_text.x = this.x;
+		health_text.y = this.y;
+		this.getStage().addChild(health_text);
+		var dx = Math.random() * 32-16;
+		var stage = this.getStage();
+		createjs.Tween.get(health_text).to({x:this.x + dx,y:this.y - 32},500, createjs.Ease.cubicOut).wait(500).call(function(item){
+			stage.removeChild(health_text);
+		});
 	}
 
-	health_text.x = this.x;
-	health_text.y = this.y;
-	this.getStage().addChild(health_text);
-	var dx = Math.random() * 32-16;
-	var stage = this.getStage();
-	createjs.Tween.get(health_text).to({x:this.x + dx,y:this.y - 32},500, createjs.Ease.cubicOut).wait(500).call(function(item){
-		stage.removeChild(health_text);
-	});
 	this.renderHealthBar();
 }
 
@@ -484,24 +482,34 @@ Unit.prototype.speak = function(message, type){
 	var color, font_size;
 	switch(type){
 		case "skill":
-			font_size = 7;
-			color = "#468966";
+			font_size = 8;
+			color = "#B74B41";
 			break;
 		case "info":
-			font_size = 5;
-			color = "#91AA9D";
+			font_size = 6;
+			color = "#7DC33B";
+			break;
+		case "default":
+			font_size = 6;
+			color = "#8749CE";
 			break;
 		case "warning":
-			font_size = 5;
-			color = "#FFB03B";
+			font_size = 6;
+			color = "#CEA23F";
 			break;
 	}
 
 	var text = new OutlineText(message, "bold "+font_size+"px Arial", color, "#000", 1);
-	text.x = -text.getMeasuredWidth() / 2;
-	this.addChild(text);
-	createjs.Tween.get(text).to({y:-20},1000, createjs.Ease.cubicOut).wait(500).call(function(item){
-		this.removeChild(text);
+	text.x = 3;//-text.getMeasuredWidth() / 2;
+	text.y = (10 - font_size) / 2;
+	var border = new createjs.Shape();
+	border.graphics.f("#fff").s("#000").rr(0,0,text.getMeasuredWidth()+6,10,3);
+	var container = new createjs.Container();
+	container.x = -text.getMeasuredWidth() / 2;
+	container.addChild(border, text);
+	this.addChild(container);
+	createjs.Tween.get(container).to({y:-20},1000, createjs.Ease.cubicOut).wait(500).call(function(item){
+		this.removeChild(container);
 	},[],this);
 }
 
@@ -587,7 +595,7 @@ Unit.prototype.moveAttackTick = function(distance){
 			}
 		}else{
 			if(this.ticks % 30 === 0 || !this.target_map){
-				this.target = this.findClosestEnemy(this.aggro_radius + this.range) || this.target;
+				this.target = this.findClosestEnemy(distance) || this.target;
 				this.target_map = this.findPath({x:this.target.x,y:this.target.y});
 			}
 			this.procMove(this.target_map);
@@ -680,7 +688,7 @@ Unit.prototype.tick = function(){
 			break;
 		case "guard":
 		case "move_attack":
-			this.moveAttackTick(this.aggro_radius + this.range);
+			this.moveAttackTick(this.aggro_radius);
 			break;
 		case "annihilate":
 			this.moveAttackTick(null);

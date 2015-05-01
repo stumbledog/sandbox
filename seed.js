@@ -483,31 +483,53 @@ function saveMap(){
 		[
 			{
 				tiles:[
-					[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-					[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-					[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-					[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-					[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-					[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-					[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-					[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-					[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-					[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+					[0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+					[0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+					[0,0,0,0,1,1,1,0,0,0,1,1,1,1,1,1,0,0,1,1],
+					[1,0,0,0,1,1,1,0,0,0,1,1,1,1,1,1,0,0,1,1],
+					[1,0,0,0,1,1,1,0,0,0,1,1,1,1,1,0,0,0,0,1],
+					[0,0,0,0,1,1,1,0,0,0,1,1,1,1,0,0,0,0,0,0],
+					[0,0,0,1,1,1,1,0,0,0,1,1,1,1,0,0,0,0,0,0],
+					[0,0,0,1,1,1,1,0,0,0,1,1,1,1,0,0,0,0,0,0],
+					[0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0],
+					[0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,1],
 				],
 				tile_map:[
-					[32,0],
+					[32,0],//[64,0],[64,32],
 				], 
-				src:"assets/Graphics/Tilesets/A5/Overworld_TileA5.png",
+				src:"assets/Graphics/Tilesets/A5/Exterior_Forest_TileA5.png",
+				block:false
+			},
+			{
+				tiles:[
+					[1,3,0,0,0,4,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+					[1,1,3,0,0,0,4,1,1,1,9,9,9,9,9,9,1,1,9,5],
+					[4,1,1,3,0,0,0,7,1,8,0,0,0,0,0,0,7,8,0,0],
+					[0,7,1,8,0,0,0,7,1,8,0,0,0,0,0,0,7,8,0,0],
+					[0,7,1,8,0,0,0,7,1,8,0,0,0,0,0,2,1,1,3,0],
+					[2,1,1,5,0,0,0,7,1,8,0,0,0,0,2,1,1,1,1,3],
+					[1,1,8,0,0,0,0,7,1,8,0,0,0,0,7,1,1,1,1,1],
+					[1,1,8,0,0,0,0,7,1,8,0,0,0,0,7,1,1,1,1,1],
+					[1,1,1,6,6,6,6,1,1,5,0,0,0,0,4,1,1,1,1,5],
+					[1,1,1,1,1,1,1,1,5,0,0,0,0,0,0,4,1,1,5,0],
+				],
+				tile_map:[
+					[80,48],
+					[64,32],[96,32],[64,64],[96,64],
+					[80,32],[64,48],[96,48],[80,64],
+					[80,48]
+				], 
+				src:"assets/Graphics/Tilesets/A2/Exterior_Forest_TileA2.png",
 				block:false
 			},
 			{
 				tiles:[
 					[0,0,3,5,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 					[0,0,0,3,5,2,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-					[2,0,0,0,3,5,2,0,0,0,1,2,1,2,1,2,0,0,1,6],
-					[5,2,0,0,1,6,4,0,0,0,3,5,6,5,6,4,0,0,3,5],
-					[6,4,0,0,3,5,2,0,0,0,1,6,5,6,4,0,0,0,0,3],
-					[4,0,0,0,1,6,4,0,0,0,3,5,6,4,0,0,0,0,0,0],
+					[0,0,0,0,3,5,2,0,0,0,1,2,1,2,1,2,0,0,1,6],
+					[2,0,0,0,1,6,4,0,0,0,3,5,6,5,6,4,0,0,3,5],
+					[4,0,0,0,3,5,2,0,0,0,1,6,5,6,4,0,0,0,0,3],
+					[0,0,0,0,1,6,4,0,0,0,3,5,6,4,0,0,0,0,0,0],
 					[0,0,0,1,6,5,2,0,0,0,1,6,5,2,0,0,0,0,0,0],
 					[0,0,0,3,4,3,4,0,0,0,3,5,6,4,0,0,0,0,0,0],
 					[0,0,0,0,0,0,0,0,0,0,1,6,5,2,0,0,0,0,0,0],
@@ -588,18 +610,6 @@ function saveMap(){
 				block:false
 			},
 			{
-/*
-					[0,0,3,5,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,0,0,3,5,2,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-					[2,0,0,0,3,5,2,0,0,0,1,2,1,2,1,2,0,0,1,6],
-					[5,2,0,0,1,6,4,0,0,0,3,5,6,5,6,4,0,0,3,5],
-					[6,4,0,0,3,5,2,0,0,0,1,6,5,6,4,0,0,0,0,3],
-					[4,0,0,0,1,6,4,0,0,0,3,5,6,4,0,0,0,0,0,0],
-					[0,0,0,1,6,5,2,0,0,0,1,6,5,2,0,0,0,0,0,0],
-					[0,0,0,3,4,3,4,0,0,0,3,5,6,4,0,0,0,0,0,0],
-					[0,0,0,0,0,0,0,0,0,0,1,6,5,2,0,0,0,0,0,0],
-					[0,0,0,0,0,0,0,0,0,1,6,5,6,5,2,0,0,0,0,1],
-*/
 				tiles:[
 					[5,6,5,6,4,0,0,0,0,0,3,5,2,0,0,0,0,0,0,0],
 					[6,4,3,4,0,0,0,0,0,0,1,6,4,0,0,0,0,0,0,0],
@@ -631,11 +641,103 @@ function saveMap(){
 				block:true
 			}
 		],false,[],[
-			{name:"Slime",model:{sprite:"monster2",index:0},x:32*3,y:32*4,radius:16,type:"melee",health:7,damage:0.8,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
-			{name:"Slime",model:{sprite:"monster2",index:0},x:32*3,y:32*4,radius:16,type:"melee",health:7,damage:0.8,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
-			{name:"Slime",model:{sprite:"monster2",index:0},x:32*3,y:32*4,radius:16,type:"melee",health:7,damage:0.8,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
-			{name:"Slime",model:{sprite:"monster2",index:0},x:32*3,y:32*4,radius:16,type:"melee",health:7,damage:0.8,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+			{name:"Skeleton Warrior",model:{sprite:"monster2",index:0},x:32*2,y:32*6,radius:16,type:"melee",health:8,damage:0.7,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+			{name:"Skeleton Warrior",model:{sprite:"monster2",index:0},x:32*2,y:32*6,radius:16,type:"melee",health:8,damage:0.7,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+			{name:"Skeleton Warrior",model:{sprite:"monster2",index:0},x:32*2,y:32*6,radius:16,type:"melee",health:8,damage:0.7,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+			{name:"Skeleton Ranger",model:{sprite:"monster2",index:1},x:32*2,y:32*6,radius:16,type:"melee",health:6,damage:1.0,range:40,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+
+			{name:"Skeleton Warrior",model:{sprite:"monster2",index:0},x:32*6,y:32*1,radius:16,type:"melee",health:8,damage:0.7,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+			{name:"Skeleton Warrior",model:{sprite:"monster2",index:0},x:32*6,y:32*1,radius:16,type:"melee",health:8,damage:0.7,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+			{name:"Skeleton Warrior",model:{sprite:"monster2",index:0},x:32*6,y:32*1,radius:16,type:"melee",health:8,damage:0.7,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+			{name:"Skeleton Ranger",model:{sprite:"monster2",index:1},x:32*6,y:32*1,radius:16,type:"melee",health:6,damage:1.0,range:40,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+
+			{name:"Skeleton Warrior",model:{sprite:"monster2",index:0},x:32*2,y:32*13,radius:16,type:"melee",health:8,damage:0.7,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+			{name:"Skeleton Warrior",model:{sprite:"monster2",index:0},x:32*2,y:32*13,radius:16,type:"melee",health:8,damage:0.7,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+			{name:"Skeleton Warrior",model:{sprite:"monster2",index:0},x:32*2,y:32*13,radius:16,type:"melee",health:8,damage:0.7,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+			{name:"Skeleton Ranger",model:{sprite:"monster2",index:1},x:32*2,y:32*13,radius:16,type:"melee",health:6,damage:1.0,range:40,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+
+			{name:"Skeleton Warrior",model:{sprite:"monster2",index:0},x:32*7,y:32*14,radius:16,type:"melee",health:8,damage:0.7,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+			{name:"Skeleton Warrior",model:{sprite:"monster2",index:0},x:32*7,y:32*14,radius:16,type:"melee",health:8,damage:0.7,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+			{name:"Skeleton Warrior",model:{sprite:"monster2",index:0},x:32*7,y:32*14,radius:16,type:"melee",health:8,damage:0.7,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+			{name:"Skeleton Ranger",model:{sprite:"monster2",index:1},x:32*7,y:32*14,radius:16,type:"melee",health:6,damage:1.0,range:40,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+
+			{name:"Skeleton Warrior",model:{sprite:"monster2",index:0},x:32*19,y:32*17,radius:16,type:"melee",health:8,damage:0.7,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+			{name:"Skeleton Warrior",model:{sprite:"monster2",index:0},x:32*19,y:32*17,radius:16,type:"melee",health:8,damage:0.7,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+			{name:"Skeleton Warrior",model:{sprite:"monster2",index:0},x:32*19,y:32*17,radius:16,type:"melee",health:8,damage:0.7,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+			{name:"Skeleton Ranger",model:{sprite:"monster2",index:1},x:32*19,y:32*17,radius:16,type:"melee",health:6,damage:1.0,range:40,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+
+			{name:"Skeleton Warrior",model:{sprite:"monster2",index:0},x:32*13,y:32*11,radius:16,type:"melee",health:8,damage:0.7,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+			{name:"Skeleton Warrior",model:{sprite:"monster2",index:0},x:32*13,y:32*11,radius:16,type:"melee",health:8,damage:0.7,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+			{name:"Skeleton Warrior",model:{sprite:"monster2",index:0},x:32*13,y:32*11,radius:16,type:"melee",health:8,damage:0.7,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+			{name:"Skeleton Ranger",model:{sprite:"monster2",index:1},x:32*13,y:32*11,radius:16,type:"melee",health:6,damage:1.0,range:40,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+
+			{name:"Skeleton Warrior",model:{sprite:"monster2",index:0},x:32*8,y:32*6,radius:16,type:"melee",health:8,damage:0.7,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+			{name:"Skeleton Warrior",model:{sprite:"monster2",index:0},x:32*8,y:32*6,radius:16,type:"melee",health:8,damage:0.7,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+			{name:"Skeleton Warrior",model:{sprite:"monster2",index:0},x:32*8,y:32*6,radius:16,type:"melee",health:8,damage:0.7,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+			{name:"Skeleton Ranger",model:{sprite:"monster2",index:1},x:32*8,y:32*6,radius:16,type:"melee",health:6,damage:1.0,range:40,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+
+			{name:"Skeleton Warrior",model:{sprite:"monster2",index:0},x:32*8,y:32*18,radius:16,type:"melee",health:8,damage:0.7,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+			{name:"Skeleton Warrior",model:{sprite:"monster2",index:0},x:32*8,y:32*18,radius:16,type:"melee",health:8,damage:0.7,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+			{name:"Skeleton Warrior",model:{sprite:"monster2",index:0},x:32*8,y:32*18,radius:16,type:"melee",health:8,damage:0.7,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+			{name:"Skeleton Ranger",model:{sprite:"monster2",index:1},x:32*8,y:32*18,radius:16,type:"melee",health:6,damage:1.0,range:40,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+
+			{name:"Skeleton Warrior",model:{sprite:"monster2",index:0},x:32*19,y:32*12,radius:16,type:"melee",health:8,damage:0.7,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+			{name:"Skeleton Warrior",model:{sprite:"monster2",index:0},x:32*19,y:32*12,radius:16,type:"melee",health:8,damage:0.7,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+			{name:"Skeleton Warrior",model:{sprite:"monster2",index:0},x:32*19,y:32*12,radius:16,type:"melee",health:8,damage:0.7,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+			{name:"Skeleton Ranger",model:{sprite:"monster2",index:1},x:32*19,y:32*12,radius:16,type:"melee",health:6,damage:1.0,range:40,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+
+			{name:"Skeleton Ranger",model:{sprite:"monster2",index:1},x:32*16,y:32*2,radius:16,type:"melee",health:6,damage:1,range:40,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+			{name:"Skeleton Ranger",model:{sprite:"monster2",index:1},x:32*16,y:32*2,radius:16,type:"melee",health:6,damage:1,range:40,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+			{name:"Skeleton Ranger",model:{sprite:"monster2",index:1},x:32*16,y:32*2,radius:16,type:"melee",health:6,damage:1,range:40,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+			{name:"Skeleton Ranger",model:{sprite:"monster2",index:1},x:32*16,y:32*2,radius:16,type:"melee",health:6,damage:1,range:40,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+			{name:"Giant Skeleton",model:{sprite:"monster2",index:3},x:32*17,y:32*1,radius:32,scale:2,type:"melee",health:50,damage:3,range:16,attack_speed:120,movement_speed:1,skills:null,gold:30,xp:50,drop_rate:50},
 		],1, 2,"Palisade Park",false,false,640,640,20,20,[32,608]));
+
+	maps.push(initMap([
+			{
+				tiles:[
+					[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+					[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+					[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+					[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+					[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+					[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+					[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+					[1,1,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,1,1],
+					[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+					[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+				],
+				tile_map:[
+					[32*2,32*1],[32*6, 32*14]
+				], 
+				src:"assets/Graphics/Tilesets/A5/Exterior_Forest_TileA5.png",
+				block:false
+			},
+			{
+				tiles:[
+					[ 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+					[ 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+					[ 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+					[ 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+					[ 0, 0, 0, 0, 0, 6, 0, 0,13, 8, 8, 8, 8, 8, 8,12, 0, 0, 0, 0],
+					[ 0, 0, 0, 0, 0, 6, 0, 0, 6, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0],
+					[ 0, 0, 0, 0, 0, 6, 0, 0, 6, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0],
+					[ 8, 8, 0, 8, 8, 9, 0, 0, 6, 0, 0, 1, 3, 0, 0, 7, 8, 0, 8, 8],
+					[ 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 4, 6, 0, 0, 0, 0, 0, 0, 0],
+					[ 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 4, 6, 0, 0, 0, 0, 0, 0, 0],
+				],
+				tile_map:[
+					[32*0,32*13],[32*1,32*13],[32*2,32*13],
+					[32*0,32*14],[32*1,32*14],[32*2,32*14],
+					[32*0,32*15],[32*1,32*15],[32*2,32*15],
+					[32*3,32*14],[32*4,32*14],
+					[32*3,32*15],[32*4,32*15],
+				], 
+				src:"assets/Graphics/Tilesets/A5/Exterior_Forest_TileA5.png",
+				block:true
+			},
+		],false,[],[],1, 3,"Leonia",false,false,640,320,20,10,[32*10,32*9]));
+
 
 	/*
 	maps.push(initMap([],false,[],[],1, 3,"Leonia",false,false,320,320,10,10,[160,160]));
@@ -724,7 +826,7 @@ function saveItems(){
 		sprite:{cropX:77,cropY:124,width:15,height:15,regX:10,regY:10,scale:0.8},
 	}));
 
-	items.push(new MerchantWeaponModel({primary_attribute:1, hand:2, type:"weapon", attack_type:"range", name:"boomerang",
+	items.push(new MerchantWeaponModel({primary_attribute:1, hand:2, type:"weapon", attack_type:"range", name:"Boomerang",
 		min_damage:3,max_damage:6,range:60,attack_speed:75,
 		sprite:{cropX:175,cropY:125,width:13,height:16,regX:6,regY:8,scale:0.8},
 		projectile:{cropX:175,cropY:126,width:13,height:14,regX:6,regY:8,scale:0.8, spin:10},
