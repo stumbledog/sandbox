@@ -736,7 +736,79 @@ function saveMap(){
 				src:"assets/Graphics/Tilesets/A5/Exterior_Forest_TileA5.png",
 				block:true
 			},
-		],false,[],[],1, 3,"Leonia",false,false,640,320,20,10,[32*10,32*9]));
+			{
+				tiles:[
+					[ 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 5],
+					[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 7],
+					[ 0, 0, 0, 0, 1, 0, 0, 0, 4, 5, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0],
+					[ 0, 0, 0, 0, 0, 0, 0, 0, 6, 7, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0],
+					[ 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+					[ 0, 8, 0, 0, 2, 0, 0, 0, 0, 1, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0],
+					[ 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+					[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+					[ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+					[ 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0],
+				],
+				tile_map:[
+					[32*4,32*0],[32*1,32*3],[32*1,32*2],
+					[32*2,32*0],[32*3,32*0],
+					[32*2,32*1],[32*3,32*1],
+					[32*1,32*0],[32*1,32*1],
+				], 
+				src:"assets/Graphics/Tilesets/B/Dungeon_Cave_TileB.png",
+				block:true
+			},
+		],false,[],[
+			{name:"Skeleton Warrior",model:{sprite:"monster2",index:0},x:32*12,y:32*5,radius:16,type:"melee",health:8,damage:0.7,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+			{name:"Skeleton Warrior",model:{sprite:"monster2",index:0},x:32*12,y:32*5,radius:16,type:"melee",health:8,damage:0.7,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+			{name:"Skeleton Warrior",model:{sprite:"monster2",index:0},x:32*12,y:32*5,radius:16,type:"melee",health:8,damage:0.7,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+			{name:"Skeleton Warrior",model:{sprite:"monster2",index:0},x:32*12,y:32*5,radius:16,type:"melee",health:8,damage:0.7,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+
+			{name:"Skeleton Warrior",model:{sprite:"monster2",index:0},x:32*18,y:32*8,radius:16,type:"melee",health:8,damage:0.7,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+			{name:"Skeleton Warrior",model:{sprite:"monster2",index:0},x:32*18,y:32*8,radius:16,type:"melee",health:8,damage:0.7,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+			{name:"Skeleton Warrior",model:{sprite:"monster2",index:0},x:32*18,y:32*8,radius:16,type:"melee",health:8,damage:0.7,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+			{name:"Skeleton Warrior",model:{sprite:"monster2",index:4},x:32*18,y:32*8,radius:16,type:"melee",health:6,damage:1,range:40,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+
+			{name:"Skeleton Warrior",model:{sprite:"monster2",index:0},x:32*18,y:32*4,radius:16,type:"melee",health:8,damage:0.7,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+			{name:"Skeleton Warrior",model:{sprite:"monster2",index:0},x:32*18,y:32*4,radius:16,type:"melee",health:8,damage:0.7,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+			{name:"Skeleton Warrior",model:{sprite:"monster2",index:0},x:32*18,y:32*4,radius:16,type:"melee",health:8,damage:0.7,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+			{name:"Skeleton Warrior",model:{sprite:"monster2",index:0},x:32*18,y:32*4,radius:16,type:"melee",health:8,damage:0.7,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+			{name:"Skeleton Warrior",model:{sprite:"monster2",index:4},x:32*18,y:32*4,radius:16,type:"melee",health:6,damage:1,range:40,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+			{name:"Skeleton Warrior",model:{sprite:"monster2",index:4},x:32*18,y:32*4,radius:16,type:"melee",health:6,damage:1,range:40,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+
+			{name:"Skeleton Warrior",model:{sprite:"monster2",index:0},x:32*15,y:32*1,radius:16,type:"melee",health:8,damage:0.7,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+			{name:"Skeleton Warrior",model:{sprite:"monster2",index:0},x:32*15,y:32*1,radius:16,type:"melee",health:8,damage:0.7,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+			{name:"Skeleton Warrior",model:{sprite:"monster2",index:0},x:32*15,y:32*1,radius:16,type:"melee",health:8,damage:0.7,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+			{name:"Skeleton Warrior",model:{sprite:"monster2",index:0},x:32*15,y:32*1,radius:16,type:"melee",health:8,damage:0.7,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+			{name:"Skeleton Warrior",model:{sprite:"monster2",index:4},x:32*15,y:32*1,radius:16,type:"melee",health:6,damage:1,range:40,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+			{name:"Skeleton Warrior",model:{sprite:"monster2",index:4},x:32*15,y:32*1,radius:16,type:"melee",health:6,damage:1,range:40,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+
+			{name:"Skeleton Warrior",model:{sprite:"monster2",index:0},x:32*8,y:32*2,radius:16,type:"melee",health:8,damage:0.7,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+			{name:"Skeleton Warrior",model:{sprite:"monster2",index:0},x:32*8,y:32*2,radius:16,type:"melee",health:8,damage:0.7,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+			{name:"Skeleton Warrior",model:{sprite:"monster2",index:0},x:32*8,y:32*2,radius:16,type:"melee",health:8,damage:0.7,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+			{name:"Skeleton Warrior",model:{sprite:"monster2",index:0},x:32*8,y:32*2,radius:16,type:"melee",health:8,damage:0.7,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+			{name:"Skeleton Warrior",model:{sprite:"monster2",index:4},x:32*8,y:32*2,radius:16,type:"melee",health:6,damage:1,range:40,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+			{name:"Skeleton Warrior",model:{sprite:"monster2",index:4},x:32*8,y:32*2,radius:16,type:"melee",health:6,damage:1,range:40,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+
+			{name:"Skeleton Warrior",model:{sprite:"monster2",index:0},x:32*4,y:32*8,radius:16,type:"melee",health:8,damage:0.7,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+			{name:"Skeleton Warrior",model:{sprite:"monster2",index:0},x:32*4,y:32*8,radius:16,type:"melee",health:8,damage:0.7,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+			{name:"Skeleton Warrior",model:{sprite:"monster2",index:0},x:32*4,y:32*8,radius:16,type:"melee",health:8,damage:0.7,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+			{name:"Skeleton Warrior",model:{sprite:"monster2",index:0},x:32*4,y:32*8,radius:16,type:"melee",health:8,damage:0.7,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+			{name:"Skeleton Warrior",model:{sprite:"monster2",index:4},x:32*4,y:32*8,radius:16,type:"melee",health:6,damage:1,range:40,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+			{name:"Skeleton Warrior",model:{sprite:"monster2",index:4},x:32*4,y:32*8,radius:16,type:"melee",health:6,damage:1,range:40,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+
+			{name:"Skeleton Warrior",model:{sprite:"monster2",index:0},x:32*2,y:32*5,radius:16,type:"melee",health:8,damage:0.7,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+			{name:"Skeleton Warrior",model:{sprite:"monster2",index:0},x:32*2,y:32*5,radius:16,type:"melee",health:8,damage:0.7,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+			{name:"Skeleton Warrior",model:{sprite:"monster2",index:0},x:32*2,y:32*5,radius:16,type:"melee",health:8,damage:0.7,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+			{name:"Skeleton Warrior",model:{sprite:"monster2",index:0},x:32*2,y:32*5,radius:16,type:"melee",health:8,damage:0.7,range:16,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+			{name:"Skeleton Warrior",model:{sprite:"monster2",index:4},x:32*2,y:32*5,radius:16,type:"melee",health:6,damage:1,range:40,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+			{name:"Skeleton Warrior",model:{sprite:"monster2",index:4},x:32*2,y:32*5,radius:16,type:"melee",health:6,damage:1,range:40,attack_speed:90,movement_speed:1,skills:null,gold:3,xp:5,drop_rate:2},
+
+			{name:"Skeleton Warrior",model:{sprite:"monster2",index:5},x:32*1,y:32*1,radius:16,scale:1.5,type:"melee",health:20,damage:3,range:40,attack_speed:120,movement_speed:1,skills:null,gold:20,xp:30,drop_rate:30},
+			{name:"Skeleton Warrior",model:{sprite:"monster2",index:6},x:32*2,y:32*1,radius:16,scale:1.5,type:"melee",health:20,damage:3,range:40,attack_speed:120,movement_speed:1,skills:null,gold:20,xp:30,drop_rate:30},
+			{name:"Skeleton Warrior",model:{sprite:"monster2",index:7},x:32*3,y:32*1,radius:16,scale:1.5,type:"melee",health:20,damage:3,range:40,attack_speed:120,movement_speed:1,skills:null,gold:20,xp:30,drop_rate:30},
+
+		],1, 3,"Leonia",false,false,640,320,20,10,[32*10,32*9]));
 
 
 	/*
