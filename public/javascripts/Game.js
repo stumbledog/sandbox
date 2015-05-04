@@ -133,11 +133,33 @@ var Game = (function(){
 			});
 		}
 
+
+		var progress_bar = new createjs.Shape();
+		var progress_stage = new createjs.Stage("progress");
+		var title = new OutlineText("Condottiere", "64px Arial", "#FFF0A5", "#000", 10);
+
+		title.textAlign("center");
+		title.x = window.innerWidth/2;
+		title.y = window.innerHeight/2 - 100;
+
+		progress_stage.canvas.width = window.innerWidth;
+		progress_stage.canvas.height = window.innerHeight;
+		progress_stage.addChild(progress_bar, title);
+
 		loader = new createjs.LoadQueue(false);
+		console.log(loader);
+		loader.addEventListener("progress", handleProgress);
 		loader.addEventListener("complete", handleLoadComplete);
 		loader.loadManifest(manifest);
 
+		function handleProgress(){
+			progress_bar.graphics.c().f("#A7A37E").rr(window.innerWidth/2 - 200,window.innerHeight/2 -10,400,40,10).f("#FFB03B").dr(window.innerWidth/2 - 200 + 10, window.innerHeight/2, 380 * loader.progress, 20);
+			progress_stage.update();
+		}
+
 		function handleLoadComplete(){
+			$("#progress").remove();
+
 			user = new User(user_builder);
 			initStages();
 			createHero(user_builder.hero);

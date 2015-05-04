@@ -11,9 +11,17 @@ canvas#minimap,
 canvas#menu,
 canvas#left_menu,
 canvas#right_menu,
-canvas#message
+canvas#message,
+canvas#progress
 {
 	position:absolute;
+}
+
+canvas#progress{
+	width:100%;
+	height:100%;
+	z-index: 10;
+	background-color: #fff;
 }
 
 canvas#bg{
