@@ -135,16 +135,22 @@ var Game = (function(){
 
 
 		var progress_bar = new createjs.Shape();
+		var progress_bar_text = new createjs.Text("","bold 20px Arial","#000");
 		var progress_stage = new createjs.Stage("progress");
-		var title = new OutlineText("Condottiere", "64px Arial", "#FFF0A5", "#000", 10);
+		var title = new OutlineText("Condottiere", "bold 120px Arial", "#FFF0A5", "#000", 20);
 
 		title.textAlign("center");
 		title.x = window.innerWidth/2;
-		title.y = window.innerHeight/2 - 100;
+		title.y = window.innerHeight/2 - 160;
 
 		progress_stage.canvas.width = window.innerWidth;
 		progress_stage.canvas.height = window.innerHeight;
-		progress_stage.addChild(progress_bar, title);
+
+		progress_bar_text.x = window.innerWidth/2;
+		progress_bar_text.y = window.innerHeight/2;
+		progress_bar_text.textAlign = "center";
+
+		progress_stage.addChild(progress_bar, title, progress_bar_text);
 
 		loader = new createjs.LoadQueue(false);
 		console.log(loader);
@@ -153,7 +159,8 @@ var Game = (function(){
 		loader.loadManifest(manifest);
 
 		function handleProgress(){
-			progress_bar.graphics.c().f("#A7A37E").rr(window.innerWidth/2 - 200,window.innerHeight/2 -10,400,40,10).f("#FFB03B").dr(window.innerWidth/2 - 200 + 10, window.innerHeight/2, 380 * loader.progress, 20);
+			progress_bar.graphics.c().f("#A7A37E").s("#000").rr(window.innerWidth/2 - 200,window.innerHeight/2 -10,400,40,10).f("#FFB03B").s("#000").dr(window.innerWidth/2 - 200 + 10, window.innerHeight/2, 380 * loader.progress, 20);
+			progress_bar_text.text = (loader.progress * 100).toFixed(2) +"%";
 			progress_stage.update();
 		}
 
