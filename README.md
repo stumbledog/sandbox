@@ -13,6 +13,7 @@ Condottiere is a real-time strategy-action RPG game. The player can control the 
   <li><b>I</b>: Open/Close inventory</li>
   <li><b>S</b>: Stop units</li>
   <li><b>F</b>: Toggle followers' action(follow the main character / auto attack)</li>
+  <li><b>M</b>: Toggle mute</li>
 </ul>
 #Browser Compatibility
 Tested on Chrome and Firefox on Windows and OS X
