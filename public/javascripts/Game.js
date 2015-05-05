@@ -3,7 +3,7 @@ var Game = (function(){
 	var instance;
 
 	function init(user_builder, map_builder, difficulty_level){
-		var user, loader, hero, blocks;
+		var user, loader, hero, blocks, bgm;
 		var minimap_stage, tooltip_stage, unit_stage, map_stage, ui_stage, left_stage, right_stage, top_stage, effect, message_stage;
 		var scale = 5;
 
@@ -74,6 +74,8 @@ var Game = (function(){
 		manifest.push({src:"assets/Graphics/Faces/ds_face37-38.png", id:"portrait19"});
 		manifest.push({src:"assets/Graphics/Faces/ds_face39-40.png", id:"portrait20"});
 
+		manifest.push({src:"assets/Graphics/effects/magic_0/round_shot.png",id:"round_shot"});
+
 		user_builder.followers.forEach(function(follower){
 			if(follower.model.active_skills){
 				follower.model.active_skills.forEach(function(skill){
@@ -95,9 +97,6 @@ var Game = (function(){
 				});
 			}
 		});
-
-		manifest.push({src:"assets/Graphics/effects/magic_0/round_shot.png",id:"round_shot"});
-
 
 		map_builder.maps.forEach(function(map){
 			manifest.push({src:map.src, id:map.src.split('/').pop()});
@@ -153,7 +152,6 @@ var Game = (function(){
 		progress_stage.addChild(progress_bar, title, progress_bar_text);
 
 		loader = new createjs.LoadQueue(false);
-		console.log(loader);
 		loader.addEventListener("progress", handleProgress);
 		loader.addEventListener("complete", handleLoadComplete);
 		loader.loadManifest(manifest);
@@ -193,8 +191,8 @@ var Game = (function(){
 			createjs.Sound.alternateExtensions = ["ogg"];
 			queue.installPlugin(createjs.Sound);
 			queue.addEventListener("complete", function(){
-				//var bgm = createjs.Sound.play("bgm");
-				//bgm.setLoop(true);
+				bgm = createjs.Sound.play("bgm");
+				bgm.setLoop(true);
 			});
 
 
@@ -202,6 +200,10 @@ var Game = (function(){
 				queue.loadFile({id:"bgm", src:"assets/Audio/BGM/10 Pleasant travel.ogg"});
 			}else if(map_builder.act === 1 && map_builder.chapter === 1){
 				queue.loadFile({id:"bgm", src:"assets/Audio/BGM/01 First battle.ogg"});
+			}else if(map_builder.act === 1 && map_builder.chapter === 2){
+				queue.loadFile({id:"bgm", src:"assets/Audio/BGM/03 Fight that should exceed.ogg"});
+			}else if(map_builder.act === 1 && map_builder.chapter === 3){
+				queue.loadFile({id:"bgm", src:"02 Fight in castle.ogg"});
 			}
 
 			if(map_builder.act !== 0){
@@ -273,6 +275,9 @@ var Game = (function(){
 		}
 
 		return {
+			getBGM:function(){
+				return bgm;
+			},
 			getMapName:function(){
 				return map_builder.name;
 			},

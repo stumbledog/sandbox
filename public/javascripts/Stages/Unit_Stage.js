@@ -148,6 +148,10 @@ Unit_Stage.prototype.initEvent = function(){
 			case 82://r
 				this.hero.useSkill('r', this.mouse_position);
 				break;
+			case 77://m
+				var bgm = this.game.getBGM();
+				bgm.setMuted(!bgm.getMuted())
+				break;
 			case 73:
 				this.user.toggleInventory();
 				break;
