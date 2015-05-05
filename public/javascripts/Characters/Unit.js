@@ -505,7 +505,7 @@ Unit.prototype.speak = function(message, type){
 	var border = new createjs.Shape();
 	border.graphics.f("#fff").s("#000").rr(0,0,text.getMeasuredWidth()+6,10,3);
 	var container = new createjs.Container();
-	container.x = -text.getMeasuredWidth() / 2;
+	container.x = -text.getMeasuredWidth() / 2 - 3;
 	container.addChild(border, text);
 	this.addChild(container);
 	createjs.Tween.get(container).to({y:-20},1000, createjs.Ease.cubicOut).wait(500).call(function(item){

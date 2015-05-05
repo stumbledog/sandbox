@@ -150,7 +150,8 @@ Unit_Stage.prototype.initEvent = function(){
 				break;
 			case 77://m
 				var bgm = this.game.getBGM();
-				bgm.setMuted(!bgm.getMuted())
+				bgm.setMuted(!bgm.getMuted());
+				this.hero.speak(bgm.getMuted()?"Mute On":"Mute Off","info");
 				break;
 			case 73:
 				this.user.toggleInventory();
