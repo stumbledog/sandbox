@@ -10,6 +10,7 @@ Condottiere is a real-time strategy-action RPG game. The player can control the 
   <li><b>Mouse Right Click</b>: Move the main character to the targeted position</li>
   <li><b>Mouse Right Click on Item</b>: Loot, purchase, sell, equip, or unequip the item</li>
   <li><b>A + Mouse Left Click</b>: Move the main character to the targeted position and attack the nearest in-range targets along the way</li>
+  <li><b>Q,W,E,R</b>: Use ability</li>
   <li><b>I</b>: Open/Close inventory</li>
   <li><b>S</b>: Stop units</li>
   <li><b>F</b>: Toggle followers' action(follow the main character / auto attack)</li>
