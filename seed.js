@@ -473,12 +473,12 @@ function saveMap(){
 		],
 		true,
 		[
-			{name:"Merchant",	model:{sprite:"merchant", index:0}, type:"merchant", x:32*4, y:32*4},
-			{name:"Recruiter",	model:{sprite:"merchant", index:1}, type:"recruiter", x:32*6, y:32*4},
+			{name:"Merchant",	model:{sprite:"merchant", index:0}, type:"merchant", x:32*5, y:32*5},
+			{name:"Recruiter",	model:{sprite:"merchant", index:1}, type:"recruiter", x:32*7, y:32*5},
 		//	{name:"Blacksmith",	model:{sprite:"merchant", index:2}, type:"blacksmith", x:32*7, y:32*7},
-			{name:"Battlemaster", model:{sprite:"soldier", index:0}, type:"battlemaster", x:32*3, y:32*7},
+			{name:"Battlemaster", model:{sprite:"soldier", index:0}, type:"battlemaster", x:32*4, y:32*8},
 		],
-		[],0,0,"Basecamp",true,true,352,352,11,11,[160,160]
+		[],0,0,"Basecamp",true,true,352,352,11,11,[192,192]
 	));
 
 	maps.push(initMap(

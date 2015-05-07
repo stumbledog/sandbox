@@ -63,6 +63,7 @@ canvas#minimap{
 	bottom:4px;
 	cursor:url('../assets/Graphics/System/Icons/swordIcon.png'), auto;
 	border: 1px solid #000;
+	opacity: 0.8;
 }
 
 canvas#menu{
