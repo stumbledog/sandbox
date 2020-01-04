@@ -1,7 +1,3 @@
-<img src="http://edwardl.net/images/screenshots/condottiere6.png"/>
-
-<a href="http://edwardl.net:3000">Demo</a>
-
 #Synopsis
 Condottiere is a real-time strategy-action RPG game. The player can control the main character, the mouse is mainly used for moving and use character skills. The player can recruit followers who help the player in combat. As player slays monsters, the player grows in experience and ability, acquiring items of power.
 
