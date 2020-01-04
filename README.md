@@ -23,9 +23,3 @@ Tested on Chrome and Firefox on Windows and OS X
   <li>MongoDB</li>
   <li>Createjs</li>
 </ul>
-
-#Screenshots
-<img src="http://edwardl.net/images/screenshots/condottiere1.png" width="49%"/>
-<img src="http://edwardl.net/images/screenshots/condottiere2.png" width="49%"/>
-<img src="http://edwardl.net/images/screenshots/condottiere3.png" width="49%"/>
-<img src="http://edwardl.net/images/screenshots/condottiere4.png" width="49%"/>
